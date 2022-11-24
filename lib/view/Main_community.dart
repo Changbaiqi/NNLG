@@ -1,6 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/utils/AccountUtil.dart';
+import 'package:nnlg/utils/CusBehavior.dart';
+import 'package:nnlg/utils/ToastUtil.dart';
 
 class Main_community extends StatefulWidget {
   const Main_community({Key? key}) : super(key: key);
@@ -26,6 +32,8 @@ class Community extends StatefulWidget {
 }
 
 class _CommunityState extends State<Community> {
+  int onClickTotal = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -54,14 +62,24 @@ class _CommunityState extends State<Community> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('在线人数'),
-                        Text('1',style: TextStyle(fontSize: 30))
+                        ValueListenableBuilder<int>(
+                          valueListenable: ContextDate.onLineTotalCount,
+                          builder:
+                              (BuildContext context, int value, Widget? child) {
+                            return Text('${value}',
+                                style: TextStyle(fontSize: 30));
+                          },
+                        )
                       ],
                     ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text('软件点击量'),
-                        Text('1',style: TextStyle(fontSize: 30),)
+                        Text(
+                          '${onClickTotal}',
+                          style: TextStyle(fontSize: 30),
+                        )
                       ],
                     )
                   ],
@@ -83,9 +101,9 @@ class _CommunityState extends State<Community> {
                       spreadRadius: 0,
                       color: Color(0xFFdfdfdf))
                 ]),
-            height: 80,
+            height: 95,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
               child: ScrollConfiguration(
                 behavior: CusBehavior(),
                 child: GridView(
@@ -94,8 +112,18 @@ class _CommunityState extends State<Community> {
                     crossAxisCount: 5,
                   ),
                   children: [
-                    boxChild("images/lyl.svg", '聊一聊'),
-                    boxChild('images/NNLG.png', '学期计划')
+                    InkWell(
+                      child: boxChildSvg("images/lyl.svg", '聊一聊'),
+                      onTap: () {
+                        ToastUtil.show('该功能未开放');
+                      },
+                    ),
+                    InkWell(
+                      child: boxChildImg('images/NNLG.png', '培养计划'),
+                      onTap: () {
+                        ToastUtil.show('该功能未开放');
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -106,15 +134,17 @@ class _CommunityState extends State<Community> {
     );
   }
 
-
-
-  Widget boxChild(String imgFile, String label) {
+  /**
+   * svg网格布局子组件
+   */
+  Widget boxChildSvg(String imgFile, String label) {
     return Center(
       child: Column(
         children: [
-          Image.asset(
+          SvgPicture.asset(
             imgFile,
-            height: 40,
+            height: 25,
+            width: 25,
           ),
           Text(
             label,
@@ -124,13 +154,43 @@ class _CommunityState extends State<Community> {
       ),
     );
   }
-}
 
-class CusBehavior extends ScrollBehavior {
+  /**
+   * img网格布局子组件
+   */
+  Widget boxChildImg(String imgFile, String label) {
+    return Center(
+      child: Column(
+        children: [
+          Image.asset(
+            imgFile,
+            height: 25,
+            width: 25,
+          ),
+          Text(
+            label,
+            style: TextStyle(fontSize: 13),
+          )
+        ],
+      ),
+    );
+  }
+
+  /**
+   * 用于初始化显示软件打开次数
+   */
+  getOnClickTotal() {
+    AccountUtil().getOnclickTotal().then((value) {
+      if (value['code'] == 200) {
+        setState(() {
+          onClickTotal = value['msg'];
+        });
+      }
+    });
+  }
+
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    if (Platform.isAndroid || Platform.isFuchsia) return child;
-    return super.buildViewportChrome(context, child, axisDirection);
+  void initState() {
+    getOnClickTotal();
   }
 }

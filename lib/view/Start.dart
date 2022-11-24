@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
+import 'package:nnlg/utils/AccountUtil.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -46,6 +47,7 @@ class _StartState extends State<Start> {
   void initState() {
 
     //toMain();
+    toClick();
     ShareDateUtil().initLoading().then((value){
       //print('${CourseData.nowWeek}');
       if(LoginData.autoLogin && LoginData.account.isNotEmpty && LoginData.password.isNotEmpty ){
@@ -113,6 +115,10 @@ class _StartState extends State<Start> {
         return Main();
       }));
     });
+  }
+
+  void toClick(){
+    AccountUtil().toOnclickTotal();
   }
   
 

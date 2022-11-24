@@ -6,6 +6,8 @@ import 'package:nnlg/view/Main_course.dart';
 import 'package:nnlg/view/Main_user.dart';
 import 'package:nnlg/view/Main_water.dart';
 
+import '../utils/AccountUtil.dart';
+
 
 class Main extends StatefulWidget {
   const Main({Key? key}) : super(key: key);
@@ -49,4 +51,10 @@ class _MainState extends State<Main> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    AccountUtil().onLinetoServer();
+  }
+
 }

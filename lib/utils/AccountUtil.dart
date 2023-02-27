@@ -49,7 +49,7 @@ class AccountUtil {
   //用于后端记录上线
   Future<void> onLinetoServer() async {
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
-        'ws://172.29.40.176:8088/user/onLine/${AccountData.studentID}');
+        '${ContextDate.VIPContextIpPort}/user/onLine/${AccountData.studentID}');
     channel.stream.listen((event) {
       print('${event}');
       var json = jsonDecode(event);
@@ -89,6 +89,9 @@ class AccountUtil {
     );
     return response.data;
   }
+
+
+
 
 
 

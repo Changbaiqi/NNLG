@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cbq.nnlg">
     <!-- The INTERNET permission is required for development. Specifically,
          the Flutter tool needs it to communicate with the running application
@@ -15,6 +16,14 @@
     <!-- 摄像头访问权限，主要用于扫二维码 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <meta-data
+        tools:node="replace"
+        android:name="huawei_module_scankit_sdk_version"
+        android:value="scanplus:2.1.0.300" />
 
+    <meta-data
+        tools:node="replace"
+        android:name="huawei_module_scankit_local"
+        android:value="20100300" />
 
 </manifest>

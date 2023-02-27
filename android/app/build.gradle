@@ -17,8 +17,9 @@ if (flutterVersionCode == null) {
 }
 
 def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
+if (flutterVersionName != null) {
+//    flutterVersionName = '1.0'
+    flutterVersionName = '3.0.1·深海之蓝'
 }
 
 apply plugin: 'com.android.application'
@@ -39,7 +40,7 @@ android {
         applicationId "com.cbq.nnlg"
         // You can update the following values to match your application needs. 
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 19//flutter.minSdkVersion
+        minSdkVersion 20//flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

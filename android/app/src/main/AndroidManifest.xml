@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.cbq.nnlg">
 
 
@@ -11,10 +12,15 @@
 
 
     <!-- 摄像头访问权限，主要用于扫二维码 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
 
 
 
@@ -27,8 +33,20 @@
            android:name="com.amap.api.v2.apikey"
            android:value="6ea84eb05b5a87104808fca89dff0f56" />
 
+       <meta-data
+           tools:node="replace"
+           android:name="huawei_module_scankit_sdk_version"
+           android:value="scanplus:2.1.0.300" />
 
-        <activity
+       <meta-data
+           tools:node="replace"
+           android:name="huawei_module_scankit_local"
+           android:value="20100300" />
+
+
+
+
+       <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"

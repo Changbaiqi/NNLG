@@ -18,6 +18,11 @@ class ShareDateUtil{
   //用于初始化所有数据加载
   Future<void> initLoading()async {
 
+    //头像加载
+    await getAccountHeadMode();
+    await getAccountHeadQQ();
+    await getAccountHeadFilePath();
+
     //学生信息详细信息加载
     await getAccountStudentName();
     await getAccountStudentID();
@@ -128,6 +133,63 @@ class ShareDateUtil{
     LoginData.autoLogin = isAutoLogin??false;
     return isAutoLogin??false;
   }
+
+
+  //设置账号头像模式
+  setAccountHeadMode(int mode) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('accountHeadMode', mode).then((c){
+      AccountData.headMode = mode;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+    //print('设置的Cookie：${ContextDate.token}');
+  }
+
+  //获取账号头像模式
+  Future<int> getAccountHeadMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    int? mode = await prefs.getInt('accountHeadMode');
+    AccountData.headMode = mode??0;
+    return mode??0;
+  }
+
+
+  //设置头像QQ
+  setAccountHeadQQ(String qq) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accountHeadQQ', qq).then((c){
+      AccountData.head_qq = qq;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+    //print('设置的Cookie：${ContextDate.token}');
+  }
+
+  //获取账号头像QQ
+  Future<String> getAccountHeadQQ() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? qq = await prefs.getString('accountHeadQQ');
+    AccountData.head_qq = qq??"2084069833";
+    return qq??"2084069833";
+  }
+
+  //设置头像路径
+  setAccountHeadFilePath(String filePath)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accountHeadFilePath', filePath).then((c){
+      AccountData.head_filePath= filePath;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //获取账号头像路径
+  Future<String> getAccountHeadFilePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? path = await prefs.getString('accountHeadFilePath');
+    AccountData.head_filePath = path??"";
+    return path??"";
+  }
+
+
 
 
 
@@ -456,6 +518,9 @@ class ShareDateUtil{
     await setWaterAccount("");
     await setWaterSaler("");
   }
+
+
+
 
 
 

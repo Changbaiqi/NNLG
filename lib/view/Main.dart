@@ -19,7 +19,7 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
 
   List<Widget> _viewList = [ Main_course(),Main_community(),Main_water(), Main_user()];
-  int _index = 2;
+  int _index = 3;
   List<BottomNavigationBarItem> _itemList = [
     BottomNavigationBarItem(icon: Icon(Icons.calendar_today_outlined),label: '课表'),
     BottomNavigationBarItem(icon: Icon(Icons.bakery_dining),label: '社区'),
@@ -30,7 +30,7 @@ class _MainState extends State<Main> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: IndexedStack(
         index: _index,
         children: _viewList,

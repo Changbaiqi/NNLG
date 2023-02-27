@@ -2,19 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/view/ScanKit_Water.dart';
+import 'package:nnlg/view/ScanQRCode_Water.dart';
 
 import '../dao/WaterData.dart';
 import '../utils/ToastUtil.dart';
 import '../utils/WaterUtil.dart';
 import 'ScanQR_Water.dart';
 import 'WaterCharge.dart';
-/*import 'package:fluttertoast/fluttertoast.dart';
-import 'package:nnzs/ScanQR_Water.dart';
-import 'package:nnzs/model/ContextDate.dart';
-import 'package:nnzs/model/ShopList.dart';
-import 'package:nnzs/utils/SharedDateUtil.dart';
-import 'package:nnzs/utils/ToastUtil.dart';
-import 'package:nnzs/utils/WaterUtil.dart';*/
 
 class Main_water extends StatefulWidget {
   const Main_water({Key? key}) : super(key: key);
@@ -386,7 +381,8 @@ class _Water_SWState extends State<Water_SW> {
             onPressed: () async {
 
               String result = await Navigator.push(context, MaterialPageRoute(builder: (builder){
-                return ScanQR_Water();
+                //return ScanQR_Water();
+                return ScanKit_Water();
               }));
               //ToastUtil().show(result);
               WaterUtil().bindCoolWater(result);
@@ -420,7 +416,7 @@ class _Water_SWState extends State<Water_SW> {
             ),
             onPressed: () async {
               String result = await Navigator.push(context, MaterialPageRoute(builder: (builder){
-                return ScanQR_Water();
+                return ScanKit_Water();
               }));
               //ToastUtil().show(result);
               WaterUtil().bindHotWater(result); //绑定热水

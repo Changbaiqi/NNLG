@@ -7,6 +7,7 @@ import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/utils/AccountUtil.dart';
 import 'package:nnlg/utils/CusBehavior.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:nnlg/view/Chitchat.dart';
 
 class Main_community extends StatefulWidget {
   const Main_community({Key? key}) : super(key: key);
@@ -115,7 +116,8 @@ class _CommunityState extends State<Community> {
                     InkWell(
                       child: boxChildSvg("images/lyl.svg", '聊一聊'),
                       onTap: () {
-                        ToastUtil.show('该功能未开放');
+                        // ToastUtil.show('该功能未开放');
+                        Navigator.of(context).push(MaterialPageRoute(builder: (builder){ return Chitchat();}));
                       },
                     ),
                     InkWell(

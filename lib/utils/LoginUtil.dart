@@ -13,9 +13,7 @@ class LoginUtil{
 
 
   LoginUtil(){
-
     _options.baseUrl ='${ContextDate.ContextUrl}';
-
   }
 
 
@@ -51,7 +49,6 @@ class LoginUtil{
 
 
     }on DioError catch(e){
-
       if(e.toString().length>60){
         //print('${e.toString().substring(53,56)}');
         if( (new RegExp(r"3\d\d")).hasMatch( e.toString().substring(53,56) )   ){
@@ -61,7 +58,6 @@ class LoginUtil{
         }else{
           //ToastUtil.show("登录失败");
         }
-
       }else{
         //ToastUtil.show("登录失败");
       }
@@ -69,8 +65,6 @@ class LoginUtil{
     }
 
     return state;
-
-
   }
 
    toLogin(){

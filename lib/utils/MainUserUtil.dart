@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import '../dao/ContextData.dart';
@@ -19,6 +18,9 @@ class MainUserUtil{
 
 
   Future<LinkedHashMap> vipLogin(String account, String passowrd) async {
+
+
+
     Response response = await Dio(_options).request(
         '/user/toLogin',
         data: {
@@ -32,8 +34,25 @@ class MainUserUtil{
 
         )
     );
-    print('${response}');
+    //print('${response}');
     return response.data ;
+  }
+
+
+  /**
+   * 软件通知
+   */
+  Future<LinkedHashMap> inform() async {
+    Response response = await Dio(_options).request(
+      '/user/inform',
+      options: Options(
+        method: 'GET',
+        contentType: 'application/json',
+        receiveTimeout: 4000
+      )
+    );
+
+    return response.data;
   }
 
 

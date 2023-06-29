@@ -9,9 +9,11 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/Main_user.dart';
 
+import '../dao/ContextData.dart';
 import '../dao/CourseData.dart';
 import '../utils/AccountUtil.dart';
 import '../utils/CourseUtil.dart';
+import '../utils/MainUserUtil.dart';
 import 'Main_course.dart';
 
 class Login extends StatefulWidget {
@@ -143,6 +145,9 @@ class _LoginFieldState extends State<LoginField> {
                     return;
                   }
                   try{
+
+
+
                   LoginUtil.turnSubmit(_inputAccountController.text.toString(),_inputPasswordController.text).then((value){
                     //debugPrint(value);
 
@@ -176,6 +181,21 @@ class _LoginFieldState extends State<LoginField> {
                             print('${CourseData.semesterCourseList[0]}');
                             //print('${value[0]}');
                               ShareDateUtil().setNowCourseList(value[0]);
+                          });
+
+                          //这个使用服务器功能的登录
+                          await MainUserUtil()
+                              .vipLogin('${LoginData.account}',
+                              '${LoginData.password}')
+                              .then((value) {
+                            if (value["code"] == 400) {
+                              ToastUtil.show('${value["msg"]}');
+                              return;
+                            }
+
+                            if (value["code"] == 200) {
+                              ContextDate.ContextVIPTken = value["token"];
+                            }
                           });
 
                           Navigator.pushReplacement(context,

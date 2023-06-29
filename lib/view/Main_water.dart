@@ -38,6 +38,7 @@ class _Main_waterState extends State<Main_water> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        elevation: 0,
         title: Text('打水'),
       ),
       endDrawer: Drawer(

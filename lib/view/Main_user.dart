@@ -5,11 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
-import 'package:nnlg/utils/AccountUtil.dart';
-import 'package:nnlg/utils/CourseUtil.dart';
-import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
@@ -17,7 +13,6 @@ import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
 import 'package:nnlg/view/Course_set.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/VIPFunList.dart';
-import 'package:nnlg/view/XiaoBeiLeave.dart';
 
 class Main_user extends StatefulWidget {
   const Main_user({Key? key}) : super(key: key);
@@ -30,9 +25,12 @@ class _Main_userState extends State<Main_user> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [User_Message(), User_set()],
-      ),
+      body: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: ListView(
+            children: [User_Message(), User_set()],
+          )),
     );
   }
 
@@ -62,7 +60,7 @@ class User_MessageState extends State<User_Message> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(10, 50, 10, 0),
+      padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
       child: Card(
         child: Container(
           height: 440,
@@ -140,13 +138,8 @@ class User_MessageState extends State<User_Message> {
                         onTap: () async {
                           UserHeadPortraitUtil u =
                               UserHeadPortraitUtil(context);
-                              await u.setHead().then((value){
-
-                              });
-                          setState(() {
-
-                          });
-
+                          await u.setHead().then((value) {});
+                          setState(() {});
                         },
                       ),
                       Text(
@@ -198,139 +191,132 @@ class _User_setState extends State<User_set> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Expanded(
-        flex: 1,
-        child: ListView(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Container(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      child: InkWell(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: Text(
-                                '课表设置',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Image.asset(
-                                'images/course.png',
-                                width: 25,
-                                height: 25,
-                              ),
-                            ),
-                          ],
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Container(
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                child: InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          '课表设置',
+                          style: TextStyle(fontSize: 15),
                         ),
-                        onTap: () {
-                          print('课表设置');
-                          Navigator.of(context)
-                              .push(MaterialPageRoute(builder: (builder) {
-                            return Course_set();
-                          }));
-                        },
                       ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Container(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      child: InkWell(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: Text(
-                                '探索新版',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Image.asset(
-                                'images/bbgx.png',
-                                width: 29,
-                                height: 29,
-                              ),
-                            ),
-                          ],
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Image.asset(
+                          'images/course.png',
+                          width: 25,
+                          height: 25,
                         ),
-                        onTap: () {
-                          print('探索新版本');
-                          ToastUtil.show('功能暂未开放');
-                        },
                       ),
-                    ),
+                    ],
                   ),
+                  onTap: () {
+                    print('课表设置');
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (builder) {
+                      return Course_set();
+                    }));
+                  },
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: Container(
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    child: Card(
-                      child: InkWell(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: Text(
-                                '退出登录',
-                                style: TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: Image.asset(
-                                'images/backLogin.png',
-                                width: 25,
-                                height: 25,
-                              ),
-                            ),
-                          ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Container(
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                child: InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          '探索新版',
+                          style: TextStyle(fontSize: 15),
                         ),
-                        onTap: () {
-                          print('退出登录');
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Image.asset(
+                          'images/bbgx.png',
+                          width: 29,
+                          height: 29,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    print('探索新版本');
+                    ToastUtil.show('功能暂未开放');
+                  },
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Container(
+              height: 60,
+              width: MediaQuery.of(context).size.width,
+              child: Card(
+                child: InkWell(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Text(
+                          '退出登录',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        child: Image.asset(
+                          'images/backLogin.png',
+                          width: 25,
+                          height: 25,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    print('退出登录');
 
-                          ShareDateUtil().clearAllAccountData();
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (builder) {
-                            return Login();
-                          }));
-                        },
-                      ),
-                    ),
-                  ),
+                    ShareDateUtil().clearAllAccountData();
+                    Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (builder) {
+                          return Login();
+                        }));
+                  },
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Center(
-                    child: Text(
-                      '         南宁理工学院 By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
-                      style: TextStyle(fontSize: 13, color: Colors.black45),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            child: Center(
+              child: Text(
+                '         南宁理工学院 By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
+                style: TextStyle(fontSize: 13, color: Colors.black45),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }

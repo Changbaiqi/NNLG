@@ -11,6 +11,8 @@ import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/Main.dart';
 
+import '../dao/ContextData.dart';
+import '../utils/MainUserUtil.dart';
 import '../utils/ToastUtil.dart';
 import 'Main_course.dart';
 
@@ -52,12 +54,13 @@ class _StartState extends State<Start> {
       //print('${CourseData.nowWeek}');
       if(LoginData.autoLogin && LoginData.account.isNotEmpty && LoginData.password.isNotEmpty ){
 
+
         //自动登录用的
         LoginUtil.turnSubmit(LoginData.account,LoginData.password).then((value){
           //debugPrint(value);
 
           //记住账号密码
-          LoginUtil().LoginPost(value).then((value){
+          LoginUtil().LoginPost(value).then((value) async {
             if(value==302){
               ToastUtil.show('登录成功');
 
@@ -70,6 +73,20 @@ class _StartState extends State<Start> {
               });
 
 
+              //服务器功能上线
+              MainUserUtil()
+                  .vipLogin('${LoginData.account}',
+                  '${LoginData.password}')
+                  .then((value) {
+                if (value["code"] == 400) {
+                  ToastUtil.show('${value["msg"]}');
+                  return;
+                }
+
+                if (value["code"] == 200) {
+                  ContextDate.ContextVIPTken = value["token"];
+                }
+              });
 
               toMain();
             }else{

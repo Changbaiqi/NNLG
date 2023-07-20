@@ -178,8 +178,12 @@ class _LoginFieldState extends State<LoginField> {
                           });
 
                           CourseUtil().getSemesterCourseList().then((value){
-                            print('${CourseData.semesterCourseList[0]}');
+                            //print('${CourseData.semesterCourseList[0]}');
                             //print('${value[0]}');
+                            //如果以及寄存了课表的日期那么久直接返回
+                            if(CourseData.nowCourseList!=null && CourseData.nowCourseList!="")
+                              return;
+
                               ShareDateUtil().setNowCourseList(value[0]);
                           });
 

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,6 @@ class CusBehavior extends ScrollBehavior {
   Widget buildViewportChrome(
       BuildContext context, Widget child, AxisDirection axisDirection) {
     if (Platform.isAndroid || Platform.isFuchsia) return child;
-    return super.buildViewportChrome(context, child, axisDirection);
+    return super.buildOverscrollIndicator(context, child,ScrollableDetails(direction: axisDirection));
   }
 }

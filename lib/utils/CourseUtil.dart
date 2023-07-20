@@ -150,29 +150,6 @@ class CourseUtil{
 
   }
 
-  //获取成绩时间列表
-  Future<dynamic> getReportCardQueryList() async {
-    Response response = await Dio(_options).request(
-        '/gllgdxbwglxy_jsxsd/kscj/cjcx_query',
-      options: Options(
-        method: 'GET',
-        contentType: 'application/x-www.form-urlencoded',
-        receiveTimeout: 4000,
-      )
-    );
-    var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
-    RegExp selectExp = RegExp(r'<select id="kksj" name="kksj" style="width: 170px;">([\s\S]*?)</select>');
-    RegExpMatch? test= selectExp.firstMatch(response.toString());
-    //debugPrint(response.toString());
-    if(test!=null){
-      RegExp optionValue = RegExp('<option value="(\s\S)*?"(\s\S)*?></option>');
-
-      debugPrint(test.group(1));
-    }
-
-  }
-
-
 
   //将爬的网页转成JSON
   static Future<String> toJSONCourse(String courseHTML) async {

@@ -37,10 +37,6 @@ class _Main_waterState extends State<Main_water> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        elevation: 0,
-        title: Text('打水'),
-      ),
       endDrawer: Drawer(
         width: 200,
         child: shopList??Center(child: Text('加载中...'),)),
@@ -51,7 +47,8 @@ class _Main_waterState extends State<Main_water> {
               return Column(
             children: [
               home_water_message=Home_water_Message(),
-              Water_SW()
+              Water_SW(),
+              Container(height: 30,)
             ],
           );
             }),

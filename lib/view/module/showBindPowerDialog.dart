@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/utils/NoticeUtils.dart';
 import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/Main.dart';
@@ -19,10 +20,14 @@ class showBindPowerDialog extends Dialog{
     return Container(
       height: 340,
       width: 300,
-      color: Colors.white,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Colors.white,
+      ),
       child: showBindPowerDialogMain(),
     );
   }
+
 
 
 
@@ -61,6 +66,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: FutureBuilder(
         future: _loadData(),
         builder: (context,snapshot){

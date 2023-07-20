@@ -10,6 +10,7 @@ import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/Main.dart';
+import 'package:nnlg/view/module/showUpdateDialog.dart';
 
 import '../dao/ContextData.dart';
 import '../utils/MainUserUtil.dart';
@@ -50,8 +51,9 @@ class _StartState extends State<Start> {
 
     //toMain();
     toClick();
-    ShareDateUtil().initLoading().then((value){
+     ShareDateUtil().initLoading().then((value) async {
       //print('${CourseData.nowWeek}');
+
       if(LoginData.autoLogin && LoginData.account.isNotEmpty && LoginData.password.isNotEmpty ){
 
 
@@ -97,12 +99,6 @@ class _StartState extends State<Start> {
           });
 
         });
-
-
-
-
-
-
 
       }else{
         toLogin();

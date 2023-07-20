@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/MainUserUtil.dart';
@@ -13,6 +14,7 @@ import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
 import 'package:nnlg/view/Course_set.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/VIPFunList.dart';
+import 'package:nnlg/view/module/showUpdateDialog.dart';
 
 class Main_user extends StatefulWidget {
   const Main_user({Key? key}) : super(key: key);
@@ -259,8 +261,17 @@ class _User_setState extends State<User_set> {
                     ],
                   ),
                   onTap: () {
-                    print('探索新版本');
-                    ToastUtil.show('功能暂未开放');
+                    //print('探索新版本');
+                    //ToastUtil.show('功能暂未开放');
+                    //ToastUtil.show('${AppInfoData.buildNumber}');
+                    //检测是否为最新版
+                    showUpdateDialog.isLastVersion().then((value){
+                      if(value==true)
+                        ToastUtil.show('已经是最新版啦(～￣▽￣)～ ');
+                      else
+                        showUpdateDialog.autoDialog(context);
+                    });
+
                   },
                 ),
               ),
@@ -307,7 +318,7 @@ class _User_setState extends State<User_set> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
             child: Center(
               child: Text(
                 '         南宁理工学院 By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',

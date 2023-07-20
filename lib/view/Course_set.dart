@@ -23,7 +23,9 @@ class _Course_setState extends State<Course_set> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('课表设置'),
+        title: Text('课表设置',style: TextStyle(fontSize:20,color: Colors.black),),
+        elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: Course_setHome(),
     );

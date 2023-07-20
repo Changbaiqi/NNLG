@@ -22,7 +22,6 @@ class Main_course extends StatefulWidget {
 /*updateTitle(String text){
     _main_courseState.updateTitle(text);
   }*/
-
 }
 
 _Main_courseState? _main_courseState;
@@ -46,73 +45,116 @@ class _Main_courseState extends State<Main_course> {
 
   Future<void> _onRefresh() async {
     await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList}");
+    ToastUtil.show('同步完毕');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        elevation: 1,
+        title: Column(
           children: [
-            IconButton(
-              icon: Image.asset(
-                'images/start.png',
-                height: 25,
-                width: 25,
-                color: Colors.white70,
-              ),
-              onPressed: () {
-                course_listState?.updatePreviousPage();
-              },
-            ),
-            Text('${_title}'),
-            IconButton(
-              icon: Image.asset(
-                'images/end.png',
-                height: 25,
-                width: 25,
-                color: Colors.white70,
-              ),
-              onPressed: () {
-                course_listState?.updateNextPage();
-              },
-            ),
-            InkWell(
-              child: Row(
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.orangeAccent,
+                  IconButton(
+                    icon: Image.asset(
+                      'images/start.png',
+                      height: 25,
+                      width: 25,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      course_listState?.updatePreviousPage();
+                    },
                   ),
-                  Text('共享课表')
+                  Text(
+                    '${_title}',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  IconButton(
+                    icon: Image.asset(
+                      'images/end.png',
+                      height: 25,
+                      width: 25,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      course_listState?.updateNextPage();
+                    },
+                  ),
                 ],
               ),
-              onTap: (){
-                showDialog(context: context, builder: (builder){
-                  return Center(
-
-                    child: showCourseSharedSelectDialog(),
-                  );
-                });
-                ToastUtil.show('测试按钮点击');
-              },
-            )
+              IconButton(
+                icon: Column(
+                  children: [
+                    Icon(
+                      Icons.cached_sharp,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    Text(
+                      '课表同步',
+                      style: TextStyle(fontSize: 8, color: Colors.black),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (builder) {
+                  //       return Center(
+                  //         child: showCourseSharedSelectDialog(),
+                  //       );
+                  //     });
+                  ToastUtil.show('正在同步官网课表...');
+                  _onRefresh();
+                  //ToastUtil.show('敬请期待...');
+                },
+              ),
+              IconButton(
+                icon: Column(
+                  children: [
+                    Icon(
+                      Icons.face_retouching_natural,
+                      color: Colors.black,
+                      size: 20,
+                    ),
+                    Text(
+                      '共享课表',
+                      style: TextStyle(fontSize: 8, color: Colors.black),
+                    )
+                  ],
+                ),
+                onPressed: () {
+                  // showDialog(
+                  //     context: context,
+                  //     builder: (builder) {
+                  //       return Center(
+                  //         child: showCourseSharedSelectDialog(),
+                  //       );
+                  //     });
+                  ToastUtil.show('敬请期待...');
+                },
+              )
+            ]),
           ],
         ),
       ),
       body: RefreshIndicator(
-        child: ListView.builder(
-            itemCount: 1,
-            itemBuilder: (context, index) {
-              return Container(
-                height: MediaQuery.of(context).size.height-65,
-                //height: MediaQuery.of(context).size.height,
-                child: Course_List(),
-              );
-            }),
+        // Container(
+        //   height: MediaQuery.of(context).size.height,
+        //   //height: MediaQuery.of(context).size.height,
+        //   child: Course_List(),
+        // )
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          //height: MediaQuery.of(context).size.height,
+          child: Course_List(),
+        ),
         onRefresh: _onRefresh,
       ),
     );
@@ -363,7 +405,7 @@ class Course_ListState extends State<Course_List> {
             children: [
               Center(
                 child: Text(
-                  '${i+1}',
+                  '${i + 1}',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 18),
                 ),
@@ -440,10 +482,15 @@ class Course_ListState extends State<Course_List> {
               Text(''),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.month && DateTime.now().day==dateTime.day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month == dateTime.month &&
+                            DateTime.now().day == dateTime.day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.month && DateTime.now().day==dateTime.day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month == dateTime.month &&
+                            DateTime.now().day == dateTime.day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.weekday)}\n${dateTime.month}/${dateTime.day}',
                   textAlign: TextAlign.center,
@@ -451,10 +498,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.add(Duration(days: 1)).month && DateTime.now().day==dateTime.add(Duration(days: 1)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 1)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 1)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.add(Duration(days: 1)).month && DateTime.now().day==dateTime.add(Duration(days: 1)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 1)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 1)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 1)).weekday)}\n${dateTime.add(Duration(days: 1)).month}/${dateTime.add(Duration(days: 1)).day}',
                   textAlign: TextAlign.center,
@@ -462,10 +518,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.add(Duration(days: 2)).month && DateTime.now().day==dateTime.add(Duration(days: 2)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 2)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 2)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.add(Duration(days: 2)).month && DateTime.now().day==dateTime.add(Duration(days: 2)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 2)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 2)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 2)).weekday)}\n${dateTime.add(Duration(days: 2)).month}/${dateTime.add(Duration(days: 2)).day}',
                   textAlign: TextAlign.center,
@@ -473,10 +538,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: DateTime.now().month==dateTime.add(Duration(days: 3)).month && DateTime.now().day==dateTime.add(Duration(days: 3)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
-                  borderRadius: BorderRadius.circular(8),
-                  border: DateTime.now().month==dateTime.add(Duration(days: 3)).month && DateTime.now().day==dateTime.add(Duration(days: 3)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 3)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 3)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(8),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 3)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 3)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 3)).weekday)}\n${dateTime.add(Duration(days: 3)).month}/${dateTime.add(Duration(days: 3)).day}',
                   textAlign: TextAlign.center,
@@ -484,10 +558,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.add(Duration(days: 4)).month && DateTime.now().day==dateTime.add(Duration(days: 4)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 4)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 4)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.add(Duration(days: 4)).month && DateTime.now().day==dateTime.add(Duration(days: 4)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 4)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 4)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 4)).weekday)}\n${dateTime.add(Duration(days: 4)).month}/${dateTime.add(Duration(days: 4)).day}',
                   textAlign: TextAlign.center,
@@ -495,10 +578,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.add(Duration(days: 5)).month && DateTime.now().day==dateTime.add(Duration(days: 5)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 5)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 5)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.add(Duration(days: 5)).month && DateTime.now().day==dateTime.add(Duration(days: 5)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 5)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 5)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 5)).weekday)}\n${dateTime.add(Duration(days: 5)).month}/${dateTime.add(Duration(days: 5)).day}',
                   textAlign: TextAlign.center,
@@ -506,10 +598,19 @@ class Course_ListState extends State<Course_List> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: DateTime.now().month==dateTime.add(Duration(days: 6)).month && DateTime.now().day==dateTime.add(Duration(days: 6)).day? Color.fromARGB(30, 59, 52, 86): Colors.transparent,
+                    color: DateTime.now().month ==
+                                dateTime.add(Duration(days: 6)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 6)).day
+                        ? Color.fromARGB(30, 59, 52, 86)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
-                    border: DateTime.now().month==dateTime.add(Duration(days: 6)).month && DateTime.now().day==dateTime.add(Duration(days: 6)).day? Border.all(color: Color.fromARGB(130, 59, 52, 86)): Border.all(color: Colors.transparent)
-                ),
+                    border: DateTime.now().month ==
+                                dateTime.add(Duration(days: 6)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 6)).day
+                        ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                        : Border.all(color: Colors.transparent)),
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 6)).weekday)}\n${dateTime.add(Duration(days: 6)).month}/${dateTime.add(Duration(days: 6)).day}',
                   textAlign: TextAlign.center,
@@ -519,11 +620,16 @@ class Course_ListState extends State<Course_List> {
           ],
         ),
         Expanded(
-            flex: 1,
-            child: Table(
-              border: TableBorder.all(color: Colors.black,width: 0.5),
-              children: forWidgetList(tableWidgetList),
-            )),
+          flex: 1,
+          child: ListView(
+            children: [
+              Table(
+                border: TableBorder.all(color: Colors.black, width: 0.5),
+                children: forWidgetList(tableWidgetList),
+              )
+            ],
+          ),
+        ),
       ],
     );
   }

@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/utils/AccountUtil.dart';
+import 'package:nnlg/utils/CourseScoreUtil.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/CusBehavior.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/Chitchat.dart';
+import 'package:nnlg/view/ExamInquiry.dart';
+import 'package:nnlg/view/ScoreInquiry.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 
 import '../dao/LoginData.dart';
@@ -133,7 +136,7 @@ class _CommunityState extends State<Community> {
                     child: boxChildSvg("images/lyl.svg", '考试安排'),
                     onTap: () {
                       // ToastUtil.show('该功能未开放');
-                      //Navigator.of(context).push(MaterialPageRoute(builder: (builder){ return Chitchat();}));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (builder){ return ExamInquiry();}));
                     },
                   ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
@@ -161,8 +164,10 @@ class _CommunityState extends State<Community> {
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
                     child: boxChildImg('images/NNLG.png', '成绩查询'),
                     onTap: () {
-                      CourseUtil().getReportCardQueryList().then((value){
-
+                      CourseScoreUtil().getReportCardQueryList().then((value){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (builder){
+                          return ScoreInquiry();
+                        }));
                       });
                     },
                   ),),
@@ -197,6 +202,9 @@ class _CommunityState extends State<Community> {
               ),
             ),
           ),
+        ),
+        Container(
+          height: 40,
         )
       ],
     );

@@ -1,8 +1,10 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
+import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/dao/XiaoBeiData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/XiaoBeiUserUtil.dart';
@@ -17,6 +19,9 @@ class ShareDateUtil{
 
   //用于初始化所有数据加载
   Future<void> initLoading()async {
+
+    //初始化APP的相关信息，比如APP版本以及APP名称和签名等
+    AppInfoData.init();
 
     //头像加载
     await getAccountHeadMode();
@@ -50,6 +55,9 @@ class ShareDateUtil{
     await getCardNum();
     await getWaterSaler();
     await getWaterUserId();
+
+    //初始化通知寄存版本号
+    await getNoticeId();
 
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek = CourseUtil.getNowWeek(CourseData.schoolOpenTime, CourseData.ansWeek);
@@ -521,10 +529,21 @@ class ShareDateUtil{
 
 
 
+  //获取通知寄存版本号
+  Future<int> getNoticeId() async{
+    final prefs = await SharedPreferences.getInstance();
+    int? noticeId = await prefs.getInt('NoticeId');
+    NoticeData.noticeId = noticeId??0;
+    return noticeId??0;
+  }
 
-
-
-
+ //设置通知寄存版本号
+  Future<void> setNoticeId(int noticeId) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('NoticeId', noticeId).then((c){
+      NoticeData.noticeId = noticeId;
+    });
+  }
 
 
 

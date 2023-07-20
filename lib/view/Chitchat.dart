@@ -20,7 +20,9 @@ class _ChitchatState extends State<Chitchat> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text('聊天室'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        title: Text('聊天室',style: TextStyle(color: Colors.black),),
       ),
       body: Container(
         child: ChatInterFace(),
@@ -82,14 +84,23 @@ class _ChatInterFaceState extends State<ChatInterFace> {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                     child: Container(
-                      height: 50,
                       child: TextField(
+                        keyboardType: TextInputType.multiline,
                         controller: sendTextEdit,
-                        decoration: InputDecoration(
+                        maxLines: 5,
+                        minLines: 1,
+                        decoration: const InputDecoration(
                             hintText: '请输入需要发送的信息',
-                            border: InputBorder.none,
+                            border: const OutlineInputBorder(
+                              gapPadding: 0,
+                              borderSide: BorderSide(
+                                width: 1,
+                                style: BorderStyle.none
+                              )
+                            ),
                             fillColor: Colors.black12,
                             filled: true,
+                            isDense: true,
                             enabledBorder: OutlineInputBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(5)),

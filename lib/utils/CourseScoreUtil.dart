@@ -68,12 +68,16 @@ class CourseScoreUtil{
     List<String> scoreList = [];
     for(Match m in tecc){
       String match = m.group(1).toString();
-      RegExp courseNumberExp = RegExp(r'<td align="left">([\d]{4,})?</td>[\n\s]*<td align="left">([^<]*)*?</td>');
+      RegExp courseNumberExp = RegExp(r'<td>([\d]*)</td>[\n\s]*<td>([^<]*)*?</td>[\n\s]*<td align="left">([\d]{4,})?</td>[\n\s]*<td align="left">([^<]*)*?</td>');
       RegExp courseCsoreExp = RegExp(r'<td style="[^"]*">([\s\S]*)</td></td>');
+
+      //序号
+      String? number = courseNumberExp.firstMatch(match)?.group(1).toString();
+      String? time = courseNumberExp.firstMatch(match)?.group(2).toString();
       //课程编号
-      String? courseNumber = courseNumberExp.firstMatch(match)?.group(1).toString();
+      String? courseNumber = courseNumberExp.firstMatch(match)?.group(3).toString();
       //课程名称
-      String? courseName = courseNumberExp.firstMatch(match)?.group(2).toString();
+      String? courseName = courseNumberExp.firstMatch(match)?.group(4).toString();
       //课程成绩
       String? courseScore =courseCsoreExp.firstMatch(match)?.group(1).toString();
 
@@ -83,7 +87,7 @@ class CourseScoreUtil{
         continue;
       if(courseScore==null)
         continue;
-      scoreList.add('{"courseNumber":"${courseNumber}","courseName":"${courseName}","courseScore":"${courseScore}"}');
+      scoreList.add('{"number":"${number}","time":"${time}","courseNumber":"${courseNumber}","courseName":"${courseName}","courseScore":"${courseScore}"}');
     }
     return scoreList;
   }

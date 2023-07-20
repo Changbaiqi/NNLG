@@ -52,10 +52,11 @@ dependencies:
   flutter_easyrefresh: ^2.2.1 #用于下拉刷新或者加载的下拉条
   url_launcher: ^6.1.11 #用于跳转浏览器
   package_info_plus: ^4.0.2 #用于获取APP版本等相关信息
-  #home_widget: ^0.3.0 #桌面小组件
+  home_widget: ^0.3.0 #桌面小组件
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  lottie: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -160,6 +161,7 @@ flutter:
     - images/2.0x/lyl.svg
     - images/3.0x/lyl.svg
     - images/4.0x/lyl.svg
+    - images/loading.json
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -133,7 +133,7 @@ class _CommunityState extends State<Community> {
                       },
                     ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
-                    child: boxChildSvg("images/lyl.svg", '考试安排'),
+                    child: boxChildImg("images/NNLG.png", '考试安排'),
                     onTap: () {
                       // ToastUtil.show('该功能未开放');
                       Navigator.of(context).push(MaterialPageRoute(builder: (builder){ return ExamInquiry();}));

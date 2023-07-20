@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/nnlg"
+        android:shortcutDisabledMessage="@string/shortcut_widget_title"
+        android:shortcutId="shortcut_widget"
+        android:shortcutLongLabel="@string/shortcut_widget_title"
+        android:shortcutShortLabel="@string/shortcut_widget_title">
+        <intent
+            android:action="com.example.shortcutstest.SETTING"
+            android:targetClass="com.cbq.nnlg.MainActivity"
+            android:targetPackage="com.cbq.nnlg" />
+
+<!--        <intent-->
+<!--            android:action="android.intent.action.VIEW"-->
+<!--            android:targetClass="com.githubly.shortcutsdemo.StaticTestActivity"-->
+<!--            android:targetPackage="com.githubly.shortcutsdemo" />-->
+    </shortcut>
+
+</shortcuts>

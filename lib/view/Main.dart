@@ -22,7 +22,7 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
 
   List<Widget> _viewList = [Main_community(),Main_water(), Main_course(),Main_user(), Course_set(),];
-  int _index = 3;
+  int _index = 2;
   List<BottomNavigationBarItem> _itemList = [
     BottomNavigationBarItem(icon: Icon(Icons.bakery_dining),label: '社区'),
     BottomNavigationBarItem(icon: Icon(Icons.water_drop),label: '打水'),

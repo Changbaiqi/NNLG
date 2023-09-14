@@ -255,8 +255,8 @@ class Course_ListState extends State<Course_List> {
   }
 
   //表格内每一项的组件
-  Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/) {
-    return courseJSON['courseName'] == null
+  Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,{Color? color}) {
+    return courseJSON.length == 0
         ? Center(
             child: Text(
               '无课',
@@ -285,8 +285,8 @@ class Course_ListState extends State<Course_List> {
                 ),
                 child: InkWell(
                   child: Text(
-                    '${courseJSON['courseName']}',
-                    style: TextStyle(fontSize: 12),
+                    '${courseJSON.length>1? "有多门课程同时进行，点击查看详细":courseJSON[0]['courseName']}',
+                    style: TextStyle(fontSize: 12,color: courseJSON.length>1?Colors.red:Colors.black),
                   ),
                   onTap: () {
                     //ToastUtil.show('${courseJSON['courseName']}');
@@ -304,7 +304,7 @@ class Course_ListState extends State<Course_List> {
   void refreshAllCourseTable() {
     //用来寄存每周的课表的json数据
     List<String> allList = CourseData.weekCourseList;
-
+    // print(allList);
     //开学时间
     DateTime startSchoolTime = DateTime(
         int.parse(CourseData.schoolOpenTime.split('/')[0]),
@@ -329,9 +329,13 @@ class Course_ListState extends State<Course_List> {
         }
 
         for (int y = 0; y < json[x].length; ++y) {
-          //添加授课时间json
-          (json[x][y] as LinkedHashMap<String, dynamic>)
-              .addAll({"courseTime": "${CourseData.courseTime[x]}"});
+          print(json[x][y]);
+          //判断是否为空课
+          for (int z = 0; z < json[x][y].length; ++z) {
+            //添加授课时间json
+            (json[x][y][z] as LinkedHashMap<String, dynamic>)
+                .addAll({"courseTime": "${CourseData.courseTime[x]}"});
+          }
           _resCourseList.add(courseTableWidget(json[x][y] ?? "无课",
               startSchoolTime.add(Duration(days: y) /*传入相应的授课日期*/)));
         }

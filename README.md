@@ -11,7 +11,7 @@
 * Flutter 
 * JavaScript
 
-
+* 编译项目时记得修改gradlew.bat中的set GRADLE_OPTS="-Dgradle.user.home=D:/.gradle"。将其中的路径改为你的gradle目录
 
 感谢JetBrains的支持
 

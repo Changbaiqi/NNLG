@@ -321,7 +321,7 @@ class _User_setState extends State<User_set> {
             padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
             child: Center(
               child: Text(
-                '         南宁理工学院 By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
+                '         By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
                 style: TextStyle(fontSize: 13, color: Colors.black45),
                 textAlign: TextAlign.center,
               ),

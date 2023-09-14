@@ -51,8 +51,9 @@ public class MainActivity extends FlutterActivity {
             public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
                 //Log.d("call",call.method);
                 if(call.method!=null){
-                    Course course = new Course(call.method);
-                    result.success(course.getAllJSON());
+//                    Course course = new Course(call.method);
+                    CourseNew courseNew = new CourseNew(call.method);
+                    result.success(courseNew.getAllJSON());
 
                 }
             }

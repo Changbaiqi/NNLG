@@ -30,7 +30,7 @@ class _XiaoBei_gztState extends State<XiaoBei_gzt> {
     return Container(
       child: Stack(
         children: [
-          Image.asset('images/xiaobei_gzt.jpg',fit: BoxFit.fill,height: MediaQuery.of(context).size.height,width: MediaQuery.of(context).size.width,),
+          Image.asset('assets/images/xiaobei_gzt.jpg',fit: BoxFit.fill,height: MediaQuery.of(context).size.height,width: MediaQuery.of(context).size.width,),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

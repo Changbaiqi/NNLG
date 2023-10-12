@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/ContextData.dart';
@@ -13,6 +14,7 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
 import 'package:nnlg/view/Course_set.dart';
 import 'package:nnlg/view/Login.dart';
+import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/VIPFunList.dart';
 import 'package:nnlg/view/module/showUpdateDialog.dart';
 
@@ -72,7 +74,7 @@ class User_MessageState extends State<User_Message> {
               Column(
                 children: [
                   Image.asset(
-                    'images/black.webp',
+                    'assets/images/black.webp',
                     fit: BoxFit.fill,
                     height: 220,
                     width: MediaQuery.of(context).size.width,
@@ -215,7 +217,7 @@ class _User_setState extends State<User_set> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                         child: Image.asset(
-                          'images/course.png',
+                          'assets/images/course.png',
                           width: 25,
                           height: 25,
                         ),
@@ -253,7 +255,7 @@ class _User_setState extends State<User_set> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                         child: Image.asset(
-                          'images/bbgx.png',
+                          'assets/images/bbgx.png',
                           width: 29,
                           height: 29,
                         ),
@@ -265,13 +267,12 @@ class _User_setState extends State<User_set> {
                     //ToastUtil.show('功能暂未开放');
                     //ToastUtil.show('${AppInfoData.buildNumber}');
                     //检测是否为最新版
-                    showUpdateDialog.isLastVersion().then((value){
-                      if(value==true)
+                    showUpdateDialog.isLastVersion().then((value) {
+                      if (value == true)
                         ToastUtil.show('已经是最新版啦(～￣▽￣)～ ');
                       else
                         showUpdateDialog.autoDialog(context);
                     });
-
                   },
                 ),
               ),
@@ -297,7 +298,7 @@ class _User_setState extends State<User_set> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                         child: Image.asset(
-                          'images/backLogin.png',
+                          'assets/images/backLogin.png',
                           width: 25,
                           height: 25,
                         ),
@@ -308,10 +309,10 @@ class _User_setState extends State<User_set> {
                     print('退出登录');
 
                     ShareDateUtil().clearAllAccountData();
-                    Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (builder) {
-                          return Login();
-                        }));
+                    Navigator.of(context)
+                        .pushReplacement(MaterialPageRoute(builder: (builder) {
+                      return Login();
+                    }));
                   },
                 ),
               ),
@@ -320,10 +321,81 @@ class _User_setState extends State<User_set> {
           Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
             child: Center(
-              child: Text(
-                '         By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
-                style: TextStyle(fontSize: 13, color: Colors.black45),
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: InkWell(
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/github.svg',
+                                width: 30,
+                                height: 30,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                'GitHub',
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: InkWell(
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/blog.svg',
+                                width: 30,
+                                height: 30,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                '博客',
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: InkWell(
+                          child: Column(
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/qq.svg',
+                                width: 30,
+                                height: 30,
+                                color: Colors.grey,
+                              ),
+                              Text(
+                                'QQ',
+                                style: TextStyle(fontSize: 10, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+
+                    ],
+                  ),
+                  Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Text(
+                    'By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
+                    style: TextStyle(fontSize: 13, color: Colors.black45),
+                    textAlign: TextAlign.center,
+                  ),)
+                ],
               ),
             ),
           )

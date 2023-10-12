@@ -17,7 +17,7 @@ class XiaoBei_Login{
   //小北密码输入框的控制
   TextEditingController passwordTEC =TextEditingController();
 
-  List<Widget> _seelist = [Image.asset('images/close_eye.png',height: 25,width: 25,),Image.asset('images/open_eye.png',height: 25,width: 25,)];
+  List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
   bool _seeNo_Off = true;
 
 

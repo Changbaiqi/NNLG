@@ -309,10 +309,10 @@ class _CeshiState extends State<Ceshi> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //上一页
-                IconButton(icon: Image.asset('images/start.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
                 Text('第${WeekDayForm.Chinese(_pageIndex)}大节'),
                 //下一页
-                IconButton(icon: Image.asset('images/end.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
               ],
             ),
           ),

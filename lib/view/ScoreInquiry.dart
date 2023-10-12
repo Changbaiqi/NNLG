@@ -98,7 +98,7 @@ class _ScoreInquiryState extends State<ScoreInquiry> {
             }
           } else {
             widget = Center(
-              child: Lottie.asset('images/loading.json',height: 200,width: 200),
+              child: Lottie.asset('assets/images/loading.json',height: 200,width: 200),
             );
           }
           return Container(

@@ -19,12 +19,12 @@ class _XiaoBei_MainState extends State<XiaoBei_Main> {
   ];
   List<BottomNavigationBarItem> _itemList = [
     BottomNavigationBarItem(
-        icon: Image.asset('images/Fun_off.png',width: 20,height: 20,),label: '功能',
-      activeIcon: Image.asset('images/Fun_on.png',width: 20,height: 20,)
+        icon: Image.asset('assets/images/Fun_off.png',width: 20,height: 20,),label: '功能',
+      activeIcon: Image.asset('assets/images/Fun_on.png',width: 20,height: 20,)
     ),
     BottomNavigationBarItem(
-        icon: Image.asset('images/user_off.png',width: 20,height: 20,),label: '账号',
-      activeIcon: Image.asset('images/user_on.png',width: 20,height: 20,)
+        icon: Image.asset('assets/images/user_off.png',width: 20,height: 20,),label: '账号',
+      activeIcon: Image.asset('assets/images/user_on.png',width: 20,height: 20,)
     )
   ];
 

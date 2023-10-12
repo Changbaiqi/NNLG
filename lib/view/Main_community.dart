@@ -123,7 +123,7 @@ class _CommunityState extends State<Community> {
                 children: [
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)
                   ,child: InkWell(
-                      child: boxChildSvg("images/lyl.svg", '校园聊一聊'),
+                      child: boxChildSvg("assets/images/lyl.svg", '校园聊一聊'),
                       onTap: () {
                         // ToastUtil.show('该功能未开放');
                         Navigator.of(context)
@@ -133,14 +133,14 @@ class _CommunityState extends State<Community> {
                       },
                     ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
-                    child: boxChildImg("images/NNLG.png", '考试安排'),
+                    child: boxChildImg("assets/images/NNLG.png", '考试安排'),
                     onTap: () {
                       // ToastUtil.show('该功能未开放');
                       Navigator.of(context).push(MaterialPageRoute(builder: (builder){ return ExamInquiry();}));
                     },
                   ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
-                    child: boxChildImg('images/NNLG.png', '宿舍电费预警'),
+                    child: boxChildImg('assets/images/NNLG.png', '宿舍电费预警'),
                     onTap: () async {
                       showDialog(
                           context: context,
@@ -156,13 +156,13 @@ class _CommunityState extends State<Community> {
                     },
                   ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
-                    child: boxChildImg('images/NNLG.png', '培养计划'),
+                    child: boxChildImg('assets/images/NNLG.png', '培养计划'),
                     onTap: () {
                       ToastUtil.show('该功能未开放');
                     },
                   ),),
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
-                    child: boxChildImg('images/NNLG.png', '成绩查询'),
+                    child: boxChildImg('assets/images/NNLG.png', '成绩查询'),
                     onTap: () {
                       CourseScoreUtil().getReportCardQueryList().then((value){
                         Navigator.of(context).push(MaterialPageRoute(builder: (builder){

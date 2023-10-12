@@ -51,7 +51,7 @@ class _Course_SharedViewState extends State<Course_SharedView> {
           children: [
             ClipOval(
               child: Image.asset(
-                'images/user.jpg',
+                'assets/images/user.jpg',
                 width: 30,
                 height: 30,
               ),

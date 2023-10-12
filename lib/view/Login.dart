@@ -63,7 +63,7 @@ class _LoginFieldState extends State<LoginField> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Center(
-          child: Image.asset('images/NNLG.png',height: 150,width: 150,),
+          child: Image.asset('assets/images/NNLG.png',height: 150,width: 150,),
         ),
         inputAccount()
         ,
@@ -225,6 +225,19 @@ class _LoginFieldState extends State<LoginField> {
               ),
             ),
           ),
+        ),
+        Center(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("注",style: TextStyle(color: Colors.red,fontSize: 10),),
+                Text("：账号和密码均为学校教务系统账号和密码",style: TextStyle(color: Colors.grey,fontSize: 11),)
+              ],
+            ),
+          ),
         )
       ],
     );
@@ -277,7 +290,7 @@ class _LoginFieldState extends State<LoginField> {
 
   TextEditingController _inputPasswordController = TextEditingController();
   bool _seeNo_Off = true;
-  List<Widget> _seelist = [Image.asset('images/close_eye.png',height: 25,width: 25,),Image.asset('images/open_eye.png',height: 25,width: 25,)];
+  List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
   Widget inputPassword(){
 
     return Center(

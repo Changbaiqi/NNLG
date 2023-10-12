@@ -80,7 +80,7 @@ class _XiaoBei_User_MessageCardState extends State<XiaoBei_User_MessageCard> {
                             Row(
                               children: [
                                 ClipOval(
-                                  child: Image.asset('images/user.jpg',height: 80,width: 80,),
+                                  child: Image.asset('assets/images/user.jpg',height: 80,width: 80,),
                                 ),
                                 Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                   child: Column(

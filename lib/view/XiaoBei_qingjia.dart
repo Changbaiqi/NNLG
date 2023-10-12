@@ -37,7 +37,7 @@ class _XiaoBei_qjxxState extends State<XiaoBei_qjxx> {
               ),
               Container(
                 height: 45,
-                child: Image.asset('images/xiaobei_title.png',fit: BoxFit.fill,width: MediaQuery.of(context).size.width,),
+                child: Image.asset('assets/images/xiaobei_title.png',fit: BoxFit.fill,width: MediaQuery.of(context).size.width,),
               )
             ],
           ),
@@ -53,7 +53,7 @@ class _XiaoBei_qjxxState extends State<XiaoBei_qjxx> {
                         width: MediaQuery.of(context).size.width,
                         child:  Stack(
                           children: [
-                            Image.asset('images/background.png',fit: BoxFit.fill,width: MediaQuery.of(context).size.width,),
+                            Image.asset('assets/images/background.png',fit: BoxFit.fill,width: MediaQuery.of(context).size.width,),
 
                           ],
                         ),

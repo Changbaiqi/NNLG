@@ -62,7 +62,7 @@ class _Main_courseState extends State<Main_course> {
                 children: [
                   IconButton(
                     icon: Image.asset(
-                      'images/start.png',
+                      'assets/images/start.png',
                       height: 25,
                       width: 25,
                       color: Colors.black,
@@ -77,7 +77,7 @@ class _Main_courseState extends State<Main_course> {
                   ),
                   IconButton(
                     icon: Image.asset(
-                      'images/end.png',
+                      'assets/images/end.png',
                       height: 25,
                       width: 25,
                       color: Colors.black,

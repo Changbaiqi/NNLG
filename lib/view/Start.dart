@@ -39,7 +39,7 @@ class _StartState extends State<Start> {
         child: Container(
           height: 230,
           width: 230,
-          child: Image.asset('images/NNLG.png'),
+          child: Image.asset('assets/images/NNLG.png'),
         ),
       ),
     );

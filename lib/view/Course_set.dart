@@ -74,7 +74,7 @@ class _Course_setHomeState extends State<Course_setHome> {
                       children: [
                         Padding(padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
                           child: Text('${CourseData.nowCourseList}',style: TextStyle(fontSize: 14,color: Colors.black45),),),
-                        Image.asset('images/end.png',height: 17,width: 17,color: Colors.black45,)
+                        Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,)
                       ],
                     ),)
                 ],
@@ -121,7 +121,7 @@ class _Course_setHomeState extends State<Course_setHome> {
                       children: [
                         Padding(padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
                           child: Text('${CourseData.schoolOpenTime}',style: TextStyle(fontSize: 14,color: Colors.black45),),),
-                        Image.asset('images/end.png',height: 17,width: 17,color: Colors.black45,)
+                        Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,)
                       ],
                     ),)
                 ],
@@ -165,7 +165,7 @@ class _Course_setHomeState extends State<Course_setHome> {
                       children: [
                         Padding(padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
                           child: Text('${CourseData.nowWeek==0?'假期中':CourseData.nowWeek}',style: TextStyle(fontSize: 14,color: Colors.black45),),),
-                        Image.asset('images/end.png',height: 17,width: 17,color: Colors.black45,)
+                        Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,)
                       ],
                     ),)
                 ],
@@ -205,7 +205,7 @@ class _Course_setHomeState extends State<Course_setHome> {
                       children: [
                         Padding(padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
                         child: Text('${CourseData.ansWeek}',style: TextStyle(fontSize: 14,color: Colors.black45),),),
-                        Image.asset('images/end.png',height: 17,width: 17,color: Colors.black45,)
+                        Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,)
                       ],
                     ),)
                 ],
@@ -255,7 +255,7 @@ class _Course_setHomeState extends State<Course_setHome> {
                       Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child: Row(
                           children: [
-                            Image.asset('images/end.png',height: 17,width: 17,color: Colors.black45,)
+                            Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,)
                           ],
                         ),)
 

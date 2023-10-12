@@ -148,7 +148,7 @@ class _ChatInterFaceState extends State<ChatInterFace> {
               padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
               child: ClipOval(
                 child: Image.asset(
-                  'images/user.jpg',
+                  'assets/images/user.jpg',
                   height: 50,
                   width: 50,
                 ),
@@ -226,7 +226,7 @@ class _ChatInterFaceState extends State<ChatInterFace> {
               padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
               child: ClipOval(
                 child: Image.asset(
-                  'images/user.jpg',
+                  'assets/images/user.jpg',
                   height: 50,
                   width: 50,
                 ),

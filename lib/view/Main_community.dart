@@ -100,65 +100,6 @@ class _CommunityState extends State<Community> {
             ),
           ),
         ),
-        //校园卡信息
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0.0, 7.0),
-                      blurRadius: 14.0,
-                      spreadRadius: 0,
-                      color: Color(0xFFdfdfdf))
-                ]),
-            height: 260,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('卡号：'+"1231231"),
-                    Text('蒋林志')
-                  ],
-                ),),
-                Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),child: Text('￥ 10.0',style: TextStyle(fontSize: 35),),),
-                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Column(
-                  children: [
-                    Text('宿舍状态',style: TextStyle(fontSize: 20),),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('绑定宿舍：'),
-                        Text('8403'),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('宿舍电费剩余：'),
-                        Text('40￥'),
-                      ],),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('预警金额：'),
-                        Text('20￥')
-                      ],),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(onPressed: (){}, child: Text('消息卡片设置'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
-                    )
-                  ],
-                ),)
-              ],
-            ),
-          ),
-        ),
         //其他功能
         Padding(
           padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
@@ -234,6 +175,65 @@ class _CommunityState extends State<Community> {
                   ),),
                 ],
               ),
+            ),
+          ),
+        ),
+        //校园卡信息
+        Padding(
+          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0.0, 7.0),
+                      blurRadius: 14.0,
+                      spreadRadius: 0,
+                      color: Color(0xFFdfdfdf))
+                ]),
+            height: 260,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('卡号：'+"1231231"),
+                    Text('蒋林志')
+                  ],
+                ),),
+                Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),child: Text('￥ 10.0',style: TextStyle(fontSize: 35),),),
+                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Column(
+                  children: [
+                    Text('宿舍状态',style: TextStyle(fontSize: 20),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('绑定宿舍：'),
+                        Text('8403'),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('宿舍电费剩余：'),
+                        Text('40￥'),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('预警金额：'),
+                        Text('20￥')
+                      ],),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(onPressed: (){}, child: Text('消息卡片设置'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
+                    )
+                  ],
+                ),)
+              ],
             ),
           ),
         ),

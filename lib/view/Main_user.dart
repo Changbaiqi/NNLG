@@ -12,6 +12,7 @@ import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
+import 'package:nnlg/view/AboutMeView.dart';
 import 'package:nnlg/view/Course_set.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/Main.dart';
@@ -197,6 +198,7 @@ class _User_setState extends State<User_set> {
     return Container(
       child: Column(
         children: [
+          //课表设置
           Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Container(
@@ -210,31 +212,28 @@ class _User_setState extends State<User_set> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Text(
-                          '课表设置',
+                          '关于软件和作者',
                           style: TextStyle(fontSize: 15),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        child: Image.asset(
-                          'assets/images/course.png',
-                          width: 25,
-                          height: 25,
-                        ),
+                        child: SvgPicture.asset('assets/images/about.svg',width: 30,height: 30,),
                       ),
                     ],
                   ),
                   onTap: () {
-                    print('课表设置');
+                    // print('课表设置');
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (builder) {
-                      return Course_set();
+                      return AboutMeView();
                     }));
                   },
                 ),
               ),
             ),
           ),
+          //探索新版
           Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Container(
@@ -278,6 +277,7 @@ class _User_setState extends State<User_set> {
               ),
             ),
           ),
+          //退出登录
           Padding(
             padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             child: Container(
@@ -315,87 +315,6 @@ class _User_setState extends State<User_set> {
                     }));
                   },
                 ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 30),
-            child: Center(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/github.svg',
-                                width: 30,
-                                height: 30,
-                                color: Colors.grey,
-                              ),
-                              Text(
-                                'GitHub',
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/blog.svg',
-                                width: 30,
-                                height: 30,
-                                color: Colors.grey,
-                              ),
-                              Text(
-                                '博客',
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: InkWell(
-                          child: Column(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/qq.svg',
-                                width: 30,
-                                height: 30,
-                                color: Colors.grey,
-                              ),
-                              Text(
-                                'QQ',
-                                style: TextStyle(fontSize: 10, color: Colors.grey),
-                              )
-                            ],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-
-                    ],
-                  ),
-                  Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Text(
-                    'By.长白崎\n本软件为免费软件如有贩卖请勿相信\n作者QQ：2084069833',
-                    style: TextStyle(fontSize: 13, color: Colors.black45),
-                    textAlign: TextAlign.center,
-                  ),)
-                ],
               ),
             ),
           )

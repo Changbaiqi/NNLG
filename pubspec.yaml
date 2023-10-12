@@ -165,6 +165,7 @@ flutter:
     - assets/images/github.svg
     - assets/images/qq.svg
     - assets/images/blog.svg
+    - assets/images/about.svg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

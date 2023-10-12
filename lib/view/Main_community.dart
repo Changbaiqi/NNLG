@@ -11,6 +11,7 @@ import 'package:nnlg/utils/CusBehavior.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/Chitchat.dart';
 import 'package:nnlg/view/ExamInquiry.dart';
+import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/ScoreInquiry.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 
@@ -61,7 +62,7 @@ class _CommunityState extends State<Community> {
                     spreadRadius: 0,
                     color: Color(0xFFdfdfdf))
               ]),
-          height: 250,
+          height: 100,
           child: Padding(
             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
             child: Container(
@@ -99,6 +100,66 @@ class _CommunityState extends State<Community> {
             ),
           ),
         ),
+        //校园卡信息
+        Padding(
+          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+          child: Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: [
+                  BoxShadow(
+                      offset: Offset(0.0, 7.0),
+                      blurRadius: 14.0,
+                      spreadRadius: 0,
+                      color: Color(0xFFdfdfdf))
+                ]),
+            height: 260,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('卡号：'+"1231231"),
+                    Text('蒋林志')
+                  ],
+                ),),
+                Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),child: Text('￥ 10.0',style: TextStyle(fontSize: 35),),),
+                Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: Column(
+                  children: [
+                    Text('宿舍状态',style: TextStyle(fontSize: 20),),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('绑定宿舍：'),
+                        Text('8403'),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('宿舍电费剩余：'),
+                        Text('40￥'),
+                      ],),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('预警金额：'),
+                        Text('20￥')
+                      ],),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: ElevatedButton(onPressed: (){}, child: Text('消息卡片设置'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
+                    )
+                  ],
+                ),)
+              ],
+            ),
+          ),
+        ),
+        //其他功能
         Padding(
           padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
           child: Container(
@@ -122,7 +183,7 @@ class _CommunityState extends State<Community> {
                 ),
                 children: [
                   Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0)
-                  ,child: InkWell(
+                    ,child: InkWell(
                       child: boxChildSvg("assets/images/lyl.svg", '校园聊一聊'),
                       onTap: () {
                         // ToastUtil.show('该功能未开放');
@@ -172,33 +233,6 @@ class _CommunityState extends State<Community> {
                     },
                   ),),
                 ],
-              ),
-            ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: [
-                  BoxShadow(
-                      offset: Offset(0.0, 7.0),
-                      blurRadius: 14.0,
-                      spreadRadius: 0,
-                      color: Color(0xFFdfdfdf))
-                ]),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
-              child: ScrollConfiguration(
-                behavior: CusBehavior(),
-                child: Column(
-                  children: [
-                    Text(
-                        '软件作者为本校计算机系(21级)学生，软件维护需要成本。目前用爱发电。如果软件有什么bug或者啥的可以在“校园聊一聊”功能里面提案或联系作者QQ或者发送邮箱：2084069833。因为目前软件源码没人继承维护，所以等软件作者毕业后或许将不再维护。服务器一旦停止运行有些功能将会不能使用（课表和打水功能等核心功能还能使用，这个不用担心）。')
-                  ],
-                ),
               ),
             ),
           ),

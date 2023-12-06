@@ -73,7 +73,7 @@ class _WaterChargeState extends State<WaterCharge> {
                 child: Column(
                   children: [
                     InkWell(
-                      child: QrImage(
+                      child: QrImageView(
                         data: "http://wx.happy-ti.com/wxpay/scanqrcode/addvalue.html?saler=${WaterData.waterSaler}&app=WECHAT&card_number=${WaterData.cardNum}&userid=18378099595&openid=${WaterData.waterAccount}"
                         ,size: 300
                         ,embeddedImage: AssetImage("images/NNLG.png"),),

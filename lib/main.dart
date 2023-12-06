@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/view/Start.dart';
+import 'package:nnlg/view/router/AppPages.dart';
+import 'package:nnlg/view/router/Routes.dart';
+import 'package:nnlg/view/start_view/view.dart';
 
 void main(){
  return runApp(MyApp());
@@ -13,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: Start(),
+      initialRoute: Routes.Start,
+      getPages: AppPages.pages
     );
   }
 }

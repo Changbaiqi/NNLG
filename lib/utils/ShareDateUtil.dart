@@ -109,7 +109,7 @@ class ShareDateUtil{
   setRememberAccountAndPassword(bool isRemember) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('rememberAccountAndPassword', isRemember).then((c){
-      LoginData.rememberAccountAndPassword = isRemember;
+      LoginData.rememberAccountAndPassword.value = isRemember;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -119,7 +119,7 @@ class ShareDateUtil{
   Future<bool> getRememberAccountAndPassword() async {
     final prefs = await SharedPreferences.getInstance();
     bool? rememberAccountAndPassword = await prefs.getBool('rememberAccountAndPassword');
-    LoginData.rememberAccountAndPassword = rememberAccountAndPassword??false;
+    LoginData.rememberAccountAndPassword.value = rememberAccountAndPassword??false;
     return rememberAccountAndPassword??false;
   }
 
@@ -128,7 +128,7 @@ class ShareDateUtil{
   setAutoLogin(bool isAutoLogin) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isAutoLogin', isAutoLogin).then((c){
-       LoginData.autoLogin = isAutoLogin;
+       LoginData.autoLogin.value = isAutoLogin;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -138,7 +138,7 @@ class ShareDateUtil{
   Future<bool> getAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     bool? isAutoLogin = await prefs.getBool('isAutoLogin');
-    LoginData.autoLogin = isAutoLogin??false;
+    LoginData.autoLogin.value = isAutoLogin??false;
     return isAutoLogin??false;
   }
 

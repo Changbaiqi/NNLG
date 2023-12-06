@@ -44,13 +44,10 @@ class LoginField extends StatefulWidget {
 }
 
 class _LoginFieldState extends State<LoginField> {
-  //String _account="";
-  //String _password="";
-
 
   @override
   void initState() {
-    if(LoginData.rememberAccountAndPassword){
+    if(LoginData.rememberAccountAndPassword.value){
       _inputAccountController.text = LoginData.account;
       _inputPasswordController.text = LoginData.password;
     }
@@ -80,32 +77,32 @@ class _LoginFieldState extends State<LoginField> {
                   InkWell(
                     child: Row(
                       children: [
-                        Checkbox(value: LoginData.rememberAccountAndPassword, onChanged: (v){
+                        Checkbox(value: LoginData.rememberAccountAndPassword.value, onChanged: (v){
                           setState((){
-                            LoginData.rememberAccountAndPassword=(!LoginData.rememberAccountAndPassword);
+                            LoginData.rememberAccountAndPassword.value=(!LoginData.rememberAccountAndPassword.value);
                           });
-                          ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword);
+                          ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword.value);
                         }),
                         Text('记住账号密码')
                       ],
                     ),
                     onTap: () {
                       setState((){
-                        LoginData.rememberAccountAndPassword = !LoginData.rememberAccountAndPassword;
+                        LoginData.rememberAccountAndPassword.value = !LoginData.rememberAccountAndPassword.value;
                       });
-                      ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword);
+                      ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword.value);
                     },
                   ),
 
                   InkWell(
                     child: Row(
                       children: [
-                        Checkbox(value: LoginData.autoLogin, onChanged: (v){
+                        Checkbox(value: LoginData.autoLogin.value, onChanged: (v){
 
                           setState((){
-                            LoginData.autoLogin=(!LoginData.autoLogin);
+                            LoginData.autoLogin.value=(!LoginData.autoLogin.value);
                           });
-                          ShareDateUtil().setAutoLogin(LoginData.autoLogin);
+                          ShareDateUtil().setAutoLogin(LoginData.autoLogin.value);
 
                         }),
                         Text('自动登录')
@@ -113,9 +110,9 @@ class _LoginFieldState extends State<LoginField> {
                     ),
                     onTap: (){
                       setState((){
-                        LoginData.autoLogin=(!LoginData.autoLogin);
+                        LoginData.autoLogin.value=(!LoginData.autoLogin.value);
                       });
-                      ShareDateUtil().setAutoLogin(LoginData.autoLogin);
+                      ShareDateUtil().setAutoLogin(LoginData.autoLogin.value);
                     },
                   )
 
@@ -164,7 +161,7 @@ class _LoginFieldState extends State<LoginField> {
                     LoginUtil().LoginPost(value).then((value){
                       if(value==302){
                         ToastUtil.show('登录成功');
-                        if(LoginData.rememberAccountAndPassword) {
+                        if(LoginData.rememberAccountAndPassword.value) {
                           ShareDateUtil().setLoginAccount(_inputAccountController.text);
                           ShareDateUtil().setLoginPassword(_inputPasswordController.text);
 

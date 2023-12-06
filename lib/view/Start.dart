@@ -10,7 +10,6 @@ import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/Login.dart';
 import 'package:nnlg/view/Main.dart';
-import 'package:nnlg/view/module/showUpdateDialog.dart';
 
 import '../dao/ContextData.dart';
 import '../utils/MainUserUtil.dart';
@@ -55,7 +54,7 @@ class _StartState extends State<Start> {
      ShareDateUtil().initLoading().then((value) async {
       //print('${CourseData.nowWeek}');
 
-      if(LoginData.autoLogin && LoginData.account.isNotEmpty && LoginData.password.isNotEmpty ){
+      if(LoginData.autoLogin.value && LoginData.account.isNotEmpty && LoginData.password.isNotEmpty ){
 
 
         //自动登录用的

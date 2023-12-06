@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/view/start_view/binding.dart';
 
 import 'logic.dart';
 
@@ -19,6 +20,7 @@ class StartViewPage extends StatelessWidget {
           child: Image.asset('assets/images/NNLG.png'),
         ),
       ),
-    );;
+    );
   }
+
 }

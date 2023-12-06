@@ -38,8 +38,8 @@ dependencies:
   #扫描二维码
   scan: ^1.6.0
   qr_code_scanner: ^1.0.1
-  flutter_hms_scan_kit: ^1.0.4
-  qr_flutter: ^4.0.0 #二维码生成
+  flutter_hms_scan_kit: ^1.1.2 #华为的扫码
+  qr_flutter: ^4.1.0 #二维码生成
   path_provider: ^2.0.11 #获取文件目录使用
   image_gallery_saver: ^1.7.1 #保存图片使用
   image_picker: ^0.8.6 #本地图片选择

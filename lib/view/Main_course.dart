@@ -236,7 +236,7 @@ class Course_ListState extends State<Course_List> {
       //_pageController.animateToPage(_nowIndex, duration: Duration(milliseconds: 500), curve: Curves.easeInOutQuart);
     });
 
-    print('测试加载');
+    // print('测试加载');
   }
 
   //每一周的表格显示的滑动父窗口
@@ -325,11 +325,11 @@ class Course_ListState extends State<Course_List> {
       for (int x = 0; x < json.length; ++x) {
         if (i == 6) {
           debugPrint("这是第${x + 1}周");
-          debugPrint("${json[x]}");
+          // debugPrint("${json[x]}");
         }
 
         for (int y = 0; y < json[x].length; ++y) {
-          print(json[x][y]);
+          // print(json[x][y]);
           //判断是否为空课
           for (int z = 0; z < json[x][y].length; ++z) {
             //添加授课时间json

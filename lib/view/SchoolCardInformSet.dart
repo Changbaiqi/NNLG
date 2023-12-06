@@ -11,6 +11,13 @@ class SchoolCardInformSet extends StatefulWidget {
 class _SchoolCardInformSetState extends State<SchoolCardInformSet> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('消息卡片设置'),
+      ),
+      body: Column(
+        children: [],
+      ),
+    );
   }
 }

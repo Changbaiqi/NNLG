@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nnlg/view/Course_set.dart';
@@ -10,6 +9,7 @@ import 'package:nnlg/view/module/showNoticeDialog.dart';
 import 'package:nnlg/view/module/showUpdateDialog.dart';
 
 import '../utils/AccountUtil.dart';
+import '../utils/edusys/Account.dart';
 
 
 class Main extends StatefulWidget {
@@ -105,39 +105,6 @@ class _MainState extends State<Main> {
           ),
         ),
       ),
-      // bottomNavigationBar: Padding(
-      //   padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-      //   child: Container(
-      //     decoration: BoxDecoration(
-      //       borderRadius: BorderRadius.all(Radius.circular(500)),
-      //       color: Colors.white,
-      //       boxShadow: [
-      //         BoxShadow(
-      //           color: Colors.black54,
-      //           blurRadius: 70,
-      //           spreadRadius: 1,
-      //           offset: Offset(0, 40)
-      //         )
-      //       ]
-      //     ),
-      //     child: BottomNavigationBar(
-      //       backgroundColor: Colors.transparent,
-      //       elevation: 0,
-      //       currentIndex: _index,
-      //       showUnselectedLabels: true,
-      //       type: BottomNavigationBarType.fixed,
-      //       selectedItemColor: Colors.blue,
-      //       unselectedItemColor: Colors.black,
-      //       onTap: (c){
-      //         setState((){
-      //           _index = c;
-      //
-      //         });
-      //       },
-      //       items: _itemList,
-      //     ),
-      //   ),
-      // ),
     );
   }
 

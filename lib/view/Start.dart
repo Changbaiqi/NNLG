@@ -15,6 +15,7 @@ import 'package:nnlg/view/module/showUpdateDialog.dart';
 import '../dao/ContextData.dart';
 import '../utils/MainUserUtil.dart';
 import '../utils/ToastUtil.dart';
+import '../utils/edusys/Account.dart';
 import 'Main_course.dart';
 
 class Start extends StatefulWidget {

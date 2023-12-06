@@ -12,6 +12,7 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/Chitchat.dart';
 import 'package:nnlg/view/ExamInquiry.dart';
 import 'package:nnlg/view/Main.dart';
+import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/ScoreInquiry.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 
@@ -201,7 +202,16 @@ class _CommunityState extends State<Community> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('卡号：'+"1231231"),
-                    Text('蒋林志')
+                    Text('蒋林志'),
+                    Container(
+                      width: 60,
+                      height: 20,
+                      child: ElevatedButton(onPressed: (){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (builder){
+                          return SchoolCardInformSet();
+                        }));
+                      }, child: Text('设置',style: TextStyle(fontSize: 12),),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
+                    )
                   ],
                 ),),
                 Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),child: Text('￥ 10.0',style: TextStyle(fontSize: 35),),),
@@ -218,7 +228,7 @@ class _CommunityState extends State<Community> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('宿舍电费剩余：'),
+                        Text('宿舍电费：'),
                         Text('40￥'),
                       ],),
                     Row(
@@ -229,7 +239,9 @@ class _CommunityState extends State<Community> {
                       ],),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      child: ElevatedButton(onPressed: (){}, child: Text('消息卡片设置'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
+                      child: ElevatedButton(onPressed: (){
+
+                      }, child: Text('刷新卡片信息'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.blueGrey)),),
                     )
                   ],
                 ),)

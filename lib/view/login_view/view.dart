@@ -1,64 +1,32 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
+import 'package:nnlg/utils/AccountUtil.dart';
+import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/LoginUtil.dart';
+import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:nnlg/utils/edusys/Account.dart';
 import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/Main_user.dart';
 
-import '../dao/ContextData.dart';
-import '../dao/CourseData.dart';
-import '../utils/AccountUtil.dart';
-import '../utils/CourseUtil.dart';
-import '../utils/MainUserUtil.dart';
-import '../utils/edusys/Account.dart';
-import 'Main_course.dart';
+import 'logic.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LoginViewPage extends StatelessWidget {
+  LoginViewPage({Key? key}) : super(key: key);
 
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: LoginField(),
-    );
-
-  }
-}
-
-
-class LoginField extends StatefulWidget {
-  const LoginField({Key? key}) : super(key: key);
-
-  @override
-  State<LoginField> createState() => _LoginFieldState();
-}
-
-class _LoginFieldState extends State<LoginField> {
-  //String _account="";
-  //String _password="";
-
-
-  @override
-  void initState() {
-    if(LoginData.rememberAccountAndPassword){
-      _inputAccountController.text = LoginData.account;
-      _inputPasswordController.text = LoginData.password;
-    }
-
-  }
+  final logic = Get.find<LoginViewLogic>();
+  final state = Get.find<LoginViewLogic>().state;
 
   @override
   Widget build(BuildContext context) {
+
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -81,18 +49,15 @@ class _LoginFieldState extends State<LoginField> {
                     child: Row(
                       children: [
                         Checkbox(value: LoginData.rememberAccountAndPassword, onChanged: (v){
-                          setState((){
-                            LoginData.rememberAccountAndPassword=(!LoginData.rememberAccountAndPassword);
-                          });
+                          LoginData.rememberAccountAndPassword=(!LoginData.rememberAccountAndPassword);
                           ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword);
                         }),
                         Text('记住账号密码')
                       ],
                     ),
                     onTap: () {
-                      setState((){
+
                         LoginData.rememberAccountAndPassword = !LoginData.rememberAccountAndPassword;
-                      });
                       ShareDateUtil().setRememberAccountAndPassword(LoginData.rememberAccountAndPassword);
                     },
                   ),
@@ -102,9 +67,8 @@ class _LoginFieldState extends State<LoginField> {
                       children: [
                         Checkbox(value: LoginData.autoLogin, onChanged: (v){
 
-                          setState((){
                             LoginData.autoLogin=(!LoginData.autoLogin);
-                          });
+
                           ShareDateUtil().setAutoLogin(LoginData.autoLogin);
 
                         }),
@@ -112,9 +76,9 @@ class _LoginFieldState extends State<LoginField> {
                       ],
                     ),
                     onTap: (){
-                      setState((){
+
                         LoginData.autoLogin=(!LoginData.autoLogin);
-                      });
+
                       ShareDateUtil().setAutoLogin(LoginData.autoLogin);
                     },
                   )
@@ -133,9 +97,9 @@ class _LoginFieldState extends State<LoginField> {
               child: ElevatedButton(
                 child: Text('登录'),
                 style: ButtonStyle(
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20)))
-                  )
+                    shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20)))
+                    )
                 ),
                 onPressed: (){
                   new Account("21060231", "3838438778*ABCab").toLogin().then((value) {
@@ -149,7 +113,7 @@ class _LoginFieldState extends State<LoginField> {
                   });
                   //print('${_inputAccountController.text}');
                   //print('${_inputPasswordController.text}');
-                  if(_inputAccountController.text.isEmpty || _inputAccountController.text.isEmpty){
+                  if(state.inputAccountController.value.text.isEmpty || state.inputAccountController.value.text.isEmpty){
                     ToastUtil.show('请输入正确的账号或密码！');
                     return;
                   }
@@ -157,75 +121,75 @@ class _LoginFieldState extends State<LoginField> {
 
 
 
-                  LoginUtil.turnSubmit(_inputAccountController.text.toString(),_inputPasswordController.text).then((value){
-                    //debugPrint(value);
+                    LoginUtil.turnSubmit(state.inputAccountController.value.text.toString(),state.inputPasswordController.value.text).then((value){
+                      //debugPrint(value);
 
                       //记住账号密码
-                    LoginUtil().LoginPost(value).then((value){
-                      if(value==302){
-                        ToastUtil.show('登录成功');
-                        if(LoginData.rememberAccountAndPassword) {
-                          ShareDateUtil().setLoginAccount(_inputAccountController.text);
-                          ShareDateUtil().setLoginPassword(_inputPasswordController.text);
+                      LoginUtil().LoginPost(value).then((value){
+                        if(value==302){
+                          ToastUtil.show('登录成功');
+                          if(LoginData.rememberAccountAndPassword) {
+                            ShareDateUtil().setLoginAccount(state.inputAccountController.value.text);
+                            ShareDateUtil().setLoginPassword(state.inputPasswordController.value.text);
 
-                        }
+                          }
 
-                        //用于获取账户信息并且存储到本地
-                        AccountUtil().getAccountPersonalInformation().then((value) async {
-                          print('${jsonDecode(value)['id']}');
+                          //用于获取账户信息并且存储到本地
+                          AccountUtil().getAccountPersonalInformation().then((value) async {
+                            print('${jsonDecode(value)['id']}');
 
-                          await Future.wait([
-                            ShareDateUtil().setAccountStudentID(jsonDecode(value)['id']),
-                            ShareDateUtil().setAccountStudentName(jsonDecode(value)['name']),
-                            ShareDateUtil().setAccountStudentMajor(jsonDecode(value)['major'])
-                          ]).then((value){
-                            //以上数据获取完后外部调用刷新界面
-                            user_messageState?.updateNull();
-                            //if(value!=null && (value is List)){
+                            await Future.wait([
+                              ShareDateUtil().setAccountStudentID(jsonDecode(value)['id']),
+                              ShareDateUtil().setAccountStudentName(jsonDecode(value)['name']),
+                              ShareDateUtil().setAccountStudentMajor(jsonDecode(value)['major'])
+                            ]).then((value){
+                              //以上数据获取完后外部调用刷新界面
+                              user_messageState?.updateNull();
+                              //if(value!=null && (value is List)){
 
-                            //}
-                          });
+                              //}
+                            });
 
-                          CourseUtil().getSemesterCourseList().then((value){
-                            //print('${CourseData.semesterCourseList[0]}');
-                            //print('${value[0]}');
-                            //如果以及寄存了课表的日期那么久直接返回
-                            if(CourseData.nowCourseList!=null && CourseData.nowCourseList!="")
-                              return;
+                            CourseUtil().getSemesterCourseList().then((value){
+                              //print('${CourseData.semesterCourseList[0]}');
+                              //print('${value[0]}');
+                              //如果以及寄存了课表的日期那么久直接返回
+                              if(CourseData.nowCourseList!=null && CourseData.nowCourseList!="")
+                                return;
 
                               ShareDateUtil().setNowCourseList(value[0]);
+                            });
+
+                            //这个使用服务器功能的登录
+                            await MainUserUtil()
+                                .vipLogin('${LoginData.account}',
+                                '${LoginData.password}')
+                                .then((value) {
+                              if (value["code"] == 400) {
+                                ToastUtil.show('${value["msg"]}');
+                                return;
+                              }
+
+                              if (value["code"] == 200) {
+                                ContextDate.ContextVIPTken = value["token"];
+                              }
+                            });
+
+                            Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (builder){
+                                  return Main();
+                                }));
                           });
 
-                          //这个使用服务器功能的登录
-                          await MainUserUtil()
-                              .vipLogin('${LoginData.account}',
-                              '${LoginData.password}')
-                              .then((value) {
-                            if (value["code"] == 400) {
-                              ToastUtil.show('${value["msg"]}');
-                              return;
-                            }
-
-                            if (value["code"] == 200) {
-                              ContextDate.ContextVIPTken = value["token"];
-                            }
-                          });
-
-                          Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (builder){
-                                return Main();
-                              }));
-                        });
 
 
 
+                        }else{
+                          ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
+                        }
+                      });
 
-                      }else{
-                        ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
-                      }
                     });
-
-                  });
                   }catch(e){
                     print(e);
                   }
@@ -253,7 +217,9 @@ class _LoginFieldState extends State<LoginField> {
   }
 
 
-  TextEditingController _inputAccountController = TextEditingController();
+
+
+
   Widget inputAccount(){
     return Center(
       child: Padding(
@@ -264,7 +230,7 @@ class _LoginFieldState extends State<LoginField> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: _inputAccountController,
+                  controller: state.inputAccountController.value,
                   style: TextStyle(
                     fontSize: 14,
                   ),
@@ -283,7 +249,7 @@ class _LoginFieldState extends State<LoginField> {
                         )
                     ),
                   ),
-                /*onChanged: (account){
+                  /*onChanged: (account){
                   _account = account;
                 },*/),
               ),
@@ -297,7 +263,6 @@ class _LoginFieldState extends State<LoginField> {
   }
 
 
-  TextEditingController _inputPasswordController = TextEditingController();
   bool _seeNo_Off = true;
   List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
   Widget inputPassword(){
@@ -311,7 +276,7 @@ class _LoginFieldState extends State<LoginField> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: _inputPasswordController,
+                  controller: state.inputPasswordController.value,
                   obscureText: _seeNo_Off,
                   maxLines: 1,
                   style: TextStyle(
@@ -328,11 +293,7 @@ class _LoginFieldState extends State<LoginField> {
                     ),
                     suffixIcon: IconButton(
                         onPressed: (){
-                          setState(
-                              (){
-                                _seeNo_Off = !_seeNo_Off;
-                              }
-                          );
+                          _seeNo_Off = !_seeNo_Off;
                         },
                         icon: _seelist[_seeNo_Off ? 0 : 1]),
                     focusedBorder: OutlineInputBorder(
@@ -354,11 +315,4 @@ class _LoginFieldState extends State<LoginField> {
 
   }
 
-
-
-
 }
-
-
-
-

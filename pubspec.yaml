@@ -31,6 +31,7 @@ dependencies:
     sdk: flutter
   #flutter_pickers: ^2.1.9
   dio: ^4.0.6 #网络请求
+  get: ^4.6.5
   shared_preferences: ^2.0.15 #用来存储配置文件用的
   fluttertoast: ^8.0.9 #Toast提示使用
   flutter_update_dialog: ^2.0.0 #弹窗提示插件，一般用来整更新弹窗

@@ -1,5 +1,7 @@
 
 import 'package:get/get.dart';
+import 'package:nnlg/view/about_me_view/binding.dart';
+import 'package:nnlg/view/about_me_view/view.dart';
 import 'package:nnlg/view/login_view/binding.dart';
 import 'package:nnlg/view/login_view/view.dart';
 import 'package:nnlg/view/main_community_view/binding.dart';
@@ -25,6 +27,7 @@ abstract class AppPages{
     GetPage(name: Routes.MainUser, page: ()=>MainUserViewPage(),binding: MainUserViewBinding()),
     GetPage(name: Routes.MainCourse, page: ()=>MainCourseViewPage(),binding: MainCourseViewBinding()),
     GetPage(name: Routes.MainWater, page: ()=>MainWaterViewPage(),binding: MainWaterViewBinding()),
-    GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() )
+    GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),
+    GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),
   ];
 }

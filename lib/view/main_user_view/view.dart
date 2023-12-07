@@ -171,10 +171,7 @@ class MainUserViewPage extends StatelessWidget {
                           ),
                           onTap: () {
                             // print('课表设置');
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (builder) {
-                              return AboutMeView();
-                            }));
+                            Get.toNamed(Routes.AboutMe);
                           },
                         ),
                       ),

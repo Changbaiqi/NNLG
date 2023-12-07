@@ -14,4 +14,5 @@ class Routes{
   static const CourseSet = '/course/set';
   static const CourseShared = '/course/shared';
   static const ChitChat = '/chitchat';
+  static const AboutMe = '/aboutMe';
 }

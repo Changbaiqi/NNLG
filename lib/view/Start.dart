@@ -32,8 +32,6 @@ class _StartState extends State<Start> {
     //toLogin();
 
 
-
-
     return Scaffold(
       body: Center(
         child: Container(

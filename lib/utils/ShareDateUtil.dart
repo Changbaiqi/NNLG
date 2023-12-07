@@ -9,6 +9,7 @@ import 'package:nnlg/dao/XiaoBeiData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/XiaoBeiUserUtil.dart';
 import 'package:nnlg/view/Login.dart';
+import 'package:nnlg/view/Main_course.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dao/ContextData.dart';
@@ -60,7 +61,7 @@ class ShareDateUtil{
     await getNoticeId();
 
     //用来判断当前周数并赋值给配置变量
-    CourseData.nowWeek = CourseUtil.getNowWeek(CourseData.schoolOpenTime, CourseData.ansWeek);
+    CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
 
 
   }
@@ -302,7 +303,7 @@ class ShareDateUtil{
   Future<void> setSchoolOpenDate(String schoolOpenDate) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('schoolOpenDate', '${schoolOpenDate}').then((c){
-      CourseData.schoolOpenTime = schoolOpenDate;
+      CourseData.schoolOpenTime.value = schoolOpenDate;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -312,7 +313,7 @@ class ShareDateUtil{
   Future<String> getSchoolOpenDate() async {
     final prefs = await SharedPreferences.getInstance();
     String? schoolOpenDate = await prefs.getString('schoolOpenDate');
-    CourseData.schoolOpenTime = schoolOpenDate??"${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}";
+    CourseData.schoolOpenTime.value = schoolOpenDate??"${DateTime.now().year}/${DateTime.now().month}/${DateTime.now().day}";
     return schoolOpenDate??"";
   }
 
@@ -321,7 +322,7 @@ class ShareDateUtil{
   setSemesterWeekNum(int semesterWeekNum) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('semesterWeekNum', semesterWeekNum).then((c){
-      CourseData.ansWeek = semesterWeekNum;
+      CourseData.ansWeek.value = semesterWeekNum;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -331,7 +332,7 @@ class ShareDateUtil{
   Future<int> getSemesterWeekNum() async {
     final prefs = await SharedPreferences.getInstance();
     int? semesterWeekNum = await prefs.getInt('semesterWeekNum');
-    CourseData.ansWeek = semesterWeekNum??20;
+    CourseData.ansWeek.value = semesterWeekNum??20;
     return semesterWeekNum??20;
   }
 
@@ -341,7 +342,8 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('weekCourseList', weekCourseList).then((c){
-      CourseData.weekCourseList = weekCourseList;
+      CourseData.weekCourseList.value = weekCourseList;
+      CourseData.weekCourseList.refresh();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -351,7 +353,9 @@ class ShareDateUtil{
   Future<List<String>> getWeekCourseList() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? weekCourseList = await prefs.getStringList('weekCourseList');
-    CourseData.weekCourseList = weekCourseList??<String>[];
+    // CourseData.weekCourseList.value = weekCourseList??<String>[];
+    CourseData.weekCourseList.value.clear();
+    CourseData.weekCourseList.value.addAll(weekCourseList??<String>[]);
     return weekCourseList??<String>[];
   }
 
@@ -362,7 +366,10 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('semesterCourseList', semesterCourseList).then((c){
-      CourseData.semesterCourseList = semesterCourseList;
+      // CourseData.semesterCourseList.value = semesterCourseList;
+      CourseData.semesterCourseList.value.clear();
+      CourseData.semesterCourseList.value.addAll(semesterCourseList);
+      CourseData.semesterCourseList.refresh();
       return semesterCourseList;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
@@ -373,7 +380,10 @@ class ShareDateUtil{
   Future<List<String>> getSemesterCourseList() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? semesterCourseList = await prefs.getStringList('semesterCourseList');
-    CourseData.semesterCourseList = semesterCourseList??<String>[];
+    // CourseData.semesterCourseList = semesterCourseList??<String>[];
+    CourseData.semesterCourseList.value.clear();
+    CourseData.semesterCourseList.value.addAll(semesterCourseList??<String>[]);
+    CourseData.semesterCourseList.refresh();
     return semesterCourseList??<String>[];
   }
 
@@ -386,7 +396,8 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setString('nowCourseList', nowCourseList).then((c){
-      CourseData.nowCourseList = nowCourseList;
+      CourseData.nowCourseList.value = nowCourseList;
+      CourseData.nowCourseList.refresh();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -396,7 +407,8 @@ class ShareDateUtil{
   Future<String> getNowCourseList() async {
     final prefs = await SharedPreferences.getInstance();
     String? nowCourseList = await prefs.getString('nowCourseList');
-    CourseData.nowCourseList = nowCourseList??"";
+    CourseData.nowCourseList.value = nowCourseList??"";
+    CourseData.nowCourseList.refresh();
     return nowCourseList??"";
   }
 
@@ -405,7 +417,10 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('courseTimeList', courseTimeList).then((c){
-      CourseData.courseTime= courseTimeList;
+      // CourseData.courseTime= courseTimeList;
+      CourseData.courseTime.value.clear();
+      CourseData.courseTime.value.addAll(courseTimeList);
+      CourseData.courseTime.refresh();
       return courseTimeList;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
@@ -416,7 +431,11 @@ class ShareDateUtil{
   Future<List<String>> getCourseTimeList() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? courseTimeList = await prefs.getStringList('courseTimeList');
-    CourseData.courseTime= courseTimeList == null? CourseData.courseTime : courseTimeList;
+    if(courseTimeList!=null){
+      CourseData.courseTime.value.clear();
+      CourseData.courseTime.value.addAll(courseTimeList);
+      CourseData.courseTime.refresh();
+    }
     return courseTimeList??<String>[];
   }
 

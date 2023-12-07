@@ -8,8 +8,6 @@ import 'package:nnlg/dao/WeekDayForm.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
-import 'package:nnlg/view/Course_Shared.dart';
-import 'package:nnlg/view/module/showCourseSharedSelectDialog.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 
 class Main_course extends StatefulWidget {
@@ -44,7 +42,7 @@ class _Main_courseState extends State<Main_course> {
   }
 
   Future<void> _onRefresh() async {
-    await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList}");
+    await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}");
     ToastUtil.show('同步完毕');
   }
 
@@ -179,10 +177,10 @@ class Course_ListState extends State<Course_List> {
   );
 
   //用于寄存当前所在的周数，便于重新加载页面的时候跳转到此
-  static int _nowIndex = CourseData.nowWeek - 1;
+  static int _nowIndex = CourseData.nowWeek.value - 1;
 
   final PageController _pageController = PageController(
-    initialPage: CourseData.nowWeek - 1,
+    initialPage: CourseData.nowWeek.value - 1,
   );
 
   //课表显示的列表
@@ -307,9 +305,9 @@ class Course_ListState extends State<Course_List> {
     // print(allList);
     //开学时间
     DateTime startSchoolTime = DateTime(
-        int.parse(CourseData.schoolOpenTime.split('/')[0]),
-        int.parse(CourseData.schoolOpenTime.split('/')[1]),
-        int.parse(CourseData.schoolOpenTime.split('/')[2]));
+        int.parse(CourseData.schoolOpenTime.value.split('/')[0]),
+        int.parse(CourseData.schoolOpenTime.value.split('/')[1]),
+        int.parse(CourseData.schoolOpenTime.value.split('/')[2]));
 
     //临时存储courseWeek列表变量
     List<Widget> _resCourseWeek = [];
@@ -358,7 +356,7 @@ class Course_ListState extends State<Course_List> {
       viewPageVar = viewPage();
     });
 
-    ShareDateUtil().setWeekCourseList(CourseData.weekCourseList);
+    ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
   }
 
   //用于刷新列表控件用的

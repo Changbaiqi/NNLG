@@ -150,7 +150,7 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
     loadingWidgetList();
     WidgetsBinding.instance
         .addPostFrameCallback((timeStamp) {
-          _resNowChoosewidget = getIndex(CourseData.nowCourseList);
+          _resNowChoosewidget = getIndex(CourseData.nowCourseList.value);
           _chooseController.animateToItem( _resNowChoosewidget, duration: Duration(milliseconds: 500), curve: Curves.easeInOutQuart);
     });
     

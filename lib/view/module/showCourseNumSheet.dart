@@ -138,7 +138,7 @@ class _showCourseNumSheetMainState extends State<showCourseNumSheetMain> {
 
   initCourseNumChoose(){
 
-    _controller.animateToItem(CourseData.ansWeek-17, duration: Duration(milliseconds: 500), curve: Curves.easeInOutQuart);
+    _controller.animateToItem(CourseData.ansWeek.value-17, duration: Duration(milliseconds: 500), curve: Curves.easeInOutQuart);
 
   }
 

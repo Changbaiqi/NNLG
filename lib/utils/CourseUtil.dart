@@ -1,16 +1,12 @@
 
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
 
-import '../view/Main_course.dart';
 
 class CourseUtil{
 
@@ -83,7 +79,7 @@ class CourseUtil{
 
     //暂时寄存
     List<String> resWeekCourseList = [];
-    for(int week =1 ; week <= CourseData.ansWeek ; ++week){
+    for(int week =1 ; week <= CourseData.ansWeek.value ; ++week){
 
 
       Response response = await Dio(_options).request(
@@ -110,9 +106,9 @@ class CourseUtil{
     }
     //直接替换
     CourseData.weekCourseList.clear();
-    CourseData.weekCourseList=resWeekCourseList;
+    CourseData.weekCourseList.value=resWeekCourseList;
     //存储到本地，将最新课表数据
-    ShareDateUtil().setWeekCourseList(CourseData.weekCourseList);
+    ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
 
 
 
@@ -124,7 +120,6 @@ class CourseUtil{
 
   //从官网拉取学期课表的列表
   Future<dynamic> getSemesterCourseList() async {
-
     Response response = await Dio(_options).request(
         '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(

@@ -86,7 +86,7 @@ class _Course_setHomeState extends State<Course_setHome> {
             selectNowCourseListSheet(context).show().then((value){
               if(value!=null){
                 setState((){
-                  CourseData.nowCourseList = value;
+                  CourseData.nowCourseList.value = value;
                   ShareDateUtil().setNowCourseList(value);
 
                   ToastUtil.show('正在刷新课表...');
@@ -133,9 +133,9 @@ class _Course_setHomeState extends State<Course_setHome> {
             selectDateSheet(context).show().then((value){
               if(value!=null) {
                 setState(() {
-                  CourseData.schoolOpenTime = value;
-                  CourseData.nowWeek = CourseUtil.getNowWeek(CourseData.schoolOpenTime, CourseData.ansWeek);
-                  ShareDateUtil().setSchoolOpenDate(CourseData.schoolOpenTime).then((value){
+                  CourseData.schoolOpenTime.value = value;
+                  CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
+                  ShareDateUtil().setSchoolOpenDate(CourseData.schoolOpenTime.value).then((value){
                     course_listState?.refreshAllCourseTable();
                   });//记录本地存储
                 });
@@ -215,8 +215,8 @@ class _Course_setHomeState extends State<Course_setHome> {
             showCourseNumSheet(context).show().then((value){
               if(value!=null){
                 setState((){
-                  CourseData.ansWeek = value;
-                  ShareDateUtil().setSemesterWeekNum(CourseData.ansWeek);
+                  CourseData.ansWeek.value = value;
+                  ShareDateUtil().setSemesterWeekNum(CourseData.ansWeek.value);
 
                   ToastUtil.show('正在刷新课表...');
                   course_listState?.updatePullDataAndRefresh().then((value){

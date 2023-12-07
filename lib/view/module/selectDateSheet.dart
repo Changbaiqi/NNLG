@@ -284,19 +284,19 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
     int _resnowDay = 0;
 
     for( int i = 0 ; i < _year.length ; ++i ){
-      if( CourseData.schoolOpenTime.split("/")[0] == _year[i] ){
+      if( CourseData.schoolOpenTime.value.split("/")[0] == _year[i] ){
         _resnowYear = i;
       }
     }
 
     for( int i = 0 ; i < _month.length ; ++i ){
-      if( CourseData.schoolOpenTime.split("/")[1] == _month[i] ){
+      if( CourseData.schoolOpenTime.value.split("/")[1] == _month[i] ){
         _resnowMonth = i;
       }
     }
 
     for( int i = 0 ; i < _days.length ; ++i ){
-      if( CourseData.schoolOpenTime.split("/")[2] == _days[i] ){
+      if( CourseData.schoolOpenTime.value.split("/")[2] == _days[i] ){
         _resnowDay = i;
       }
     }

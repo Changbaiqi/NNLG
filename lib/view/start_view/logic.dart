@@ -11,7 +11,6 @@ import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
-import 'package:nnlg/view/Main_course.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
 import 'state.dart';
@@ -40,9 +39,8 @@ class StartViewLogic extends GetxController {
               //进行完课表拉取后然后进行对应课表数据拉取刷新
               Future.wait([
                 CourseUtil().getSemesterCourseList(),
-                CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList}")
+                CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}")
               ]).then((value){
-                course_listState!.updateNull();
               });
 
 
@@ -93,6 +91,9 @@ class StartViewLogic extends GetxController {
     });
   }
 
+  /**
+   * 用于统计软件点击次数
+   */
   void toClick(){
     AccountUtil().toOnclickTotal();
   }

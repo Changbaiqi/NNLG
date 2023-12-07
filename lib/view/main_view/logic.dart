@@ -14,6 +14,5 @@ class MainViewLogic extends GetxController {
   }
   @override
   void onInit() {
-
   }
 }

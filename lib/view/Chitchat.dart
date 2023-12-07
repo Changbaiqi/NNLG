@@ -175,7 +175,7 @@ class _ChatInterFaceState extends State<ChatInterFace> {
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                      child: Text('${text}'),
+                      child: SelectableText('${text}'),
                     ),
                   )
                 ],
@@ -216,7 +216,7 @@ class _ChatInterFaceState extends State<ChatInterFace> {
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                      child: Text('${text}'),
+                      child: SelectableText('${text}'),
                     ),
                   )
                 ],

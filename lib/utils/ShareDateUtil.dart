@@ -148,7 +148,7 @@ class ShareDateUtil{
   setAccountHeadMode(int mode) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt('accountHeadMode', mode).then((c){
-      AccountData.headMode = mode;
+      AccountData.headMode.value = mode;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -158,7 +158,7 @@ class ShareDateUtil{
   Future<int> getAccountHeadMode() async {
     final prefs = await SharedPreferences.getInstance();
     int? mode = await prefs.getInt('accountHeadMode');
-    AccountData.headMode = mode??0;
+    AccountData.headMode.value = mode??0;
     return mode??0;
   }
 
@@ -167,7 +167,7 @@ class ShareDateUtil{
   setAccountHeadQQ(String qq) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('accountHeadQQ', qq).then((c){
-      AccountData.head_qq = qq;
+      AccountData.head_qq.value = qq;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -177,7 +177,7 @@ class ShareDateUtil{
   Future<String> getAccountHeadQQ() async {
     final prefs = await SharedPreferences.getInstance();
     String? qq = await prefs.getString('accountHeadQQ');
-    AccountData.head_qq = qq??"2084069833";
+    AccountData.head_qq.value = qq??"2084069833";
     return qq??"2084069833";
   }
 
@@ -185,7 +185,7 @@ class ShareDateUtil{
   setAccountHeadFilePath(String filePath)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('accountHeadFilePath', filePath).then((c){
-      AccountData.head_filePath= filePath;
+      AccountData.head_filePath.value= filePath;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }
@@ -194,7 +194,7 @@ class ShareDateUtil{
   Future<String> getAccountHeadFilePath() async {
     final prefs = await SharedPreferences.getInstance();
     String? path = await prefs.getString('accountHeadFilePath');
-    AccountData.head_filePath = path??"";
+    AccountData.head_filePath.value = path??"";
     return path??"";
   }
 

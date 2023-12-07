@@ -135,15 +135,6 @@ class _LoginFieldState extends State<LoginField> {
                   )
                 ),
                 onPressed: (){
-                  new Account("21060231", "3838438778*ABCab").toLogin().then((value) {
-                    print(value.session);
-                    // value.getCourseList('2023-2024-1', 1).then((value){
-                    //   print(value);
-                    // });
-                    // value.getAccountInfo().then((value){
-                    //   debugPrint(value);
-                    // });
-                  });
                   //print('${_inputAccountController.text}');
                   //print('${_inputPasswordController.text}');
                   if(_inputAccountController.text.isEmpty || _inputAccountController.text.isEmpty){

@@ -14,6 +14,7 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/edusys/Account.dart';
 import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/Main_user.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
 
@@ -101,19 +102,10 @@ class LoginViewPage extends StatelessWidget {
                       )
                   ),
                   onPressed: (){
-                    new Account("21060231", "3838438778*ABCab").toLogin().then((value) {
-                      print(value.session);
-                      // value.getCourseList('2023-2024-1', 1).then((value){
-                      //   print(value);
-                      // });
-                      // value.getAccountInfo().then((value){
-                      //   debugPrint(value);
-                      // });
-                    });
-                    //print('${_inputAccountController.text}');
-                    //print('${_inputPasswordController.text}');
+
                     if(state.inputAccountController.value.text.isEmpty || state.inputAccountController.value.text.isEmpty){
-                      ToastUtil.show('请输入正确的账号或密码！');
+                      // ToastUtil.show('请输入正确的账号或密码！');
+
                       return;
                     }
                     try{
@@ -126,11 +118,11 @@ class LoginViewPage extends StatelessWidget {
                         //记住账号密码
                         LoginUtil().LoginPost(value).then((value){
                           if(value==302){
-                            ToastUtil.show('登录成功');
+                            // ToastUtil.show('登录成功');
+                            Get.snackbar("登录提示", "登录成功",duration: Duration(milliseconds: 1500),);
                             if(LoginData.rememberAccountAndPassword.value) {
                               ShareDateUtil().setLoginAccount(state.inputAccountController.value.text);
                               ShareDateUtil().setLoginPassword(state.inputPasswordController.value.text);
-
                             }
 
                             //用于获取账户信息并且存储到本地
@@ -143,17 +135,14 @@ class LoginViewPage extends StatelessWidget {
                                 ShareDateUtil().setAccountStudentMajor(jsonDecode(value)['major'])
                               ]).then((value){
                                 //以上数据获取完后外部调用刷新界面
-                                user_messageState?.updateNull();
-                                //if(value!=null && (value is List)){
 
-                                //}
                               });
-
+                              //课程学期列表获取
                               CourseUtil().getSemesterCourseList().then((value){
                                 //print('${CourseData.semesterCourseList[0]}');
                                 //print('${value[0]}');
                                 //如果以及寄存了课表的日期那么久直接返回
-                                if(CourseData.nowCourseList!=null && CourseData.nowCourseList!="")
+                                if(CourseData.nowCourseList.value!=null && CourseData.nowCourseList.value!="")
                                   return;
 
                                 ShareDateUtil().setNowCourseList(value[0]);
@@ -174,17 +163,12 @@ class LoginViewPage extends StatelessWidget {
                                 }
                               });
 
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(builder: (builder){
-                                    return Main();
-                                  }));
+                              Get.offNamed(Routes.Main);
                             });
 
-
-
-
                           }else{
-                            ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
+                            // ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
+                            Get.snackbar("登录提示", "登录失败，请检查一下账号或密码是否正确",duration: Duration(milliseconds: 1500),);
                           }
                         });
 

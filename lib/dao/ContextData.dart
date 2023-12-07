@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 
 class ContextDate{
 
@@ -12,6 +13,6 @@ class ContextDate{
   static String ContextCookie = '';
   static String ContextVIPTken = '';
 
-  static ValueNotifier<int> onLineTotalCount = ValueNotifier<int>(0); //数据监听器
+  static final onLineTotalCount = 0.obs; //数据监听器
 
 }

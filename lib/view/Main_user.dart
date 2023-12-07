@@ -115,7 +115,7 @@ class User_MessageState extends State<User_Message> {
                                       },
                                     )
                                   : Image.file(
-                                      File(AccountData.head_filePath),
+                                      File(AccountData.head_filePath.value),
                                       height: 130,
                                       width: 130,
                                     )),

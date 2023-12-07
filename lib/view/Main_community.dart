@@ -76,7 +76,7 @@ class _CommunityState extends State<Community> {
                       children: [
                         Text('在线人数'),
                         ValueListenableBuilder<int>(
-                          valueListenable: ContextDate.onLineTotalCount,
+                          valueListenable: ValueNotifier<int>(ContextDate.onLineTotalCount.value),
                           builder:
                               (BuildContext context, int value, Widget? child) {
                             return Text('${value}',

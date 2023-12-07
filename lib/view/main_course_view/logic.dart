@@ -25,7 +25,6 @@ class MainCourseViewLogic extends GetxController {
     initialPage: CourseData.nowWeek.value - 1,
   );
 
-
   updateTitle(String text) {
     state.title.value = text;
   }
@@ -42,12 +41,12 @@ class MainCourseViewLogic extends GetxController {
         duration: Duration(milliseconds: 900), curve: Curves.ease);
   }
 
-
   //刷新课表
   Future<void> onRefresh() async {
-    await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}");
-    Get.snackbar("课表通知", "同步完毕",duration: Duration(milliseconds: 1500),);
+    await CourseUtil()
+        .getAllCourseWeekList("${CourseData.nowCourseList.value}");
   }
+
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
@@ -119,50 +118,53 @@ class MainCourseViewLogic extends GetxController {
     }
   }
 
-
   //表格内每一项的组件
-  Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,{Color? color}) {
+  Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,
+      {Color? color}) {
     return courseJSON.length == 0
         ? Center(
-      child: Text(
-        '无课',
-        style: TextStyle(fontSize: 12),
-      ),
-    )
-        : Container(
-      child: Padding(
-        padding: EdgeInsets.all(2.5),
-        child: Container(
-          decoration: new BoxDecoration(
-            //背景
-            color: Color.fromARGB(
-                (dateTime.month == DateTime.now().month) &&
-                    (dateTime.day == DateTime.now().day)
-                    ? 130
-                    : 30,
-                59,
-                52,
-                86),
-            //设置四周圆角 角度
-            borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            //设置四周边框
-            border: new Border.all(
-                width: 1, color: Color.fromARGB(80, 59, 52, 86)),
-          ),
-          child: InkWell(
             child: Text(
-              '${courseJSON.length>1? "有多门课程同时进行，点击查看详细":courseJSON[0]['courseName']}',
-              style: TextStyle(fontSize: 12,color: courseJSON.length>1?Colors.red:Colors.black),
+              '无课',
+              style: TextStyle(fontSize: 12),
             ),
-            onTap: () {
-              //ToastUtil.show('${courseJSON['courseName']}');
-              //debugPrint(courseJSON.toString());
-              showCourseTableMessage(context).show(courseJSON, dateTime);
-            },
-          ),
-        ),
-      ),
-    );
+          )
+        : Container(
+            child: Padding(
+              padding: EdgeInsets.all(2.5),
+              child: Container(
+                decoration: new BoxDecoration(
+                  //背景
+                  color: Color.fromARGB(
+                      (dateTime.month == DateTime.now().month) &&
+                              (dateTime.day == DateTime.now().day)
+                          ? 130
+                          : 30,
+                      59,
+                      52,
+                      86),
+                  //设置四周圆角 角度
+                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                  //设置四周边框
+                  border: new Border.all(
+                      width: 1, color: Color.fromARGB(80, 59, 52, 86)),
+                ),
+                child: InkWell(
+                  child: Text(
+                    '${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}',
+                    style: TextStyle(
+                        fontSize: 12,
+                        color:
+                            courseJSON.length > 1 ? Colors.red : Colors.black),
+                  ),
+                  onTap: () {
+                    //ToastUtil.show('${courseJSON['courseName']}');
+                    //debugPrint(courseJSON.toString());
+                    showCourseTableMessage(context).show(courseJSON, dateTime);
+                  },
+                ),
+              ),
+            ),
+          );
   }
 
   List<TableRow> forWidgetList(List tableWidgetList) {
@@ -255,12 +257,12 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month == dateTime.month &&
-                        DateTime.now().day == dateTime.day
+                            DateTime.now().day == dateTime.day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month == dateTime.month &&
-                        DateTime.now().day == dateTime.day
+                            DateTime.now().day == dateTime.day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -271,16 +273,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 1)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 1)).day
+                                dateTime.add(Duration(days: 1)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 1)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 1)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 1)).day
+                                dateTime.add(Duration(days: 1)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 1)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -291,16 +293,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 2)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 2)).day
+                                dateTime.add(Duration(days: 2)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 2)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 2)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 2)).day
+                                dateTime.add(Duration(days: 2)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 2)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -311,16 +313,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 3)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 3)).day
+                                dateTime.add(Duration(days: 3)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 3)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 3)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 3)).day
+                                dateTime.add(Duration(days: 3)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 3)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -331,16 +333,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 4)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 4)).day
+                                dateTime.add(Duration(days: 4)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 4)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 4)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 4)).day
+                                dateTime.add(Duration(days: 4)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 4)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -351,16 +353,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 5)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 5)).day
+                                dateTime.add(Duration(days: 5)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 5)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 5)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 5)).day
+                                dateTime.add(Duration(days: 5)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 5)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -371,16 +373,16 @@ class MainCourseViewLogic extends GetxController {
               Container(
                 decoration: BoxDecoration(
                     color: DateTime.now().month ==
-                        dateTime.add(Duration(days: 6)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 6)).day
+                                dateTime.add(Duration(days: 6)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 6)).day
                         ? Color.fromARGB(30, 59, 52, 86)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                     border: DateTime.now().month ==
-                        dateTime.add(Duration(days: 6)).month &&
-                        DateTime.now().day ==
-                            dateTime.add(Duration(days: 6)).day
+                                dateTime.add(Duration(days: 6)).month &&
+                            DateTime.now().day ==
+                                dateTime.add(Duration(days: 6)).day
                         ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
                         : Border.all(color: Colors.transparent)),
                 child: Text(
@@ -406,11 +408,11 @@ class MainCourseViewLogic extends GetxController {
     );
   }
 
-
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.weekCourseList.value);
+    //每次进入课表都进行一次课表同步
+    onRefresh();
     state.title.value = '第${CourseData.nowWeek.value}周';
-
   }
 }

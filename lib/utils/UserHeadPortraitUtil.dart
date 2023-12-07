@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -134,7 +135,7 @@ class _UserHeadPortraitUtil_WinState extends State<_UserHeadPortraitUtil_Win>
                   onPressed: () async {
                     await ShareDateUtil().setAccountHeadQQ(qqInput.text);
                     await ShareDateUtil().setAccountHeadMode(1);
-                    ToastUtil.show('修改成功');
+                    Get.snackbar("头像修改", "修改成功",duration: Duration(milliseconds: 1500),);
                     Navigator.pop(context);
                   }),
             ),
@@ -169,7 +170,7 @@ class _UserHeadPortraitUtil_WinState extends State<_UserHeadPortraitUtil_Win>
         File _imgPath = File(pickerImages.path);
         await getApplicationDocumentsDirectory().then((value) async {
           _imgPath.copy(value.path + "/user.jpg");
-          print("读取：" + AccountData.head_filePath);
+          print("读取：" + AccountData.head_filePath.value);
           print("地址：" + value.path + "/user.jpg");
           await ShareDateUtil()
               .setAccountHeadFilePath(value.path + "/user.jpg");

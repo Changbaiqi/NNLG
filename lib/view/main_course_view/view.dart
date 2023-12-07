@@ -71,7 +71,7 @@ class MainCourseViewPage extends StatelessWidget {
                 ),
                 onPressed: () {
                   Get.snackbar("课表通知", "正在同步官网课表...",duration: Duration(milliseconds: 1500),);
-                  logic.onRefresh();
+                  logic.onRefresh().then((value) => Get.snackbar("课表通知", "同步完毕",duration: Duration(milliseconds: 1500),));
                   //ToastUtil.show('敬请期待...');
                 },
               ),
@@ -108,7 +108,9 @@ class MainCourseViewPage extends StatelessWidget {
           reverse: false,
           scrollDirection: Axis.horizontal,
           controller: logic.pageController,
-          children: logic.refreshAllCourseTable(CourseData.weekCourseList.value),
+          children: CourseData.weekCourseList.value.length!=0?logic.refreshAllCourseTable(CourseData.weekCourseList.value):[Center(
+            child: Text("课表加载中......"),
+          )],
         ),
       )),
     );

@@ -8,6 +8,7 @@ import 'package:nnlg/view/ExamInquiry.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/ScoreInquiry.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
 
@@ -95,10 +96,11 @@ class MainCommunityViewPage extends StatelessWidget {
                           child: logic.boxChildSvg("assets/images/lyl.svg", '校园聊一聊'),
                           onTap: () {
                             // ToastUtil.show('该功能未开放');
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (builder) {
-                              return Chitchat();
-                            }));
+                            // Navigator.of(context)
+                            //     .push(MaterialPageRoute(builder: (builder) {
+                            //   return Chitchat();
+                            // }));
+                            Get.toNamed(Routes.ChitChat);
                           },
                         ),),
                       Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(

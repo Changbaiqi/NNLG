@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/ScanKit_Water.dart';
 import 'package:nnlg/view/ScanQRCode_Water.dart';
@@ -25,7 +26,7 @@ class _Main_waterState extends State<Main_water> {
   Future<void> _onRefresh() async {
 
 
-      await WaterUtil().getMenoy(WaterData.waterAccount, WaterData.waterSaler).then((value){
+      await WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         //刷新信息
         home_water_messageState?.updateMessage(money: value);
 
@@ -114,7 +115,7 @@ class Home_water_MessageState extends State<Home_water_Message> {
   @override
   void initState() {
     home_water_messageState = this;
-    WaterUtil().getMenoy(WaterData.waterAccount, WaterData.waterSaler).then((value){
+    WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
       setState((){
         _money = value;
       });
@@ -270,9 +271,9 @@ class _Water_SWState extends State<Water_SW> {
 
   //用于冷水打卡
   _coolOpenWaterButtonCheck(){
-    if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
-      if(WaterData.coolWater.isNotEmpty) {
-        WaterUtil().openWater(WaterData.coolWater, WaterData.cardNum, WaterData.waterAccount).then((value){
+    if(WaterData.waterAccount.value.isNotEmpty&& WaterData.cardNum.value.isNotEmpty) {
+      if(WaterData.coolWater.value.isNotEmpty) {
+        WaterUtil().openWater(WaterData.coolWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
           ToastUtil.show('${value['message']}');
         });
 
@@ -286,13 +287,13 @@ class _Water_SWState extends State<Water_SW> {
 
   //用于冷水关闭
   _coolCloseWaterButtonCheck(){
-    if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
+    if(WaterData.waterAccount.value.isNotEmpty&& WaterData.cardNum.value.isNotEmpty) {
       if(WaterData.coolWater.isNotEmpty) {
-        WaterUtil().closeWater(WaterData.coolWater, WaterData.cardNum, WaterData.waterAccount).then((value){
+        WaterUtil().closeWater(WaterData.coolWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
           ToastUtil.show('${value['message']}');
           //用于刷新金额
           Timer(Duration(seconds: 1),(){
-            WaterUtil().getMenoy(WaterData.waterAccount, WaterData.waterSaler).then((value){
+            WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
               //刷新信息
               home_water_messageState?.updateMessage(money: value);
             });
@@ -311,7 +312,7 @@ class _Water_SWState extends State<Water_SW> {
   _hotOpenWaterButtonCheck(){
     if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
       if(WaterData.hotWater.isNotEmpty) {
-        WaterUtil().openWater(WaterData.hotWater, WaterData.cardNum, WaterData.waterAccount).then((value){
+        WaterUtil().openWater(WaterData.hotWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
           ToastUtil.show('${value['message']}');
         });
       }else
@@ -325,11 +326,11 @@ class _Water_SWState extends State<Water_SW> {
   _hotCloseWaterButtonCheck(){
     if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
       if(WaterData.hotWater.isNotEmpty) {
-        WaterUtil().closeWater(WaterData.hotWater, WaterData.cardNum, WaterData.waterAccount).then((value){
+        WaterUtil().closeWater(WaterData.hotWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
           ToastUtil.show('${value['message']}');
           //用于刷新金额
           Timer(Duration(seconds: 1),(){
-            WaterUtil().getMenoy(WaterData.waterAccount, WaterData.waterSaler).then((value){
+            WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
               //刷新信息
               home_water_messageState?.updateMessage(money: value);
 
@@ -522,11 +523,11 @@ class _Water_SWState extends State<Water_SW> {
                               (value){
                                 if(value!="")
                                   setState((){
-                                    _bingCard = WaterData.cardNum;
+                                    _bingCard = WaterData.cardNum.value;
                                     ToastUtil.show('绑定成功');
                                     Navigator.pop(context);
                                     //更新数据
-                                    WaterUtil().getMenoy(WaterData.waterAccount, WaterData.waterSaler).then((value){
+                                    WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
                                       home_water_messageState?.updateMessage(money: value);
                                     });
                                   });
@@ -575,8 +576,8 @@ class _Water_SWState extends State<Water_SW> {
   @override
   void initState() {
 
-    if(WaterData.cardNum.isNotEmpty&& WaterData.cardNum!=null)
-      this._bingCard = WaterData.cardNum;
+    if(WaterData.cardNum.value.isNotEmpty&& WaterData.cardNum.value!=null)
+      this._bingCard = WaterData.cardNum.value;
   }
 
 }

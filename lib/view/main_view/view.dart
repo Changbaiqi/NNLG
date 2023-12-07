@@ -9,6 +9,7 @@ import 'package:nnlg/view/course_set_view/view.dart';
 import 'package:nnlg/view/main_community_view/view.dart';
 import 'package:nnlg/view/main_course_view/view.dart';
 import 'package:nnlg/view/main_user_view/view.dart';
+import 'package:nnlg/view/main_water_view/view.dart';
 
 import 'logic.dart';
 
@@ -17,7 +18,7 @@ class MainViewPage extends StatelessWidget {
   final logic = Get.find<MainViewLogic>();
   final state = Get.find<MainViewLogic>().state;
 
-  List<Widget> _viewList = [MainCommunityViewPage(),Main_water(), MainCourseViewPage(),MainUserViewPage(), CourseSetViewPage(),];
+  List<Widget> _viewList = [MainCommunityViewPage(),MainWaterViewPage(), MainCourseViewPage(),MainUserViewPage(), CourseSetViewPage(),];
 
   List<BottomNavigationBarItem> _itemList = [
     BottomNavigationBarItem(icon: Icon(Icons.bakery_dining),label: '社区'),

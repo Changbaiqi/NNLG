@@ -451,14 +451,14 @@ class ShareDateUtil{
   Future<void> setWaterAccount(String waterAccount) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('WaterAccount', '${waterAccount}').then((c){
-      WaterData.waterAccount = waterAccount;
+      WaterData.waterAccount.value = waterAccount;
     });
   }
 
   Future<String> getWaterAccount() async{
     final prefs = await SharedPreferences.getInstance();
     String? waterAccount = await prefs.getString('WaterAccount');
-    WaterData.waterAccount = waterAccount??"";
+    WaterData.waterAccount.value = waterAccount??"";
     return waterAccount??"";
   }
 
@@ -467,7 +467,7 @@ class ShareDateUtil{
   Future<void> setCoolWater(String coolWater) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('CoolWater', '${coolWater}').then((c){
-      WaterData.coolWater = coolWater;
+      WaterData.coolWater.value = coolWater;
     });
     //('设置的Token：${WaterData.token}');
   }
@@ -475,7 +475,7 @@ class ShareDateUtil{
   Future<String> getCoolWater() async{
     final prefs = await SharedPreferences.getInstance();
     String? coolWater = await prefs.getString('CoolWater');
-    WaterData.coolWater = coolWater??"";
+    WaterData.coolWater.value = coolWater??"";
     return coolWater??"";
   }
 
@@ -483,28 +483,28 @@ class ShareDateUtil{
   Future<void> setHotWater(String hotWater) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('HotWater', '${hotWater}').then((c){
-      WaterData.hotWater = hotWater;
+      WaterData.hotWater.value = hotWater;
     });
   }
 
   Future<String> getHotWater() async{
     final prefs = await SharedPreferences.getInstance();
     String? hotWater = await prefs.getString('HotWater');
-    WaterData.hotWater = hotWater??"";
+    WaterData.hotWater.value = hotWater??"";
     return hotWater??"";
   }
 
   Future<void> setCardNum(String cardNum) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('CardNum', '${cardNum}').then((c){
-      WaterData.cardNum = cardNum;
+      WaterData.cardNum.value = cardNum;
     });
   }
 
   Future<String> getCardNum() async{
     final prefs = await SharedPreferences.getInstance();
     String? cardNum = await prefs.getString('CardNum');
-    WaterData.cardNum = cardNum??"";
+    WaterData.cardNum.value = cardNum??"";
     return cardNum??"";
   }
 
@@ -513,14 +513,14 @@ class ShareDateUtil{
   Future<void> setWaterSaler(String waterSaler) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('WaterSaler', '${waterSaler}').then((c){
-      WaterData.waterSaler = waterSaler;
+      WaterData.waterSaler.value = waterSaler;
     });
   }
 
   Future<String> getWaterSaler() async{
     final prefs = await SharedPreferences.getInstance();
     String? waterSaler = await prefs.getString('WaterSaler');
-    WaterData.waterSaler = waterSaler??"";
+    WaterData.waterSaler.value = waterSaler??"";
     return waterSaler??"";
   }
 
@@ -528,14 +528,14 @@ class ShareDateUtil{
   Future<void> setWaterUserId(String userId) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('WaterUserId', '${userId}').then((c){
-      WaterData.userId =userId;
+      WaterData.userId.value =userId;
     });
   }
 
   Future<String> getWaterUserId() async{
     final prefs = await SharedPreferences.getInstance();
     String? userId = await prefs.getString('WaterUserId');
-    WaterData.userId = userId??"";
+    WaterData.userId.value = userId??"";
     return userId??"";
   }
 

@@ -56,7 +56,7 @@ class WaterUtil{
       await ShareDateUtil().setCardNum(cardNum);
       await ShareDateUtil().setWaterUserId(userId);
 
-      return WaterData.cardNum;
+      return WaterData.cardNum.value;
     }
 
     return "";

@@ -1,4 +1,3 @@
-import 'package:nnlg/view/Start.dart';
 
 /**
  * 路由
@@ -15,4 +14,5 @@ class Routes{
   static const CourseShared = '/course/shared';
   static const ChitChat = '/chitchat';
   static const AboutMe = '/aboutMe';
+  static const ScoreInquiry='/ScoreInquiry';
 }

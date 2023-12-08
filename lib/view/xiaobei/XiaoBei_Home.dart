@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/dao/XiaoBeiData.dart';
 import 'package:nnlg/utils/XiaoBeiHomeUtil.dart';
-import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/module/setXiaoBeiPlayTImeSheet.dart';
 
 import '../../utils/ToastUtil.dart';

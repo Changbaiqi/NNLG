@@ -136,9 +136,10 @@ class MainCommunityViewPage extends StatelessWidget {
                         child: logic.boxChildImg('assets/images/NNLG.png', '成绩查询'),
                         onTap: () {
                           CourseScoreUtil().getReportCardQueryList().then((value){
-                            Navigator.of(context).push(MaterialPageRoute(builder: (builder){
-                              return ScoreInquiry();
-                            }));
+                            // Navigator.of(context).push(MaterialPageRoute(builder: (builder){
+                            //   return ScoreInquiry();
+                            // }));
+                            Get.toNamed(Routes.ScoreInquiry);
                           });
                         },
                       ),),

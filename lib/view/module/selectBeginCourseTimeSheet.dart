@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
-import 'package:nnlg/view/Main.dart';
 
 class selectBeginCourseTimeSheet{
 

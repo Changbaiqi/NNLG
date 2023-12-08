@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/utils/ChitchatUtil.dart';
@@ -9,6 +10,11 @@ import 'state.dart';
 
 class ChitChatViewLogic extends GetxController {
   final ChitChatViewState state = ChitChatViewState();
+
+  messageAudio(duration)async{
+    Timer(Duration(milliseconds: duration), () { state.audioPlayer.play(AssetSource(r'audio/sendMessage.mp3'));});
+
+  }
 
   msgListening() async {
     state.chitchatUtil.getChannel().stream.listen((event) {
@@ -20,8 +26,10 @@ class ChitChatViewLogic extends GetxController {
           state.msgList.refresh();
         Timer(
             Duration(milliseconds: 100),
-                () => state.listScrollController.value
-                .jumpTo(state.listScrollController.value.position.maxScrollExtent));
+                () {state.listScrollController.value
+                .jumpTo(state.listScrollController.value.position.maxScrollExtent);
+                messageAudio(800);
+            });
       } else if (json['code'] == 202) {
           if (json['userId'] == AccountData.studentID) {
             state.msgList.value.add(
@@ -32,9 +40,10 @@ class ChitChatViewLogic extends GetxController {
             state.msgList.refresh();
           }
         Timer(
-            Duration(milliseconds: 500),
+            Duration(milliseconds: 100),
                 (){state.listScrollController.value
                 .jumpTo(state.listScrollController.value.position.maxScrollExtent);
+              messageAudio(800);
             });
 
       } else if(json['code']== 203){

@@ -32,6 +32,8 @@ dependencies:
   #flutter_pickers: ^2.1.9
   dio: ^4.0.6 #网络请求
   get: ^4.6.5
+  audioplayers: ^5.2.1 #播放音频
+
   shared_preferences: ^2.0.15 #用来存储配置文件用的
   fluttertoast: ^8.0.9 #Toast提示使用
   flutter_update_dialog: ^2.0.0 #弹窗提示插件，一般用来整更新弹窗
@@ -51,6 +53,8 @@ dependencies:
   web_socket_channel: ^2.2.0 #用于发送WebSocket
 
   flutter_easyrefresh: ^2.2.1 #用于下拉刷新或者加载的下拉条
+  pull_to_refresh: ^2.0.0 #列表刷新
+  flutter_staggered_animations: ^1.1.1 #列表子控件加载动画
   url_launcher: ^6.1.11 #用于跳转浏览器
   package_info_plus: ^4.0.2 #用于获取APP版本等相关信息
   home_widget: ^0.3.0 #桌面小组件
@@ -167,6 +171,7 @@ flutter:
     - assets/images/qq.svg
     - assets/images/blog.svg
     - assets/images/about.svg
+    - assets/audio/sendMessage.mp3
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

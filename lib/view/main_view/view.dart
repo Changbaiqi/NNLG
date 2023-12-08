@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/view/Course_set.dart';
-import 'package:nnlg/view/Main_community.dart';
-import 'package:nnlg/view/Main_course.dart';
-import 'package:nnlg/view/Main_user.dart';
-import 'package:nnlg/view/Main_water.dart';
 import 'package:nnlg/view/course_set_view/view.dart';
 import 'package:nnlg/view/main_community_view/view.dart';
 import 'package:nnlg/view/main_course_view/view.dart';

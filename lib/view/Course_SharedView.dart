@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/Main.dart';
 
 class Course_SharedView extends StatefulWidget {
   const Course_SharedView({Key? key}) : super(key: key);

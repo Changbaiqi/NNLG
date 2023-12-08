@@ -11,7 +11,6 @@ import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
-import 'package:nnlg/view/AboutMeView.dart';
 import 'package:nnlg/view/VIPFunList.dart';
 import 'package:nnlg/view/module/showUpdateDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';

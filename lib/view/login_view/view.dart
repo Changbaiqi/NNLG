@@ -11,9 +11,6 @@ import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/MainUserUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
-import 'package:nnlg/utils/edusys/Account.dart';
-import 'package:nnlg/view/Main.dart';
-import 'package:nnlg/view/Main_user.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';

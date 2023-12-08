@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:nnlg/view/Course_SharedView.dart';
-import 'package:nnlg/view/Main.dart';
 
 class showCourseSharedSelectDialog extends Dialog{
 

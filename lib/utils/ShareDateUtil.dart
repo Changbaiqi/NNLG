@@ -1,5 +1,4 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/CourseData.dart';
@@ -7,9 +6,6 @@ import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/dao/XiaoBeiData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
-import 'package:nnlg/utils/XiaoBeiUserUtil.dart';
-import 'package:nnlg/view/Login.dart';
-import 'package:nnlg/view/Main_course.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dao/ContextData.dart';

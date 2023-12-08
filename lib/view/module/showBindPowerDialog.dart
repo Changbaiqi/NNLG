@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/utils/NoticeUtils.dart';
 import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
-import 'package:nnlg/view/Main.dart';
 
 import '../../dao/LoginData.dart';
 import '../../utils/MainUserUtil.dart';

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/Main.dart';
 import 'package:nnlg/view/manage/ManageXiaoBeiUserOperation.dart';
 
 import '../../utils/ToastUtil.dart';

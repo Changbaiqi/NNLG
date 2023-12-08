@@ -16,6 +16,8 @@ import 'package:nnlg/view/main_view/binding.dart';
 import 'package:nnlg/view/main_view/view.dart';
 import 'package:nnlg/view/main_water_view/binding.dart';
 import 'package:nnlg/view/main_water_view/view.dart';
+import 'package:nnlg/view/score_inquiry_view/binding.dart';
+import 'package:nnlg/view/score_inquiry_view/view.dart';
 import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
 
@@ -32,5 +34,7 @@ abstract class AppPages{
     GetPage(name: Routes.MainWater, page: ()=>MainWaterViewPage(),binding: MainWaterViewBinding()),
     GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),
     GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),
+    GetPage(name: Routes.ScoreInquiry, page:()=>ScoreInquiryViewPage(),binding: ScoreInquiryViewBinding() ),
+
   ];
 }

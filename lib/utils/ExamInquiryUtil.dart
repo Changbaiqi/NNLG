@@ -32,7 +32,7 @@ class ExamInquiryUtil{
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="xnxqid" name="xnxqid" style="width: 170px;">([\s\S]*?)</select>');
     RegExpMatch? test= selectExp.firstMatch(response.toString());
-    debugPrint(response.toString());
+    // debugPrint(response.toString());
     List<String> timeList = [];
     if(test!=null){
       RegExp optionValue = RegExp(r'>([\s\S]*?)</option>');

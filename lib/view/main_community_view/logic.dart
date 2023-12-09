@@ -7,7 +7,7 @@ import 'state.dart';
 
 class MainCommunityViewLogic extends GetxController {
   final MainCommunityViewState state = MainCommunityViewState();
-
+  BuildContext? context=null;
 
   /**
    * svg网格布局子组件

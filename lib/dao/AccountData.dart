@@ -7,4 +7,7 @@ class AccountData{
   static final headMode = 0.obs; //0为默认图片，1为QQ图片，2为本地
   static final head_qq="".obs;
   static final head_filePath="".obs;
+  static final justMessengerUsername = "".obs;
+  static final justMessengerPassword = "".obs;
+
 }

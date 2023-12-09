@@ -15,4 +15,6 @@ class Routes{
   static const ChitChat = '/chitchat';
   static const AboutMe = '/aboutMe';
   static const ScoreInquiry='/ScoreInquiry';
+  static const ExamInquiry='/examInquiry';
+  static const WaterCharge='/waterCharge';
 }

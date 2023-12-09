@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,7 +5,7 @@ import 'package:nnlg/dao/WaterData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
 import 'package:nnlg/view/ScanKit_Water.dart';
-import 'package:nnlg/view/WaterCharge.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
 
@@ -194,11 +192,7 @@ class MainWaterViewPage extends StatelessWidget {
                   child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                     child: ElevatedButton(
                         onPressed: (){
-
-                          Navigator.of(logic.context!).push(MaterialPageRoute(builder: (builder){
-                            return WaterCharge();
-                          }));
-
+                          Get.toNamed(Routes.WaterCharge);
                         }
                         , child: Text('充值')),
                   )),
@@ -294,7 +288,6 @@ class MainWaterViewPage extends StatelessWidget {
               String result = await Navigator.push(logic.context!, MaterialPageRoute(builder: (builder){
                 return ScanKit_Water();
               }));
-              //ToastUtil().show(result);
               WaterUtil().bindHotWater(result); //绑定热水
 
             },

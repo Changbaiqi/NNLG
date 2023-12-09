@@ -6,10 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
-import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
-import 'package:nnlg/view/ScanKit_Water.dart';
-import 'package:nnlg/view/WaterCharge.dart';
 
 import 'state.dart';
 
@@ -28,7 +25,6 @@ class MainWaterViewLogic extends GetxController {
     await WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
       //刷新信息
       updateMessage(money: value);
-
     });
 
   }

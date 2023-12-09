@@ -4,6 +4,8 @@ import 'package:nnlg/view/about_me_view/binding.dart';
 import 'package:nnlg/view/about_me_view/view.dart';
 import 'package:nnlg/view/chit_chat_view/binding.dart';
 import 'package:nnlg/view/chit_chat_view/view.dart';
+import 'package:nnlg/view/exam_inquiry_view/binding.dart';
+import 'package:nnlg/view/exam_inquiry_view/view.dart';
 import 'package:nnlg/view/login_view/binding.dart';
 import 'package:nnlg/view/login_view/view.dart';
 import 'package:nnlg/view/main_community_view/binding.dart';
@@ -20,6 +22,8 @@ import 'package:nnlg/view/score_inquiry_view/binding.dart';
 import 'package:nnlg/view/score_inquiry_view/view.dart';
 import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
+import 'package:nnlg/view/water_charge_view/binding.dart';
+import 'package:nnlg/view/water_charge_view/view.dart';
 
 import 'Routes.dart';
 
@@ -35,6 +39,7 @@ abstract class AppPages{
     GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),
     GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),
     GetPage(name: Routes.ScoreInquiry, page:()=>ScoreInquiryViewPage(),binding: ScoreInquiryViewBinding() ),
-
+    GetPage(name: Routes.ExamInquiry, page:()=>ExamInquiryViewPage(),binding: ExamInquiryViewBinding() ),
+    GetPage(name: Routes.WaterCharge, page:()=>WaterChargeViewPage(),binding: WaterChargeViewBinding() ),
   ];
 }

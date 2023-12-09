@@ -1,5 +1,6 @@
 
 import 'dart:collection';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
 
@@ -27,6 +28,7 @@ class JustMessengerUtil{
           options: Options(
             method: 'POST',
             contentType: 'multipart/form-data; boundary=----WebKitFormBoundaryZbrCdfxSNKXrm4u9',
+            responseType: ResponseType.plain,
             receiveTimeout: 4000,
             headers: {
               'Authorization': 'Basic bGV2aWFfY2xpZW50OmxldmlhX3NlY3JldA==',
@@ -35,14 +37,14 @@ class JustMessengerUtil{
               'Connection': 'keep-alive'
             }
           ),
-          data: {
+          queryParameters: {
             'grant_type': 'password',
             'password': password,
             'scope': 'all',
             'username': username
           }
       );
-      return response.data;
+      return jsonDecode(response.data);
   }
 
 

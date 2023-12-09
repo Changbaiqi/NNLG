@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/utils/CourseScoreUtil.dart';
 import 'package:nnlg/utils/CusBehavior.dart';
+import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
@@ -148,7 +150,7 @@ class MainCommunityViewPage extends StatelessWidget {
                     ]),
                 height: 260,
                 width: MediaQuery.of(context).size.width,
-                child: bindingJustMessengerCard(),
+                child: noJustMessengerCard(),
               ),
             ),
             Container(
@@ -226,7 +228,21 @@ class MainCommunityViewPage extends StatelessWidget {
       child: ElevatedButton(
         child: Text('绑定'),
           onPressed: (){
-
+          JustMessengerUtil().LoginPost('abc020731', '18378099595').then((value){
+            // print(value);
+            if(value['resultCode']!=null){
+              Get.snackbar('提示', value['message'],duration: Duration(milliseconds: 1500));
+              return;
+            }
+            //装置token等参数
+            AccountData.justMessengerAccess_Token.value=value['access_token'];
+            AccountData.justMessengerRefresh_Toekn.value=value['refresh_token'];
+            AccountData.justMessengerSchoolId.value=value['schoolId'];
+            AccountData.justMessengerCompany.value=value['company'];
+            AccountData.justMessengerExpires_in.value=value['expires_in'];
+            AccountData.justMessengerToken_Type.value=value['token_type'];
+            AccountData.justMessengerJti.value=value['jti'];
+          });
           },
       ),
     );

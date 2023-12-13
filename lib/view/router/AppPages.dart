@@ -22,6 +22,8 @@ import 'package:nnlg/view/score_inquiry_view/binding.dart';
 import 'package:nnlg/view/score_inquiry_view/view.dart';
 import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
+import 'package:nnlg/view/teaching_eva_view/binding.dart';
+import 'package:nnlg/view/teaching_eva_view/view.dart';
 import 'package:nnlg/view/water_charge_view/binding.dart';
 import 'package:nnlg/view/water_charge_view/view.dart';
 
@@ -41,5 +43,6 @@ abstract class AppPages{
     GetPage(name: Routes.ScoreInquiry, page:()=>ScoreInquiryViewPage(),binding: ScoreInquiryViewBinding() ),
     GetPage(name: Routes.ExamInquiry, page:()=>ExamInquiryViewPage(),binding: ExamInquiryViewBinding() ),
     GetPage(name: Routes.WaterCharge, page:()=>WaterChargeViewPage(),binding: WaterChargeViewBinding() ),
+    GetPage(name: Routes.TeachingEva, page:()=>TeachingEvaViewPage(),binding: TeachingEvaViewBinding() ),
   ];
 }

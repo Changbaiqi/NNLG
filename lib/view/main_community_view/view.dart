@@ -129,6 +129,14 @@ class MainCommunityViewPage extends StatelessWidget {
                           });
                         },
                       ),),
+                      Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
+                        child: logic.boxChildImg('assets/images/NNLG.png', '教学评价'),
+                        onTap: () {
+                          CourseScoreUtil().getReportCardQueryList().then((value){
+                            Get.toNamed(Routes.TeachingEva);
+                          });
+                        },
+                      ),),
                     ],
                   ),
                 ),

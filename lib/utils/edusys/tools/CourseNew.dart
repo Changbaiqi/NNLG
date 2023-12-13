@@ -1,4 +1,4 @@
-import 'CourseForm.dart';
+import '../entity/CourseForm.dart';
 
 class CourseNew{
   String? _courseHTML;

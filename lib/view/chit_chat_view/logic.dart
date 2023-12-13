@@ -28,7 +28,7 @@ class ChitChatViewLogic extends GetxController {
             Duration(milliseconds: 100),
                 () {state.listScrollController.value
                 .jumpTo(state.listScrollController.value.position.maxScrollExtent);
-                messageAudio(800);
+                messageAudio(500);
             });
       } else if (json['code'] == 202) {
           if (json['userId'] == AccountData.studentID) {
@@ -43,7 +43,7 @@ class ChitChatViewLogic extends GetxController {
             Duration(milliseconds: 100),
                 (){state.listScrollController.value
                 .jumpTo(state.listScrollController.value.position.maxScrollExtent);
-              messageAudio(800);
+              messageAudio(500);
             });
 
       } else if(json['code']== 203){

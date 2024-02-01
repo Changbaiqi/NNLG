@@ -11,8 +11,8 @@ class ExamInquiryViewLogic extends GetxController {
   //初始化列表
   initSearchList() {
     ExamInquiryUtil().getReportCardQueryList().then((value) {
-      //print(value.toString());
       state.searList.value = value;
+      state.searList.refresh();
     });
   }
 
@@ -31,7 +31,7 @@ class ExamInquiryViewLogic extends GetxController {
     ExamInquiryUtil().getExamNowSelectTime().then((value){
       state.selectTime.value = value;
       initSearchList();
+      showScoreList(state.selectTime.value);
     });
-    showScoreList(state.selectTime.value);
   }
 }

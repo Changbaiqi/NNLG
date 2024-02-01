@@ -18,4 +18,7 @@ class Routes{
   static const ExamInquiry='/examInquiry';
   static const WaterCharge='/waterCharge';
   static const TeachingEva='/teachingEva';
+  static const TeachingEvaDetails='/teachingEva/details';
+  static const EvalForm = '/teachingEva/details/evalForm';
+  static const TrainPlan= '/trainPlan';
 }

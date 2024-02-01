@@ -1,0 +1,12 @@
+{
+  "number": "序号",
+  "semester": "学期",
+  "code": "课程序号",
+  "courseName": "课程名称",
+  "unit": "开课单位",
+  "credit": "学分",
+  "creditHour": "学时",
+  "evaMode": "考核模式",
+  "property": "课程属性",
+  "isExam": "是否考核"
+}

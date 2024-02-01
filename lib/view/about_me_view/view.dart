@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/utils/CusBehavior.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'logic.dart';
 
@@ -73,7 +74,14 @@ class AboutMeViewPage extends StatelessWidget {
                                 )
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () async {
+                              const url = 'https://github.com/Changbaiqi';
+                              if(await canLaunch(url)){
+                                await launch(url);
+                              }else{
+                                throw 'Could not launch $url';
+                              }
+                            },
                           ),
                         ),
                         Padding(
@@ -93,7 +101,14 @@ class AboutMeViewPage extends StatelessWidget {
                                 )
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () async {
+                              const url = 'https://blogs.changbaiqi.top';
+                              if(await canLaunch(url)){
+                              await launch(url);
+                              }else{
+                              throw 'Could not launch $url';
+                              }
+                            },
                           ),
                         ),
                         Padding(
@@ -113,7 +128,9 @@ class AboutMeViewPage extends StatelessWidget {
                                 )
                               ],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              callQQ(number: 2084069833,isGroup: false);
+                            },
                           ),
                         ),
 
@@ -133,5 +150,19 @@ class AboutMeViewPage extends StatelessWidget {
         ),//软件申明信息
       ),
     );
+  }
+
+  /// 吊起QQ
+  /// [number]QQ号
+  /// [isGroup]是否是群号,默认是,不是群号则直接跳转聊天
+  void callQQ({int number = 955586867, bool isGroup = true}) async {
+    String url = isGroup
+        ? 'mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${number ?? 0}&card_type=group&source=qrcode'
+        : 'mqqwpa://im/chat?chat_type=wpa&uin=${number ?? 0}&version=1&src_type=web&web_src=oicqzone.com';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('不能访问');
+    }
   }
 }

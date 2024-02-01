@@ -1,29 +1,39 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+
 // import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:get/get.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'logic.dart';
 
+/*
+ * TODO
+ * @Author 长白崎
+ * @Date 2024/1/30 3:29
+ */
 class ChitChatViewPage extends StatelessWidget {
   ChitChatViewPage({Key? key}) : super(key: key);
   final logic = Get.put(ChitChatViewLogic());
   final state = Get.find<ChitChatViewLogic>().state;
 
+  
   @override
   Widget build(BuildContext context) {
     state.context = context;
-
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
-        title: Text('聊天室',style: TextStyle(color: Colors.black),),
+        title: Text(
+          '聊天室',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
       body: Container(
         child: Column(
@@ -31,31 +41,34 @@ class ChitChatViewPage extends StatelessWidget {
             //聊天内容
             Expanded(
               flex: 1,
-              child:Container(
-                child:  Obx(()=>SmartRefresher(
-                  // enablePullUp: true,
-                  enablePullDown: true,
-                  header: WaterDropHeader(),
-                  onRefresh: () async{
-                    logic.loadHistoryMessage();
-                    state.refreshController.refreshCompleted();
-                  },
-                  controller: state.refreshController,
-                  child: ListView.builder(
-                    controller: state.listScrollController.value,
-                    itemCount: state.msgList.value.length,
-                    padding: EdgeInsets.only(top: 27),
-                    itemBuilder: (context, index) {
-                      return AnimationConfiguration.staggeredList(position: index,
-                          duration: const Duration(milliseconds: 350),
-                          child: SlideAnimation(
-                            verticalOffset: 50.0,
-                            child: FadeInAnimation(
-                              child: messageChild(state.msgList.value[index]),
-                            ),));
-                    },
-                  ),
-                )),
+              child: Container(
+                child: Obx(() => SmartRefresher(
+                      // enablePullUp: true,
+                      enablePullDown: true,
+                      header: WaterDropHeader(),
+                      onRefresh: () async {
+                        logic.loadHistoryMessage();
+                        state.refreshController.refreshCompleted();
+                      },
+                      controller: state.refreshController,
+                      child: ListView.builder(
+                        controller: state.listScrollController.value,
+                        itemCount: state.msgList.value.length,
+                        padding: EdgeInsets.only(top: 27),
+                        itemBuilder: (context, index) {
+                          return AnimationConfiguration.staggeredList(
+                              position: index,
+                              duration: const Duration(milliseconds: 350),
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(
+                                  child:
+                                      messageChild(state.msgList.value[index]),
+                                ),
+                              ));
+                        },
+                      ),
+                    )),
               ),
             ),
             Container(
@@ -68,62 +81,87 @@ class ChitChatViewPage extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Expanded(
-                    child:Container(
-                      margin: EdgeInsets.fromLTRB(15, 10, 0, 10),
-                      constraints: BoxConstraints(
-                        maxHeight: 100.0,
-                        minHeight: 50.0,
-                      ),
-                      decoration: BoxDecoration(
-                          color:  Color(0xFFF5F6FF),
-                          borderRadius: BorderRadius.all(Radius.circular(2))
-                      ),
-                      child: TextField(
-                        controller: state.sendTextEdit,
-                        cursorColor:Color(0xFF464EB5),
-                        maxLines: null,
-                        maxLength: 200,
-                        decoration: InputDecoration(
-                          counterText: '',
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 10.0, bottom:10.0),
-                          hintText: "发送",
-                          hintStyle: TextStyle(
-                              color: Color(0xFFADB3BA),
-                              fontSize:15
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: InkWell(
+                          child: Row(
+                            children: [
+                              Text('Markdown'),
+                              Obx(() => Checkbox(
+                                  value: state.isMarkdown.value,
+                                  onChanged: (value) {
+                                    state.isMarkdown.value = !state.isMarkdown.value;
+                                  }))
+                            ],
+                          ),
+                          onTap: (){
+                            state.isMarkdown.value= !state.isMarkdown.value;
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Expanded(
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(15, 10, 0, 10),
+                          constraints: BoxConstraints(
+                            maxHeight: 100.0,
+                            minHeight: 50.0,
+                          ),
+                          decoration: BoxDecoration(
+                              color: Color(0xFFF5F6FF),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(2))),
+                          child: TextField(
+                            controller: state.sendTextEdit,
+                            cursorColor: Color(0xFF464EB5),
+                            maxLines: null,
+                            maxLength: 200,
+                            decoration: InputDecoration(
+                              counterText: '',
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.only(
+                                  left: 16.0,
+                                  right: 16.0,
+                                  top: 10.0,
+                                  bottom: 10.0),
+                              hintText: "发送",
+                              hintStyle: TextStyle(
+                                  color: Color(0xFFADB3BA), fontSize: 15),
+                            ),
+                            style: TextStyle(
+                                color: Color(0xFF03073C), fontSize: 15),
                           ),
                         ),
-                        style: TextStyle(
-                            color: Color(0xFF03073C),
-                            fontSize:15
-                        ),
                       ),
-                    ),
-                  ),
-                  GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                      alignment: Alignment.center,
-                      height: 70,
-                      child: Text(
-                        '发送',
-                        style: TextStyle(
-                          color: Color(0xFF464EB5),
-                          fontSize: 14,
+                      GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        child: Container(
+                          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+                          alignment: Alignment.center,
+                          height: 70,
+                          child: Text(
+                            '发送',
+                            style: TextStyle(
+                              color: Color(0xFF464EB5),
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
+                        onTap: () {
+                          state.chitchatUtil.send(state.sendTextEdit.text);
+                          state.sendTextEdit.text = '';
+                        },
                       ),
-                    ),
-                    onTap: () {
-                      state.chitchatUtil.send(state.sendTextEdit.text);
-                      state.sendTextEdit.text='';
-                    },
-                  ),
+                    ],
+                  )
                 ],
               ),
             ),
@@ -191,6 +229,10 @@ class ChitChatViewPage extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
                       child: SelectableText('${messageJson['text']}'),
+                      // child: Markdown(
+                      //     physics: NeverScrollableScrollPhysics(),
+                      //     shrinkWrap: true,
+                      //     data: '${messageJson['text']}')
                     ),
                   )
                 ],
@@ -214,7 +256,7 @@ class ChitChatViewPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 0, 0),
+              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -225,18 +267,22 @@ class ChitChatViewPage extends StatelessWidget {
                     ],
                   ),
                   Container(
-                    constraints: BoxConstraints(
-                      minHeight: 50,
-                      maxWidth: MediaQuery.of(state.context!).size.width / 1.3,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Colors.black54,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                      child: SelectableText('${messageJson['text']}'),
-                    ),
-                  )
+                      constraints: BoxConstraints(
+                        minHeight: 50,
+                        maxWidth:
+                            MediaQuery.of(state.context!).size.width / 1.3,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      // child: Padding(
+                      //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+                      //   child: SelectableText('${messageJson['text']}'),
+                      // ),
+                      child: Markdown(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          data: '${messageJson['text']}'))
                 ],
               ),
             ),

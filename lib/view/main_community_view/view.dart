@@ -118,7 +118,8 @@ class MainCommunityViewPage extends StatelessWidget {
                       Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(
                         child: logic.boxChildImg('assets/images/NNLG.png', '培养计划'),
                         onTap: () {
-                          Get.snackbar("通知", "该功能未开放",duration: Duration(milliseconds: 1500),);
+                          // Get.snackbar("通知", "该功能未开放",duration: Duration(milliseconds: 1500),);
+                          Get.toNamed(Routes.TrainPlan);
                         },
                       ),),
                       Padding(padding: EdgeInsets.fromLTRB(0, 15, 0, 0),child: InkWell(

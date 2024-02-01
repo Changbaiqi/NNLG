@@ -4,6 +4,10 @@ import 'package:nnlg/view/about_me_view/binding.dart';
 import 'package:nnlg/view/about_me_view/view.dart';
 import 'package:nnlg/view/chit_chat_view/binding.dart';
 import 'package:nnlg/view/chit_chat_view/view.dart';
+import 'package:nnlg/view/eva_detail_view/binding.dart';
+import 'package:nnlg/view/eva_detail_view/view.dart';
+import 'package:nnlg/view/eval_form_view/binding.dart';
+import 'package:nnlg/view/eval_form_view/view.dart';
 import 'package:nnlg/view/exam_inquiry_view/binding.dart';
 import 'package:nnlg/view/exam_inquiry_view/view.dart';
 import 'package:nnlg/view/login_view/binding.dart';
@@ -24,6 +28,8 @@ import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
 import 'package:nnlg/view/teaching_eva_view/binding.dart';
 import 'package:nnlg/view/teaching_eva_view/view.dart';
+import 'package:nnlg/view/train_plan_view/binding.dart';
+import 'package:nnlg/view/train_plan_view/view.dart';
 import 'package:nnlg/view/water_charge_view/binding.dart';
 import 'package:nnlg/view/water_charge_view/view.dart';
 
@@ -31,18 +37,21 @@ import 'Routes.dart';
 
 abstract class AppPages{
   static final pages=[
-    GetPage(name: Routes.Start, page:()=> StartViewPage(),binding: StartViewBinding()),
-    GetPage(name: Routes.Main, page: ()=> MainViewPage(),binding: MainViewBinding()),
-    GetPage(name: Routes.ChitChat, page: ()=> ChitChatViewPage(),binding: ChitChatViewBinding()),
-    GetPage(name: Routes.Login, page: ()=> LoginViewPage(),binding: LoginViewBinding()),
-    GetPage(name: Routes.MainUser, page: ()=>MainUserViewPage(),binding: MainUserViewBinding()),
-    GetPage(name: Routes.MainCourse, page: ()=>MainCourseViewPage(),binding: MainCourseViewBinding()),
-    GetPage(name: Routes.MainWater, page: ()=>MainWaterViewPage(),binding: MainWaterViewBinding()),
-    GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),
-    GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),
-    GetPage(name: Routes.ScoreInquiry, page:()=>ScoreInquiryViewPage(),binding: ScoreInquiryViewBinding() ),
-    GetPage(name: Routes.ExamInquiry, page:()=>ExamInquiryViewPage(),binding: ExamInquiryViewBinding() ),
-    GetPage(name: Routes.WaterCharge, page:()=>WaterChargeViewPage(),binding: WaterChargeViewBinding() ),
-    GetPage(name: Routes.TeachingEva, page:()=>TeachingEvaViewPage(),binding: TeachingEvaViewBinding() ),
+    GetPage(name: Routes.Start, page:()=> StartViewPage(),binding: StartViewBinding()), //开始页面
+    GetPage(name: Routes.Main, page: ()=> MainViewPage(),binding: MainViewBinding()), //主页面
+    GetPage(name: Routes.ChitChat, page: ()=> ChitChatViewPage(),binding: ChitChatViewBinding()),//校园聊一聊
+    GetPage(name: Routes.Login, page: ()=> LoginViewPage(),binding: LoginViewBinding()),  //登录页面
+    GetPage(name: Routes.MainUser, page: ()=>MainUserViewPage(),binding: MainUserViewBinding()), //用户页面
+    GetPage(name: Routes.MainCourse, page: ()=>MainCourseViewPage(),binding: MainCourseViewBinding()), //个人课表页面
+    GetPage(name: Routes.MainWater, page: ()=>MainWaterViewPage(),binding: MainWaterViewBinding()), //打水页面
+    GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),//主页
+    GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),//关于页面
+    GetPage(name: Routes.ScoreInquiry, page:()=>ScoreInquiryViewPage(),binding: ScoreInquiryViewBinding() ),//成绩查询页面
+    GetPage(name: Routes.ExamInquiry, page:()=>ExamInquiryViewPage(),binding: ExamInquiryViewBinding() ), //考试查询页面
+    GetPage(name: Routes.WaterCharge, page:()=>WaterChargeViewPage(),binding: WaterChargeViewBinding() ), //打水扫码页面
+    GetPage(name: Routes.TeachingEva, page:()=>TeachingEvaViewPage(),binding: TeachingEvaViewBinding() ), //评教页面
+    GetPage(name: Routes.TeachingEvaDetails, page:()=>EvaDetailViewPage(),binding: EvaDetailViewBinding() ), //评教子页面
+    GetPage(name: Routes.EvalForm, page:()=>EvalFormViewPage(),binding: EvalFormViewBinding() ), //评教表单页面
+    GetPage(name: Routes.TrainPlan, page:()=>TrainPlanViewPage(),binding: TrainPlanViewBinding() ), //培养计划页面
   ];
 }

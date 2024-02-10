@@ -6,7 +6,7 @@ class AppInfoData{
   static String? version;
   static String? buildNumber;
   //版本递增标识编号
-  static int versionNumber=6;
+  static int versionNumber=8;
 
   static init() async{
     PackageInfo packageInfo = await PackageInfo.fromPlatform();

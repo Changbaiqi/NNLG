@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/widget/markdown.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/utils/AppUpdateUtil.dart';
@@ -16,7 +18,10 @@ class showUpdateDialog extends Dialog {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 340,
+      constraints: BoxConstraints(
+        minHeight: 340,
+        maxHeight: 500
+      ),
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -111,7 +116,9 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain> {
                   Text('版本代号：',style: TextStyle(fontSize: 15,color: Colors.black54),),
                   Text('${widget._json["mark"]}'),
                   Text('更新内容：',style: TextStyle(fontSize: 15,color: Colors.black54),),
-                  Text('${widget._json['content']}')
+                  // Markdown(data: widget._json['content'],physics: NeverScrollableScrollPhysics(),shrinkWrap: true,)
+                  MarkdownWidget(data: widget._json['content'],shrinkWrap: true,)
+                  // Text('${widget._json['content']}')
                 ],
               ),)
             ],

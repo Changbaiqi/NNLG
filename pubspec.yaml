@@ -60,12 +60,14 @@ dependencies:
   flutter_easyrefresh: ^2.2.1 #用于下拉刷新或者加载的下拉条
   pull_to_refresh: ^2.0.0 #列表刷新
   flutter_staggered_animations: ^1.1.1 #列表子控件加载动画
-  url_launcher: ^6.1.11 #用于跳转浏览器
+  url_launcher: ^6.2.4 #用于跳转浏览器
   package_info_plus: ^4.0.2 #用于获取APP版本等相关信息
   home_widget: ^0.3.0 #桌面小组件
   lottie: ^1.2.1 #lottie动画依赖
   flutter_markdown: ^0.6.18+3 # markdown
-
+  markdown_widget: ^2.3.2+3 #markdown
+  roundcheckbox: ^2.0.5
+  animated_flip_counter: ^0.2.6
 
 
 dev_dependencies:
@@ -176,6 +178,7 @@ flutter:
     - assets/images/qq.svg
     - assets/images/blog.svg
     - assets/images/about.svg
+    - assets/images/position.json
     - assets/audio/sendMessage.mp3
   # To add assets to your application, add an assets section, like this:
   # assets:

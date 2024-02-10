@@ -5,6 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
 
+/*
+ * [author] 长白崎
+ * [date] 2024/2/10 21:38
+ * [description] TODO 各大节课时间选择
+ */
 class selectBeginCourseTimeSheet{
 
   dynamic _context;
@@ -303,15 +308,22 @@ class _CeshiState extends State<Ceshi> {
         children: [
           Container(
             height: 50,
-            color: Colors.blue,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 241, 241, 241),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black54,blurRadius: 10,offset: Offset(1,1)
+                )
+              ]
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //上一页
-                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: Colors.black54,),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
                 Text('第${WeekDayForm.Chinese(_pageIndex)}大节'),
                 //下一页
-                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: Colors.white70,),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: Colors.black54,),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
               ],
             ),
           ),
@@ -378,7 +390,7 @@ class _CeshiState extends State<Ceshi> {
     Navigator.pop(context);*/
 
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+            padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
             child: Container(
               height: 50,
               width: MediaQuery.of(context).size.width,
@@ -388,7 +400,7 @@ class _CeshiState extends State<Ceshi> {
                   Container(
                     height: 50,
                     width: 150,
-                    child: ElevatedButton(child: Text('确定'),
+                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
                       style: ButtonStyle(
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
@@ -411,7 +423,7 @@ class _CeshiState extends State<Ceshi> {
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('取消'),
+                        child: Text('取消',style: TextStyle(color: Colors.white),),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Colors.black45

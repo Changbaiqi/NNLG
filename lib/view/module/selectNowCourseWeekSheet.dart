@@ -63,7 +63,7 @@ class selectNowCourseWeekSheet{
             ),
 
             Center(
-              child: Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+              child: Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

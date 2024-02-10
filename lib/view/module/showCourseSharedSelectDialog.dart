@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nnlg/view/Course_SharedView.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 class showCourseSharedSelectDialog extends Dialog{
 
@@ -48,9 +50,10 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> {
                   )
               ),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (builder){
-                  return Course_SharedView();
-                }));
+                // Navigator.of(context).push(MaterialPageRoute(builder: (builder){
+                //   return Course_SharedView();
+                // }));
+                Get.toNamed(Routes.SharedCourseChoose);
               },
             ),),),
           Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),

@@ -1,18 +1,19 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:nnlg/view/module/showCourseSharedSelectDialog.dart';
+import 'package:nnlg/view/router/AppPages.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
 
 class MainCourseViewPage extends StatelessWidget {
   MainCourseViewPage({Key? key}) : super(key: key);
   final logic = Get.put(MainCourseViewLogic());
+
   // final logic = Get.find<MainCourseViewLogic>();
   final state = Get.find<MainCourseViewLogic>().state;
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,9 +40,9 @@ class MainCourseViewPage extends StatelessWidget {
                     },
                   ),
                   Obx(() => Text(
-                    '${state.title.value}',
-                    style: TextStyle(color: Colors.black),
-                  )),
+                        '${state.title.value}',
+                        style: TextStyle(color: Colors.black),
+                      )),
                   IconButton(
                     icon: Image.asset(
                       'assets/images/end.png',
@@ -70,8 +71,16 @@ class MainCourseViewPage extends StatelessWidget {
                   ],
                 ),
                 onPressed: () {
-                  Get.snackbar("课表通知", "正在同步官网课表...",duration: Duration(milliseconds: 1500),);
-                  logic.onRefresh().then((value) => Get.snackbar("课表通知", "同步完毕",duration: Duration(milliseconds: 1500),));
+                  Get.snackbar(
+                    "课表通知",
+                    "正在同步官网课表...",
+                    duration: Duration(milliseconds: 1500),
+                  );
+                  logic.onRefresh().then((value) => Get.snackbar(
+                        "课表通知",
+                        "同步完毕",
+                        duration: Duration(milliseconds: 1500),
+                      ));
                   //ToastUtil.show('敬请期待...');
                 },
               ),
@@ -89,32 +98,47 @@ class MainCourseViewPage extends StatelessWidget {
                     )
                   ],
                 ),
-                onPressed: () {
-                  Get.snackbar("功能通知", "敬请期待...",duration: Duration(milliseconds: 1500),);
+                onPressed: () async {
+                  Get.snackbar(
+                    "功能通知",
+                    "敬请期待...",
+                    duration: Duration(milliseconds: 1500),
+                  );
+                  // Get.toNamed(Routes.ShareCourseChoose);
+                  // await showCourseSharedSelectDialog();
+                  showDialog(
+                      context: context,
+                      builder: (contxt) {
+                        return Center(
+                          child: showCourseSharedSelectDialog(),
+                        );
+                      });
                 },
               )
             ]),
           ],
         ),
       ),
-      body: Obx(()=>Container(
-        height: MediaQuery.of(context).size.height,
-        child: PageView(
-          onPageChanged: (int index) {
-            state.nowIndex.value = index;
-            logic.updateTitle('第${index + 1}周');
-            // print('当前页面时$index');
-          },
-          reverse: false,
-          scrollDirection: Axis.horizontal,
-          controller: logic.pageController,
-          children: CourseData.weekCourseList.value.length!=0?logic.refreshAllCourseTable(CourseData.weekCourseList.value):[Center(
-            child: Text("课表加载中......"),
-          )],
-        ),
-      )),
+      body: Obx(() => Container(
+            height: MediaQuery.of(context).size.height,
+            child: PageView(
+              onPageChanged: (int index) {
+                state.nowIndex.value = index;
+                logic.updateTitle('第${index + 1}周');
+                // print('当前页面时$index');
+              },
+              reverse: false,
+              scrollDirection: Axis.horizontal,
+              controller: logic.pageController,
+              children: CourseData.weekCourseList.value.length != 0
+                  ? logic.refreshAllCourseTable(CourseData.weekCourseList.value)
+                  : [
+                      Center(
+                        child: Text("课表加载中......"),
+                      )
+                    ],
+            ),
+          )),
     );
   }
-
-
 }

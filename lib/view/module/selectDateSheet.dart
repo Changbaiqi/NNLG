@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:nnlg/dao/CourseData.dart';
 
 
-
+/*
+ * [author] 长白崎
+ * [date] 2024/2/10 21:36
+ * [description] 用于选择开学时间的组件
+ */
 class selectDateSheet {
 
 
@@ -228,9 +232,9 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
           }),
 
           Center(
-            child: Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
                     height: 50,

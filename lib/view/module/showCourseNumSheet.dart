@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:nnlg/dao/CourseData.dart';
 
+/*
+ * [author] 长白崎
+ * [date] 2024/2/10 21:38
+ * [description] TODO 本学期总周数选择
+ */
 class showCourseNumSheet{
 
 
@@ -89,9 +94,9 @@ class _showCourseNumSheetMainState extends State<showCourseNumSheetMain> {
           ),
 
           Center(
-            child: Padding(padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Container(
                     height: 50,

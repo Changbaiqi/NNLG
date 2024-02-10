@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/widget/markdown.dart';
+// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 
@@ -13,7 +15,10 @@ class showNoticeDialog extends Dialog {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 340,
+      constraints: BoxConstraints(
+        minHeight: 340,
+        maxHeight: 500,
+      ),
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -65,17 +70,23 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain> {
             '公告',
             style: TextStyle(fontSize: 25),
           ),),
-          Expanded(flex: 1,child: ListView(
-            children: [
-              Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('${widget._json['content']}')
-                ],
-              ),)
-            ],
+          Expanded(child: Padding(
+            padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+            // child: Markdown(data: widget._json['content'],),
+            child: MarkdownWidget(data: widget._json['content'],shrinkWrap: true,),
           )),
+          // Expanded(flex: 1,child: ListView(
+          //   children: [
+          //     Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+          //     child: Column(
+          //       crossAxisAlignment: CrossAxisAlignment.start,
+          //       children: [
+          //         Markdown(data: widget._json['content']),
+          //         // Text('${widget._json['content']}')
+          //       ],
+          //     ),)
+          //   ],
+          // )),
           Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -4,6 +4,14 @@ import 'package:nnlg/view/about_me_view/binding.dart';
 import 'package:nnlg/view/about_me_view/view.dart';
 import 'package:nnlg/view/chit_chat_view/binding.dart';
 import 'package:nnlg/view/chit_chat_view/view.dart';
+import 'package:nnlg/view/course_shared_choose_view/binding.dart';
+import 'package:nnlg/view/course_shared_choose_view/view.dart';
+import 'package:nnlg/view/course_shared_list_view/binding.dart';
+import 'package:nnlg/view/course_shared_list_view/view.dart';
+import 'package:nnlg/view/course_shared_show_view/binding.dart';
+import 'package:nnlg/view/course_shared_show_view/view.dart';
+import 'package:nnlg/view/course_shared_view/binding.dart';
+import 'package:nnlg/view/course_shared_view/view.dart';
 import 'package:nnlg/view/eva_detail_view/binding.dart';
 import 'package:nnlg/view/eva_detail_view/view.dart';
 import 'package:nnlg/view/eval_form_view/binding.dart';
@@ -28,6 +36,8 @@ import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
 import 'package:nnlg/view/teaching_eva_view/binding.dart';
 import 'package:nnlg/view/teaching_eva_view/view.dart';
+import 'package:nnlg/view/train_plan_semester_view/binding.dart';
+import 'package:nnlg/view/train_plan_semester_view/view.dart';
 import 'package:nnlg/view/train_plan_view/binding.dart';
 import 'package:nnlg/view/train_plan_view/view.dart';
 import 'package:nnlg/view/water_charge_view/binding.dart';
@@ -53,5 +63,9 @@ abstract class AppPages{
     GetPage(name: Routes.TeachingEvaDetails, page:()=>EvaDetailViewPage(),binding: EvaDetailViewBinding() ), //评教子页面
     GetPage(name: Routes.EvalForm, page:()=>EvalFormViewPage(),binding: EvalFormViewBinding() ), //评教表单页面
     GetPage(name: Routes.TrainPlan, page:()=>TrainPlanViewPage(),binding: TrainPlanViewBinding() ), //培养计划页面
+    GetPage(name: Routes.TrainPlanSemester, page:()=>TrainPlanSemesterViewPage(),binding: TrainPlanSemesterViewBinding() ), //培养计划页面
+    GetPage(name: Routes.SharedCourseChoose, page:()=> CourseSharedChooseViewPage(),binding: CourseSharedChooseViewBinding()), //共享课表页面
+    GetPage(name: Routes.CourseSharedList, page:()=> CourseSharedListViewPage(),binding: CourseSharedListViewBinding()), // 共享课表账号名单页面
+    GetPage(name: Routes.CourseSharedShow, page:()=> CourseSharedShowViewPage(),binding: CourseSharedShowViewBinding()), // 共享课表查看页面
   ];
 }

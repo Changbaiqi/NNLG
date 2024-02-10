@@ -2,6 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:nnlg/dao/CourseData.dart';
 
+/*
+ * [author] 长白崎
+ * [date] 2024/2/10 21:37
+ * [description] TODO 用于选择本学期的课表的组件
+ */
 class selectNowCourseListSheet{
 
   dynamic _context;
@@ -92,7 +97,6 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-
 
                   Container(
                     height: 50,

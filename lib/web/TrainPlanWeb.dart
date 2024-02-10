@@ -16,7 +16,6 @@ class TrainPlanWeb{
 
   BaseOptions _options = BaseOptions();
 
-
   TrainPlanWeb(){
 
     _options.baseUrl ='${ContextDate.ContextUrl}';

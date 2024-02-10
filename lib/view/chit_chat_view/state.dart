@@ -23,6 +23,7 @@ class ChitChatViewState {
   final audioPlayer = AudioPlayer();
 
   final isMarkdown = false.obs; //是否markdown格式输入
+  final isChatGLM = false.obs;
 
 
   ChitChatViewState() {

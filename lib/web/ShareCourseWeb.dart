@@ -5,10 +5,13 @@
  *
  * @Description TODO
  *               */
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
-import 'package:nnlg/entity/model/ShareCourseDataModel.dart';
+import 'package:nnlg/entity/model/ShareCourseAccountModel.dart' as ShareCourseAccountModel;
+import 'package:nnlg/entity/model/ShareCourseDataModel.dart' as ShareCourseDataModel;
 
 class ShareCourseWeb{
 
@@ -29,7 +32,7 @@ class ShareCourseWeb{
    * [param] null
    * [return]
    */
-  Future<ShareCourseAccountModel> getShareAccountList() async {
+  Future<ShareCourseAccountModel.ShareCourseAccountModel> getShareAccountList() async {
     Response response = await Dio(_options).request(
         '/user/course/getShareAccountList',
         options: Options(
@@ -41,7 +44,7 @@ class ShareCourseWeb{
           }
         )
     );
-    ShareCourseAccountModel model = ShareCourseAccountModel.fromJson(response.data);
+    ShareCourseAccountModel.ShareCourseAccountModel model = ShareCourseAccountModel.ShareCourseAccountModel.fromJson(response.data);
     return model;
   }
 
@@ -53,20 +56,21 @@ class ShareCourseWeb{
    * [param] null
    * [return] 
    */
-  Future<ShareCourseDataModel> getShareCourseData(String studentId) async {
+  Future<Map<dynamic,dynamic>> getShareCourseData(String studentId,String semester) async {
+    print(studentId);
     Response response = await Dio(_options).request(
-        '/user/course/getShareCourseData/${studentId}',
+        '/user/course/getShareCourseData/${studentId}/${semester}',
         options: Options(
             method: 'GET',
             contentType: 'application/x-www.form-urlencoded',
-            receiveTimeout: 4000,
+            receiveTimeout: 15000,
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }
         )
     );
-    ShareCourseDataModel model = ShareCourseDataModel(code: response.data['code'],data: response.data['data'],message: response.data['message']);
-    return model;
+    ;
+    return response.data;
   }
 
 

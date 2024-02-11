@@ -99,11 +99,11 @@ class MainCourseViewPage extends StatelessWidget {
                   ],
                 ),
                 onPressed: () async {
-                  Get.snackbar(
-                    "功能通知",
-                    "敬请期待...",
-                    duration: Duration(milliseconds: 1500),
-                  );
+                  // Get.snackbar(
+                  //   "功能通知",
+                  //   "敬请期待...",
+                  //   duration: Duration(milliseconds: 1500),
+                  // );
                   // Get.toNamed(Routes.ShareCourseChoose);
                   // await showCourseSharedSelectDialog();
                   showDialog(

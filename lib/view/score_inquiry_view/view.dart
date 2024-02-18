@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
@@ -34,11 +35,11 @@ class ScoreInquiryViewPage extends StatelessWidget {
                 value: state.selectTime.value,
                 items: state.searList.value
                     .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(e),
-                    )))
+                        value: e,
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          child: Text(e),
+                        )))
                     .toList(),
                 onChanged: (value) {
                   state.selectTime.value = value!;
@@ -51,8 +52,8 @@ class ScoreInquiryViewPage extends StatelessWidget {
       // body: ListView(
       //   children: [_showScoreWidget],
       // ),
-      body: Obx((){
-        switch(state.showState.value){
+      body: Obx(() {
+        switch (state.showState.value) {
           case 0:
             return Center(
                 child: Lottie.asset('assets/images/loading.json',
@@ -76,7 +77,17 @@ class ScoreInquiryViewPage extends StatelessWidget {
                           childAspectRatio: childAspectRatio,
                         ),
                         itemBuilder: (context, index) {
-                          return showchildElement(state.scoreList[index]);
+                          return AnimationConfiguration.staggeredGrid(
+                              position: index,
+                              duration: Duration(milliseconds: 350),
+                              columnCount: state.scoreList.length,
+                              child: SlideAnimation(
+                                verticalOffset: 50.0,
+                                child: FadeInAnimation(
+                                  child:
+                                      showchildElement(state.scoreList[index]),
+                                ),
+                              ));
                         },
                       ),
                     ),
@@ -86,7 +97,9 @@ class ScoreInquiryViewPage extends StatelessWidget {
               ],
             );
           default:
-            return Center(child: Text('错误'),);
+            return Center(
+              child: Text('错误'),
+            );
         }
       }),
     );

@@ -108,6 +108,7 @@ class MainCourseViewPage extends StatelessWidget {
                   // await showCourseSharedSelectDialog();
                   showDialog(
                       context: context,
+                      barrierColor: Colors.transparent,
                       builder: (contxt) {
                         return Center(
                           child: showCourseSharedSelectDialog(),

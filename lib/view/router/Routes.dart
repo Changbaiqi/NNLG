@@ -11,6 +11,7 @@ class Routes{
   static const SharedCourseChoose= '/main/course/shareChoose';
   static const CourseSharedList = '/course/shared/list';
   static const CourseSharedShow = '/course/shared/show';
+  static const CourseShared = '/course/share';
   static const MainWater = '/main/water';
   static const MainCommunity = '/main/community';
   static const CourseSet = '/course/set';

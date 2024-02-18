@@ -67,5 +67,6 @@ abstract class AppPages{
     GetPage(name: Routes.SharedCourseChoose, page:()=> CourseSharedChooseViewPage(),binding: CourseSharedChooseViewBinding()), //共享课表页面
     GetPage(name: Routes.CourseSharedList, page:()=> CourseSharedListViewPage(),binding: CourseSharedListViewBinding()), // 共享课表账号名单页面
     GetPage(name: Routes.CourseSharedShow, page:()=> CourseSharedShowViewPage(),binding: CourseSharedShowViewBinding()), // 共享课表查看页面
+    GetPage(name: Routes.CourseShared, page:()=> CourseSharedViewPage(),binding: CourseSharedViewBinding()), // 共享课表查看页面
   ];
 }

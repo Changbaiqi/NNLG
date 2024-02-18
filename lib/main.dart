@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:nnlg/view/router/AppPages.dart';
 import 'package:nnlg/view/router/Routes.dart';
 import 'package:nnlg/view/start_view/view.dart';
-
 void main(){
+  WidgetsFlutterBinding.ensureInitialized();
  return runApp(MyApp());
 }
 

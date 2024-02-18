@@ -18,7 +18,7 @@ class ShareDateUtil{
   Future<void> initLoading()async {
 
     //初始化APP的相关信息，比如APP版本以及APP名称和签名等
-    AppInfoData.init();
+    await AppInfoData.init();
 
     //头像加载
     await getAccountHeadMode();

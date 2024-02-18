@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 
@@ -7,6 +8,7 @@ import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
+import 'package:shake_animation_widget/shake_animation_widget.dart';
 
 import 'state.dart';
 
@@ -121,6 +123,11 @@ class MainCourseViewLogic extends GetxController {
   //表格内每一项的组件
   Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,
       {Color? color}) {
+    ShakeAnimationController _shakeAnimationController = new ShakeAnimationController();
+    // if((dateTime.month == DateTime.now().month) &&
+    //     (dateTime.day == DateTime.now().day)){
+    //   Timer.periodic(Duration(seconds: 2),(Timer timer)=>_shakeAnimationController.start(shakeCount: 1));
+    // }
     return courseJSON.length == 0
         ? Center(
             child: Text(
@@ -128,43 +135,50 @@ class MainCourseViewLogic extends GetxController {
               style: TextStyle(fontSize: 12),
             ),
           )
-        : Container(
-            child: Padding(
-              padding: EdgeInsets.all(2.5),
-              child: Container(
-                decoration: new BoxDecoration(
-                  //背景
-                  color: Color.fromARGB(
-                      (dateTime.month == DateTime.now().month) &&
-                              (dateTime.day == DateTime.now().day)
-                          ? 130
-                          : 30,
-                      59,
-                      52,
-                      86),
-                  //设置四周圆角 角度
-                  borderRadius: BorderRadius.all(Radius.circular(4.0)),
-                  //设置四周边框
-                  border: new Border.all(
-                      width: 1, color: Color.fromARGB(80, 59, 52, 86)),
-                ),
-                child: InkWell(
-                  child: Text(
-                    '${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}',
-                    style: TextStyle(
-                        fontSize: 12,
-                        color:
-                            courseJSON.length > 1 ? Colors.red : Colors.black),
+        : ShakeAnimationWidget(
+      shakeAnimationController: _shakeAnimationController,
+            isForward: false,
+            shakeAnimationType: ShakeAnimationType.SkewShake,
+            shakeCount: 0,
+            child: Container(
+              child: Padding(
+                padding: EdgeInsets.all(2.5),
+                child: Container(
+                  decoration: new BoxDecoration(
+                    //背景
+                    color: Color.fromARGB(
+                        (dateTime.month == DateTime.now().month) &&
+                                (dateTime.day == DateTime.now().day)
+                            ? 130
+                            : 30,
+                        59,
+                        52,
+                        86),
+                    //设置四周圆角 角度
+                    borderRadius: BorderRadius.all(Radius.circular(4.0)),
+                    //设置四周边框
+                    border: new Border.all(
+                        width: 1, color: Color.fromARGB(80, 59, 52, 86)),
                   ),
-                  onTap: () {
-                    //ToastUtil.show('${courseJSON['courseName']}');
-                    //debugPrint(courseJSON.toString());
-                    showCourseTableMessage(context).show(courseJSON, dateTime);
-                  },
+                  child: InkWell(
+                    child: Text(
+                      '${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: courseJSON.length > 1
+                              ? Colors.red
+                              : Colors.black),
+                    ),
+                    onTap: () {
+                      //ToastUtil.show('${courseJSON['courseName']}');
+                      //debugPrint(courseJSON.toString());
+                      showCourseTableMessage(context)
+                          .show(courseJSON, dateTime);
+                    },
+                  ),
                 ),
               ),
-            ),
-          );
+            ));
   }
 
   List<TableRow> forWidgetList(List tableWidgetList) {

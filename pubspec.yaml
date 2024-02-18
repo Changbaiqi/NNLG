@@ -15,8 +15,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 3.1.2+4
-
+version: 3.3.3+5
+#version: 3.3.3·亚托莉+5
 environment:
   sdk: ">=2.17.1 <3.0.0"
 
@@ -68,6 +68,8 @@ dependencies:
   markdown_widget: ^2.3.2+3 #markdown
   roundcheckbox: ^2.0.5
   animated_flip_counter: ^0.2.6
+  shake_animation_widget: ^3.0.4 #抖动动画
+  sqflite: ^2.3.2 #Sqlife框架
 
 
 dev_dependencies:
@@ -174,10 +176,22 @@ flutter:
     - assets/images/3.0x/lyl.svg
     - assets/images/4.0x/lyl.svg
     - assets/images/loading.json
+    - assets/images/searchLoadingLottie.json
+    - assets/images/shareLoadingLottie.json
+    - assets/images/exam_plan_lottie.json
+    - assets/images/chat_room_lottie.json
+    - assets/images/evaluate_lottie.json
+    - assets/images/score_search_lottie.json
     - assets/images/github.svg
     - assets/images/qq.svg
     - assets/images/blog.svg
     - assets/images/about.svg
+    - assets/images/exam_plan.svg
+    - assets/images/dorm.svg
+    - assets/images/train_plan.svg
+    - assets/images/score_inquiry.svg
+    - assets/images/score_inquiry2.svg
+    - assets/images/teach_eval.svg
     - assets/images/position.json
     - assets/audio/sendMessage.mp3
   # To add assets to your application, add an assets section, like this:

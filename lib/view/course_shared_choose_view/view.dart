@@ -24,7 +24,7 @@ class CourseSharedChooseViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('查看'),
+          title: Text('查询'),
           elevation: 0,
         ),
         body: Obx(() => ListView.separated(

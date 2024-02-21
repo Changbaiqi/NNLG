@@ -132,18 +132,6 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                             shrinkWrap: true,
                           ),
                         )),
-                        // Expanded(flex: 1,child: ListView(
-                        //   children: [
-                        //     Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                        //     child: Column(
-                        //       crossAxisAlignment: CrossAxisAlignment.start,
-                        //       children: [
-                        //         Markdown(data: widget._json['content']),
-                        //         // Text('${widget._json['content']}')
-                        //       ],
-                        //     ),)
-                        //   ],
-                        // )),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                           child: Row(
@@ -160,7 +148,10 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                                     onPressed: () {
                                       ShareDateUtil()
                                           .setNoticeId(widget._json['uid']);
-                                      Navigator.pop(context);
+                                      // Navigator.pop(context);
+                                      _animationController!
+                                          .reverse()
+                                          .then((value) => Navigator.pop(context));
                                     }),
                               ),
                               Container(
@@ -172,7 +163,9 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                                                 Colors.blueGrey)),
                                     child: Text('取  消'),
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      _animationController!
+                                          .reverse()
+                                          .then((value) => Navigator.pop(context));
                                     }),
                               )
                             ],

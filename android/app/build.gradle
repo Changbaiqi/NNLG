@@ -12,7 +12,7 @@ if (flutterRoot == null) {
 }
 
 
-def flutterVersionCode= 9
+def flutterVersionCode= '9'
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '1'
@@ -45,8 +45,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21//flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-//        versionCode flutterVersionCode.toInteger()
-        versionCode flutterVersionCode
+        versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
     }

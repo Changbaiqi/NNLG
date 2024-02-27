@@ -52,7 +52,7 @@ dependencies:
   image_picker: ^0.8.6 #本地图片选择
   amap_flutter_map: ^3.0.0 #高德地图
   amap_flutter_location: ^3.0.0 #高德定位
-
+  flutter_pickers: ^2.1.8
   flutter_svg: ^0.22.0 #用于加载svg图标
 
   web_socket_channel: ^2.2.0 #用于发送WebSocket
@@ -70,6 +70,7 @@ dependencies:
   animated_flip_counter: ^0.2.6
   shake_animation_widget: ^3.0.4 #抖动动画
   sqflite: ^2.3.2 #Sqlife框架
+  fluwx: ^4.4.10 #微信支付
 
 
 dev_dependencies:
@@ -182,6 +183,8 @@ flutter:
     - assets/images/chat_room_lottie.json
     - assets/images/evaluate_lottie.json
     - assets/images/score_search_lottie.json
+    - assets/images/rocketLoading_lottie.json
+    - assets/images/emoji_lottie.json
     - assets/images/github.svg
     - assets/images/qq.svg
     - assets/images/blog.svg

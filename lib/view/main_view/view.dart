@@ -37,13 +37,16 @@ class MainViewPage extends StatelessWidget {
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.transparent,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
 
       body: PageView(
-        children: _viewList, controller: state.pageController.value,onPageChanged: (indexPage){
-          state.index.value=indexPage;
-      },),
+        children: _viewList,
+        controller: state.pageController.value,
+        onPageChanged: (indexPage) {
+          state.index.value = indexPage;
+        },),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(() =>
           FloatingActionButton(
             child: Icon(Icons.calendar_month),

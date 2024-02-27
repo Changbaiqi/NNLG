@@ -245,9 +245,9 @@ class LoginViewPage extends StatelessWidget {
 
 
 
-  List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
-  Widget inputPassword(){
 
+  Widget inputPassword(){
+    List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
     return Center(
       child: Padding(
         padding: EdgeInsets.fromLTRB(50, 10, 50, 0),

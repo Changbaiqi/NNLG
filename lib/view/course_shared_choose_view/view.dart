@@ -13,39 +13,103 @@ class CourseSharedChooseViewPage extends StatelessWidget {
   final logic = Get.find<CourseSharedChooseViewLogic>();
   final state = Get.find<CourseSharedChooseViewLogic>().state;
 
-  int? _shareCount;
-  List cc = [
-    '{"name": "张三","id": "21060231"}',
-    '{"name": "李四","id": "21060231"}',
-    '{"name": "王五","id": "21060231"}'
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
         appBar: AppBar(
-          title: Text('查询'),
+          automaticallyImplyLeading: !state.isSearch.value,
+          title: Stack(
+            alignment: Alignment.center,
+            children: [
+              AnimatedCrossFade(
+                  firstChild: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('查询'),
+                  ),
+                  secondChild: Align(
+                    alignment: Alignment.center,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            textInputAction: TextInputAction.search,
+                            controller: state.searchController.value,
+                            decoration: InputDecoration(
+                              hintText: '搜索',
+                              contentPadding: EdgeInsets.fromLTRB(20, 0, 50, 0),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                  borderSide: BorderSide(
+                                      color: Colors.black38, width: 2.0)),
+                            ),
+                            onSubmitted: (value) {
+                              //检测输入框数据是否为空
+                              if (state.searchTxtIsEmpty.value) {
+                                state.isSearch.value = !state.isSearch.value;
+                                return;
+                              }
+
+                              state.searchAccount(
+                                  state.searchController.value.text);
+                              state.searchController.refresh();
+                            },
+                          ),
+                          flex: 1,
+                        ),
+                      ],
+                    ),
+                  ),
+                  crossFadeState: state.isSearch.value
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  duration: Duration(milliseconds: 100)),
+              Align(
+                child: IconButton(
+                  icon: Icon(
+                      (!state.searchTxtIsEmpty.value && state.isSearch.value) ||
+                              (!state.isSearch.value)
+                          ? Icons.search
+                          : Icons.close),
+                  onPressed: () {
+                    //检测输入框数据是否为空
+                    if (state.searchTxtIsEmpty.value) {
+                      state.isSearch.value = !state.isSearch.value;
+                      return;
+                    }
+
+                    state.searchAccount(state.searchController.value.text);
+                    state.searchController.refresh();
+                  },
+                ),
+                alignment: Alignment.centerRight,
+              )
+            ],
+          ),
           elevation: 0,
         ),
-        body: Obx(() => ListView.separated(
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return childView(state.accountList.value[index]);
-              },
-              itemCount: state.accountList.value.length,
-              separatorBuilder: (BuildContext context, int index) => Divider(
-                  height: 0.01,
-                  indent: 10,
-                  endIndent: 10,
-                  thickness: 0.1,
-                  color: Colors.black),
-            )));
+        body: WillPopScope(
+          child: Obx(() => state.isSearch.value
+              ? logic.searchView(state.searchController.value.text)
+              : logic.shareChooseView()),
+          onWillPop: () async {
+            if (state.isSearch.value) {
+              state.searchController.value.text = '';
+              state.searchList.value.clear();
+              state.isSearch.value = false;
+              return false;
+            }
+            Get.back(); //退出当前页面
+            return false;
+          },
+        )));
   }
 
   /**
    * 每个选项的子项
    */
-  Widget childView(ShareAccountList accountList) {
+  Widget childView(accountDataJson) {
     // var json = jsonDecode(list[index]);
     return InkWell(
       child: Container(
@@ -68,9 +132,9 @@ class CourseSharedChooseViewPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text('姓名：${accountList.studentName}'),
-                    Text('班级:${accountList.studentClass}'),
-                    Text('学号：${accountList.userAccount}')
+                    Text('姓名：${accountDataJson['studentName']}'),
+                    Text('班级：${accountDataJson['studentClass']}'),
+                    Text('学号：${accountDataJson['userAccount']}')
                   ],
                 ),
               )
@@ -78,8 +142,9 @@ class CourseSharedChooseViewPage extends StatelessWidget {
           ),
         ),
       ),
-      onTap: (){
-        Get.toNamed(Routes.CourseSharedShow,arguments: {'data': accountList});
+      onTap: () {
+        Get.toNamed(Routes.CourseSharedShow,
+            arguments: {'data': accountDataJson});
       },
     );
   }

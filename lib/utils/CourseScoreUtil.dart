@@ -26,7 +26,6 @@ class CourseScoreUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
-          receiveTimeout: 4000,
         )
     );
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
@@ -52,8 +51,7 @@ class CourseScoreUtil{
         '/gllgdxbwglxy_jsxsd/kscj/cjcx_list',
         options: Options(
             method: 'POST',
-            contentType: 'application/x-www-form-urlencoded',
-            receiveTimeout: 4000
+            contentType: 'application/x-www-form-urlencoded'
         ),
         data: {
           "kksj": '${time}',

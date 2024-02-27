@@ -57,7 +57,6 @@ class CourseUtil{
         options: Options(
           method: 'POST',
           contentType: 'application/x-www-form-urlencoded',
-          receiveTimeout: 4000,
         ),
         data: {
           "xnxq01id": '${semester}',
@@ -87,7 +86,6 @@ class CourseUtil{
           options: Options(
               method: 'POST',
               contentType: 'application/x-www-form-urlencoded',
-              receiveTimeout: 4000,
           ),
           data: {
             "xnxq01id": '${semester}',
@@ -125,7 +123,6 @@ class CourseUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www-form-urlencoded',
-          receiveTimeout: 4000,
         )
     );
     //debugPrint('${response.requestOptions.headers}');

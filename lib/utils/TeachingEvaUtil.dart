@@ -24,7 +24,6 @@ class TeachingEvaUtil{
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
-        receiveTimeout: 4000,
       ),
     );
     String str=response.data;
@@ -40,7 +39,6 @@ class TeachingEvaUtil{
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
-        receiveTimeout: 4000,
       ),
     );
     String str=response.data;
@@ -56,7 +54,6 @@ class TeachingEvaUtil{
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
-        receiveTimeout: 4000,
       ),
     );
     String HTML=response.data;
@@ -73,7 +70,6 @@ class TeachingEvaUtil{
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
-        receiveTimeout: 4000,
       ),
     );
     String str=response.data;

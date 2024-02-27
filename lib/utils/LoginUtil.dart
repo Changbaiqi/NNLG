@@ -37,7 +37,6 @@ class LoginUtil{
           options: Options(
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
-            receiveTimeout: 4000,
           ),
           data: {
             "encoded": '${encoded}'

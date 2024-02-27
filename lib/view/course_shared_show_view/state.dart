@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:ffi';
 
 import 'package:flutter/widgets.dart';
@@ -7,7 +8,7 @@ import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
 import 'package:nnlg/web/ShareCourseWeb.dart';
 
 class CourseSharedShowViewState {
-  final accountData = (ShareAccountList()).obs;
+  final accountData = (LinkedHashMap<String,dynamic>()).obs;
 
   final selectSemester = "".obs; //当前选择的学年
   final semesterList = [].obs; //学期列表
@@ -22,7 +23,7 @@ class CourseSharedShowViewState {
   final courseWeek = <Widget>[].obs;
 
   getShareCourseData(String semester) async {
-    await ShareCourseWeb().getShareCourseData(accountData.value.userAccount!,semester).then((value){
+    await ShareCourseWeb().getShareCourseData(accountData.value['userAccount'],semester).then((value){
       // print(value.data.courseList);
       if(value['code']!=200){
         Get.snackbar(

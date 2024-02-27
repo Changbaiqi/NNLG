@@ -79,7 +79,7 @@ class MainCourseViewPage extends StatelessWidget {
                   logic.onRefresh().then((value) => Get.snackbar(
                         "课表通知",
                         "同步完毕",
-                        duration: Duration(milliseconds: 1500),
+                        duration:const Duration(milliseconds: 1500),
                       ));
                   //ToastUtil.show('敬请期待...');
                 },

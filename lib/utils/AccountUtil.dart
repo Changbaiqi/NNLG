@@ -28,7 +28,6 @@ class AccountUtil {
       options: Options(
         method: 'POST',
         contentType: 'application/x-www-form-urlencoded',
-        receiveTimeout: 4000,
       ),
     );
     //debugPrint('${response}');

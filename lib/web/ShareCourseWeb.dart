@@ -32,7 +32,7 @@ class ShareCourseWeb{
    * [param] null
    * [return]
    */
-  Future<ShareCourseAccountModel.ShareCourseAccountModel> getShareAccountList() async {
+  Future<LinkedHashMap<String,dynamic>> getShareAccountList() async {
     Response response = await Dio(_options).request(
         '/user/course/getShareAccountList',
         options: Options(
@@ -44,8 +44,8 @@ class ShareCourseWeb{
           }
         )
     );
-    ShareCourseAccountModel.ShareCourseAccountModel model = ShareCourseAccountModel.ShareCourseAccountModel.fromJson(response.data);
-    return model;
+    // ShareCourseAccountModel.ShareCourseAccountModel model = ShareCourseAccountModel.ShareCourseAccountModel.fromJson(response.data);
+    return response.data;
   }
 
   /**

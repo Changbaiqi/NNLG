@@ -30,7 +30,6 @@ class MainUserUtil{
         options: Options(
           method: 'POST',
           contentType: 'application/json',
-          receiveTimeout: 4000,
 
         )
     );

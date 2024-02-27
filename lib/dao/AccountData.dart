@@ -9,11 +9,12 @@ class AccountData{
   static final head_filePath="".obs;
 
   //一信通
-  static final justMessengerUsername = "".obs;
-  static final justMessengerPassword = "".obs;
-  static final justMessengerAccess_Token = "".obs;
-  static final justMessengerRefresh_Toekn = "".obs;
-  static final justMessengerSchoolId="".obs;
+  static final justMessengerUsername = "".obs; //用户名称
+  static final justMessengerAccount = "".obs; //用户账号
+  static final justMessengerPassword = "".obs; //用户密码
+  static final justMessengerAccess_Token = "".obs; //token
+  static final justMessengerRefresh_Toekn = "".obs; //不知道啥玩意
+  static final justMessengerSchoolId="".obs; //学校id
   static final justMessengerCompany = "".obs;
   static final justMessengerToken_Type = "".obs;
   static final justMessengerExpires_in = 0.obs;

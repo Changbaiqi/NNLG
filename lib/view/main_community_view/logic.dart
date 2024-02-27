@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/utils/AccountUtil.dart';
 import 'package:nnlg/utils/JustMessengerUtil.dart';
+import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
 
 import 'state.dart';
@@ -169,13 +170,18 @@ class MainCommunityViewLogic extends GetxController {
         return;
       }
 
+      ShareDateUtil().setJustMessengerAccount(account); //寄存账号
+      // AccountData.justMessengerAccount.value = account; //寄存账号
+      // AccountData.justMessengerPassword.value = password; //寄存密码
+      ShareDateUtil().setJustMessengerPassword(password); //寄存密码
+
       //装置token等参数
       AccountData.justMessengerAccess_Token.value =
       value['access_token'];
       AccountData.justMessengerRefresh_Toekn.value =
       value['refresh_token'];
-      AccountData.justMessengerSchoolId.value = value['schoolId'];
-      AccountData.justMessengerCompany.value = value['company'];
+      AccountData.justMessengerSchoolId.value = value['schoolId']; //设置学校id
+      AccountData.justMessengerCompany.value = value['company']; //设置公司棉城
       AccountData.justMessengerExpires_in.value = value['expires_in'];
       AccountData.justMessengerToken_Type.value = value['token_type'];
       AccountData.justMessengerJti.value = value['jti'];
@@ -402,13 +408,40 @@ class MainCommunityViewLogic extends GetxController {
               Container(
                 width: MediaQuery.of(context!).size.width,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // JustMessengerUtil().wxPay();
+                  onPressed: () async {
+                    //获取卡的信息
+                    await JustMessengerUtil().getJustMessengerCardMessage().then((value){
+                      //如果获取卡信息异常
+                      if(value['code']!=200){
+                        Get.snackbar('获取一信通信息提示', '${value['message']}',
+                            duration:const Duration(milliseconds: 1500));
+                        return;
+                      }
+
+                      state.justMessengerMoney.value = value['data'][0]['accountBlance'].toString(); //赋值金额
+                      state.justMessengerCardCode.value = value['data'][0]['crdId'];
+
+
+                    });
                   },
                   child: Text('刷新卡片信息'),
                   style: ButtonStyle(
                       backgroundColor:
                           MaterialStateProperty.all(Colors.blueGrey)),
+                ),
+              ),
+              Container(
+                width: MediaQuery.of(context!).size.width,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    ShareDateUtil().setJustMessengerAccount(""); //设置账号为空
+                    ShareDateUtil().setJustMessengerPassword(""); //设置密码为空
+                    state.isLoginJustMessenger.value = false;
+                  },
+                  child: Text('取消绑定'),
+                  style: ButtonStyle(
+                      backgroundColor:
+                      MaterialStateProperty.all(Colors.blueGrey)),
                 ),
               )
             ],
@@ -418,8 +451,27 @@ class MainCommunityViewLogic extends GetxController {
     );
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] TODO 初始化一信通
+   * [date] 2:00 2024/2/28
+   * [param] null
+   * [return]
+   */
+  initJustMessenger(){
+    //如果为空那么直接跳过
+    if(AccountData.justMessengerAccount.value.isEmpty || AccountData.justMessengerPassword.value.isEmpty)
+      return;
+
+    //直接自动登录
+    loginJustMessage(AccountData.justMessengerAccount.value, AccountData.justMessengerPassword.value);
+    state.isLoginJustMessenger.value = true;
+  }
+
   @override
   void onInit() {
-    getOnClickTotal();
+    getOnClickTotal(); //初始化获取点击统计
+    initJustMessenger(); //初始化一信通
   }
 }

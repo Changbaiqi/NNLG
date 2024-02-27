@@ -53,6 +53,10 @@ class ShareDateUtil{
     await getWaterSaler();
     await getWaterUserId();
 
+    //一信通数据加载
+    await getJustMessengerAccount();
+    await getJustMessengerPassword();
+
     //初始化通知寄存版本号
     await getNoticeId();
 
@@ -560,6 +564,55 @@ class ShareDateUtil{
     });
   }
 
+  //获取一信通的用户名称
+  Future<String> getJustMessengerUsername() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? justMessengerUsername = await prefs.getString('JustMessengerUsername');
+    AccountData.justMessengerUsername.value = justMessengerUsername??"";
+    return justMessengerUsername??"";
+  }
+
+  //设置一信通的用户名称
+  Future<void> setJustMessengerUsername(String justMessengerUsername) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('JustMessengerUsername', justMessengerUsername).then((c){
+      AccountData.justMessengerUsername.value = justMessengerUsername;
+    });
+  }
+
+
+  //获取一信通的用户账号
+  Future<String> getJustMessengerAccount() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? justMessengerAccount = await prefs.getString('JustMessengerAccount');
+    AccountData.justMessengerAccount.value = justMessengerAccount??"";
+    return justMessengerAccount??"";
+  }
+
+  //设置一信通的用户账号
+  Future<void> setJustMessengerAccount(String justMessengerAccount) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('JustMessengerAccount', justMessengerAccount).then((c){
+      AccountData.justMessengerAccount.value = justMessengerAccount;
+    });
+  }
+
+
+  //获取一信通的用户密码
+  Future<String> getJustMessengerPassword() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? justMessengerPassword = await prefs.getString('JustMessengerPassword');
+    AccountData.justMessengerPassword.value = justMessengerPassword??"";
+    return justMessengerPassword??"";
+  }
+
+  //设置一信通的用户密码
+  Future<void> setJustMessengerPassword(String justMessengerPassword) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('JustMessengerPassword', justMessengerPassword).then((c){
+      AccountData.justMessengerPassword.value = justMessengerPassword;
+    });
+  }
 
 
 

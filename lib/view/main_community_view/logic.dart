@@ -351,25 +351,25 @@ class MainCommunityViewLogic extends GetxController {
             children: [
               Obx(() => Text('卡号：${state.justMessengerCardCode.value}')),
               Obx(() => Text('${state.justMessengerUserName.value}')),
-              Container(
-                width: 60,
-                height: 20,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context!)
-                        .push(MaterialPageRoute(builder: (builder) {
-                      return SchoolCardInformSet();
-                    }));
-                  },
-                  child: Text(
-                    '设置',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.blueGrey)),
-                ),
-              )
+              // Container(
+              //   width: 60,
+              //   height: 20,
+              //   child: ElevatedButton(
+              //     onPressed: () {
+              //       Navigator.of(context!)
+              //           .push(MaterialPageRoute(builder: (builder) {
+              //         return SchoolCardInformSet();
+              //       }));
+              //     },
+              //     child: Text(
+              //       '设置',
+              //       style: TextStyle(fontSize: 12),
+              //     ),
+              //     style: ButtonStyle(
+              //         backgroundColor:
+              //             MaterialStateProperty.all(Colors.blueGrey)),
+              //   ),
+              // )
             ],
           ),
         ),
@@ -381,31 +381,31 @@ class MainCommunityViewLogic extends GetxController {
               )),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: Column(
             children: [
-              Text(
-                '宿舍状态',
-                style: TextStyle(fontSize: 20),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('绑定宿舍：'),
-                  Text('8403'),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('宿舍电费：'),
-                  Text('40￥'),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [Text('预警金额：'), Text('20￥')],
-              ),
+              // Text(
+              //   '宿舍状态',
+              //   style: TextStyle(fontSize: 20),
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text('绑定宿舍：'),
+              //     Text('8403'),
+              //   ],
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text('宿舍电费：'),
+              //     Text('40￥'),
+              //   ],
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [Text('预警金额：'), Text('20￥')],
+              // ),
               Container(
                 width: MediaQuery.of(context!).size.width,
                 child: ElevatedButton(

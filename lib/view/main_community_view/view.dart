@@ -121,7 +121,6 @@ class MainCommunityViewPage extends StatelessWidget {
                     child: logic.boxChildSvg(
                         'assets/images/train_plan.svg', '培养计划'),
                     onTap: () {
-                      // Get.snackbar("通知", "该功能未开放",duration: Duration(milliseconds: 1500),);
                       Get.toNamed(Routes.TrainPlan);
                     },
                   ),
@@ -130,9 +129,10 @@ class MainCommunityViewPage extends StatelessWidget {
                     // child: logic.boxChildSvg(
                     //     'assets/images/score_inquiry2.svg', '成绩查询'),
                     onTap: () {
-                      CourseScoreUtil().getReportCardQueryList().then((value) {
-                        Get.toNamed(Routes.ScoreInquiry);
-                      });
+//                       CourseScoreUtil().getReportCardQueryList().then((value) {
+//
+//                       });
+                      Get.toNamed(Routes.ScoreInquiry);
                     },
                   ),
                   InkWell(
@@ -140,9 +140,10 @@ class MainCommunityViewPage extends StatelessWidget {
                     // child: logic.boxChildSvg(
                     //     'assets/images/teach_eval.svg', '教学评价'),
                     onTap: () {
-                      CourseScoreUtil().getReportCardQueryList().then((value) {
-                        Get.toNamed(Routes.TeachingEva);
-                      });
+                    Get.toNamed(Routes.TeachingEva);
+//                       CourseScoreUtil().getReportCardQueryList().then((value) {
+//
+//                       });
                     },
                   )
                 ],

@@ -21,8 +21,8 @@ class ScoreInquiryViewLogic extends GetxController {
   // }
 
   //初始化日期列表
-  initSearchList() {
-    CourseScoreUtil().getReportCardQueryList().then((value) {
+  initSearchList() async {
+    await CourseScoreUtil().getReportCardQueryList().then((value) {
       state.searList.value = value;
     });
   }

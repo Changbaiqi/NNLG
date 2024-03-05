@@ -172,7 +172,7 @@ class CourseSharedChooseViewLogic extends GetxController {
                                         text: '学号：',
                                         style: TextStyle(color: Colors.black))
                                   ]..addAll(buildText(
-                                      searchTxT, '${json['shareAccount']}'))),
+                                      searchTxT, '${json['userAccount']}'))),
                             ),
                             RichText(
                               text: TextSpan(

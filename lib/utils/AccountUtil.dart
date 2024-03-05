@@ -70,7 +70,7 @@ class AccountUtil {
       options: Options(
         method: 'get',
         contentType: 'application/x-www-form-urlencoded',
-        receiveTimeout: 4000,
+        receiveTimeout: 10000,
       ),
     );
   }

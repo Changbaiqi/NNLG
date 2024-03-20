@@ -43,6 +43,7 @@ class ShareDateUtil{
     await getSemesterCourseList();
     await getNowCourseList();
     await getCourseTimeList();
+    await getColorClassSchedule();
 
 
     //打水功能相关功能信息加载
@@ -612,6 +613,21 @@ class ShareDateUtil{
     await prefs.setString('JustMessengerPassword', justMessengerPassword).then((c){
       AccountData.justMessengerPassword.value = justMessengerPassword;
     });
+  }
+
+
+  //获取是否为彩色课表
+  Future<bool> getColorClassSchedule() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isColorClassSchedule = await prefs.getBool('isColorClassSchedule');
+    CourseData.isColorClassSchedule.value = isColorClassSchedule??false;
+    return isColorClassSchedule??false;
+  }
+
+  //设置是否为彩色课表
+  Future<void> setColorClassSchedule(bool isOpen) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isColorClassSchedule', isOpen).then((value) => CourseData.isColorClassSchedule.value = isOpen);
   }
 
 

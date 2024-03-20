@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/module/selectBeginCourseTimeSheet.dart';
 import 'package:nnlg/view/module/selectDateSheet.dart';
 import 'package:nnlg/view/module/selectNowCourseListSheet.dart';
@@ -24,15 +23,42 @@ class CourseSetViewPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('课表设置',style: TextStyle(fontSize:20,color: Colors.black),),
+        title: Text('设置',style: TextStyle(fontSize:20,color: Colors.black),),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
       body: Obx(()=>ListView(
         children: [
-
           Padding(padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-            child: Text('基本设置',style: TextStyle(fontSize: 13,color: Colors.black54),),),
+            child: Text('课表设置',style: TextStyle(fontSize: 13,color: Colors.black54),),),
+          InkWell(
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('彩色课表',style: TextStyle(fontSize: 20),),
+                          Text('此选项可以将不同课程进行不同颜色的区分',style: TextStyle(fontSize: 10,color: Colors.black45),),
+                        ],
+                      ),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Row(
+                        children: [
+                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                          Obx(() => Switch(value: CourseData.isColorClassSchedule.value, onChanged: (v){
+                            ShareDateUtil().setColorClassSchedule(v);
+                          }))
+                        ],
+                      ),)
+                  ],
+                ),
+              ),),
+          ),
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(
@@ -192,7 +218,6 @@ class CourseSetViewPage extends StatelessWidget {
 
             },
           ),
-
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(
@@ -304,8 +329,6 @@ class CourseSetViewPage extends StatelessWidget {
 
             },
           )
-
-
         ],
       )),
     );

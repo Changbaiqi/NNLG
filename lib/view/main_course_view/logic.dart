@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,7 @@ import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
 
 import 'state.dart';
@@ -15,6 +17,8 @@ import 'state.dart';
 class MainCourseViewLogic extends GetxController {
   final MainCourseViewState state = MainCourseViewState();
   BuildContext? context;
+
+  final _streamSubscriptions = <StreamSubscription<dynamic>>[];
 
   Widget loading = Center(
     child: Text(
@@ -53,6 +57,11 @@ class MainCourseViewLogic extends GetxController {
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
     // print(allList);
+    // int ans =0;
+    // for(String str in allList){
+    //   log("第${++ans}周课表"+str);
+    // }
+
     //开学时间
     DateTime startSchoolTime = DateTime(
         int.parse(CourseData.schoolOpenTime.value.split('/')[0]),
@@ -146,14 +155,14 @@ class MainCourseViewLogic extends GetxController {
                 child: Container(
                   decoration: new BoxDecoration(
                     //背景
-                    color: Color.fromARGB(
+                    color: !CourseData.isColorClassSchedule.value?Color.fromARGB(
                         (dateTime.month == DateTime.now().month) &&
-                                (dateTime.day == DateTime.now().day)
+                            (dateTime.day == DateTime.now().day)
                             ? 130
                             : 30,
                         59,
                         52,
-                        86),
+                        86):state.stringTurn16Color("${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}"),
                     //设置四周圆角 角度
                     borderRadius: BorderRadius.all(Radius.circular(4.0)),
                     //设置四周边框
@@ -172,6 +181,7 @@ class MainCourseViewLogic extends GetxController {
                     onTap: () {
                       //ToastUtil.show('${courseJSON['courseName']}');
                       //debugPrint(courseJSON.toString());
+                      // state.stringTurn16Color();
                       showCourseTableMessage(context)
                           .show(courseJSON, dateTime);
                     },
@@ -422,11 +432,47 @@ class MainCourseViewLogic extends GetxController {
     );
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 摇一摇返回当前周
+   * [date] 17:19 2024/3/20
+   * [param] null
+   * [return]
+   */
+  shakeListen() {
+    _streamSubscriptions
+        .add(userAccelerometerEvents.listen((UserAccelerometerEvent  event) {
+      //不受重力的影响
+      // print("event的值${event}");
+      int value = 4;
+      if (event.x >= value ||
+          event.x <= -value ||
+          event.y >= value ||
+          event.y <= -value ||
+          event.z >= value ||
+          event.z <= -value) {
+        if(pageController.hasClients)
+          pageController.animateToPage(CourseData.nowWeek.value-1, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
+
+      }
+    }));
+  }
+
+
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.weekCourseList.value);
     //每次进入课表都进行一次课表同步
     onRefresh();
     state.title.value = '第${CourseData.nowWeek.value}周';
+    shakeListen();
   }
+
+
+  @override
+  void onClose() {
+    _streamSubscriptions.forEach((element) {element.cancel();}); //删除所有摇一摇
+  }
+
 }

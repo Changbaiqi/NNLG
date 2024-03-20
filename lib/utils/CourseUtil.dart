@@ -1,11 +1,13 @@
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/utils/edusys/tools/CourseNew.dart';
 
 
 class CourseUtil{
@@ -102,6 +104,12 @@ class CourseUtil{
 
 
     }
+    // int ans =0;
+    // for(String str in resWeekCourseList){
+    //   log("第${++ans}周课表"+str);
+    // }
+
+
     //直接替换
     CourseData.weekCourseList.clear();
     CourseData.weekCourseList.value=resWeekCourseList;
@@ -146,8 +154,10 @@ class CourseUtil{
   //将爬的网页转成JSON
   static Future<String> toJSONCourse(String courseHTML) async {
     MethodChannel platform = const MethodChannel("CoursePOLO");
-    //String returnValue = await platform.invokeMethod("450324200207311613--!--123");
+
     String returnValue = await platform.invokeMethod('${courseHTML}');
+    // String returnValue =await CourseNew("${courseHTML}").getAllJSON();
+    log(returnValue);
     //debugPrint('${returnValue}');
     return returnValue;
   }

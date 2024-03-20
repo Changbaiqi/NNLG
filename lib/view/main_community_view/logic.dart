@@ -348,7 +348,7 @@ class MainCommunityViewLogic extends GetxController {
           padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+              children:[
               Obx(() => Text('卡号：${state.justMessengerCardCode.value}')),
               Obx(() => Text('${state.justMessengerUserName.value}')),
               // Container(

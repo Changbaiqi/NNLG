@@ -91,6 +91,37 @@ public class CourseNew {
             courseForm.setCourseTeacher(mat.group(2));
             courseForm.setCourseWeek(mat.group(5));
             courseForm.setCourseClassRoom(mat.group(6));
+        }else{
+            Pattern patCourseName = Pattern.compile("([\\s\\S]*?)<br/>");
+            Matcher matCourseName = patCourseName.matcher(courseStr);
+            if(matCourseName.find()){
+                courseForm.setCourseName(matCourseName.group(1));
+            }else{
+                courseForm.setCourseName("无");
+            }
+
+            Pattern patCourseTeacher = Pattern.compile("[\\s\\S]*?'老师'[^>]*?>([\\s\\S]*?)<[\\s\\S]*?");
+            Matcher matCourseTeacher = patCourseTeacher.matcher(courseStr);
+            if(matCourseTeacher.find()){
+                courseForm.setCourseTeacher(matCourseTeacher.group(1));
+            }else{
+                courseForm.setCourseTeacher("无");
+            }
+            Pattern patCourseWeek = Pattern.compile("[\\s\\S]*?>\\(([0-9]*?)\\)[\\s\\S]*?>([\\s\\S]*?)<[\\s\\S]*?");
+            Matcher matCourseWeek = patCourseWeek.matcher(courseStr);
+            if(matCourseWeek.find()){
+                courseForm.setCourseWeek(matCourseWeek.group(2));
+            }else{
+                courseForm.setCourseWeek("无");
+            }
+
+            Pattern patCourseClassRoom = Pattern.compile("[\\s\\S]*?'上课地点'[^>]*?>([\\s\\S]*?)<[\\s\\S]*?");
+            Matcher matCourseClassRoom = patCourseClassRoom.matcher(courseStr);
+            if(matCourseClassRoom.find()){
+                courseForm.setCourseClassRoom(matCourseClassRoom.group(1));
+            }else{
+                courseForm.setCourseClassRoom("无");
+            }
         }
 //        System.out.println(courseStr);
         return courseForm;

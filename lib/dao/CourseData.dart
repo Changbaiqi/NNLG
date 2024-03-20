@@ -19,6 +19,8 @@ class CourseData{
   //当前选择的课程表单
   static final nowCourseList="".obs;
 
+  static final isColorClassSchedule = false.obs; //是否为彩色课表
+
 
   //每大节的时间
   static final courseTime = <String>[

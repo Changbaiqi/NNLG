@@ -71,6 +71,7 @@ dependencies:
   shake_animation_widget: ^3.0.4 #抖动动画
   sqflite: ^2.3.2 #Sqlife框架
   fluwx: ^4.4.10 #微信支付
+  sensors_plus: ^4.0.2 #摇一摇
 
 
 dev_dependencies:

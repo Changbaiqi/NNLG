@@ -1,16 +1,23 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-import 'dart:developer';
-
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:tencent_kit/tencent_kit.dart';
 
 import 'state.dart';
 
@@ -19,6 +26,7 @@ class MainCourseViewLogic extends GetxController {
   BuildContext? context;
 
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  final courseWidgetKey = GlobalKey(); //课表key
 
   Widget loading = Center(
     child: Text(
@@ -30,10 +38,6 @@ class MainCourseViewLogic extends GetxController {
   final PageController pageController = PageController(
     initialPage: CourseData.nowWeek.value - 1,
   );
-
-  updateTitle(String text) {
-    state.title.value = text;
-  }
 
   //向下翻一页
   updateNextPage() {
@@ -77,7 +81,7 @@ class MainCourseViewLogic extends GetxController {
       List _resCourseList = [];
       for (int x = 0; x < json.length; ++x) {
         if (i == 6) {
-          debugPrint("这是第${x + 1}周");
+          // debugPrint("这是第${x + 1}周");
           // debugPrint("${json[x]}");
         }
 
@@ -132,7 +136,8 @@ class MainCourseViewLogic extends GetxController {
   //表格内每一项的组件
   Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,
       {Color? color}) {
-    ShakeAnimationController _shakeAnimationController = new ShakeAnimationController();
+    ShakeAnimationController _shakeAnimationController =
+        new ShakeAnimationController();
     // if((dateTime.month == DateTime.now().month) &&
     //     (dateTime.day == DateTime.now().day)){
     //   Timer.periodic(Duration(seconds: 2),(Timer timer)=>_shakeAnimationController.start(shakeCount: 1));
@@ -145,7 +150,7 @@ class MainCourseViewLogic extends GetxController {
             ),
           )
         : ShakeAnimationWidget(
-      shakeAnimationController: _shakeAnimationController,
+            shakeAnimationController: _shakeAnimationController,
             isForward: false,
             shakeAnimationType: ShakeAnimationType.SkewShake,
             shakeCount: 0,
@@ -155,14 +160,17 @@ class MainCourseViewLogic extends GetxController {
                 child: Container(
                   decoration: new BoxDecoration(
                     //背景
-                    color: !CourseData.isColorClassSchedule.value?Color.fromARGB(
-                        (dateTime.month == DateTime.now().month) &&
-                            (dateTime.day == DateTime.now().day)
-                            ? 130
-                            : 30,
-                        59,
-                        52,
-                        86):state.stringTurn16Color("${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}"),
+                    color: !CourseData.isColorClassSchedule.value
+                        ? Color.fromARGB(
+                            (dateTime.month == DateTime.now().month) &&
+                                    (dateTime.day == DateTime.now().day)
+                                ? 130
+                                : 30,
+                            59,
+                            52,
+                            86)
+                        : state.stringTurn16Color(
+                            "${courseJSON.length > 1 ? "有多门课程同时进行，点击查看详细" : courseJSON[0]['courseName']}"),
                     //设置四周圆角 角度
                     borderRadius: BorderRadius.all(Radius.circular(4.0)),
                     //设置四周边框
@@ -442,7 +450,7 @@ class MainCourseViewLogic extends GetxController {
    */
   shakeListen() {
     _streamSubscriptions
-        .add(userAccelerometerEvents.listen((UserAccelerometerEvent  event) {
+        .add(userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       //不受重力的影响
       // print("event的值${event}");
       int value = 4;
@@ -452,27 +460,139 @@ class MainCourseViewLogic extends GetxController {
           event.y <= -value ||
           event.z >= value ||
           event.z <= -value) {
-        if(pageController.hasClients)
-          pageController.animateToPage(CourseData.nowWeek.value-1, duration: const Duration(milliseconds: 500), curve: Curves.decelerate);
-
+        if (pageController.hasClients && CourseData.isShakeToNowSchedule.value)
+          pageController.animateToPage(CourseData.nowWeek.value - 1,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.decelerate);
       }
     }));
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 课表图片分享
+   * [date] 13:24 2024/3/22
+   * [param] null
+   * [return]
+   */
+  Future<String?> capturePngFilePath(globalKey) async {
+    // TencentKitPlatform.instance.shareText(
+    //   scene: TencentScene.kScene_QQ,
+    //   summary: '分享测试',
+    // );
+    try {
+      RenderRepaintBoundary boundary =
+          globalKey.currentContext.findRenderObject();
+      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+      ui.Image image = await boundary.toImage(pixelRatio: dpr);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List picBytes = byteData!.buffer.asUint8List();
+
+      var tempDir = await getTemporaryDirectory();
+      // 判断路径是否存在
+      bool isDirExist = await Directory(tempDir.path).exists();
+      if (!isDirExist) Directory(tempDir.path).create();
+      var file =
+          await File(tempDir.path + "${DateTime.now().toIso8601String()}.png")
+              .writeAsBytes(picBytes);
+      await Share.shareXFiles([XFile(file.path)], text: '南理校园助手');
+      return file.path;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  //申请存本地相册权限
+  Future<bool> getPormiation() async {
+    if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      if (status.isDenied) {
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.photos,
+        ].request();
+        // saveImage(globalKey);
+      }
+      return status.isGranted;
+    } else {
+      var status = await Permission.storage.status;
+      if (status.isDenied) {
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.storage,
+        ].request();
+      }
+      return status.isGranted;
+    }
+  }
+
+  //保存到相册
+  void savePhoto() async {
+    RenderRepaintBoundary? boundary = courseWidgetKey.currentContext!
+        .findRenderObject() as RenderRepaintBoundary?;
+
+    double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+    var image = await boundary!.toImage(pixelRatio: dpr);
+    // 将image转化成byte
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    //获取保存相册权限，如果没有，则申请改权限
+    bool permition = await getPormiation();
+
+    var status = await Permission.photos.status;
+    if (permition) {
+      if (Platform.isIOS) {
+        if (status.isGranted) {
+          Uint8List images = byteData!.buffer.asUint8List();
+          final result = await ImageGallerySaver.saveImage(images,
+              quality: 60, name: "hello");
+          File saveFile = new File(result.replaceAll("file://", ""));
+          await TencentKitPlatform.instance.shareImage(
+              scene: TencentScene.kScene_QQ, imageUri: Uri.file(saveFile.path));
+          // EasyLoading.showToast("保存成功");
+        }
+        if (status.isDenied) {
+          print("IOS拒绝");
+        }
+      } else {
+        //安卓
+        if (status.isGranted) {
+          print("Android已授权");
+          Uint8List images = byteData!.buffer.asUint8List();
+          final result = await ImageGallerySaver.saveImage(images,
+              quality: 60, isReturnImagePathOfIOS: true);
+          // print(result);
+          if (result != null) {
+            print(result['filePath']);
+            // EasyLoading.showToast("保存成功");
+            File saveFile =
+                new File(result['filePath'].replaceAll("content://", ""));
+            await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
+                text: '南理校园助手');
+          } else {
+            print('error');
+            // toast("保存失败");
+          }
+        }
+      }
+    } else {
+      //重新请求--第一次请求权限时，保存方法不会走，需要重新调一次
+      savePhoto();
+    }
+  }
 
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.weekCourseList.value);
     //每次进入课表都进行一次课表同步
     onRefresh();
-    state.title.value = '第${CourseData.nowWeek.value}周';
     shakeListen();
   }
 
-
   @override
   void onClose() {
-    _streamSubscriptions.forEach((element) {element.cancel();}); //删除所有摇一摇
+    _streamSubscriptions.forEach((element) {
+      element.cancel();
+    }); //删除所有摇一摇
   }
-
 }

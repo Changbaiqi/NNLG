@@ -58,6 +58,40 @@ class CourseSetViewPage extends StatelessWidget {
                   ],
                 ),
               ),),
+            onTap: (){
+              ShareDateUtil().setColorClassSchedule(!CourseData.isColorClassSchedule.value);
+            },
+          ),
+          InkWell(
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('摇一摇返回当前周',style: TextStyle(fontSize: 20),),
+                          Text('此选项可以在浏览其他周课表时摇一摇手机快速移动到当前周课表',style: TextStyle(fontSize: 10,color: Colors.black45),),
+                        ],
+                      ),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Row(
+                        children: [
+                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                          Obx(() => Switch(value: CourseData.isShakeToNowSchedule.value, onChanged: (v){
+                            ShareDateUtil().setShakeToNowSchedule(v);
+                          }))
+                        ],
+                      ),)
+                  ],
+                ),
+              ),),
+            onTap: (){
+              ShareDateUtil().setShakeToNowSchedule(!CourseData.isShakeToNowSchedule.value);
+            },
           ),
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),

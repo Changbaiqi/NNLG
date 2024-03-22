@@ -44,6 +44,7 @@ class ShareDateUtil{
     await getNowCourseList();
     await getCourseTimeList();
     await getColorClassSchedule();
+    await getShakeToNowSchedule();
 
 
     //打水功能相关功能信息加载
@@ -628,6 +629,20 @@ class ShareDateUtil{
   Future<void> setColorClassSchedule(bool isOpen) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isColorClassSchedule', isOpen).then((value) => CourseData.isColorClassSchedule.value = isOpen);
+  }
+
+  //获取是否为开启摇一摇
+  Future<bool> getShakeToNowSchedule() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isShakeToNowSchedule = await prefs.getBool('isShakeToNowSchedule');
+    CourseData.isShakeToNowSchedule.value = isShakeToNowSchedule??false;
+    return isShakeToNowSchedule??false;
+  }
+
+  //设置是否为彩色课表
+  Future<void> setShakeToNowSchedule(bool isOpen) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isShakeToNowSchedule', isOpen).then((value) => CourseData.isShakeToNowSchedule.value = isOpen);
   }
 
 

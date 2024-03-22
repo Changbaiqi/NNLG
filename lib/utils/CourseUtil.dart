@@ -157,7 +157,7 @@ class CourseUtil{
 
     String returnValue = await platform.invokeMethod('${courseHTML}');
     // String returnValue =await CourseNew("${courseHTML}").getAllJSON();
-    log(returnValue);
+    // log(returnValue);
     //debugPrint('${returnValue}');
     return returnValue;
   }

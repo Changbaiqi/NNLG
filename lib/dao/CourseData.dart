@@ -21,6 +21,8 @@ class CourseData{
 
   static final isColorClassSchedule = false.obs; //是否为彩色课表
 
+  static final isShakeToNowSchedule = true.obs; //是否开启摇一摇返回当前周
+
 
   //每大节的时间
   static final courseTime = <String>[

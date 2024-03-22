@@ -151,7 +151,7 @@ class MainCommunityViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  loginJustMessage(String account, String password) {
+  loginJustMessage(String account, String password, bool isShowSnackbar) {
     JustMessengerUtil().loginPost(account, password).then((value) async {
       // print(value);
       if (value['resultCode'] != null) {
@@ -196,8 +196,9 @@ class MainCommunityViewLogic extends GetxController {
       //   // Get.snackbar("金额", '${value['data']}');
       //   state.justMessengerMoney.value = value['data'];
       // });
-
-      Get.snackbar('提示', '登录成功', duration: const Duration(milliseconds: 1500));
+      if (isShowSnackbar)
+        Get.snackbar('提示', '登录成功',
+            duration: const Duration(milliseconds: 1500));
       state.isLoginJustMessenger.value = true; //设置为成功登录状态
     });
   }
@@ -327,7 +328,7 @@ class MainCommunityViewLogic extends GetxController {
 
                   //登录
                   loginJustMessage(inputAccountController.text,
-                      inputPasswordController.text);
+                      inputPasswordController.text, true);
                   // _testPicker();
                 },
               ),
@@ -348,7 +349,7 @@ class MainCommunityViewLogic extends GetxController {
           padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:[
+            children: [
               Obx(() => Text('卡号：${state.justMessengerCardCode.value}')),
               Obx(() => Text('${state.justMessengerUserName.value}')),
               // Container(
@@ -469,7 +470,7 @@ class MainCommunityViewLogic extends GetxController {
 
     //直接自动登录
     loginJustMessage(AccountData.justMessengerAccount.value,
-        AccountData.justMessengerPassword.value);
+        AccountData.justMessengerPassword.value, false);
     state.isLoginJustMessenger.value = true;
   }
 

@@ -97,20 +97,6 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(child: Text('确定'),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
-                      ),
-                      onPressed: () {
-                         Navigator.pop(context, '${CourseData.semesterCourseList[_resNowChoosewidget]}');
-                      },),
-                  ),
                   Container(
                     height: 50,
                     width: 150,
@@ -118,7 +104,7 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('取消'),
+                        child: Text('取消',style: TextStyle(color: Colors.white),),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Colors.black45
@@ -131,9 +117,19 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
                     ),
 
                   ),
-
-
-
+                  Container(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
+                          )
+                      ),
+                      onPressed: () {
+                         Navigator.pop(context, '${CourseData.semesterCourseList[_resNowChoosewidget]}');
+                      },),
+                  ),
                 ],
               ),
             ),

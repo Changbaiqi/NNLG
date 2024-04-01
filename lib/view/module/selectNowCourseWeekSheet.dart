@@ -70,7 +70,27 @@ class selectNowCourseWeekSheet{
                     Container(
                       height: 50,
                       width: 150,
-                      child: ElevatedButton(child: Text('确定'),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(_context);
+                          },
+                          child: Text('取消',style: TextStyle(color: Colors.white),),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  Colors.black45
+                              ),
+                              shape: MaterialStateProperty.all(
+                                RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
+
+                              )
+                          )
+                      ),
+
+                    ),
+                    Container(
+                      height: 50,
+                      width: 150,
+                      child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
                         style: ButtonStyle(
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
@@ -79,26 +99,6 @@ class selectNowCourseWeekSheet{
                         onPressed: () {
                         Navigator.pop(_context, _index + 1);
                       },),
-                    ),
-                    Container(
-                      height: 50,
-                      width: 150,
-                      child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(_context);
-                            },
-                          child: Text('取消'),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.black45
-                            ),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-
-                              )
-                          )
-                      ),
-
                     ),
                   ],
                 ),

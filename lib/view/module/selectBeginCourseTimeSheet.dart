@@ -397,25 +397,7 @@ class _CeshiState extends State<Ceshi> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
-                      ),
-                      onPressed: () {
 
-
-
-                        Navigator.pop(context, resDataTime);
-
-
-
-                      },),
-                  ),
                   Container(
                     height: 50,
                     width: 150,
@@ -435,6 +417,25 @@ class _CeshiState extends State<Ceshi> {
                         )
                     ),
 
+                  ),
+                  Container(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
+                          )
+                      ),
+                      onPressed: () {
+
+
+
+                        Navigator.pop(context, resDataTime);
+
+
+
+                      },),
                   ),
                 ],
               ),

@@ -101,24 +101,11 @@ class _showCourseNumSheetMainState extends State<showCourseNumSheetMain> {
                   Container(
                     height: 50,
                     width: 150,
-                    child: ElevatedButton(child: Text('确定'),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context, _index + 17);
-                      },),
-                  ),
-                  Container(
-                    height: 50,
-                    width: 150,
                     child: ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('取消'),
+                        child: Text('取消',style: TextStyle(color: Colors.white),),
                         style: ButtonStyle(
                             backgroundColor: MaterialStateProperty.all(
                                 Colors.black45
@@ -130,6 +117,19 @@ class _showCourseNumSheetMainState extends State<showCourseNumSheetMain> {
                         )
                     ),
 
+                  ),
+                  Container(
+                    height: 50,
+                    width: 150,
+                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
+                          )
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context, _index + 17);
+                      },),
                   ),
                 ],
               ),

@@ -107,7 +107,7 @@ class _showCourseTableMessageChildState extends State<_showCourseTableMessageChi
               child: ElevatedButton(
                   onPressed: (){
                     Navigator.of(context).pop();
-                  }, child: Text('确定')
+                  }, child: Text('确定',style: TextStyle(color: Colors.black54),)
               ),
             ),
           )

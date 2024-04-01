@@ -208,7 +208,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                 child:  ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.blueGrey)
-                    ), child: Text('取消'),onPressed: (){
+                    ), child: Text('取消',style: TextStyle(color: Colors.white),),onPressed: (){
                   // Navigator.pop(context);
                   _animationController!
                       .reverse()
@@ -221,7 +221,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                 child:  ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.blueGrey)
-                    ), child: Text('不再提示此版本',style: TextStyle(fontSize: 11),),onPressed: (){
+                    ), child: Text('不再提示此版本',style: TextStyle(color:Colors.white,fontSize: 11),),onPressed: (){
                   ShareDateUtil().setNoUpdateVersion(widget._json["code"]);
                   _animationController!
                       .reverse()
@@ -239,7 +239,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
       width: MediaQuery.of(context).size.width,
       child: ElevatedButton(style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Colors.blueAccent)
-      ), child: Text('更新'),onPressed: () async {
+      ), child: Text('更新',style: TextStyle(color: Colors.black54),),onPressed: () async {
         //launchUrl(Uri.parse('${widget._json['url']}',));
         if (await canLaunch('${widget._json['url']}')) {
           await launch('${widget._json['url']}');

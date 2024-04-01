@@ -49,7 +49,7 @@ class MainViewPage extends StatelessWidget {
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(() =>
           FloatingActionButton(
-            child: Icon(Icons.calendar_month),
+            child: Icon(Icons.calendar_month,color: Colors.black,),
             backgroundColor: state.index.value == 2 ? Colors.blue : Colors
                 .blueGrey,
             onPressed: () {

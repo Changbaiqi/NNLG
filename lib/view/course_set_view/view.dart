@@ -23,7 +23,7 @@ class CourseSetViewPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('设置',style: TextStyle(fontSize:20,color: Colors.black),),
+        title: Text('课表设置',style: TextStyle(fontSize:20,color: Colors.black),),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),

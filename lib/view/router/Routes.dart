@@ -25,4 +25,5 @@ class Routes{
   static const EvalForm = '/teachingEva/details/evalForm';
   static const TrainPlan= '/trainPlan';
   static const TrainPlanSemester = '/trainPlan/semester';
+  static const AuthenticationStandards = '/authentication/standards';
 }

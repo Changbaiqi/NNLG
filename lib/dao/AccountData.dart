@@ -7,6 +7,10 @@ class AccountData{
   static final headMode = 0.obs; //0为默认图片，1为QQ图片，2为本地
   static final head_qq="".obs;
   static final head_filePath="".obs;
+  static final isIdent = false.obs; //是否有认证标识
+  static final identMainTag= "".obs; //主认证标识标签
+  static final identMainColor="".obs; //主认证标识颜色
+  static final identList= [].obs; //认证项目总表
 
   //一信通
   static final justMessengerUsername = "".obs; //用户名称

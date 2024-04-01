@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/animation.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
@@ -127,12 +129,16 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
 
                 if (value["code"] == 200) {
                   ContextDate.ContextVIPTken = value["token"];
+                  ShareDateUtil().setIsIdent(value["data"]["user"]["isIdent"]==1); //设置是否有认证
+                  ShareDateUtil().setIdentMainColor(value["data"]["user"]["identMainColor"]); //设置主认证颜色
+                  log("认证颜色：${value["data"]["user"]["identMainColor"]}");
+                  ShareDateUtil().setIdentMainTag(value["data"]["user"]["identMainTag"]); //设置主认证标签
                 }
               });
 
               toMain();
             } else {
-              ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
+              ToastUtil.show('登录失败，请检查一下账号或密码是否正确,或者网络是否流畅');
               toLogin();
             }
           });

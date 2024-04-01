@@ -52,14 +52,16 @@ class showUpdateDialog extends Dialog {
     // };
     }
 
-  static autoDialog(BuildContext context) {
+  static autoDialog(BuildContext context,int noVersion) {
     AppUpdateUtil().getAppUpdate().then((json) {
       if (json["code"] != 200) {
         ToastUtil.show('${json['msg']}');
         return;
       }
+
       //如果软件版本递增号高于服务器版本则直接退出
       if (json["data"]["code"] <= AppInfoData.versionNumber.value) return;
+      if(json["data"]["code"]==noVersion) return; //屏蔽更新
 
       showDialog(
         barrierDismissible: false,
@@ -158,9 +160,8 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                             ),)
                         ],
                       )),
-                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10),child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: _initButton(),
+                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10),child: Column(
+                        children: _initButton()
                       ),)
                     ],
                   ),
@@ -199,32 +200,51 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
     List<Widget> list=[];
     if(widget._json['fuver']<AppInfoData.versionNumber.value){
       list.add(
-          Container(
-            width: MediaQuery.of(context).size.width/3,
-            child:  ElevatedButton(
-                style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.blueGrey)
-                ), child: Text('取消'),onPressed: (){
-              // Navigator.pop(context);
-              _animationController!
-                  .reverse()
-                  .then((value) => Navigator.pop(context));
-            }),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                width: 120,
+                child:  ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.blueGrey)
+                    ), child: Text('取消'),onPressed: (){
+                  // Navigator.pop(context);
+                  _animationController!
+                      .reverse()
+                      .then((value) => Navigator.pop(context));
+                }),
+              ),
+
+              Container(
+                width: 130,
+                child:  ElevatedButton(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.blueGrey)
+                    ), child: Text('不再提示此版本',style: TextStyle(fontSize: 11),),onPressed: (){
+                  ShareDateUtil().setNoUpdateVersion(widget._json["code"]);
+                  _animationController!
+                      .reverse()
+                      .then((value) => Navigator.pop(context));
+                }),
+              )
+            ],
           )
       );
   }
 
 
     list.add( Container(
-      width: MediaQuery.of(context).size.width/3,
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      width: MediaQuery.of(context).size.width,
       child: ElevatedButton(style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Colors.blueAccent)
       ), child: Text('更新'),onPressed: () async {
         //launchUrl(Uri.parse('${widget._json['url']}',));
         if (await canLaunch('${widget._json['url']}')) {
-        await launch('${widget._json['url']}');
+          await launch('${widget._json['url']}');
         } else {
-        throw 'Could not launch ${widget._json['url']}';
+          throw 'Could not launch ${widget._json['url']}';
         }
       }),
     ));

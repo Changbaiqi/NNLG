@@ -2,6 +2,8 @@
 import 'package:get/get.dart';
 import 'package:nnlg/view/about_me_view/binding.dart';
 import 'package:nnlg/view/about_me_view/view.dart';
+import 'package:nnlg/view/authentication_standards_view/binding.dart';
+import 'package:nnlg/view/authentication_standards_view/view.dart';
 import 'package:nnlg/view/chit_chat_view/binding.dart';
 import 'package:nnlg/view/chit_chat_view/view.dart';
 import 'package:nnlg/view/course_shared_choose_view/binding.dart';
@@ -68,5 +70,6 @@ abstract class AppPages{
     GetPage(name: Routes.CourseSharedList, page:()=> CourseSharedListViewPage(),binding: CourseSharedListViewBinding()), // 共享课表账号名单页面
     GetPage(name: Routes.CourseSharedShow, page:()=> CourseSharedShowViewPage(),binding: CourseSharedShowViewBinding()), // 共享课表查看页面
     GetPage(name: Routes.CourseShared, page:()=> CourseSharedViewPage(),binding: CourseSharedViewBinding()), // 共享课表查看页面
+    GetPage(name: Routes.AuthenticationStandards, page:()=> AuthenticationStandardsViewPage(),binding: AuthenticationStandardsViewBinding()), // 认证说明
   ];
 }

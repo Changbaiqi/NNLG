@@ -1,6 +1,7 @@
 
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
+import 'package:nnlg/dao/AppUpdateData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/dao/NoticeData.dart';
@@ -61,6 +62,15 @@ class ShareDateUtil{
 
     //初始化通知寄存版本号
     await getNoticeId();
+
+
+    //初始化认证信息
+    await getIsIdent();
+    await getIdentMainColor();
+    await getIdentMainTag();
+
+    //初始化不更新的版本标记
+    await getNoUpdateVersion();
 
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
@@ -635,14 +645,72 @@ class ShareDateUtil{
   Future<bool> getShakeToNowSchedule() async{
     final prefs = await SharedPreferences.getInstance();
     bool? isShakeToNowSchedule = await prefs.getBool('isShakeToNowSchedule');
-    CourseData.isShakeToNowSchedule.value = isShakeToNowSchedule??false;
-    return isShakeToNowSchedule??false;
+    CourseData.isShakeToNowSchedule.value = isShakeToNowSchedule??true;
+    return isShakeToNowSchedule??true;
   }
 
   //设置是否为彩色课表
   Future<void> setShakeToNowSchedule(bool isOpen) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isShakeToNowSchedule', isOpen).then((value) => CourseData.isShakeToNowSchedule.value = isOpen);
+  }
+
+
+//获取是否有认证
+  Future<bool> getIsIdent() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isIdent = await prefs.getBool('isIdent');
+    AccountData.isIdent.value = isIdent??true;
+    return isIdent??false;
+  }
+
+  //设置是否有认证
+  Future<void> setIsIdent(bool isIdent) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isIdent', isIdent).then((value) => AccountData.isIdent.value = isIdent);
+  }
+
+  //获取主认证标签
+  Future<String> getIdentMainTag() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? identMainTag = await prefs.getString('identMainTag');
+    AccountData.identMainTag.value = identMainTag??"";
+    return identMainTag??"";
+  }
+
+  //设置主认证标签
+  Future<void> setIdentMainTag(String identMainTag) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('identMainTag', identMainTag).then((value) => AccountData.identMainTag.value = identMainTag);
+  }
+
+  //获取主认证颜色
+  Future<String> getIdentMainColor() async{
+    final prefs = await SharedPreferences.getInstance();
+    String? identMainColor = await prefs.getString('identMainColor');
+    AccountData.identMainColor.value = identMainColor??"#f1f2f5";
+    return identMainColor??"#f1f2f5";
+  }
+
+  //设置主认证颜色
+  Future<void> setIdentMainColor(String identMainColor) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('identMainColor', identMainColor).then((value) => AccountData.identMainColor.value = identMainColor);
+  }
+
+
+  //获取不提示更新的版本
+  Future<int> getNoUpdateVersion() async{
+    final prefs = await SharedPreferences.getInstance();
+    int? noUpdateVersion = await prefs.getInt('noUpdateVersion');
+    AppUpdateData.noUpdateVersion.value = noUpdateVersion??0;
+    return noUpdateVersion??0;
+  }
+
+  //设置不提示更新的版本
+  Future<void> setNoUpdateVersion(int noUpdateVersion) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('noUpdateVersion', noUpdateVersion).then((value) => AppUpdateData.noUpdateVersion.value = noUpdateVersion);
   }
 
 

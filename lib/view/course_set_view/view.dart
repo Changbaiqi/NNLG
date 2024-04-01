@@ -65,17 +65,20 @@ class CourseSetViewPage extends StatelessWidget {
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(
-                height: 60,
+                height: 65,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('摇一摇返回当前周',style: TextStyle(fontSize: 20),),
-                          Text('此选项可以在浏览其他周课表时摇一摇手机快速移动到当前周课表',style: TextStyle(fontSize: 10,color: Colors.black45),),
-                        ],
+                      child: Container(
+                        width: 250,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('摇一摇返回当前周',style: TextStyle(fontSize: 20),),
+                            Text('此选项可以在浏览其他周课表时摇一摇手机快速移动到当前周课表',maxLines: 2,style: TextStyle(fontSize: 10,color: Colors.black45),),
+                          ],
+                        ),
                       ),),
                     Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                       child: Row(

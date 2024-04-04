@@ -271,6 +271,30 @@ class MainCourseViewLogic extends GetxController {
       ]);
       list.add(tableRow);
     }
+    //
+    // list.insert(
+    //     2,
+    //   TableRow(
+    //     children: [
+    //       TableCell(
+    //         verticalAlignment: TableCellVerticalAlignment.values.single,
+    //         child: Text('午休'),
+    //       )
+    //     ]
+    //   )
+    //     );
+    // list.insert(2, TableRow(
+    //   children: [
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //     Container(child: Text('午休'),),
+    //   ]
+    // ));
     return list;
   }
 

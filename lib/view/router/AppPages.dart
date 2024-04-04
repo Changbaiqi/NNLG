@@ -26,6 +26,8 @@ import 'package:nnlg/view/login_view/binding.dart';
 import 'package:nnlg/view/login_view/view.dart';
 import 'package:nnlg/view/main_community_view/binding.dart';
 import 'package:nnlg/view/main_community_view/view.dart';
+import 'package:nnlg/view/main_course_new_view/binding.dart';
+import 'package:nnlg/view/main_course_new_view/view.dart';
 import 'package:nnlg/view/main_course_view/binding.dart';
 import 'package:nnlg/view/main_course_view/view.dart';
 import 'package:nnlg/view/main_user_view/binding.dart';
@@ -57,6 +59,7 @@ abstract class AppPages{
     GetPage(name: Routes.Login, page: ()=> LoginViewPage(),binding: LoginViewBinding()),  //登录页面
     GetPage(name: Routes.MainUser, page: ()=>MainUserViewPage(),binding: MainUserViewBinding()), //用户页面
     GetPage(name: Routes.MainCourse, page: ()=>MainCourseViewPage(),binding: MainCourseViewBinding()), //个人课表页面
+    GetPage(name: Routes.MainCourseNew, page: ()=>MainCourseNewViewPage(),binding: MainCourseNewViewBinding()), //个人课表页面
     GetPage(name: Routes.MainWater, page: ()=>MainWaterViewPage(),binding: MainWaterViewBinding()), //打水页面
     GetPage(name: Routes.MainCommunity, page:()=>MainCommunityViewPage(),binding: MainCommunityViewBinding() ),//主页
     GetPage(name: Routes.AboutMe, page:()=>AboutMeViewPage(),binding: AboutMeViewBinding() ),//关于页面

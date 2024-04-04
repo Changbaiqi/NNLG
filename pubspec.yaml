@@ -75,6 +75,7 @@ dependencies:
   tencent_kit: ^6.0.1 #QQ分享
   share_plus: ^7.2.2 #分享
   permission_handler: ^8.1.6 #权限管理
+  syncfusion_flutter_calendar: ^25.1.35 #calendar课表展示表格
 
 tencent_kit:
   app_id: 123
@@ -192,6 +193,7 @@ flutter:
     - assets/images/score_search_lottie.json
     - assets/images/rocketLoading_lottie.json
     - assets/images/emoji_lottie.json
+    - assets/images/cloudloading.json
     - assets/images/github.svg
     - assets/images/qq.svg
     - assets/images/blog.svg

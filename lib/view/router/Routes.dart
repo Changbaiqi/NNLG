@@ -8,6 +8,7 @@ class Routes{
   static const Main='/main';
   static const MainUser = '/main/user';
   static const MainCourse = '/main/course';
+  static const MainCourseNew = '/main/courseNew';
   static const SharedCourseChoose= '/main/course/shareChoose';
   static const CourseSharedList = '/course/shared/list';
   static const CourseSharedShow = '/course/shared/show';

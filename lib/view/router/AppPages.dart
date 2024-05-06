@@ -36,6 +36,8 @@ import 'package:nnlg/view/main_view/binding.dart';
 import 'package:nnlg/view/main_view/view.dart';
 import 'package:nnlg/view/main_water_view/binding.dart';
 import 'package:nnlg/view/main_water_view/view.dart';
+import 'package:nnlg/view/nnlg_community_view/binding.dart';
+import 'package:nnlg/view/nnlg_community_view/view.dart';
 import 'package:nnlg/view/score_inquiry_view/binding.dart';
 import 'package:nnlg/view/score_inquiry_view/view.dart';
 import 'package:nnlg/view/start_view/binding.dart';
@@ -77,5 +79,6 @@ abstract class AppPages{
     GetPage(name: Routes.CourseShared, page:()=> CourseSharedViewPage(),binding: CourseSharedViewBinding()), // 共享课表查看页面
     GetPage(name: Routes.CourseSet, page: ()=>CourseSetViewPage(),binding: CourseSetViewBinding()), //课表设置页面
     GetPage(name: Routes.AuthenticationStandards, page:()=> AuthenticationStandardsViewPage(),binding: AuthenticationStandardsViewBinding()), // 认证说明
+    GetPage(name: Routes.NnlgCommunity, page: ()=>NnlgCommunityViewPage(),binding: NnlgCommunityViewBinding()), //校园社区
   ];
 }

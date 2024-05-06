@@ -46,6 +46,7 @@ class ShareDateUtil{
     await getCourseTimeList();
     await getColorClassSchedule();
     await getShakeToNowSchedule();
+    await getNoonLineSwitch();
 
 
     //打水功能相关功能信息加载
@@ -649,10 +650,24 @@ class ShareDateUtil{
     return isShakeToNowSchedule??true;
   }
 
-  //设置是否为彩色课表
+  //设置是否为开启摇一摇
   Future<void> setShakeToNowSchedule(bool isOpen) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isShakeToNowSchedule', isOpen).then((value) => CourseData.isShakeToNowSchedule.value = isOpen);
+  }
+
+  //获取是否为开启午休分割线
+  Future<bool> getNoonLineSwitch() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isNoonLineSwitch = await prefs.getBool('isNoonLineSwitch');
+    CourseData.isNoonLineSwitch.value = isNoonLineSwitch??true;
+    return isNoonLineSwitch??true;
+  }
+
+  //设置是否为开启午休分割线
+  Future<void> setNoonLineSwitch(bool isOpen) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isNoonLineSwitch', isOpen).then((value) => CourseData.isNoonLineSwitch.value = isOpen);
   }
 
 

@@ -23,13 +23,15 @@ class CourseData{
 
   static final isShakeToNowSchedule = true.obs; //是否开启摇一摇返回当前周
 
+  static final isNoonLineSwitch = true.obs; //是否开启午休分割线提示
+
 
   //每大节的时间
   static final courseTime = <String>[
     "08:30-10:05",
     "10:25-12:00",
     "14:30-16:05",
-    "16:15-18:00",
+    "16:15-17:50",
     "18:20-19:55",
     "20:05-21:40"
   ].obs;

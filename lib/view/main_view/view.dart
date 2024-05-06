@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/view/course_set_view/view.dart';
 import 'package:nnlg/view/main_community_view/view.dart';
 import 'package:nnlg/view/main_course_view/view.dart';
 import 'package:nnlg/view/main_user_view/view.dart';
 import 'package:nnlg/view/main_water_view/view.dart';
+import 'package:nnlg/view/nnlg_community_view/view.dart';
 
 import 'logic.dart';
 
@@ -19,15 +19,17 @@ class MainViewPage extends StatelessWidget {
     MainCommunityViewPage(),
     MainWaterViewPage(),
     MainCourseViewPage(),
+    NnlgCommunityViewPage(),
     MainUserViewPage(),
-    CourseSetViewPage(),
+    // CourseSetViewPage(),
   ];
 
   List<BottomNavigationBarItem> _itemList = [
     BottomNavigationBarItem(icon: Icon(Icons.bakery_dining), label: '社区'),
     BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: '打水'),
+    BottomNavigationBarItem(icon: Icon(Icons.discord),label: '社区'),
     BottomNavigationBarItem(icon: Icon(Icons.person), label: '账户'),
-    BottomNavigationBarItem(icon: Icon(Icons.settings), label: '设置'),
+    // BottomNavigationBarItem(icon: Icon(Icons.settings), label: '设置'),
   ];
 
   @override
@@ -121,10 +123,10 @@ class MainViewPage extends StatelessWidget {
                       icon: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.person, color: state.index.value == 3
+                          Icon(Icons.discord, color: state.index.value == 3
                               ? Colors.blue
                               : Colors.black,),
-                          Text('账户', style: TextStyle(fontSize: 12),),
+                          Text('社区', style: TextStyle(fontSize: 12),),
                         ],
                       ),
                       splashRadius: 27,
@@ -135,10 +137,10 @@ class MainViewPage extends StatelessWidget {
                       icon: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.settings, color: state.index.value == 4
+                          Icon(Icons.person, color: state.index.value == 4
                               ? Colors.blue
                               : Colors.black,),
-                          Text('设置', style: TextStyle(fontSize: 12),),
+                          Text('我的', style: TextStyle(fontSize: 12),),
                         ],
                       ),
                       splashRadius: 27,

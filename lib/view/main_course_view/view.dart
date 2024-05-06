@@ -63,7 +63,7 @@ class MainCourseViewPage extends StatelessWidget {
                                     : Colors.redAccent),
                           ),
                           Text(
-                            '${CourseData.nowCourseList}',
+                            '${CourseData.nowCourseList.value}',
                             style: TextStyle(fontSize: 12),
                           )
                         ],
@@ -154,10 +154,11 @@ class MainCourseViewPage extends StatelessWidget {
                         color: Colors.black,
                         size: 20,
                       ),
-                      Text(
-                        '共享课表',
-                        style: TextStyle(fontSize: 8, color: Colors.black),
-                      )
+                     Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                     child:  Text(
+                       '共享课表',
+                       style: TextStyle(fontSize: 12, color: Colors.black),
+                     ),)
                     ],
                   ),
                   value: '共享课表',
@@ -172,10 +173,11 @@ class MainCourseViewPage extends StatelessWidget {
                         color: Colors.black,
                         size: 20,
                       ),
-                      Text(
-                        '设为本周',
-                        style: TextStyle(fontSize: 8, color: Colors.black),
-                      )
+                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child:  Text(
+                          '设为本周',
+                          style: TextStyle(fontSize: 12, color: Colors.black),
+                        ),)
                     ],
                   ),
                   value: '设为本周',

@@ -27,4 +27,5 @@ class Routes{
   static const TrainPlan= '/trainPlan';
   static const TrainPlanSemester = '/trainPlan/semester';
   static const AuthenticationStandards = '/authentication/standards';
+  static const NnlgCommunity = '/nnlgCommunity';
 }

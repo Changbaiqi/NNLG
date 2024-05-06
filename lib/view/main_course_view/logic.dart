@@ -201,10 +201,14 @@ class MainCourseViewLogic extends GetxController {
 
   List<TableRow> forWidgetList(List tableWidgetList) {
     List<TableRow> list = [];
+    double defineBorderWidth = 0.1;
     //左侧日期
     for (int i = 0; i <= 5; ++i) {
       TableRow tableRow = TableRow(children: [
         Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           height: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -228,42 +232,63 @@ class MainCourseViewLogic extends GetxController {
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 1
               ? tableWidgetList[(i * 7) + 0]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 2
               ? tableWidgetList[(i * 7) + 1]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 3
               ? tableWidgetList[(i * 7) + 2]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 4
               ? tableWidgetList[(i * 7) + 3]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 5
               ? tableWidgetList[(i * 7) + 4]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 6
               ? tableWidgetList[(i * 7) + 5]
               : loading,
         ),
         Container(
           height: 100,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.black54,width: defineBorderWidth)
+          ),
           child: tableWidgetList.length >= (i * 7) + 7
               ? tableWidgetList[(i * 7) + 6]
               : loading,
@@ -271,30 +296,22 @@ class MainCourseViewLogic extends GetxController {
       ]);
       list.add(tableRow);
     }
-    //
-    // list.insert(
-    //     2,
-    //   TableRow(
-    //     children: [
-    //       TableCell(
-    //         verticalAlignment: TableCellVerticalAlignment.values.single,
-    //         child: Text('午休'),
-    //       )
-    //     ]
-    //   )
-    //     );
-    // list.insert(2, TableRow(
-    //   children: [
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //     Container(child: Text('午休'),),
-    //   ]
-    // ));
+
+    //如果开启了分割线则添加
+    if(CourseData.isNoonLineSwitch.value){
+      list.insert(2, TableRow(
+          children: [
+            Container(),
+            Container(),
+            Container(),
+            Container(child: Center(child: Text('午'),),),
+            Container(),
+            Container(child: Center(child: Text('休'),),),
+            Container(),
+            Container(),
+          ]
+      ));
+    }
     return list;
   }
 
@@ -306,7 +323,7 @@ class MainCourseViewLogic extends GetxController {
     return Column(
       children: [
         Table(
-          border: TableBorder.all(color: Colors.white70),
+          border: TableBorder.all(color: Colors.transparent),
           children: [
             TableRow(children: [
               Text(''),
@@ -454,7 +471,7 @@ class MainCourseViewLogic extends GetxController {
           child: ListView(
             children: [
               Table(
-                border: TableBorder.all(color: Colors.black, width: 0.5),
+                // border: TableBorder.all(color: Colors.black, width: 0.1),
                 children: forWidgetList(tableWidgetList),
               )
             ],

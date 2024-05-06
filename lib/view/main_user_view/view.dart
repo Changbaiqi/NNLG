@@ -307,42 +307,42 @@ class MainUserViewPage extends StatelessWidget {
                       ),
                     ),
 
-                    //退出登录
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          child: InkWell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Text(
-                                    '测试',
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  child: Image.asset(
-                                    'assets/images/backLogin.png',
-                                    width: 25,
-                                    height: 25,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              //退出登录
-                              Get.toNamed(Routes.MainCourseNew);
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
+                    // // 测试新课表页面用
+                    // Padding(
+                    //   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    //   child: Container(
+                    //     height: 60,
+                    //     width: MediaQuery.of(context).size.width,
+                    //     child: Card(
+                    //       child: InkWell(
+                    //         child: Row(
+                    //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //           children: [
+                    //             Padding(
+                    //               padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                    //               child: Text(
+                    //                 '测试',
+                    //                 style: TextStyle(fontSize: 15),
+                    //               ),
+                    //             ),
+                    //             Padding(
+                    //               padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    //               child: Image.asset(
+                    //                 'assets/images/backLogin.png',
+                    //                 width: 25,
+                    //                 height: 25,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         ),
+                    //         onTap: () {
+                    //           //退出登录
+                    //           Get.toNamed(Routes.MainCourseNew);
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     //退出登录
                     Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),

@@ -96,6 +96,41 @@ class CourseSetViewPage extends StatelessWidget {
               ShareDateUtil().setShakeToNowSchedule(!CourseData.isShakeToNowSchedule.value);
             },
           ),
+
+          InkWell(
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Container(
+                height: 65,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                      child: Container(
+                        width: 250,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('午休分割线',style: TextStyle(fontSize: 20),),
+                            Text('是否显示课表午休分割线',maxLines: 2,style: TextStyle(fontSize: 10,color: Colors.black45),),
+                          ],
+                        ),
+                      ),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                      child: Row(
+                        children: [
+                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                          Obx(() => Switch(value: CourseData.isNoonLineSwitch.value, onChanged: (v){
+                            ShareDateUtil().setNoonLineSwitch(v);
+                          }))
+                        ],
+                      ),)
+                  ],
+                ),
+              ),),
+            onTap: (){
+              ShareDateUtil().setShakeToNowSchedule(!CourseData.isShakeToNowSchedule.value);
+            },
+          ),
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(

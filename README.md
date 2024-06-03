@@ -1,4 +1,4 @@
-# 南理校园助手
+# 校园助手
 
 ![](https://img.shields.io/badge/Android-passing-r.svg)
 

@@ -21,12 +21,14 @@ import 'package:tencent_kit/tencent_kit.dart';
 
 import 'state.dart';
 
-class MainCourseViewLogic extends GetxController {
+class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMixin{
   final MainCourseViewState state = MainCourseViewState();
   BuildContext? context;
 
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   final courseWidgetKey = GlobalKey(); //课表key
+
+  AnimationController? animationController=null;
 
   Widget loading = Center(
     child: Text(
@@ -53,8 +55,12 @@ class MainCourseViewLogic extends GetxController {
 
   //刷新课表
   Future<void> onRefresh() async {
+    if(state.courseRefreshStatus.value==1) return; //反正同时多次触发
+    state.courseRefreshStatus.value=1;
+    animationController?.forward();
     await CourseUtil()
         .getAllCourseWeekList("${CourseData.nowCourseList.value}");
+    state.courseRefreshStatus.value=0;
   }
 
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
@@ -622,12 +628,37 @@ class MainCourseViewLogic extends GetxController {
     }
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 用于监听课表刷新的
+   * [date] 19:47 2024/6/9
+   * [param] null
+   * [return]
+   */
+  void courseRefreshListen(){
+    if(animationController==null)animationController = AnimationController(vsync: this,duration: Duration(
+        milliseconds: 2500
+    ));
+    animationController?..addStatusListener((status) {
+      if(status == AnimationStatus.completed && state.courseRefreshStatus.value==1){
+        animationController?.reset();
+        animationController?.forward();
+      }else if(status == AnimationStatus.completed && state.courseRefreshStatus.value!=1){
+        animationController?.reset();
+      }
+    });
+  }
+
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.weekCourseList.value);
+
+    courseRefreshListen();
     //每次进入课表都进行一次课表同步
     onRefresh();
     shakeListen();
+
   }
 
   @override

@@ -47,6 +47,9 @@ class ShareDateUtil{
     await getColorClassSchedule();
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
+    await getIsPictureBackground();
+    await getIsRandomQuadraticBackground();
+    await getIsCustomerLocalBackground();
 
 
     //打水功能相关功能信息加载
@@ -728,7 +731,46 @@ class ShareDateUtil{
     await prefs.setInt('noUpdateVersion', noUpdateVersion).then((value) => AppUpdateData.noUpdateVersion.value = noUpdateVersion);
   }
 
+  //获取是否为纯色背景课表
+  Future<bool> getIsPictureBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? IsPictureBackground = await prefs.getBool('isPictureBackground');
+    CourseData.isPictureBackground.value = IsPictureBackground??true;
+    return IsPictureBackground??false;
+  }
 
+  //设置是否为纯色背景课表
+  Future<void> setIsPictureBackground(bool isPictureBackground) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isPictureBackground', isPictureBackground).then((value) => CourseData.isPictureBackground.value = isPictureBackground);
+  }
 
+  //获取是否为纯色背景课表
+  Future<bool> getIsRandomQuadraticBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isRandomQuadraticBackground = await prefs.getBool('isRandomQuadraticBackground');
+    CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground??true;
+    return isRandomQuadraticBackground??false;
+  }
+
+  //设置是二次元随机背景课表
+  Future<void> setIsRandomQuadraticBackground(bool isRandomQuadraticBackground) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isRandomQuadraticBackground', isRandomQuadraticBackground).then((value) => CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground);
+  }
+
+  //获取是否为纯色背景课表
+  Future<bool> getIsCustomerLocalBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isCustomerLocalBackground = await prefs.getBool('isCustomerLocalBackground');
+    CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground??true;
+    return isCustomerLocalBackground??false;
+  }
+
+  //设置是否为纯色背景课表
+  Future<void> setIsCustomerLocalBackground(bool isCustomerLocalBackground) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCustomerLocalBackground', isCustomerLocalBackground).then((value) => CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground);
+  }
 
 }

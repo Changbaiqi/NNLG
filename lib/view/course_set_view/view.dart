@@ -64,6 +64,123 @@ class CourseSetViewPage extends StatelessWidget {
           ),
           InkWell(
             child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Column(
+                children: [
+                  Container(
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('纯白背景/图片背景',style: TextStyle(fontSize: 20),),
+                              Text('此选项可以调整课表背景图片',style: TextStyle(fontSize: 10,color: Colors.black45),),
+                              Visibility(child: Container(
+                                child: Text('测试'),
+                              ),visible: false,)
+                            ],
+                          ),),
+                        Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          child: Row(
+                            children: [
+                              // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                              Obx(() => Switch(value: CourseData.isPictureBackground.value, onChanged: (v){
+                                ShareDateUtil().setIsPictureBackground(v);
+                              }))
+                            ],
+                          ),)
+                      ],
+                    ),
+                  ),
+                  Visibility(child: Container(
+                    height: 100,
+                    child: Column(
+                      children: [
+                        InkWell(
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Container(
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('随机二次元背景图',style: TextStyle(fontSize: 15),),
+                                      ],
+                                    ),),
+                                  Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                                        Obx(() => Transform.scale(
+                                          scale: 0.7,
+                                          child: Switch(value: CourseData.isRandomQuadraticBackground.value, onChanged: (v){
+                                            ShareDateUtil().setIsRandomQuadraticBackground(v);
+                                            if(v){ShareDateUtil().setIsCustomerLocalBackground(false);}
+                                          }),
+                                        ))
+                                      ],
+                                    ),)
+                                ],
+                              ),
+                            ),),
+                          onTap: (){
+                            ShareDateUtil().setColorClassSchedule(!CourseData.isColorClassSchedule.value);
+                          },
+                        ),
+                        InkWell(
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Container(
+                              height: 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text('自定义背景图（该功能还没做好）',style: TextStyle(fontSize: 15),),
+                                      ],
+                                    ),),
+                                  Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                    child: Row(
+                                      children: [
+                                        // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                                        Obx(() => Transform.scale(
+                                          scale: 0.7,
+                                          child: Switch(value: CourseData.isCustomerLocalBackground.value, onChanged: (v){
+                                            ShareDateUtil().setIsCustomerLocalBackground(v);
+                                            if(v){ShareDateUtil().setIsRandomQuadraticBackground(false);}
+                                          }),
+                                        ))
+                                      ],
+                                    ),)
+                                ],
+                              ),
+                            ),),
+                          onTap: (){
+                            ShareDateUtil().setColorClassSchedule(!CourseData.isColorClassSchedule.value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),visible: CourseData.isPictureBackground.value,)
+                ],
+              ),),
+            onTap: (){
+              ShareDateUtil().setColorClassSchedule(!CourseData.isColorClassSchedule.value);
+            },
+          ),
+          InkWell(
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Container(
                 height: 65,
                 child: Row(

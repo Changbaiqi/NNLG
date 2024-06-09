@@ -25,6 +25,12 @@ class CourseData{
 
   static final isNoonLineSwitch = true.obs; //是否开启午休分割线提示
 
+  static final isPictureBackground = false.obs; //是否为图片背景
+
+  static final isRandomQuadraticBackground = false.obs; //是否为二次元背景
+
+  static final isCustomerLocalBackground = false.obs; //是否为二次元背景
+
 
   //每大节的时间
   static final courseTime = <String>[

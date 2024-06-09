@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
 
@@ -11,6 +13,7 @@ class LoginUtil{
 
 
   LoginUtil(){
+    _options.method='POST';
     _options.baseUrl ='${ContextDate.ContextUrl}';
   }
 
@@ -33,7 +36,7 @@ class LoginUtil{
 
     try {
       Response response = await Dio(_options).request(
-          '/gllgdxbwglxy_jsxsd/xk/LoginToXk?encoded=${encoded}',
+          '/gllgdxbwglxy_jsxsd/xk/LoginToXk',
           options: Options(
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
@@ -43,8 +46,7 @@ class LoginUtil{
           }
       );
 
-
-
+      // log(response.toString());
     }on DioError catch(e){
       if(e.toString().length>60){
         //print('${e.toString().substring(53,56)}');

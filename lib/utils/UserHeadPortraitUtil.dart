@@ -165,7 +165,7 @@ class _UserHeadPortraitUtil_WinState extends State<_UserHeadPortraitUtil_Win>
 
   Future _getImage() async {
     final pickerImages = await picker.pickImage(source: ImageSource.gallery);
-    if (mounted) {
+    // if (mounted) {
       if (pickerImages != null) {
         File _imgPath = File(pickerImages.path);
         await getApplicationDocumentsDirectory().then((value) async {
@@ -182,5 +182,5 @@ class _UserHeadPortraitUtil_WinState extends State<_UserHeadPortraitUtil_Win>
         print('没有照片可以选择');
       }
     }
-  }
+  // }
 }

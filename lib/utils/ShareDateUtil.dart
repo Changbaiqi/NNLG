@@ -47,9 +47,13 @@ class ShareDateUtil{
     await getColorClassSchedule();
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
-    await getIsPictureBackground();
-    await getIsRandomQuadraticBackground();
-    await getIsCustomerLocalBackground();
+    await getIsPictureBackground(); //获取是否开启背景图
+    await getIsRandomQuadraticBackground(); //获取是否为二次元随机图片
+    await getIsUrlBackground(); //获取是否为url图片
+    await getIsCustomerLocalBackground(); //获取是否为本地图片
+    await getCourseBackgroundFilePath(); //获取本地图片路径
+    await getCourseBackgroundInputUrl(); //获取背景url
+    await getCourseBackgroundOpacity(); //获取背景透明度
 
 
     //打水功能相关功能信息加载
@@ -678,7 +682,7 @@ class ShareDateUtil{
   Future<bool> getIsIdent() async{
     final prefs = await SharedPreferences.getInstance();
     bool? isIdent = await prefs.getBool('isIdent');
-    AccountData.isIdent.value = isIdent??true;
+    AccountData.isIdent.value = isIdent??false;
     return isIdent??false;
   }
 
@@ -735,7 +739,7 @@ class ShareDateUtil{
   Future<bool> getIsPictureBackground() async{
     final prefs = await SharedPreferences.getInstance();
     bool? IsPictureBackground = await prefs.getBool('isPictureBackground');
-    CourseData.isPictureBackground.value = IsPictureBackground??true;
+    CourseData.isPictureBackground.value = IsPictureBackground??false;
     return IsPictureBackground??false;
   }
 
@@ -749,7 +753,7 @@ class ShareDateUtil{
   Future<bool> getIsRandomQuadraticBackground() async{
     final prefs = await SharedPreferences.getInstance();
     bool? isRandomQuadraticBackground = await prefs.getBool('isRandomQuadraticBackground');
-    CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground??true;
+    CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground??false;
     return isRandomQuadraticBackground??false;
   }
 
@@ -759,18 +763,83 @@ class ShareDateUtil{
     await prefs.setBool('isRandomQuadraticBackground', isRandomQuadraticBackground).then((value) => CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground);
   }
 
-  //获取是否为纯色背景课表
+  //获取是否为本地背景课表
   Future<bool> getIsCustomerLocalBackground() async{
     final prefs = await SharedPreferences.getInstance();
     bool? isCustomerLocalBackground = await prefs.getBool('isCustomerLocalBackground');
-    CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground??true;
+    CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground??false;
     return isCustomerLocalBackground??false;
   }
 
-  //设置是否为纯色背景课表
+  //设置是否为本地背景课表
   Future<void> setIsCustomerLocalBackground(bool isCustomerLocalBackground) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isCustomerLocalBackground', isCustomerLocalBackground).then((value) => CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground);
   }
 
+  //获取是否为Url背景课表
+  Future<bool> getIsUrlBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isUrlBackground = await prefs.getBool('isUrlBackground');
+    CourseData.isUrlBackground.value = isUrlBackground??false;
+    return isUrlBackground??false;
+  }
+
+  //设置是否为Url背景课表
+  Future<void> setIsUrlBackground(bool isUrlBackground) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isUrlBackground', isUrlBackground).then((value) => CourseData.isUrlBackground.value = isUrlBackground);
+  }
+
+  //设置背景图片本地路径
+  setCourseBackgroundFilePath(String filePath)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('courseBackgroundFilePath', filePath).then((c){
+      CourseData.courseBackgroundFilePath.value= filePath;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //获取背景图片本地路径
+  Future<String> getCourseBackgroundFilePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? path = await prefs.getString('courseBackgroundFilePath');
+    CourseData.courseBackgroundFilePath.value = path??"";
+    return path??"";
+  }
+
+
+  //设置背景url
+  setCourseBackgroundInputUrl(String courseBackgroundInputUrl)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('courseBackgroundInputUrl', courseBackgroundInputUrl).then((c){
+      CourseData.courseBackgroundInputUrl.value= courseBackgroundInputUrl;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //获取背景url
+  Future<String> getCourseBackgroundInputUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? path = await prefs.getString('courseBackgroundInputUrl');
+    CourseData.courseBackgroundInputUrl.value = path??"";
+    return path??"";
+  }
+
+  //设置背景图片透明度
+  setCourseBackgroundOpacity(double courseBackgroundOpacity)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('courseBackgroundOpacity', courseBackgroundOpacity).then((c){
+      CourseData.courseBackgroundOpacity.value= courseBackgroundOpacity;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //获取背景图片透明度
+  Future<double> getCourseBackgroundOpacity() async {
+    final prefs = await SharedPreferences.getInstance();
+    double? opacity = await prefs.getDouble('courseBackgroundOpacity');
+    CourseData.courseBackgroundOpacity.value = opacity??0.5;
+    return opacity??0.5;
+  }
 }

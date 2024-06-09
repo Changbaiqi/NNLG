@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,9 +33,33 @@ class MainCourseViewPage extends StatelessWidget {
             color: Color.fromARGB(255, 255, 251, 254),
             // color: Colors.white
           ),
-          child: Obx(() => Opacity(
-            child: Image.network('https://t.mwm.moe/fj/',fit: BoxFit.cover,),
-            opacity: CourseData.isPictureBackground.value && CourseData.isRandomQuadraticBackground.value?0.5:0,
+          child: Obx(() => Stack(
+            children: [
+              Opacity(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Image.network('https://t.mwm.moe/fj/',fit: BoxFit.cover,),
+                ),
+                opacity: CourseData.isPictureBackground.value && CourseData.isRandomQuadraticBackground.value?CourseData.courseBackgroundOpacity.value:0,
+              ),
+              Opacity(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Image.network(CourseData.courseBackgroundInputUrl.value,fit: BoxFit.cover,),
+                ),
+                opacity: CourseData.isPictureBackground.value && CourseData.isUrlBackground.value?CourseData.courseBackgroundOpacity.value:0,
+              ),
+              Opacity(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Image.file(File(CourseData.courseBackgroundFilePath.value),fit: BoxFit.cover,),
+                ),
+                opacity: CourseData.isPictureBackground.value && CourseData.isCustomerLocalBackground.value?CourseData.courseBackgroundOpacity.value:0,
+              )
+            ],
           )),
         ),
         Scaffold(
@@ -123,6 +148,7 @@ class MainCourseViewPage extends StatelessWidget {
                       ],
                     )),
                 onPressed: () {
+                  if(state.courseRefreshStatus==1) return; //防止重叠触发
                   Get.snackbar(
                     "课表通知",
                     "正在同步官网课表...",

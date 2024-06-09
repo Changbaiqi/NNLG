@@ -12,14 +12,14 @@ if (flutterRoot == null) {
 }
 
 
-def flutterVersionCode= '16'
+def flutterVersionCode= '17'
 //def flutterVersionCode = '9999999'
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '1'
 //}
 
-def flutterVersionName = '3.4.0·亚托莉'
+def flutterVersionName = '3.4.1·亚托莉'
 //def flutterVersionName = localProperties.getProperty('flutter.versionName')
 //if (flutterVersionName == null) {
 //    //flutterVersionName = '1.0'

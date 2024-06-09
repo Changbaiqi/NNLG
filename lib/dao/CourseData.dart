@@ -27,10 +27,15 @@ class CourseData{
 
   static final isPictureBackground = false.obs; //是否为图片背景
 
-  static final isRandomQuadraticBackground = false.obs; //是否为二次元背景
+  static final isRandomQuadraticBackground = false.obs; //是否为随机二次元背景
+
+  static final isUrlBackground = false.obs; //是否为url背景
 
   static final isCustomerLocalBackground = false.obs; //是否为二次元背景
 
+  static final courseBackgroundFilePath = "".obs; //背景图片路径
+  static final courseBackgroundInputUrl = "".obs; //手动输入的背景图片url
+  static final courseBackgroundOpacity = 0.0.obs; //背景透明度
 
   //每大节的时间
   static final courseTime = <String>[

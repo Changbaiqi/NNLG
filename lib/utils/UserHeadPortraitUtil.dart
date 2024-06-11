@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:path_provider/path_provider.dart';
@@ -163,17 +165,28 @@ class _UserHeadPortraitUtil_WinState extends State<_UserHeadPortraitUtil_Win>
     );
   }
 
+  Future<String> getFileHash(String filePath) async {
+    final file = File(filePath);
+    final fileLength = file.lengthSync();
+
+    final fileBytes = file.readAsBytesSync().buffer.asUint8List();
+    final hash = md5.convert(fileBytes.buffer.asUint8List()).toString();
+    return hash;
+  }
+
   Future _getImage() async {
     final pickerImages = await picker.pickImage(source: ImageSource.gallery);
     // if (mounted) {
       if (pickerImages != null) {
         File _imgPath = File(pickerImages.path);
+        String fileName = await getFileHash(pickerImages.path);
         await getApplicationDocumentsDirectory().then((value) async {
-          _imgPath.copy(value.path + "/user.jpg");
+          if(AccountData.head_filePath.value!="") await File(AccountData.head_filePath.value).delete();
+          _imgPath.copy(value.path + '/user_${fileName}.jpg');
           print("读取：" + AccountData.head_filePath.value);
-          print("地址：" + value.path + "/user.jpg");
+          print("地址：" + value.path + '/user_${fileName}.jpg');
           await ShareDateUtil()
-              .setAccountHeadFilePath(value.path + "/user.jpg");
+              .setAccountHeadFilePath(value.path + '/user_${fileName}.jpg');
           await ShareDateUtil().setAccountHeadMode(2);
         });
 

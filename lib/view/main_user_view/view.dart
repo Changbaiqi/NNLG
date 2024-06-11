@@ -73,38 +73,38 @@ class MainUserViewPage extends StatelessWidget {
                                                 ClipOval(
                                                   //child: Image.asset('images/user.jpg',height: 130,width: 130,),
                                                   child: AccountData
-                                                              .headMode.value ==
-                                                          0
+                                                      .headMode.value ==
+                                                      0
                                                       ? Image.network(
-                                                          "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
-                                                          height: 130,
-                                                          width: 130,
-                                                        )
+                                                      "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
+                                                      height: 130,
+                                                      width: 130,fit: BoxFit.cover
+                                                  )
                                                       : (AccountData.headMode
-                                                                  .value ==
-                                                              1
-                                                          ? Image.network(
-                                                              "https://q1.qlogo.cn/g?b=qq&nk=${AccountData.head_qq.value}&s=640",
-                                                              height: 130,
-                                                              width: 130,
-                                                              errorBuilder:
-                                                                  (contex, e,
-                                                                      stak) {
-                                                                return Image
-                                                                    .network(
-                                                                  "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
-                                                                  height: 130,
-                                                                  width: 130,
-                                                                );
-                                                              },
-                                                            )
-                                                          : Image.file(
-                                                              File(AccountData
-                                                                  .head_filePath
-                                                                  .value),
-                                                              height: 130,
-                                                              width: 130,
-                                                            )),
+                                                      .value ==
+                                                      1
+                                                      ? Image.network(
+                                                      "https://q1.qlogo.cn/g?b=qq&nk=${AccountData.head_qq.value}&s=640",
+                                                      height: 130,
+                                                      width: 130,
+                                                      errorBuilder:
+                                                          (contex, e,
+                                                          stak) {
+                                                        return Image
+                                                            .network(
+                                                            "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
+                                                            height: 130,
+                                                            width: 130,fit: BoxFit.cover
+                                                        );
+                                                      },fit: BoxFit.cover
+                                                  )
+                                                      : Image.file(
+                                                    File(AccountData
+                                                        .head_filePath
+                                                        .value),
+                                                    height: 130,
+                                                    width: 130,fit: BoxFit.cover,
+                                                  )),
                                                 ),
                                                 Visibility(
                                                     visible: AccountData
@@ -150,7 +150,8 @@ class MainUserViewPage extends StatelessWidget {
                                           onTap: () async {
                                             UserHeadPortraitUtil u =
                                                 UserHeadPortraitUtil(context);
-                                            await u.setHead().then((value) {});
+                                            await u.setHead().then((value) {
+                                            });
                                           },
                                         ),
                                         Text(

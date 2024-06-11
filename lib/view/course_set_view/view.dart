@@ -387,12 +387,6 @@ class CourseSetViewPage extends StatelessWidget {
                                             child: ElevatedButton(
                                                 onPressed: () async {
                                                   await logic.getImage();
-                                                  Get.snackbar(
-                                                    "课表通知",
-                                                    "选择图片成功",
-                                                    duration: Duration(
-                                                        milliseconds: 1500),
-                                                  );
                                                 },
                                                 child: Text('选择图片')),
                                           ),

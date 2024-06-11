@@ -77,6 +77,7 @@ dependencies:
   permission_handler: ^8.1.6 #权限管理
   syncfusion_flutter_calendar: ^25.1.38 #calendar课表展示表格
   flutter_screenutil: ^5.9.3  #用于字体大小适配
+  crypto: ^3.0.3 #计算加密
 
 
 tencent_kit:

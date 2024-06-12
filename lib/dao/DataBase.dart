@@ -23,5 +23,25 @@ class DataBase{
     return path;
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 检测表是否存在，存在则true，不存在则false
+   * [date] 23:50 2024/6/11
+   * [param] null
+   * [return]
+   */
+  static Future<bool> checkTable(String tableName) async{
+    //得到数据库的路径
+    var myDataBasePath = await DataBase.getDBPath();
+    //打开数据库
+    Database my_db = await openDatabase(myDataBasePath);
+    //检测表是否存在，如果存在则跳过
+    var list = await my_db.query('sqlite_master',
+        where: """type='table' AND name='${tableName}'""");
+    if(list==0) return false;
+    return true;
+  }
+
 
 }

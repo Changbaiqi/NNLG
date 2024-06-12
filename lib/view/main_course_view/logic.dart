@@ -1,16 +1,23 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/ClassScheduleDao.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
+import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -18,6 +25,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tencent_kit/tencent_kit.dart';
+import 'package:uuid/uuid.dart';
 
 import 'state.dart';
 
@@ -58,11 +66,49 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
     if(state.courseRefreshStatus.value==1) return; //反正同时多次触发
     state.courseRefreshStatus.value=1;
     animationController?.forward();
-    await CourseUtil()
+    List<String> newestCourse = await CourseUtil()
         .getAllCourseWeekList("${CourseData.nowCourseList.value}");
+
+    ShareDateUtil().setWeekCourseList(newestCourse);
+
+    cacheClassSchedule(AccountData.studentID,CourseData.nowCourseList.value,jsonEncode(newestCourse).toString()); //进行缓存逻辑执行
+    // ClassScheduleEntity? classSchedule = await GetIt.I<ClassScheduleDao>().findClassScheduleForUid('123');
+
     state.courseRefreshStatus.value=0;
   }
 
+
+  //用于缓存课表的
+  cacheClassSchedule(String studentId,String semester,String classScheduleJson) async{
+    //获取最新课表数据
+    ClassScheduleEntity? newestClassSchedule =await GetIt.I<ClassScheduleDao>().findNewestClassSchedule(AccountData.studentID,CourseData.nowCourseList.value);
+    String scheduleMd5 = md5.convert(utf8.encode(classScheduleJson)).toString(); //课表数据的md5码
+    //如果没有任何一条记录那么直接先插入现在的数据
+    if(newestClassSchedule==null){
+      //存入
+      await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(uid: Uuid().v1(),studentId: AccountData.studentID,semester: CourseData.nowCourseList.value,dateTime: DateTime.now(),md5: scheduleMd5,json: classScheduleJson));
+      return; //如果不存在最新的那么直接退出
+    }
+
+    //如果内容相同那么久不用更新了，说明当前就已经是最新课表
+    if(scheduleMd5==newestClassSchedule.md5) return;
+
+
+    log(newestClassSchedule.id.toString());
+    log(newestClassSchedule.uid.toString());
+    log(newestClassSchedule.dateTime.toString());
+    log(newestClassSchedule.md5.toString());
+    log(newestClassSchedule.json.toString());
+    GetIt.I<ClassScheduleDao>().deleteClassSchedule(newestClassSchedule);
+    // var list = await GetIt.I<ClassScheduleDao>().findAllClassSchedule();
+    // for(var classSchedule in list){
+    //   log('${classSchedule.id.toString()}-${classSchedule.dateTime}-${classSchedule.uid}-${classSchedule.json}');
+    //   int num =await GetIt.I<ClassScheduleDao>().deleteClassSchedule(classSchedule!);
+    //   log('删除了：$num');
+    // }
+
+
+  }
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {

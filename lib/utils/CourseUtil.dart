@@ -75,7 +75,7 @@ class CourseUtil{
 
 
   //根据学期获取全部课表json并将其装载到课表数据存储
-  Future<void> getAllCourseWeekList(String semester) async {
+  Future<List<String>> getAllCourseWeekList(String semester) async {
 
 
     //暂时寄存
@@ -110,13 +110,12 @@ class CourseUtil{
     // }
 
 
-    //直接替换
-    CourseData.weekCourseList.clear();
-    CourseData.weekCourseList.value=resWeekCourseList;
-    //存储到本地，将最新课表数据
-    ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
-
-
+    // //直接替换
+    // CourseData.weekCourseList.clear();
+    // CourseData.weekCourseList.value=resWeekCourseList;
+    // //存储到本地，将最新课表数据
+    // ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
+    return resWeekCourseList;
 
   }
 

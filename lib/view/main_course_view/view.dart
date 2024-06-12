@@ -205,7 +205,7 @@ class MainCourseViewPage extends StatelessWidget {
                   return [
                     PopupMenuItem(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
@@ -226,7 +226,7 @@ class MainCourseViewPage extends StatelessWidget {
                     ),
                     PopupMenuItem(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
@@ -237,13 +237,34 @@ class MainCourseViewPage extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              '设为本周',
+                              '当前页设为本周',
                               style: TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           )
                         ],
                       ),
                       value: '设为本周',
+                    ),
+                    PopupMenuItem(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.build,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                            child: Text(
+                              '课表改动历史',
+                              style: TextStyle(fontSize: 12, color: Colors.black),
+                            ),
+                          )
+                        ],
+                      ),
+                      value: '课表改动历史',
                     )
                   ];
                 },
@@ -278,6 +299,10 @@ class MainCourseViewPage extends StatelessWidget {
                                 CourseData.ansWeek.value));
                       }
                       break;
+                    case '课表改用历史':{
+
+                    }
+                    break;
                   }
                 },
               )

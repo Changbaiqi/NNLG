@@ -1,11 +1,25 @@
+import 'package:floor/floor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_it/get_it.dart';
+import 'package:nnlg/dao/ClassScheduleDatabase.dart';
 import 'package:nnlg/view/router/AppPages.dart';
 import 'package:nnlg/view/router/Routes.dart';
-import 'package:nnlg/view/start_view/view.dart';
-void main(){
+
+import 'dao/ClassScheduleDao.dart';
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
+  //数据库迁移更新
+  final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db')
+      .addMigrations([Migration(3, 4, (database)async{
+        await database.update('ClassScheduleEntity', {'studentId': '','semester': ''});
+  })]).build();
+  
+  final dao = database.classScheduleDao;
+  GetIt getIt = GetIt.instance;
+  getIt.registerSingleton<ClassScheduleDao>(dao,signalsReady: true);
  return runApp(MyApp());
 }
 

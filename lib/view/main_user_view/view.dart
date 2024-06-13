@@ -337,7 +337,7 @@ class MainUserViewPage extends StatelessWidget {
                               ],
                             ),
                             onTap: () {
-
+                              Get.toNamed(Routes.AccountSafe);
                             },
                           ),
                         ),

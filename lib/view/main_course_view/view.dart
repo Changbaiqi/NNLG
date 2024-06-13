@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -251,20 +250,20 @@ class MainCourseViewPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Icon(
-                            Icons.build,
+                            Icons.update,
                             color: Colors.black,
                             size: 20,
                           ),
                           Padding(
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
-                              '课表改动历史',
+                              '课表同步历史',
                               style: TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           )
                         ],
                       ),
-                      value: '课表改动历史',
+                      value: '课表同步历史',
                     )
                   ];
                 },
@@ -299,7 +298,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 CourseData.ansWeek.value));
                       }
                       break;
-                    case '课表改动历史':{
+                    case '课表同步历史':{
                       logic.showClassScheduleHistory();
                     }
                     break;

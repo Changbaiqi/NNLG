@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:web_socket_channel/io.dart';
 
 class AccountData{
   static String studentName = "长白崎";
@@ -23,4 +24,6 @@ class AccountData{
   static final justMessengerToken_Type = "".obs;
   static final justMessengerExpires_in = 0.obs;
   static final justMessengerJti = "".obs;
+
+  static IOWebSocketChannel? channel=null;
 }

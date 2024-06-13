@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -135,7 +136,7 @@ class LoginViewPage extends StatelessWidget {
 
                               });
                               //课程学期列表获取
-                              CourseUtil().getSemesterCourseList().then((value){
+                              await CourseUtil().getSemesterCourseList().then((value){
                                 //print('${CourseData.semesterCourseList[0]}');
                                 //print('${value[0]}');
                                 //如果以及寄存了课表的日期那么久直接返回
@@ -157,6 +158,10 @@ class LoginViewPage extends StatelessWidget {
 
                                 if (value["code"] == 200) {
                                   ContextDate.ContextVIPTken = value["token"];
+                                  ShareDateUtil().setIsIdent(value["data"]["user"]["isIdent"]==1); //设置是否有认证
+                                  ShareDateUtil().setIdentMainColor(value["data"]["user"]["identMainColor"]); //设置主认证颜色
+                                  log("认证颜色：${value["data"]["user"]["identMainColor"]}");
+                                  ShareDateUtil().setIdentMainTag(value["data"]["user"]["identMainTag"]); //设置主认证标签
                                 }
                               });
 
@@ -199,8 +204,7 @@ class LoginViewPage extends StatelessWidget {
 
 
 
-
-
+  //账号输入
   Widget inputAccount(){
     return Center(
       child: Padding(
@@ -245,7 +249,7 @@ class LoginViewPage extends StatelessWidget {
 
 
 
-
+  //密码输入框
   Widget inputPassword(){
     List<Widget> _seelist = [Image.asset('assets/images/close_eye.png',height: 25,width: 25,),Image.asset('assets/images/open_eye.png',height: 25,width: 25,)];
     return Center(

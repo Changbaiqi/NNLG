@@ -34,7 +34,6 @@ class MainViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logic.startInit(context); //初始化
 
     return Scaffold(
       extendBody: true,

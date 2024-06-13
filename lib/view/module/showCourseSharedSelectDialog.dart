@@ -83,6 +83,7 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
                           //   return Course_SharedView();
                           // }));
                           Get.toNamed(Routes.SharedCourseChoose);
+                          _animationController!.reverse().then((value) => Navigator.pop(context));
                         },
                       ),),
                     ),
@@ -101,6 +102,7 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
                                   borderRadius: BorderRadius.circular(150)))),
                           onPressed: () {
                             Get.toNamed(Routes.CourseShared);
+                            _animationController!.reverse().then((value) => Navigator.pop(context));
                           },
                         ),
                       ),

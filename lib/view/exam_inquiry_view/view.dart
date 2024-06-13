@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:sqflite/utils/utils.dart';
 
 import 'logic.dart';
 
@@ -103,7 +105,11 @@ class ExamInquiryViewPage extends StatelessWidget {
         break;
     }
 
-    //print(json);
+    Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
+    var color = RandomColor.getColor(options);
+    // print(color);
+
+    // log(color);    //print(json);
     json = jsonDecode(json);
     //var jsson = jsonDecode('{"name":"cc"}');
     return Container(
@@ -111,7 +117,8 @@ class ExamInquiryViewPage extends StatelessWidget {
       width: 150,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Color.fromARGB(255, colorR, colorG, colorB),
+          // color: Color.fromARGB(255, colorR, colorG, colorB),
+        color: Color.fromARGB(255, color[0], color[1], color[2]),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(

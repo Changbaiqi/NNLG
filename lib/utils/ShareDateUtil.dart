@@ -95,6 +95,15 @@ class ShareDateUtil{
     await setAccountStudentID("");
     await setAccountStudentMajor("");
 
+    //清空认证
+    await setIsIdent(false);
+    await setIdentMainColor("");
+    await setIdentMainTag("");
+
+    //关闭ws在线
+    AccountData.channel?.sink.close();
+    AccountData.channel=null;
+
     //自动登录取消
     await setAutoLogin(false);
 

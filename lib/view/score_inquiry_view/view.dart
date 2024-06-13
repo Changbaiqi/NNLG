@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -109,16 +110,8 @@ class ScoreInquiryViewPage extends StatelessWidget {
    * 单个组件
    */
   showchildElement(json) {
-    //print(json);
-    int colorR = 0;
-    int colorG = 0;
-    int colorB = 0;
-    while (true) {
-      colorR = Random().nextInt(255);
-      colorG = Random().nextInt(255);
-      colorB = Random().nextInt(255);
-      if ((colorR - colorG).abs() >= 40 || (colorG - colorB).abs() >= 40) break;
-    }
+    Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
+    var color = RandomColor.getColor(options);
     //print(json);
     json = jsonDecode(json);
     //var jsson = jsonDecode('{"name":"cc"}');
@@ -127,7 +120,8 @@ class ScoreInquiryViewPage extends StatelessWidget {
       width: 150,
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Color.fromARGB(255, colorR, colorG, colorB),
+          // color: Color.fromARGB(255, colorR, colorG, colorB),
+        color: Color.fromARGB(255, color[0], color[1], color[2]),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(

@@ -46,7 +46,7 @@ class AccountUtil {
   }
 
   //用于后端记录上线
-  Future<void> onLinetoServer() async {
+  Future<IOWebSocketChannel> onLinetoServer() async {
     IOWebSocketChannel channel = IOWebSocketChannel.connect(
         '${ContextDate.VIPContextIpPort}/user/onLine/${AccountData.studentID}');
     channel.stream.listen((event) {
@@ -54,10 +54,11 @@ class AccountUtil {
       var json = jsonDecode(event);
       ContextDate.onLineTotalCount.value = json['msg'];
     }, onError: (error) {
-        channel.sink.close();
+        channel?.sink.close();
     }, onDone: () async {
         await onLinetoServer();
     });
+    return channel;
   }
 
 

@@ -115,11 +115,9 @@ class CourseSetViewPage extends StatelessWidget {
                               children: [
                                 // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
                                 Obx(() => Switch(
-                                    value:
-                                    CourseData.isPictureBackground.value,
+                                    value: CourseData.isPictureBackground.value,
                                     onChanged: (v) {
-                                      ShareDateUtil()
-                                          .setIsPictureBackground(v);
+                                      ShareDateUtil().setIsPictureBackground(v);
                                     }))
                               ],
                             ),
@@ -138,29 +136,35 @@ class CourseSetViewPage extends StatelessWidget {
                                     height: 40,
                                     child: Row(
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Padding(
                                           padding:
-                                          EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                              EdgeInsets.fromLTRB(35, 5, 0, 0),
                                           child: Column(
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                '背景透明度   ${(CourseData.courseBackgroundOpacity.value*100).toInt()}',
+                                                '背景透明度   ${(CourseData.courseBackgroundOpacity.value * 100).toInt()}',
                                                 style: TextStyle(fontSize: 15),
                                               ),
                                             ],
                                           ),
                                         ),
-                                        Slider(value: CourseData.courseBackgroundOpacity.value, onChanged: (v){
-                                          // CourseData.courseBackgroundOpacity.value = double.parse(v.toStringAsFixed(3));
-                                          ShareDateUtil().setCourseBackgroundOpacity(double.parse(v.toStringAsFixed(3)));
-                                          // log(v.toString());
-                                        })
+                                        Slider(
+                                            value: CourseData
+                                                .courseBackgroundOpacity.value,
+                                            onChanged: (v) {
+                                              // CourseData.courseBackgroundOpacity.value = double.parse(v.toStringAsFixed(3));
+                                              ShareDateUtil()
+                                                  .setCourseBackgroundOpacity(
+                                                      double.parse(v
+                                                          .toStringAsFixed(3)));
+                                              // log(v.toString());
+                                            })
                                       ],
                                     ),
                                   ),
@@ -240,77 +244,86 @@ class CourseSetViewPage extends StatelessWidget {
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
-                                              padding:
-                                              EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  35, 5, 0, 0),
                                               child: Column(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                                    CrossAxisAlignment.start,
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   Text(
                                                     '自定义图片URL背景图',
-                                                    style: TextStyle(fontSize: 15),
+                                                    style:
+                                                        TextStyle(fontSize: 15),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                             Padding(
-                                              padding:
-                                              EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                              padding: EdgeInsets.fromLTRB(
+                                                  0, 0, 10, 0),
                                               child: Row(
                                                 crossAxisAlignment:
-                                                CrossAxisAlignment.center,
+                                                    CrossAxisAlignment.center,
                                                 mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                    MainAxisAlignment.center,
                                                 children: [
                                                   // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
                                                   Obx(() => Transform.scale(
-                                                    scale: 0.7,
-                                                    child: Switch(
-                                                        value: CourseData
-                                                            .isUrlBackground
-                                                            .value,
-                                                        onChanged: (v) {
-                                                          ShareDateUtil()
-                                                              .setIsUrlBackground(
-                                                              v);
-                                                          if (v) {
-                                                            ShareDateUtil()
-                                                                .setIsRandomQuadraticBackground(
-                                                                false);
-                                                            ShareDateUtil()
-                                                                .setIsCustomerLocalBackground(
-                                                                false);
-                                                          }
-                                                        }),
-                                                  ))
+                                                        scale: 0.7,
+                                                        child: Switch(
+                                                            value: CourseData
+                                                                .isUrlBackground
+                                                                .value,
+                                                            onChanged: (v) {
+                                                              ShareDateUtil()
+                                                                  .setIsUrlBackground(
+                                                                      v);
+                                                              if (v) {
+                                                                ShareDateUtil()
+                                                                    .setIsRandomQuadraticBackground(
+                                                                        false);
+                                                                ShareDateUtil()
+                                                                    .setIsCustomerLocalBackground(
+                                                                        false);
+                                                              }
+                                                            }),
+                                                      ))
                                                 ],
                                               ),
                                             )
                                           ],
                                         ),
-                                        Padding(padding: EdgeInsets.fromLTRB(35, 0, 20, 0),child: TextField(
-                                          controller: logic.backGroundUrlController,
-                                          decoration: InputDecoration(
-                                            label: Text('URL'),
-                                            hintText: '请输入图片URL链接',
-                                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(0)
-                                                )
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(0)
-                                                )
-                                            ),
-                                          )
-                                        ),)
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(35, 0, 20, 0),
+                                          child: TextField(
+                                              controller:
+                                                  logic.backGroundUrlController,
+                                              decoration: InputDecoration(
+                                                label: Text('URL'),
+                                                hintText: '请输入图片URL链接',
+                                                contentPadding:
+                                                    EdgeInsets.fromLTRB(
+                                                        10, 0, 10, 0),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    0))),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    0))),
+                                              )),
+                                        )
                                       ],
                                     ),
                                   ),
@@ -405,9 +418,7 @@ class CourseSetViewPage extends StatelessWidget {
                     ],
                   ),
                 ),
-                onTap: () {
-
-                },
+                onTap: () {},
               ),
               InkWell(
                 child: Padding(
@@ -563,7 +574,7 @@ class CourseSetViewPage extends StatelessWidget {
                 ),
                 onTap: () {
                   //用于选择开学年月日
-                  selectNowCourseListSheet(context).show().then((value) {
+                  selectNowCourseListSheet(context).show().then((value) async{
                     if (value != null) {
                       Get.snackbar(
                         "课表通知",
@@ -572,15 +583,21 @@ class CourseSetViewPage extends StatelessWidget {
                       );
                       CourseData.nowCourseList.value = value;
                       ShareDateUtil().setNowCourseList(value);
-                      CourseUtil()
-                          .getAllCourseWeekList("${CourseData.nowCourseList}")
-                          .then((value) {
-                        Get.snackbar(
-                          "课表通知",
-                          "课表切换成功",
-                          duration: Duration(milliseconds: 1500),
-                        );
-                      });
+                      await logic.onRefresh();
+                      Get.snackbar(
+                        "课表通知",
+                        "课表切换成功",
+                        duration: Duration(milliseconds: 1500),
+                      );
+                      // CourseUtil()
+                      //     .getAllCourseWeekList("${CourseData.nowCourseList}")
+                      //     .then((value) {
+                      //   Get.snackbar(
+                      //     "课表通知",
+                      //     "课表切换成功",
+                      //     duration: Duration(milliseconds: 1500),
+                      //   );
+                      // });
                     }
                   });
                 },

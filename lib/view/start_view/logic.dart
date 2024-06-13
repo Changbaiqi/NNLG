@@ -112,7 +112,7 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
               ToastUtil.show('登录成功');
 
               //进行完课表拉取后然后进行对应课表数据拉取刷新
-              Future.wait([
+              await Future.wait([
                 CourseUtil().getSemesterCourseList(),
                 CourseUtil()
                     .getAllCourseWeekList("${CourseData.nowCourseList.value}")

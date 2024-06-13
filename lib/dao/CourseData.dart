@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 
 class CourseData{
 
@@ -16,6 +17,13 @@ class CourseData{
 
   //用于存储从官网最新拉取的课程表的列表
   static final semesterCourseList = <String>[].obs;
+
+  //当前显示课表的UUID值
+  static final showClassScheduleUUID = "".obs;
+
+  //用于存当前显示的课表实体对象
+  static final showClassScheduleEntity = Rx(ClassScheduleEntity);
+
   //当前选择的课程表单
   static final nowCourseList="".obs;
 

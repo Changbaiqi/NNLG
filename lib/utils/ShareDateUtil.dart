@@ -54,6 +54,7 @@ class ShareDateUtil{
     await getCourseBackgroundFilePath(); //获取本地图片路径
     await getCourseBackgroundInputUrl(); //获取背景url
     await getCourseBackgroundOpacity(); //获取背景透明度
+    await getShowClassScheduleUUID(); //获取当前显示课表的UUID
 
 
     //打水功能相关功能信息加载
@@ -842,4 +843,22 @@ class ShareDateUtil{
     CourseData.courseBackgroundOpacity.value = opacity??0.5;
     return opacity??0.5;
   }
+
+  //设置当前显示的课表UUID
+  setShowClassScheduleUUID(String showClassScheduleUUID)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('showClassScheduleUUID', showClassScheduleUUID).then((c){
+      CourseData.showClassScheduleUUID.value= showClassScheduleUUID;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //获取当前显示的课表UUID
+  Future<String> getShowClassScheduleUUID() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? uuid = await prefs.getString('showClassScheduleUUID');
+    CourseData.showClassScheduleUUID.value = uuid??"";
+    return uuid??"";
+  }
+
 }

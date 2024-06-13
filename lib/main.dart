@@ -13,8 +13,8 @@ void main() async{
 
   //数据库迁移更新
   final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db')
-      .addMigrations([Migration(3, 4, (database)async{
-        await database.update('ClassScheduleEntity', {'studentId': '','semester': ''});
+      .addMigrations([Migration(4, 5, (database)async{
+        await database.update('ClassScheduleEntity', {'list': null});
   })]).build();
   
   final dao = database.classScheduleDao;

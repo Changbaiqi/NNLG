@@ -6,8 +6,11 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:crypto/crypto.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
@@ -29,14 +32,15 @@ import 'package:uuid/uuid.dart';
 
 import 'state.dart';
 
-class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMixin{
+class MainCourseViewLogic extends GetxController
+    with SingleGetTickerProviderMixin {
   final MainCourseViewState state = MainCourseViewState();
   BuildContext? context;
 
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   final courseWidgetKey = GlobalKey(); //课表key
 
-  AnimationController? animationController=null;
+  AnimationController? animationController = null;
 
   Widget loading = Center(
     child: Text(
@@ -63,52 +67,205 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
 
   //刷新课表
   Future<void> onRefresh() async {
-    if(state.courseRefreshStatus.value==1) return; //反正同时多次触发
-    state.courseRefreshStatus.value=1;
-    animationController?.forward();
-    List<String> newestCourse = await CourseUtil()
-        .getAllCourseWeekList("${CourseData.nowCourseList.value}");
+    if (state.courseRefreshStatus.value == 1) return; //反正同时多次触发
+    state.courseRefreshStatus.value = 1; //设置当前课表刷新状态为进行中
+    animationController?.forward(); //同步按钮动画执行
 
-    ShareDateUtil().setWeekCourseList(newestCourse);
-
-    cacheClassSchedule(AccountData.studentID,CourseData.nowCourseList.value,jsonEncode(newestCourse).toString()); //进行缓存逻辑执行
-    // ClassScheduleEntity? classSchedule = await GetIt.I<ClassScheduleDao>().findClassScheduleForUid('123');
-
-    state.courseRefreshStatus.value=0;
+    //同步拉取教务系统课表
+    List<String> newestCourse = await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}");
+    //首次获取课表逻辑
+    firstClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+    //课表缓存逻辑执行
+    cacheClassSchedule(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+    //拉取显示最新课表逻辑
+    newestClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+    // ShareDateUtil().setWeekCourseList(newestCourse); //设置课表
+    state.courseRefreshStatus.value = 0;//设置当前课表刷新状态为结束
   }
 
-
   //用于缓存课表的
-  cacheClassSchedule(String studentId,String semester,String classScheduleJson) async{
+  cacheClassSchedule(String studentId, String semester, List<String> classSchedule) async {
     //获取最新课表数据
-    ClassScheduleEntity? newestClassSchedule =await GetIt.I<ClassScheduleDao>().findNewestClassSchedule(AccountData.studentID,CourseData.nowCourseList.value);
-    String scheduleMd5 = md5.convert(utf8.encode(classScheduleJson)).toString(); //课表数据的md5码
+    ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
+        .findNewestClassSchedule(
+            AccountData.studentID, CourseData.nowCourseList.value);
+    String scheduleMd5 = md5
+        .convert(utf8.encode(jsonEncode(classSchedule).toString()))
+        .toString(); //课表数据的md5码
     //如果没有任何一条记录那么直接先插入现在的数据
-    if(newestClassSchedule==null){
+    if (newestClassSchedule == null) {
       //存入
-      await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(uid: Uuid().v1(),studentId: AccountData.studentID,semester: CourseData.nowCourseList.value,dateTime: DateTime.now(),md5: scheduleMd5,json: classScheduleJson));
+      await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(
+              uid: Uuid().v1(),
+              //UUID生成
+              studentId: AccountData.studentID,
+              //用户学号
+              semester: CourseData.nowCourseList.value,
+              //课表学期
+              dateTime: DateTime.now(),
+              //更新时间
+              md5: scheduleMd5,
+              //课表数据的md5值
+              list: classSchedule) //课表数据
+          );
       return; //如果不存在最新的那么直接退出
     }
 
     //如果内容相同那么久不用更新了，说明当前就已经是最新课表
-    if(scheduleMd5==newestClassSchedule.md5) return;
-
+    if (scheduleMd5 == newestClassSchedule.md5) return;
 
     log(newestClassSchedule.id.toString());
     log(newestClassSchedule.uid.toString());
     log(newestClassSchedule.dateTime.toString());
     log(newestClassSchedule.md5.toString());
-    log(newestClassSchedule.json.toString());
-    GetIt.I<ClassScheduleDao>().deleteClassSchedule(newestClassSchedule);
+
+    //如果数据不相同那么存入
+    await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(
+            uid: Uuid().v1(),
+            //UUID生成
+            studentId: AccountData.studentID,
+            //用户学号
+            semester: CourseData.nowCourseList.value,
+            //课表学期
+            dateTime: DateTime.now(),
+            //更新时间
+            md5: scheduleMd5,
+            //课表数据的md5值
+            list: classSchedule) //课表数据
+        );
+
+    // log(newestClassSchedule.json.toString());
+    // GetIt.I<ClassScheduleDao>().deleteClassSchedule(newestClassSchedule);
     // var list = await GetIt.I<ClassScheduleDao>().findAllClassSchedule();
     // for(var classSchedule in list){
     //   log('${classSchedule.id.toString()}-${classSchedule.dateTime}-${classSchedule.uid}-${classSchedule.json}');
     //   int num =await GetIt.I<ClassScheduleDao>().deleteClassSchedule(classSchedule!);
     //   log('删除了：$num');
     // }
-
-
   }
+
+  //首次课表获取逻辑
+  firstClassScheduleLogic(String studentId,String semester,List<String> classSchedule) async{
+    //获取最新课表数据
+    ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
+        .findNewestClassSchedule(
+        AccountData.studentID, CourseData.nowCourseList.value);
+    if(newestClassSchedule==null){ //如果最新课表数据为空那么说明为第一次获取课表
+      ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+      ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
+    }
+  }
+
+  //最新课表显示逻辑
+  newestClassScheduleLogic(String studentId, String semester, List<String> classSchedule) async {
+    //获取最新课表数据
+    ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
+        .findNewestClassSchedule(
+        AccountData.studentID, CourseData.nowCourseList.value);
+    ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
+  }
+
+  //显示指定UUID课表逻辑
+  showClassScheduleForUUID(String UUID)async{
+    ClassScheduleEntity? classSchedule = await GetIt.I<ClassScheduleDao>()
+        .findClassScheduleForUid(UUID);
+    ShareDateUtil().setShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setWeekCourseList((classSchedule?.list)!); //直接显示这个课表
+  }
+  //显示历史变动课表项组件
+  showClassScheduleHistory() async {
+    List<ClassScheduleEntity> scheduleList = await GetIt.I<ClassScheduleDao>()
+        .findAllClassScheduleForStudentIdAndSemester(
+            AccountData.studentID, CourseData.nowCourseList.value);
+    showDialog(
+        context: Get.context!,
+        barrierDismissible: false,
+        builder: (builder) {
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: InkWell(
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 247, 242, 249),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black45,
+                            blurRadius: 10,
+                            offset: Offset(1, 1))
+                      ]),
+                  height: 300,
+                  width: 250,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Column(
+                      children: [
+                        Expanded(child: ListView.builder(
+                            itemCount: scheduleList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              String timeForm =
+                                  '${scheduleList[index].dateTime?.year}-${scheduleList[index].dateTime?.month}-${scheduleList[index].dateTime?.day}  ${scheduleList[index].dateTime?.hour}:${scheduleList[index].dateTime?.minute}';
+                              return InkWell(
+                                child: Container(
+                                  height: 60,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            '更新时间：${timeForm}',
+                                            style: TextStyle(
+                                                color: Colors.black, fontSize: 12),
+                                          ),
+                                          Visibility(
+                                            child: Text(' (当前)',style: TextStyle(color: Colors.red),),
+                                            visible: CourseData.showClassScheduleUUID.value==scheduleList[index].uid,
+                                          )
+                                        ],
+                                      ),
+                                      Text('课表UID值：${scheduleList[index].uid}',
+                                          style: TextStyle(
+                                              color: Colors.black, fontSize: 9)),
+                                      Text('课表MD5值：${scheduleList[index].md5}',
+                                          style: TextStyle(
+                                              color: Colors.black, fontSize: 9))
+                                    ],
+                                  ),
+                                ),
+                                onTap: () {
+                                  showClassScheduleForUUID((scheduleList[index]?.uid)!);
+                                  Navigator.pop(builder); //退出弹窗
+                                  Get.snackbar(
+                                    "课表通知",
+                                    "已选择${timeForm}历史缓存课表",
+                                    duration: Duration(milliseconds: 1500),
+                                  );
+                                },
+                              );
+                            }),flex: 1,),
+                        Container(
+                          width: MediaQuery.of(builder).size.width,
+                          child: ElevatedButton(onPressed: (){
+                            Navigator.pop(builder);
+                          }, child: Text('取消')),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(builder);
+                Get.back();
+              },
+            ),
+          );
+        });
+  }
+
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
@@ -259,8 +416,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
       TableRow tableRow = TableRow(children: [
         Container(
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           height: 100,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -285,8 +442,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 1
               ? tableWidgetList[(i * 7) + 0]
               : loading,
@@ -294,8 +451,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 2
               ? tableWidgetList[(i * 7) + 1]
               : loading,
@@ -303,8 +460,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 3
               ? tableWidgetList[(i * 7) + 2]
               : loading,
@@ -312,8 +469,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 4
               ? tableWidgetList[(i * 7) + 3]
               : loading,
@@ -321,8 +478,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 5
               ? tableWidgetList[(i * 7) + 4]
               : loading,
@@ -330,8 +487,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 6
               ? tableWidgetList[(i * 7) + 5]
               : loading,
@@ -339,8 +496,8 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
         Container(
           height: 100,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black54,width: defineBorderWidth)
-          ),
+              border:
+                  Border.all(color: Colors.black54, width: defineBorderWidth)),
           child: tableWidgetList.length >= (i * 7) + 7
               ? tableWidgetList[(i * 7) + 6]
               : loading,
@@ -350,19 +507,27 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
     }
 
     //如果开启了分割线则添加
-    if(CourseData.isNoonLineSwitch.value){
-      list.insert(2, TableRow(
-          children: [
+    if (CourseData.isNoonLineSwitch.value) {
+      list.insert(
+          2,
+          TableRow(children: [
             Container(),
             Container(),
             Container(),
-            Container(child: Center(child: Text('午'),),),
+            Container(
+              child: Center(
+                child: Text('午'),
+              ),
+            ),
             Container(),
-            Container(child: Center(child: Text('休'),),),
+            Container(
+              child: Center(
+                child: Text('休'),
+              ),
+            ),
             Container(),
             Container(),
-          ]
-      ));
+          ]));
     }
     return list;
   }
@@ -682,18 +847,21 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
    * [param] null
    * [return]
    */
-  void courseRefreshListen(){
-    if(animationController==null)animationController = AnimationController(vsync: this,duration: Duration(
-        milliseconds: 2500
-    ));
-    animationController?..addStatusListener((status) {
-      if(status == AnimationStatus.completed && state.courseRefreshStatus.value==1){
-        animationController?.reset();
-        animationController?.forward();
-      }else if(status == AnimationStatus.completed && state.courseRefreshStatus.value!=1){
-        animationController?.reset();
-      }
-    });
+  void courseRefreshListen() {
+    if (animationController == null)
+      animationController = AnimationController(
+          vsync: this, duration: Duration(milliseconds: 2500));
+    animationController
+      ?..addStatusListener((status) {
+        if (status == AnimationStatus.completed &&
+            state.courseRefreshStatus.value == 1) {
+          animationController?.reset();
+          animationController?.forward();
+        } else if (status == AnimationStatus.completed &&
+            state.courseRefreshStatus.value != 1) {
+          animationController?.reset();
+        }
+      });
   }
 
   @override
@@ -704,7 +872,6 @@ class MainCourseViewLogic extends GetxController with SingleGetTickerProviderMix
     //每次进入课表都进行一次课表同步
     onRefresh();
     shakeListen();
-
   }
 
   @override

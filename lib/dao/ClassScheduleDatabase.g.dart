@@ -83,7 +83,7 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 4,
+      version: 5,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -99,7 +99,7 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `ClassScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `json` TEXT)');
+            'CREATE TABLE IF NOT EXISTS `ClassScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `list` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -129,7 +129,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'uid': item.uid,
                   'dateTime': _dateTimeConverter.encode(item.dateTime),
                   'md5': item.md5,
-                  'json': item.json
+                  'list': _stringListConverter.encode(item.list)
                 }),
         _classScheduleEntityDeletionAdapter = DeletionAdapter(
             database,
@@ -142,7 +142,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'uid': item.uid,
                   'dateTime': _dateTimeConverter.encode(item.dateTime),
                   'md5': item.md5,
-                  'json': item.json
+                  'list': _stringListConverter.encode(item.list)
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -167,7 +167,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
             uid: row['uid'] as String?,
             dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
             md5: row['md5'] as String?,
-            json: row['json'] as String?));
+            list: _stringListConverter.decode(row['list'] as String)));
   }
 
   @override
@@ -177,7 +177,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   ) async {
     return _queryAdapter.queryList(
         'SELECT * FROM ClassScheduleEntity WHERE studentId= ?1 and semester= ?2',
-        mapper: (Map<String, Object?> row) => ClassScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, json: row['json'] as String?),
+        mapper: (Map<String, Object?> row) => ClassScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, list: _stringListConverter.decode(row['list'] as String)),
         arguments: [studentId, semester]);
   }
 
@@ -192,7 +192,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
             uid: row['uid'] as String?,
             dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
             md5: row['md5'] as String?,
-            json: row['json'] as String?),
+            list: _stringListConverter.decode(row['list'] as String)),
         arguments: [uid]);
   }
 
@@ -203,7 +203,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   ) async {
     return _queryAdapter.query(
         'SELECT * FROM ClassScheduleEntity WHERE studentId= ?1 AND semester= ?2 ORDER BY dateTime DESC LIMIT 1',
-        mapper: (Map<String, Object?> row) => ClassScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, json: row['json'] as String?),
+        mapper: (Map<String, Object?> row) => ClassScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, list: _stringListConverter.decode(row['list'] as String)),
         arguments: [studentId, semester]);
   }
 
@@ -219,7 +219,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
             uid: row['uid'] as String?,
             dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
             md5: row['md5'] as String?,
-            json: row['json'] as String?),
+            list: _stringListConverter.decode(row['list'] as String)),
         arguments: [uid]);
   }
 
@@ -239,3 +239,4 @@ class _$ClassScheduleDao extends ClassScheduleDao {
 
 // ignore_for_file: unused_element
 final _dateTimeConverter = DateTimeConverter();
+final _stringListConverter = StringListConverter();

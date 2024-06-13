@@ -16,6 +16,6 @@ class ClassScheduleEntity{
   String? uid;
   DateTime? dateTime;
   String? md5;
-  String? json;
-  ClassScheduleEntity({this.id,this.studentId,this.semester,this.uid,this.dateTime,this.md5,this.json});
+  List<String>? list;
+  ClassScheduleEntity({this.id,this.studentId,this.semester,this.uid,this.dateTime,this.md5,this.list});
 }

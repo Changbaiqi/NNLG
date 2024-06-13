@@ -299,8 +299,8 @@ class MainCourseViewPage extends StatelessWidget {
                                 CourseData.ansWeek.value));
                       }
                       break;
-                    case '课表改用历史':{
-
+                    case '课表改动历史':{
+                      logic.showClassScheduleHistory();
                     }
                     break;
                   }

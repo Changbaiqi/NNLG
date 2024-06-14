@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -153,7 +154,7 @@ class MainCourseViewPage extends StatelessWidget {
                     "正在同步官网课表...",
                     duration: Duration(milliseconds: 1500),
                   );
-                  logic.onRefresh().then((value) =>
+                  logic.onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.showClassScheduleUUID.value).then((value) =>
                       Get.snackbar(
                         "课表通知",
                         "同步完毕",
@@ -299,7 +300,7 @@ class MainCourseViewPage extends StatelessWidget {
                       }
                       break;
                     case '课表同步历史':{
-                      logic.showClassScheduleHistory();
+                      logic.showClassScheduleHistory(AccountData.studentID,CourseData.nowCourseList.value);
                     }
                     break;
                   }

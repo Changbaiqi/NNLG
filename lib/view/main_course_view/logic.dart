@@ -68,20 +68,20 @@ class MainCourseViewLogic extends GetxController
   }
 
   //刷新课表
-  Future<void> onRefresh() async {
+  Future<void> onRefresh(String studentID,String nowCourseList,String showClassScheduleUUID) async {
     if (state.courseRefreshStatus.value == 1) return; //反正同时多次触发
     state.courseRefreshStatus.value = 1; //设置当前课表刷新状态为进行中
     try{
       animationController?.forward(); //同步按钮动画执行
 
       //同步拉取教务系统课表
-      List<String> newestCourse = await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}");
+      List<String> newestCourse = await CourseUtil().getAllCourseWeekList(nowCourseList);
       //课表缓存逻辑执行
-      await cacheClassSchedule(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      await cacheClassSchedule(studentID, nowCourseList, newestCourse);
       //首次获取课表逻辑
-      await firstClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      await firstClassScheduleLogic(studentID, nowCourseList, newestCourse,showClassScheduleUUID);
       //拉取显示最新课表逻辑
-      await newestClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      await newestClassScheduleLogic(studentID, nowCourseList, newestCourse);
       // ShareDateUtil().setWeekCourseList(newestCourse); //设置课表
     }catch(e){
       ToastUtil.show('错误：${e.toString()}');
@@ -90,11 +90,11 @@ class MainCourseViewLogic extends GetxController
   }
 
   //用于缓存课表的
-  cacheClassSchedule(String studentId, String semester, List<String> classSchedule) async {
+  cacheClassSchedule(String studentID, String semester, List<String> classSchedule) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
         .findNewestClassSchedule(
-            AccountData.studentID, CourseData.nowCourseList.value);
+            studentID, semester);
     String scheduleMd5 = md5
         .convert(utf8.encode(jsonEncode(classSchedule).toString()))
         .toString(); //课表数据的md5码
@@ -104,9 +104,9 @@ class MainCourseViewLogic extends GetxController
       await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(
               uid: Uuid().v1(),
               //UUID生成
-              studentId: AccountData.studentID,
+              studentId: studentID,
               //用户学号
-              semester: CourseData.nowCourseList.value,
+              semester: semester,
               //课表学期
               dateTime: DateTime.now(),
               //更新时间
@@ -125,9 +125,9 @@ class MainCourseViewLogic extends GetxController
     await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(
             uid: Uuid().v1(),
             //UUID生成
-            studentId: AccountData.studentID,
+            studentId: studentID,
             //用户学号
-            semester: CourseData.nowCourseList.value,
+            semester: semester,
             //课表学期
             dateTime: DateTime.now(),
             //更新时间
@@ -139,23 +139,23 @@ class MainCourseViewLogic extends GetxController
   }
 
   //首次课表获取逻辑
-  firstClassScheduleLogic(String studentId,String semester,List<String> classSchedule) async{
+  firstClassScheduleLogic(String studentID,String semester,List<String> classSchedule,String showClassScheduleUUID) async{
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
         .findNewestClassSchedule(
-        AccountData.studentID, CourseData.nowCourseList.value);
-    if(CourseData.showClassScheduleUUID.value==""){ //如果最新课表数据为空那么说明为第一次获取课表
+        studentID, semester);
+    if(showClassScheduleUUID==""){ //如果最新课表数据为空那么说明为第一次获取课表
       ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
       ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
     }
   }
 
   //最新课表显示逻辑
-  newestClassScheduleLogic(String studentId, String semester, List<String> classSchedule) async {
+  newestClassScheduleLogic(String studentID, String semester, List<String> classSchedule) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
         .findNewestClassSchedule(
-        AccountData.studentID, CourseData.nowCourseList.value);
+        studentID, semester);
     ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
     ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
   }
@@ -168,10 +168,10 @@ class MainCourseViewLogic extends GetxController
     ShareDateUtil().setWeekCourseList((classSchedule?.list)!); //直接显示这个课表
   }
   //显示历史变动课表项组件
-  showClassScheduleHistory() async {
+  showClassScheduleHistory(String studentID,String semester) async {
     List<ClassScheduleEntity> scheduleList = await GetIt.I<ClassScheduleDao>()
         .findAllClassScheduleForStudentIdAndSemester(
-            AccountData.studentID, CourseData.nowCourseList.value);
+            studentID, semester);
     showDialog(
         context: Get.context!,
         barrierDismissible: false,
@@ -864,7 +864,7 @@ class MainCourseViewLogic extends GetxController
 
     courseRefreshListen();
     //每次进入课表都进行一次课表同步
-    onRefresh();
+    onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.showClassScheduleUUID.value);
     shakeListen();
   }
 

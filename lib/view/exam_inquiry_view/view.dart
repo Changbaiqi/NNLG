@@ -94,16 +94,16 @@ class ExamInquiryViewPage extends StatelessWidget {
    * 单个组件
    */
   showchildElement(json){
-    int colorR = 0;
-    int colorG = 0;
-    int colorB = 0;
-    while(true){
-      colorR =Random().nextInt(255);
-      colorG =Random().nextInt(255);
-      colorB =Random().nextInt(255);
-      if((colorR-colorG).abs()>=40 || (colorG-colorB).abs()>=40)
-        break;
-    }
+    // int colorR = 0;
+    // int colorG = 0;
+    // int colorB = 0;
+    // while(true){
+    //   colorR =Random().nextInt(255);
+    //   colorG =Random().nextInt(255);
+    //   colorB =Random().nextInt(255);
+    //   if((colorR-colorG).abs()>=40 || (colorG-colorB).abs()>=40)
+    //     break;
+    // }
 
     Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
     var color = RandomColor.getColor(options);

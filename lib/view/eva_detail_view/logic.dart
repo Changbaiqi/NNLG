@@ -11,7 +11,7 @@ class EvaDetailViewLogic extends GetxController {
   showEvaDetailList() async {
     state.showState.value=0;
   await TeachingEvaUtil().getEvaDetailList(Get.arguments['url']).then((value) => value.forEach((element) {
-        // print(element.toJson());
+        print(element.toJson());
        state.searList.value.add(element.toJson());
     }));
     state.showState.value = 1;

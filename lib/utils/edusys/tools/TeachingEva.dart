@@ -156,7 +156,7 @@ class TeachingEva{
       }
       break;
     }
-    log(jsonMap.toString());
+    // log(jsonMap.toString());
 
     return jsonMap;
 

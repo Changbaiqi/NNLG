@@ -76,12 +76,18 @@ class MainCourseViewLogic extends GetxController
 
       //同步拉取教务系统课表
       List<String> newestCourse = await CourseUtil().getAllCourseWeekList(nowCourseList);
+
+      //获取本地最新课表数据
+      ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
+          .findNewestClassSchedule(
+          studentID, nowCourseList);
+
       //课表缓存逻辑执行
       await cacheClassSchedule(studentID, nowCourseList, newestCourse);
       //首次获取课表逻辑
       await firstClassScheduleLogic(studentID, nowCourseList, newestCourse,showClassScheduleUUID);
       //拉取显示最新课表逻辑
-      await newestClassScheduleLogic(studentID, nowCourseList, newestCourse);
+      await newestClassScheduleLogic(studentID, nowCourseList, newestCourse,newestClassSchedule);
       // ShareDateUtil().setWeekCourseList(newestCourse); //设置课表
     }catch(e){
       ToastUtil.show('错误：${e.toString()}');
@@ -151,11 +157,13 @@ class MainCourseViewLogic extends GetxController
   }
 
   //最新课表显示逻辑
-  newestClassScheduleLogic(String studentID, String semester, List<String> classSchedule) async {
+  newestClassScheduleLogic(String studentID, String semester, List<String> classSchedule,ClassScheduleEntity? localNestScheduleEntity) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
         .findNewestClassSchedule(
         studentID, semester);
+    if(newestClassSchedule!.dateTime==localNestScheduleEntity!.dateTime) return; //如果没有刷新新的课表，直接跳过即可。
+    log('触发更新');
     ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
     ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
   }
@@ -263,11 +271,6 @@ class MainCourseViewLogic extends GetxController
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
-    // print(allList);
-    // int ans =0;
-    // for(String str in allList){
-    //   log("第${++ans}周课表"+str);
-    // }
 
     //开学时间
     DateTime startSchoolTime = DateTime(

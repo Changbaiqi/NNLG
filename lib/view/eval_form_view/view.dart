@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/utils/TeachingEvaUtil.dart';
@@ -29,15 +31,20 @@ class EvalFormViewPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                child: Row(
-                                  children: [
-                                    Text(state.formJsonData
-                                        .value!['classList'][index]['className'],style: TextStyle(fontSize: 18),),
-                                    Text('（${state.formJsonData
-                                        .value!['classList'][index]['rate']}）',style: TextStyle(color: Colors.red,fontSize: 18),),
-                                  ],
-                                )
-                              ),
+                                  child: Row(
+                                children: [
+                                  Text(
+                                    state.formJsonData.value!['classList']
+                                        [index]['className'],
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                  Text(
+                                    '（${state.formJsonData.value!['classList'][index]['rate']}）',
+                                    style: TextStyle(
+                                        color: Colors.red, fontSize: 18),
+                                  ),
+                                ],
+                              )),
                               Column(
                                 children:
                                     ((state.formJsonData.value!['classList']
@@ -104,12 +111,12 @@ class EvalFormViewPage extends StatelessWidget {
                                 TeachingEvaUtil()
                                     .submitEva(state.formJsonData.value, 1)
                                     .then((value) {
+                                  Get.back();
                                   Get.snackbar(
                                     "评教通知",
                                     "$value",
                                     duration: Duration(milliseconds: 1500),
                                   );
-                                  Get.back();
                                 });
                               } else {
                                 Get.snackbar(

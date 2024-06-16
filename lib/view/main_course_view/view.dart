@@ -47,7 +47,7 @@ class MainCourseViewPage extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Image.network(CourseData.courseBackgroundInputUrl.value,fit: BoxFit.cover,),
+                  child: CourseData.courseBackgroundInputUrl.value!=null?Image.network(CourseData.courseBackgroundInputUrl.value,fit: BoxFit.cover,):Container(),
                 ),
                 opacity: CourseData.isPictureBackground.value && CourseData.isUrlBackground.value?CourseData.courseBackgroundOpacity.value:0,
               ),
@@ -55,7 +55,7 @@ class MainCourseViewPage extends StatelessWidget {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  child: Image.file(File(CourseData.courseBackgroundFilePath.value),fit: BoxFit.cover,),
+                  child: CourseData.courseBackgroundFilePath.value!=null?Image.file(File(CourseData.courseBackgroundFilePath.value),fit: BoxFit.cover,):Container(),
                 ),
                 opacity: CourseData.isPictureBackground.value && CourseData.isCustomerLocalBackground.value?CourseData.courseBackgroundOpacity.value:0,
               )

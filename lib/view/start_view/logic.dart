@@ -108,8 +108,9 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
 
           //记住账号密码
           LoginUtil().LoginPost(value).then((value) async {
-            if (value == 302) {
-              ToastUtil.show('登录成功');
+            if (value['code'] == 200) {
+              ToastUtil.show('${value['msg']}');
+              ContextDate.ContextCookie = value['session'];
 
               //进行完课表拉取后然后进行对应课表数据拉取刷新
               Future.wait([
@@ -138,7 +139,7 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
 
               toMain();
             } else {
-              ToastUtil.show('登录失败，请检查一下账号或密码是否正确,或者网络是否流畅');
+              ToastUtil.show('${value['msg']}');
               toLogin();
             }
           });

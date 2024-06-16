@@ -115,9 +115,10 @@ class LoginViewPage extends StatelessWidget {
 
                         //记住账号密码
                         LoginUtil().LoginPost(value).then((value){
-                          if(value==302){
+                          if(value['code']==200){
                             // ToastUtil.show('登录成功');
-                            Get.snackbar("登录提示", "登录成功",duration: Duration(milliseconds: 1500),);
+                            ContextDate.ContextCookie = value['session']; //设置session
+                            Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
                             if(LoginData.rememberAccountAndPassword.value) {
                               ShareDateUtil().setLoginAccount(state.inputAccountController.value.text);
                               ShareDateUtil().setLoginPassword(state.inputPasswordController.value.text);
@@ -170,7 +171,7 @@ class LoginViewPage extends StatelessWidget {
 
                           }else{
                             // ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
-                            Get.snackbar("登录提示", "登录失败，请检查一下账号或密码是否正确",duration: Duration(milliseconds: 1500),);
+                            Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
                           }
                         });
 

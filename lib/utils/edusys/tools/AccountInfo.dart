@@ -97,15 +97,13 @@ class AccountInfo{
 
   String getAccountGender(){
     RegExp regExp1 = RegExp(r'性别</td>([\w\W]+)>姓名拼音');
-    Iterable<Match> match1 = regExp1.allMatches(_accountPersionalInformationHTML!);
-
-    for(Match m in match1){
-      RegExp regExp2 = RegExp(r'([^<]+)</td>');
-      Iterable<Match> match2 = regExp2.allMatches(m.group(1).toString());
-      for(Match m2 in match2){
-        return m2.group(1).toString();
+    RegExpMatch? match1 = regExp1.firstMatch(_accountPersionalInformationHTML!);
+    if(match1!=null){
+      RegExp regExp2 = RegExp(r'>&nbsp;([^<]+)</td>');
+      RegExpMatch? match2 = regExp2.firstMatch(match1.group(1).toString());
+      if(match2!=null){
+        return match2.group(1).toString();
       }
-      break;
     }
     return "";
   }

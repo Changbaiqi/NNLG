@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/utils/edusys/tools/AccountInfo.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -32,18 +34,20 @@ class AccountUtil {
     );
     //debugPrint('${response}');
     //debugPrint('${response.data.toString()}');
-
-    return getAccountHTMLToJSON(response.data.toString());
+    // var oldJson = await getAccountHTMLToJSON(response.data.toString());
+    // log(oldJson.toString());
+    // log(json.toString());
+    return AccountInfo(response.data.toString()).getAllJSON();
   }
 
   //用于提取账户个人信息页面并转换成JSON数据返回
-  static Future<String> getAccountHTMLToJSON(String accountHTML) async {
-    MethodChannel platform = const MethodChannel("AccountPOLO");
-
-    String returnValue = await platform.invokeMethod('${accountHTML}');
-
-    return returnValue;
-  }
+  // static Future<String> getAccountHTMLToJSON(String accountHTML) async {
+  //   MethodChannel platform = const MethodChannel("AccountPOLO");
+  //
+  //   String returnValue = await platform.invokeMethod('${accountHTML}');
+  //
+  //   return returnValue;
+  // }
 
   //用于后端记录上线
   Future<IOWebSocketChannel> onLinetoServer() async {

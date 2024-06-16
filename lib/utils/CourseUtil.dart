@@ -8,6 +8,7 @@ import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/edusys/tools/CourseNew.dart';
+import 'package:nnlg/utils/edusys/tools/SemesterCourseList.dart';
 
 
 class CourseUtil{
@@ -152,22 +153,19 @@ class CourseUtil{
 
   //将爬的网页转成JSON
   static Future<String> toJSONCourse(String courseHTML) async {
-    MethodChannel platform = const MethodChannel("CoursePOLO");
+    // MethodChannel platform = const MethodChannel("CoursePOLO");
+    // String oldReturnValue = await platform.invokeMethod('${courseHTML}');
+    String returnValue =await CourseNew("${courseHTML}").getAllJSON();
 
-    String returnValue = await platform.invokeMethod('${courseHTML}');
-    // String returnValue =await CourseNew("${courseHTML}").getAllJSON();
-    // log(returnValue);
-    //debugPrint('${returnValue}');
     return returnValue;
   }
 
   //
   static Future<String> toSemesterCourseList(String semesterCourseListHTML) async {
 
-    MethodChannel platform = const MethodChannel("SemesterCourseListPOLO");
-    //String returnValue = await platform.invokeMethod("450324200207311613--!--123");
-    String returnValue = await platform.invokeMethod('${semesterCourseListHTML}');
-    //debugPrint('${returnValue}');
+    // MethodChannel platform = const MethodChannel("SemesterCourseListPOLO");
+    // String returnValue = await platform.invokeMethod('${semesterCourseListHTML}');
+    String returnValue=SemesterCourseList(semesterCourseListHTML).getAllList();
     return returnValue;
 
   }

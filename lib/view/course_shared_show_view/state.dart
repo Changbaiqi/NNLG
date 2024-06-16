@@ -1,10 +1,8 @@
 import 'dart:collection';
-import 'dart:ffi';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
 import 'package:nnlg/web/ShareCourseWeb.dart';
 
 class CourseSharedShowViewState {

@@ -109,6 +109,7 @@ class ShareDateUtil{
 
     //课表信息数据
     await setWeekCourseList(<String>[]);
+    await setShowClassScheduleUUID('');
 
     //清空VIP账号信息数据
     XiaoBeiData.xiaobeiAccount='';

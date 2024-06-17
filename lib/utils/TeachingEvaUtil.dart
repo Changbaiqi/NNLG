@@ -7,6 +7,8 @@ import 'package:nnlg/utils/edusys/entity/EvalInform.dart';
 import 'package:nnlg/utils/edusys/entity/TeachingEvaForm.dart';
 import 'package:nnlg/utils/edusys/tools/TeachingEva.dart';
 
+import 'LoginUtil.dart';
+
 class TeachingEvaUtil {
   BaseOptions _options = BaseOptions();
 
@@ -23,9 +25,13 @@ class TeachingEvaUtil {
       '/gllgdxbwglxy_jsxsd/xspj/xspj_find.do?Ves632DSdyV=NEW_XSD_JXPJ',
       options: Options(
         method: 'GET',
-        contentType: 'text/html;charset=UTF-8',
+        contentType: 'text/html;charset=UTF-8'
       ),
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getTeachingEvaList();
+    }
     String str = response.data;
     return TeachingEva(str).getTeachingEvaList();
   }
@@ -41,6 +47,10 @@ class TeachingEvaUtil {
         contentType: 'text/html;charset=UTF-8',
       ),
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getEvaDetailList(url);
+    }
     String str = response.data;
     return TeachingEva.getEvaDetailList(str);
   }
@@ -53,9 +63,13 @@ class TeachingEvaUtil {
       '/${evalInform.url}',
       options: Options(
         method: 'GET',
-        contentType: 'text/html;charset=UTF-8',
+        contentType: 'text/html;charset=UTF-8'
       ),
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getEvaDetailForm(evalInform);
+    }
     String HTML = response.data;
     Map<String, dynamic> jsonMap = TeachingEva.getEvaDetailForm(HTML);
     return jsonMap;
@@ -74,6 +88,10 @@ class TeachingEvaUtil {
         contentType: 'text/html;charset=UTF-8',
       ),
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return submitEvaDetail(teachingEvaForm);
+    }
     String str = response.data;
     return TeachingEva.getEvaDetailList(str);
   }

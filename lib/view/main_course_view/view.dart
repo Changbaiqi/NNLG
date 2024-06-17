@@ -148,7 +148,7 @@ class MainCourseViewPage extends StatelessWidget {
                       ],
                     )),
                 onPressed: () {
-                  if(state.courseRefreshStatus==1) return; //防止重叠触发
+                  if(state.courseRefreshStatus.value==1) return; //防止重叠触发
                   Get.snackbar(
                     "课表通知",
                     "正在同步官网课表...",

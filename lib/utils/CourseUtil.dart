@@ -4,10 +4,14 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:gbk_codec/gbk_codec.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/dao/LoginData.dart';
+import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/edusys/tools/CourseNew.dart';
+import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
 import 'package:nnlg/utils/edusys/tools/SemesterCourseList.dart';
 
 
@@ -59,15 +63,17 @@ class CourseUtil{
         '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(
           method: 'POST',
-          contentType: 'application/x-www-form-urlencoded',
+          contentType: 'application/x-www-form-urlencoded'
         ),
         data: {
           "xnxq01id": '${semester}',
           "zc": '${week??""}'
         }
     );
-    //debugPrint('${response.requestOptions.headers}');
-    //debugPrint('${response}');
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getCourseWeekList(semester,week: week);
+    }
 
     return toJSONCourse(response.toString());
   }
@@ -83,7 +89,6 @@ class CourseUtil{
     List<String> resWeekCourseList = [];
     for(int week =1 ; week <= CourseData.ansWeek.value ; ++week){
 
-
       Response response = await Dio(_options).request(
           '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
           options: Options(
@@ -95,6 +100,10 @@ class CourseUtil{
             "zc": '${week}'
           }
       );
+      //检查是否登录超时，如果超时则重新登录
+      if(await LoginUtil.checkLoginTimeOut(response)){
+        return getAllCourseWeekList(semester);
+      }
       //debugPrint(response.toString());
       await toJSONCourse(response.toString()).then((value){
         //debugPrint(value);
@@ -130,9 +139,13 @@ class CourseUtil{
         '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(
           method: 'GET',
-          contentType: 'application/x-www-form-urlencoded',
+          contentType: 'application/x-www-form-urlencoded'
         )
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getSemesterCourseList();
+    }
     //debugPrint('${response.requestOptions.headers}');
     //debugPrint('${response}');
     List<String> resList = [];
@@ -149,6 +162,8 @@ class CourseUtil{
     return resList;
 
   }
+
+
 
 
   //将爬的网页转成JSON

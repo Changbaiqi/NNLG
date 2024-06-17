@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../dao/ContextData.dart';
+import 'LoginUtil.dart';
 
 class ExamInquiryUtil{
 
@@ -26,9 +27,13 @@ class ExamInquiryUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
-          receiveTimeout: 4000,
+          receiveTimeout: 4000
         )
     );
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getReportCardQueryList();
+    }
+
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="xnxqid" name="xnxqid" style="width: 170px;">([\s\S]*?)</select>');
     RegExpMatch? test= selectExp.firstMatch(response.toString());
@@ -53,9 +58,13 @@ class ExamInquiryUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
-          receiveTimeout: 4000,
+          receiveTimeout: 4000
         )
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getExamNowSelectTime();
+    }
     //<option selected value="2022-2023-2">2022-2023-2</option>
     //var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="xnxqid" name="xnxqid" style="width: 170px;">([\s\S]*?)</select>');
@@ -80,7 +89,7 @@ class ExamInquiryUtil{
         options: Options(
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
-            receiveTimeout: 4000
+            receiveTimeout: 4000,
         ),
         data: {
           "xqlbmc": '',
@@ -88,6 +97,10 @@ class ExamInquiryUtil{
           "xqlb": '',
         }
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getExamList(time);
+    }
     //debugPrint(response.data);
 
     RegExp scoreExpText = RegExp(r'class="Nsb_r_list Nsb_table">([\s\S]*?)</table>');

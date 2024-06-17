@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:gbk_codec/gbk_codec.dart';
+import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
 
 import '../dao/ContextData.dart';
@@ -18,7 +21,7 @@ class LoginUtil {
       return status! < 500;
     };
   }
-  String gbkDecoder(List<int> responseBytes, RequestOptions options, ResponseBody responseBody) {
+  static String gbkDecoder(List<int> responseBytes, RequestOptions options, ResponseBody responseBody) {
     return gbk_bytes.decode(responseBytes);
   }
 
@@ -28,7 +31,7 @@ class LoginUtil {
     // String returnValue = await platform.invokeMethod('${account}--!--${password}');
     // log(returnValue);
     String result = EncryEncode.toEncodeInp(account, password);
-    log(result);
+    // log(result);
     // return returnValue;
     return result;
   }
@@ -47,8 +50,8 @@ class LoginUtil {
             ),
             data: {"encoded": '${encoded}'});
 
-    log(response.toString());
-    log(response.headers['set-cookie'].toString());
+    // log(response.toString());
+    // log(response.headers['set-cookie'].toString());
     RegExp regExp = RegExp(
         r'<font style="display: inline;white-space:nowrap;" color="red">([^<]+)</font>');
     RegExpMatch? match = regExp.firstMatch(response.data.toString());
@@ -61,6 +64,33 @@ class LoginUtil {
       'msg': '登录成功',
       'session': response.headers['set-cookie'].toString()
     };
+  }
+
+  /**
+   * [title] 检测登录是否超时，如果超时那么从新登录
+   * [author] 长白崎
+   * [description] //TODO
+   * [date] 21:27 2024/6/16
+   * [param] null
+   * [return]
+   */
+  static checkLoginTimeOut(Response response) async{
+    String body = gbk_bytes.decode(utf8.encode(response.data));
+
+    RegExp regExp = RegExp(
+        r'<font style="display: inline;white-space:nowrap;" color="red">([^<]+)</font>');
+    RegExpMatch? match = regExp.firstMatch(body);
+    if(match!=null && match.group(1).toString().contains("请先登录系统")){
+      await LoginUtil().LoginPost(EncryEncode.toEncodeInp(LoginData.account, LoginData.password)).then((value){
+        if(value['code']==200){
+          LoginData.session = value['session'];
+        }else{
+          return false;
+        }
+      });
+      return true;
+    }
+    return false;
   }
 
   toLogin() {}

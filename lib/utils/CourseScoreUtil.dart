@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 
 import '../dao/ContextData.dart';
+import 'LoginUtil.dart';
 
 class CourseScoreUtil{
 
@@ -28,6 +29,11 @@ class CourseScoreUtil{
           contentType: 'application/x-www.form-urlencoded',
         )
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getReportCardQueryList();
+    }
+
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="kksj" name="kksj" style="width: 170px;">([\s\S]*?)</select>');
     RegExpMatch? test= selectExp.firstMatch(response.toString());
@@ -51,7 +57,7 @@ class CourseScoreUtil{
         '/gllgdxbwglxy_jsxsd/kscj/cjcx_list',
         options: Options(
             method: 'POST',
-            contentType: 'application/x-www-form-urlencoded'
+            contentType: 'application/x-www-form-urlencoded',
         ),
         data: {
           "kksj": '${time}',
@@ -60,6 +66,10 @@ class CourseScoreUtil{
           "xsfs": 'all'
         }
     );
+    //检查是否登录超时，如果超时则重新登录
+    if(await LoginUtil.checkLoginTimeOut(response)){
+      return getScoreList(time);
+    }
     //debugPrint(response.data);
     RegExp scoreExpTR = RegExp(r'<tr>([\s\S]*?)</tr>');
     Iterable<Match> tecc = scoreExpTR.allMatches(response.toString());

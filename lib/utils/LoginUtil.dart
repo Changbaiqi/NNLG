@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gbk_codec/gbk_codec.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
@@ -75,22 +76,22 @@ class LoginUtil {
    * [return]
    */
   static checkLoginTimeOut(Response response) async{
-    String body = gbk_bytes.decode(utf8.encode(response.data));
-
+    String body =  gbk_bytes.decode(response.data);
     RegExp regExp = RegExp(
         r'<font style="display: inline;white-space:nowrap;" color="red">([^<]+)</font>');
     RegExpMatch? match = regExp.firstMatch(body);
     if(match!=null && match.group(1).toString().contains("请先登录系统")){
-      await LoginUtil().LoginPost(EncryEncode.toEncodeInp(LoginData.account, LoginData.password)).then((value){
+      await LoginUtil().LoginPost(EncryEncode.toEncodeInp(LoginData.account, LoginData.password)).then((value)async{
         if(value['code']==200){
-          LoginData.session = value['session'];
+          // LoginData.session = value['session'];
+          ContextDate.ContextCookie = value['session'];
         }else{
           return false;
         }
       });
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   toLogin() {}

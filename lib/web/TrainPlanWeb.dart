@@ -6,8 +6,11 @@
  * @Description TODO
  */
 
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
 import 'package:nnlg/utils/edusys/tools/TrainPlan.dart';
 
@@ -30,10 +33,14 @@ class TrainPlanWeb{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
+          responseType: ResponseType.bytes,
           receiveTimeout: 4000,
         )
     );
-    List<TrainPlanInForm> list = TrainPlan(response.data).getTrainPlanList();
+    if(!await LoginUtil.checkLoginTimeOut(response)){
+      return getTrainPlan();
+    }
+    List<TrainPlanInForm> list = TrainPlan(utf8.decode(response.data)).getTrainPlanList();
     return list;
   }
 

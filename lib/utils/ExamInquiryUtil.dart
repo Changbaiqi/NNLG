@@ -1,5 +1,6 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 
 import '../dao/ContextData.dart';
 import 'LoginUtil.dart';
@@ -27,16 +28,17 @@ class ExamInquiryUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
+            responseType: ResponseType.bytes,
           receiveTimeout: 4000
         )
     );
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getReportCardQueryList();
     }
 
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="xnxqid" name="xnxqid" style="width: 170px;">([\s\S]*?)</select>');
-    RegExpMatch? test= selectExp.firstMatch(response.toString());
+    RegExpMatch? test= selectExp.firstMatch(utf8.decode(response.data));
     // debugPrint(response.toString());
     List<String> timeList = [];
     if(test!=null){
@@ -58,17 +60,18 @@ class ExamInquiryUtil{
         options: Options(
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
+            responseType: ResponseType.bytes,
           receiveTimeout: 4000
         )
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getExamNowSelectTime();
     }
     //<option selected value="2022-2023-2">2022-2023-2</option>
     //var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
     RegExp selectExp = RegExp(r'<select id="xnxqid" name="xnxqid" style="width: 170px;">([\s\S]*?)</select>');
-    RegExpMatch? test= selectExp.firstMatch(response.toString());
+    RegExpMatch? test= selectExp.firstMatch(utf8.decode(response.data));
     //debugPrint(response.toString());
     if(test!=null){
       String text = test.group(1).toString();
@@ -89,6 +92,7 @@ class ExamInquiryUtil{
         options: Options(
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
+          responseType: ResponseType.bytes,
             receiveTimeout: 4000,
         ),
         data: {
@@ -98,13 +102,13 @@ class ExamInquiryUtil{
         }
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getExamList(time);
     }
     //debugPrint(response.data);
 
     RegExp scoreExpText = RegExp(r'class="Nsb_r_list Nsb_table">([\s\S]*?)</table>');
-    String? text = scoreExpText.firstMatch(response.toString())?.group(1).toString();
+    String? text = scoreExpText.firstMatch(utf8.decode(response.data))?.group(1).toString();
     RegExp scoreExpTR = RegExp(r'<tr>([\s\S]*?)</tr>');
     //debugPrint(scoreExpTR.firstMatch(response.toString())?.group(1).toString());
     Iterable<Match> tecc = scoreExpTR.allMatches(text??"");

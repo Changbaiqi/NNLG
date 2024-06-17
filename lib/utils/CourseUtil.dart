@@ -63,7 +63,8 @@ class CourseUtil{
         '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(
           method: 'POST',
-          contentType: 'application/x-www-form-urlencoded'
+          contentType: 'application/x-www-form-urlencoded',
+          responseType: ResponseType.bytes,
         ),
         data: {
           "xnxq01id": '${semester}',
@@ -71,11 +72,11 @@ class CourseUtil{
         }
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getCourseWeekList(semester,week: week);
     }
 
-    return toJSONCourse(response.toString());
+    return toJSONCourse(utf8.decode(response.data));
   }
 
 
@@ -85,15 +86,17 @@ class CourseUtil{
   Future<List<String>> getAllCourseWeekList(String semester) async {
 
 
+    bool brushFlag = false;
     //暂时寄存
     List<String> resWeekCourseList = [];
-    for(int week =1 ; week <= CourseData.ansWeek.value ; ++week){
+    for(int week =1; week <= CourseData.ansWeek.value ; ++week){
 
       Response response = await Dio(_options).request(
           '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
           options: Options(
               method: 'POST',
               contentType: 'application/x-www-form-urlencoded',
+            responseType: ResponseType.bytes,
           ),
           data: {
             "xnxq01id": '${semester}',
@@ -101,11 +104,14 @@ class CourseUtil{
           }
       );
       //检查是否登录超时，如果超时则重新登录
-      if(await LoginUtil.checkLoginTimeOut(response)){
-        return getAllCourseWeekList(semester);
+      if(!brushFlag) {
+        if (!await LoginUtil.checkLoginTimeOut(response)) {
+          return getAllCourseWeekList(semester);
+        }
+        brushFlag = true;
       }
       //debugPrint(response.toString());
-      await toJSONCourse(response.toString()).then((value){
+      await toJSONCourse(utf8.decode(response.data)).then((value){
         //debugPrint(value);
         resWeekCourseList.add(value);
 
@@ -139,17 +145,19 @@ class CourseUtil{
         '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(
           method: 'GET',
-          contentType: 'application/x-www-form-urlencoded'
+          contentType: 'application/x-www-form-urlencoded',
+          responseType: ResponseType.bytes,
         )
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getSemesterCourseList();
     }
+    String body = utf8.decode(response.data);
     //debugPrint('${response.requestOptions.headers}');
     //debugPrint('${response}');
     List<String> resList = [];
-    await toSemesterCourseList(response.toString()).then((value) async {
+    await toSemesterCourseList(body).then((value) async {
 
       List<dynamic> toList = jsonDecode(value);
 

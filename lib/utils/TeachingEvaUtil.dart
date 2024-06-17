@@ -1,7 +1,6 @@
-import 'dart:developer';
+import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/utils/edusys/entity/EvalInform.dart';
 import 'package:nnlg/utils/edusys/entity/TeachingEvaForm.dart';
@@ -25,14 +24,15 @@ class TeachingEvaUtil {
       '/gllgdxbwglxy_jsxsd/xspj/xspj_find.do?Ves632DSdyV=NEW_XSD_JXPJ',
       options: Options(
         method: 'GET',
-        contentType: 'text/html;charset=UTF-8'
+        contentType: 'text/html;charset=UTF-8',
+        responseType: ResponseType.bytes,
       ),
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getTeachingEvaList();
     }
-    String str = response.data;
+    String str = utf8.decode(response.data);
     return TeachingEva(str).getTeachingEvaList();
   }
 
@@ -45,13 +45,14 @@ class TeachingEvaUtil {
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
+        responseType: ResponseType.bytes,
       ),
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getEvaDetailList(url);
     }
-    String str = response.data;
+    String str = utf8.decode(response.data);
     return TeachingEva.getEvaDetailList(str);
   }
 
@@ -63,14 +64,15 @@ class TeachingEvaUtil {
       '/${evalInform.url}',
       options: Options(
         method: 'GET',
-        contentType: 'text/html;charset=UTF-8'
+        contentType: 'text/html;charset=UTF-8',
+        responseType: ResponseType.bytes,
       ),
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return getEvaDetailForm(evalInform);
     }
-    String HTML = response.data;
+    String HTML = utf8.decode(response.data);
     Map<String, dynamic> jsonMap = TeachingEva.getEvaDetailForm(HTML);
     return jsonMap;
   }
@@ -86,13 +88,14 @@ class TeachingEvaUtil {
       options: Options(
         method: 'GET',
         contentType: 'text/html;charset=UTF-8',
+        responseType: ResponseType.bytes,
       ),
     );
     //检查是否登录超时，如果超时则重新登录
-    if(await LoginUtil.checkLoginTimeOut(response)){
+    if(!await LoginUtil.checkLoginTimeOut(response)){
       return submitEvaDetail(teachingEvaForm);
     }
-    String str = response.data;
+    String str = utf8.decode(response.data);
     return TeachingEva.getEvaDetailList(str);
   }
 
@@ -139,12 +142,13 @@ class TeachingEvaUtil {
             options: Options(
               method: 'GET',
               contentType: 'application/x-www-form-urlencoded',
+              responseType: ResponseType.bytes,
             ),
             // data: data
         );
-    String responseStr = response.toString();
+    
     RegExp regExp=RegExp(r"alert\('([^']+)'\)");
-    RegExpMatch? match = regExp.firstMatch(response.toString());
+    RegExpMatch? match = regExp.firstMatch(utf8.decode(response.data));
     if(match!=null){
       return match.group(1).toString();
     }

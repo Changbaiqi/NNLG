@@ -25,7 +25,7 @@ class Account {
           options: Options(
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
-            receiveTimeout: 4000,
+            receiveTimeout: const Duration(seconds: 15),
           ),
           data: {"encoded": '${_encryEncode}'});
     } on DioError catch (e) {
@@ -55,7 +55,7 @@ class Account {
         'http://bwgljw.yinghuaonline.com/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
         options: Options(
             method: 'POST',
-            receiveTimeout: 4000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {"Cookie": '$_session'}),
         data: {"xnxq01id": '${semester}', "zc": '$week'});
     // debugPrint(response.toString());
@@ -69,7 +69,7 @@ class Account {
         'http://bwgljw.yinghuaonline.com/gllgdxbwglxy_jsxsd/grxx/xsxx',
         options: Options(
             method: 'GET',
-            receiveTimeout: 4000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {"Cookie": '$_session'}));
 
     AccountInfo accountInfo =AccountInfo(response.toString());

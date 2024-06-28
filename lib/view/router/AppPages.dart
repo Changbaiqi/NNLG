@@ -40,6 +40,8 @@ import 'package:nnlg/view/nnlg_community_view/binding.dart';
 import 'package:nnlg/view/nnlg_community_view/view.dart';
 import 'package:nnlg/view/score_inquiry_view/binding.dart';
 import 'package:nnlg/view/score_inquiry_view/view.dart';
+import 'package:nnlg/view/software_development_test_view/binding.dart';
+import 'package:nnlg/view/software_development_test_view/view.dart';
 import 'package:nnlg/view/start_view/binding.dart';
 import 'package:nnlg/view/start_view/view.dart';
 import 'package:nnlg/view/teaching_eva_view/binding.dart';
@@ -81,5 +83,6 @@ abstract class AppPages{
     GetPage(name: Routes.AuthenticationStandards, page:()=> AuthenticationStandardsViewPage(),binding: AuthenticationStandardsViewBinding()), // 认证说明
     GetPage(name: Routes.NnlgCommunity, page: ()=>NnlgCommunityViewPage(),binding: NnlgCommunityViewBinding()), //校园社区
     GetPage(name: Routes.AccountSafe, page: ()=>AccountSafeViewPage(),binding: AccountSafeViewBinding()), //账号安全与隐私
+    GetPage(name: Routes.SoftwareDevelopmentTestView, page: ()=>SoftwareDevelopmentTestViewPage(),binding:  SoftwareDevelopmentTestViewBinding()), //用于测试的页面
   ];
 }

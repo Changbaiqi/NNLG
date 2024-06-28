@@ -13,7 +13,7 @@ abstract class ClassScheduleDao{
   @Query('SELECT * FROM ClassScheduleEntity')
   Future<List<ClassScheduleEntity>> findAllClassSchedule();
 
-  @Query('SELECT * FROM ClassScheduleEntity WHERE studentId= :studentId and semester= :semester')
+  @Query('SELECT * FROM ClassScheduleEntity WHERE studentId= :studentId and semester= :semester ORDER BY dateTime DESC')
   Future<List<ClassScheduleEntity>> findAllClassScheduleForStudentIdAndSemester(String studentId,String semester);
 
   @Query('SELECT * FROM ClassScheduleEntity WHERE uid= :uid LIMIT 1')

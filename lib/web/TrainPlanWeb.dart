@@ -34,11 +34,11 @@ class TrainPlanWeb{
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
           responseType: ResponseType.bytes,
-          receiveTimeout: 4000,
+          receiveTimeout: const Duration(seconds: 5),
         )
     );
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getTrainPlan();
+      return TrainPlanWeb().getTrainPlan();
     }
     List<TrainPlanInForm> list = TrainPlan(utf8.decode(response.data)).getTrainPlanList();
     return list;

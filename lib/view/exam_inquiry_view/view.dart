@@ -130,47 +130,62 @@ class ExamInquiryViewPage extends StatelessWidget {
       ),
       child: Stack(
           children: [
-            Positioned(child: Container(
-              height: 25,
-              width: 25,
-              decoration: BoxDecoration(
-                  color:Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(500))
-              ),
-              child: Center(
-                child: Text('${json["number"]}',style: TextStyle(fontSize: 18,color: Colors.black87),),
-              ),
-            ),left: 10,top: 10,),
-            Positioned(child: Row(
+            Positioned(child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text('科目：',style: TextStyle(fontSize: 15),),
                 Container(
-                  width: 100,
-                  child: Text('${json["courseName"]}',style: TextStyle(fontSize: 12),maxLines: 2,),
-                )
+                  height: 25,
+                  width: 25,
+                  decoration: BoxDecoration(
+                      color:Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(500))
+                  ),
+                  child: Center(
+                    child: Text('${json["number"]}',style: TextStyle(fontSize: 18,color: Colors.black87),),
+                  ),
+                ),
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('科目：',style: TextStyle(fontSize: 15),),
+                    Container(
+                      width: Get.width/4.5,
+                      child: Text('${json["courseName"]}',style: TextStyle(fontSize: 12),maxLines: 3,),
+                    )
+                  ],
+                ),),
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('时间：',style: TextStyle(fontSize: 15),),
+                    Container(
+                      width: Get.width/4.5,
+                      child: Text('${json["examTime"].toString().replaceAll(" ", "\n")}',style: TextStyle(fontSize: 12),maxLines: 3,),
+                    )
+                  ],
+                )),
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('考场：',style: TextStyle(fontSize: 15),),
+                    Container(
+                        width: Get.width/4.5,
+                        child: Text('${json["examRoom"]}',style: TextStyle(fontSize: 12,),maxLines: 3,)
+                    )
+                  ],
+                ),),
+              Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Row(
+                  children: [
+                    Text('座位号：',style: TextStyle(fontSize: 15),),
+                    Text('${json["seatNumber"]}',style: TextStyle(fontSize: 12),)
+                  ],
+                ))
               ],
-            ),top: 50,left: 10,),
-            Positioned(child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('时间：',style: TextStyle(fontSize: 15),),
-                Text('${json["examTime"].toString().replaceAll(" ", "\n")}',style: TextStyle(fontSize: 12),)
-              ],
-            ),top: 90,left: 10,),
-            Positioned(child: Row(
-              children: [
-                Text('考场：',style: TextStyle(fontSize: 15),),
-                Text('${json["examRoom"]}',style: TextStyle(fontSize: 12),)
-              ],
-            ),top: 140,left: 10,),
-            Positioned(child: Row(
-              children: [
-                Text('座位号：',style: TextStyle(fontSize: 15),),
-                Text('${json["seatNumber"]}',style: TextStyle(fontSize: 12),)
-              ],
-            ),top: 180,left: 10,)
+            ),top: 10,left: 10,),
+            // Positioned(child: ,top: 90,left: 10,),
 
           ]
       ),

@@ -25,7 +25,7 @@ class XiaoBeiUserUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 10000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -44,7 +44,7 @@ class XiaoBeiUserUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 10000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -65,7 +65,7 @@ class XiaoBeiUserUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );

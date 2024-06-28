@@ -26,7 +26,7 @@ class PowerDormUtil{
         headers: {
           "Authorization": '${ContextDate.ContextVIPTken}'
         },
-        receiveTimeout: 15000
+        receiveTimeout: const Duration(seconds: 15)
       )
     );
     //print('数据${response.data}');
@@ -53,7 +53,7 @@ class PowerDormUtil{
           headers: {
             "Authorization": '${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 4000,
+          receiveTimeout: const Duration(seconds: 15),
         )
     );
     //print('${response}');
@@ -70,7 +70,7 @@ class PowerDormUtil{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 4000
+            receiveTimeout: const Duration(seconds: 15)
         )
     );
 

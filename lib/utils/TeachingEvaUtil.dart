@@ -30,7 +30,7 @@ class TeachingEvaUtil {
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getTeachingEvaList();
+      return TeachingEvaUtil().getTeachingEvaList();
     }
     String str = utf8.decode(response.data);
     return TeachingEva(str).getTeachingEvaList();
@@ -50,7 +50,7 @@ class TeachingEvaUtil {
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getEvaDetailList(url);
+      return TeachingEvaUtil().getEvaDetailList(url);
     }
     String str = utf8.decode(response.data);
     return TeachingEva.getEvaDetailList(str);
@@ -70,7 +70,7 @@ class TeachingEvaUtil {
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getEvaDetailForm(evalInform);
+      return TeachingEvaUtil().getEvaDetailForm(evalInform);
     }
     String HTML = utf8.decode(response.data);
     Map<String, dynamic> jsonMap = TeachingEva.getEvaDetailForm(HTML);
@@ -93,7 +93,7 @@ class TeachingEvaUtil {
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return submitEvaDetail(teachingEvaForm);
+      return TeachingEvaUtil().submitEvaDetail(teachingEvaForm);
     }
     String str = utf8.decode(response.data);
     return TeachingEva.getEvaDetailList(str);
@@ -146,6 +146,9 @@ class TeachingEvaUtil {
             ),
             // data: data
         );
+    if(! await LoginUtil.checkLoginTimeOut(response)){
+      return TeachingEvaUtil().submitEva(json, subState);
+    }
     
     RegExp regExp=RegExp(r"alert\('([^']+)'\)");
     RegExpMatch? match = regExp.firstMatch(utf8.decode(response.data));

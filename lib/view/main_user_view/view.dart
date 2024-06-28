@@ -231,6 +231,7 @@ class MainUserViewPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -267,6 +268,7 @@ class MainUserViewPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -315,6 +317,7 @@ class MainUserViewPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -351,6 +354,7 @@ class MainUserViewPage extends StatelessWidget {
                         width: MediaQuery.of(context).size.width,
                         child: Card(
                           child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -379,7 +383,45 @@ class MainUserViewPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                    )
+                    ),
+
+                    //用于软件测试的入口
+                    Visibility(child: Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  child: Text(
+                                    '软件开发测试',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: Image.asset(
+                                    'assets/images/backLogin.png',
+                                    width: 25,
+                                    height: 25,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              //进入软件测试页面
+                              Get.toNamed(Routes.SoftwareDevelopmentTestView);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),visible: true,)
                   ],
                 ),
               )

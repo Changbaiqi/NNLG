@@ -73,7 +73,7 @@ class CourseUtil{
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getCourseWeekList(semester,week: week);
+      return CourseUtil().getCourseWeekList(semester,week: week);
     }
 
     return toJSONCourse(utf8.decode(response.data));
@@ -106,7 +106,7 @@ class CourseUtil{
       //检查是否登录超时，如果超时则重新登录
       if(!brushFlag) {
         if (!await LoginUtil.checkLoginTimeOut(response)) {
-          return getAllCourseWeekList(semester);
+          return CourseUtil().getAllCourseWeekList(semester);
         }
         brushFlag = true;
       }
@@ -120,17 +120,7 @@ class CourseUtil{
 
 
     }
-    // int ans =0;
-    // for(String str in resWeekCourseList){
-    //   log("第${++ans}周课表"+str);
-    // }
 
-
-    // //直接替换
-    // CourseData.weekCourseList.clear();
-    // CourseData.weekCourseList.value=resWeekCourseList;
-    // //存储到本地，将最新课表数据
-    // ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
     return resWeekCourseList;
 
   }
@@ -151,7 +141,7 @@ class CourseUtil{
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getSemesterCourseList();
+      return CourseUtil().getSemesterCourseList();
     }
     String body = utf8.decode(response.data);
     //debugPrint('${response.requestOptions.headers}');

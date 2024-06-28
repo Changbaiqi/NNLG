@@ -25,7 +25,7 @@ class AppUpdateUtil {
             headers: {
               "Authorization": '${ContextDate.ContextVIPTken}'
             },
-            receiveTimeout: 15000
+            receiveTimeout: const Duration(seconds: 15)
         )
     );
     //print('数据${response.data}');

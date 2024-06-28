@@ -29,4 +29,5 @@ class Routes{
   static const AuthenticationStandards = '/authentication/standards';
   static const NnlgCommunity = '/nnlgCommunity';
   static const AccountSafe = '/accountSafe';
+  static const SoftwareDevelopmentTestView = '/SoftwareDevelopmentTestViewComponent';
 }

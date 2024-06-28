@@ -29,11 +29,11 @@ class ExamInquiryUtil{
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
             responseType: ResponseType.bytes,
-          receiveTimeout: 4000
+          receiveTimeout: const Duration(seconds: 15)
         )
     );
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getReportCardQueryList();
+      return ExamInquiryUtil().getReportCardQueryList();
     }
 
     var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
@@ -61,12 +61,12 @@ class ExamInquiryUtil{
           method: 'GET',
           contentType: 'application/x-www.form-urlencoded',
             responseType: ResponseType.bytes,
-          receiveTimeout: 4000
+          receiveTimeout: const Duration(seconds: 15)
         )
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getExamNowSelectTime();
+      return ExamInquiryUtil().getExamNowSelectTime();
     }
     //<option selected value="2022-2023-2">2022-2023-2</option>
     //var text = '<select id="kksj" name="kksj" style="width: 170px;">测试用的text</select>';
@@ -93,7 +93,7 @@ class ExamInquiryUtil{
             method: 'POST',
             contentType: 'application/x-www-form-urlencoded',
           responseType: ResponseType.bytes,
-            receiveTimeout: 4000,
+            receiveTimeout: const Duration(seconds: 15),
         ),
         data: {
           "xqlbmc": '',
@@ -103,7 +103,7 @@ class ExamInquiryUtil{
     );
     //检查是否登录超时，如果超时则重新登录
     if(!await LoginUtil.checkLoginTimeOut(response)){
-      return getExamList(time);
+      return ExamInquiryUtil().getExamList(time);
     }
     //debugPrint(response.data);
 

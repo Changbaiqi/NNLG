@@ -176,7 +176,7 @@ class _$ClassScheduleDao extends ClassScheduleDao {
     String semester,
   ) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM ClassScheduleEntity WHERE studentId= ?1 and semester= ?2',
+        'SELECT * FROM ClassScheduleEntity WHERE studentId= ?1 and semester= ?2 ORDER BY dateTime DESC',
         mapper: (Map<String, Object?> row) => ClassScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, list: _stringListConverter.decode(row['list'] as String)),
         arguments: [studentId, semester]);
   }

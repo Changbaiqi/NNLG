@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:gbk_codec/gbk_codec.dart';
 
 import '../dao/ContextData.dart';
 import 'LoginUtil.dart';
@@ -26,7 +24,7 @@ class CourseScoreUtil {
         ));
     //检查是否登录超时，如果超时则重新登录
     if (!await LoginUtil.checkLoginTimeOut(response)) {
-      return getReportCardQueryList();
+      return CourseScoreUtil().getReportCardQueryList();
     }
     // log(utf8.decode(response.data));
 
@@ -62,7 +60,7 @@ class CourseScoreUtil {
         data: {"kksj": '${time}', "kcxz": '', "kcmc": '', "xsfs": 'all'});
     //检查是否登录超时，如果超时则重新登录
     if (!await LoginUtil.checkLoginTimeOut(response)) {
-      return getScoreList(time);
+      return CourseScoreUtil().getScoreList(time);
     }
     // log(response.toString());
     //debugPrint(response.data);

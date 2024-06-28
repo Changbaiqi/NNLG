@@ -110,7 +110,8 @@ class ScoreInquiryViewPage extends StatelessWidget {
    * 单个组件
    */
   showchildElement(json) {
-    Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
+    Options options = Options(
+        format: Format.rgbArray, count: 1, luminosity: Luminosity.light);
     var color = RandomColor.getColor(options);
     //print(json);
     json = jsonDecode(json);
@@ -121,7 +122,7 @@ class ScoreInquiryViewPage extends StatelessWidget {
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
           // color: Color.fromARGB(255, colorR, colorG, colorB),
-        color: Color.fromARGB(255, color[0], color[1], color[2]),
+          color: Color.fromARGB(255, color[0], color[1], color[2]),
           borderRadius: BorderRadius.all(Radius.circular(15)),
           boxShadow: [
             BoxShadow(
@@ -129,111 +130,110 @@ class ScoreInquiryViewPage extends StatelessWidget {
           ]),
       child: Stack(children: [
         Positioned(
-          child: Container(
-            height: 25,
-            width: 25,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(Radius.circular(500))),
-            child: Center(
-              child: Text(
-                '${json["number"]}',
-                style: TextStyle(fontSize: 18, color: Colors.black87),
-              ),
-            ),
-          ),
-          left: 10,
-          top: 10,
-        ),
-        Positioned(
-          child: Row(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                '编号：',
-                style: TextStyle(fontSize: 15),
-              ),
               Container(
-                width: 100,
-                child: Text(
-                  '${json["courseNumber"]}',
-                  style: TextStyle(fontSize: 12),
-                  maxLines: 2,
+                height: 25,
+                width: 25,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(500))),
+                child: Center(
+                  child: Text(
+                    '${json["number"]}',
+                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                  ),
                 ),
-              )
-            ],
-          ),
-          top: 50,
-          left: 10,
-        ),
-        Positioned(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                '科目：',
-                style: TextStyle(fontSize: 15),
               ),
-              Container(
-                width: 100,
-                child: Text(
-                  '${json["courseName"]}',
-                  style: TextStyle(fontSize: 12),
-                  maxLines: 2,
-                ),
-              )
-            ],
-          ),
-          top: 90,
-          left: 10,
-        ),
-        Positioned(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                '时间：',
-                style: TextStyle(fontSize: 15),
-              ),
-              Container(
-                width: 100,
-                child: Text(
-                  '${json["time"]}',
-                  style: TextStyle(fontSize: 12),
-                  maxLines: 2,
-                ),
-              )
-            ],
-          ),
-          top: 70,
-          left: 10,
-        ),
-        Positioned(
-          child: Row(
-            children: [
-              Text(
-                '成绩：',
-                style: TextStyle(fontSize: 15),
-              ),
-              Container(
-                  height: 70,
-                  width: 70,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(100)),
-                      color: logic.scoreColors(json['courseScore'])),
-                  child: Center(
-                    child: Text(
-                      '${json["courseScore"]}',
-                      style: TextStyle(fontSize: 30),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '编号：',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      Container(
+                        width: Get.width/4,
+                        child: Text(
+                          '${json["courseNumber"]}',
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  )),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      '科目：',
+                      style: TextStyle(fontSize: 15),
                     ),
+                    Container(
+                      width: Get.width/4.0,
+                      child: Text(
+                        '${json["courseName"]}',
+                        style: TextStyle(fontSize: 12),
+                        maxLines: 2,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '时间：',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      Container(
+                        width: Get.width/4.0,
+                        child: Text(
+                          '${json["time"]}',
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                        ),
+                      )
+                    ],
+                  )),
+              Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: Row(
+                    children: [
+                      Text(
+                        '成绩：',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                      Container(
+                          height: 70,
+                          width: 70,
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(100)),
+                              color: logic.scoreColors(json['courseScore'])),
+                          child: Center(
+                            child: Text(
+                              '${json["courseScore"]}',
+                              style: TextStyle(fontSize: 30),
+                            ),
+                          ))
+                    ],
                   ))
             ],
           ),
-          top: 140,
           left: 10,
+          top: 10,
         ),
       ]),
     );

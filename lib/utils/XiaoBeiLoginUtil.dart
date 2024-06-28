@@ -32,7 +32,7 @@ class XiaoBeiLoginUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 4000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );

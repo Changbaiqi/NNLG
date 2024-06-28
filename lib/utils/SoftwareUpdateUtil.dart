@@ -23,7 +23,7 @@ class SoftwareUpdateUtil{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 4000
+            receiveTimeout: const Duration(seconds: 15)
         )
     );
 

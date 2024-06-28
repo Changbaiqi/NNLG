@@ -28,7 +28,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -45,7 +45,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
         )
     );
     //print('${response}');
@@ -62,7 +62,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -79,7 +79,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
         )
     );
     //print('${response}');
@@ -96,7 +96,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -113,7 +113,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
         ),
       data: {
           "playTime":'${timeStr}'
@@ -133,7 +133,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -149,7 +149,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
         ),
       data: {
           "location":'${location}',
@@ -170,7 +170,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
 
         )
     );
@@ -189,7 +189,7 @@ class XiaoBeiHomeUtil{
           headers: {
             "Authorization":'${ContextDate.ContextVIPTken}'
           },
-          receiveTimeout: 15000,
+          receiveTimeout: const Duration(seconds: 15),
         )
     );
     //print('${response}');

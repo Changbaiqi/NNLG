@@ -90,6 +90,7 @@ class MainCommunityViewPage extends StatelessWidget {
                 childAspectRatio: 1.2,
                 children: [
                   InkWell(
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
                     child: logic.boxChildLottie('assets/images/chat_room_lottie.json', '校园聊一聊'),
                     // child: logic.boxChildSvg("assets/images/lyl.svg", '校园聊一聊'),
                     onTap: () {
@@ -118,6 +119,7 @@ class MainCommunityViewPage extends StatelessWidget {
                     },
                   ),
                   InkWell(
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(20)),
                     child: logic.boxChildSvg(
                         'assets/images/train_plan.svg', '培养计划'),
                     onTap: () {
@@ -125,6 +127,7 @@ class MainCommunityViewPage extends StatelessWidget {
                     },
                   ),
                   InkWell(
+                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20)),
                     child: logic.boxChildLottie('assets/images/score_search_lottie.json', '成绩查询'),
                     // child: logic.boxChildSvg(
                     //     'assets/images/score_inquiry2.svg', '成绩查询'),

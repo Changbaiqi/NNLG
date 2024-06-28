@@ -38,7 +38,7 @@ class ShareCourseWeb{
         options: Options(
           method: 'GET',
           contentType: 'application/json',
-          receiveTimeout: 4000,
+          receiveTimeout: const Duration(seconds: 5),
           headers: {
             'Authorization': ContextDate.ContextVIPTken
           }
@@ -63,7 +63,7 @@ class ShareCourseWeb{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 15000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }
@@ -87,7 +87,7 @@ class ShareCourseWeb{
         options: Options(
             method: 'POST',
             contentType: 'application/json',
-            receiveTimeout: 15000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }
@@ -113,7 +113,7 @@ class ShareCourseWeb{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 15000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }
@@ -136,7 +136,7 @@ class ShareCourseWeb{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 15000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }
@@ -160,7 +160,7 @@ class ShareCourseWeb{
         options: Options(
             method: 'GET',
             contentType: 'application/json',
-            receiveTimeout: 15000,
+            receiveTimeout: const Duration(seconds: 15),
             headers: {
               'Authorization': ContextDate.ContextVIPTken
             }

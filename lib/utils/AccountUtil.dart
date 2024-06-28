@@ -75,7 +75,7 @@ class AccountUtil {
       options: Options(
         method: 'get',
         contentType: 'application/x-www-form-urlencoded',
-        receiveTimeout: 10000,
+        receiveTimeout: const Duration(seconds: 15),
       ),
     );
   }
@@ -88,7 +88,7 @@ class AccountUtil {
       '${ContextDate.VIPContextUrl}/user/getClick',
       options: Options(
         method: 'get',
-        receiveTimeout: 5000,
+        receiveTimeout: const Duration(seconds: 15),
       ),
     );
     return response.data;

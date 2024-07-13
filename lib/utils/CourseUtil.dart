@@ -10,6 +10,7 @@ import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/LoginUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/utils/edusys/tools/CourseForAll.dart';
 import 'package:nnlg/utils/edusys/tools/CourseNew.dart';
 import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
 import 'package:nnlg/utils/edusys/tools/SemesterCourseList.dart';
@@ -169,7 +170,8 @@ class CourseUtil{
     // MethodChannel platform = const MethodChannel("CoursePOLO");
     // String oldReturnValue = await platform.invokeMethod('${courseHTML}');
     String returnValue =await CourseNew("${courseHTML}").getAllJSON();
-
+    String newTest = await CourseForAll("${courseHTML}").getAllSemesterJson(21);
+    log(newTest);
     return returnValue;
   }
 

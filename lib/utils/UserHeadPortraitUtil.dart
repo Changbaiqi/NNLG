@@ -7,9 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:path_provider/path_provider.dart';
 
 class UserHeadPortraitUtil {

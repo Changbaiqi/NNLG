@@ -170,8 +170,8 @@ class CourseUtil{
     // MethodChannel platform = const MethodChannel("CoursePOLO");
     // String oldReturnValue = await platform.invokeMethod('${courseHTML}');
     String returnValue =await CourseNew("${courseHTML}").getAllJSON();
-    String newTest = await CourseForAll("${courseHTML}").getAllSemesterJson(21);
-    log(newTest);
+    // String newTest = await CourseForAll("${courseHTML}").getAllSemesterJson(21);
+    // log(newTest);
     return returnValue;
   }
 

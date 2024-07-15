@@ -16,7 +16,20 @@ class SoftwareDevelopmentTestViewPage extends StatelessWidget {
       body: Container(
         child: Column(
           children: [
-            Expanded(child: Obx(() => ClassScheduleWidget(courseJson: text.value,)),flex: 1,)
+            Obx(() => Expanded(
+              child: ClassScheduleWidget(
+                tableJson: logic.tableJson.value,
+                isNoon: true,
+                columTimeList: [
+                  DateTime(2024,7,15),
+                  DateTime(2024,7,16),
+                  DateTime(2024,7,17),
+                  DateTime(2024,7,18),
+                  DateTime(2024,7,19),
+                  DateTime(2024,7,20),
+                  DateTime(2024,7,21),
+                ],
+              ),flex: 1,))
           ],
         ),
       ),

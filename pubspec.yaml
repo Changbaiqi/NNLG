@@ -220,6 +220,7 @@ flutter:
     - assets/images/teach_eval.svg
     - assets/images/position.json
     - assets/audio/sendMessage.mp3
+    - assets/files/scheduleJson.json
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

@@ -123,15 +123,18 @@ class ClassScheduleWidget extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.black12,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Center(
-                      child: Obx(() => Text(
-                            '${isMin.value ? '小' : '大'}节\n显示',
-                            style: TextStyle(fontSize: 10),
-                          )),
+                  child: Padding(
+                    padding: EdgeInsets.all(4),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black12,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Center(
+                        child: Obx(() => Text(
+                          '${isMin.value ? '小' : '大'}节\n显示',
+                          style: TextStyle(fontSize: 10),
+                        )),
+                      ),
                     ),
                   ),
                   onTap: () {

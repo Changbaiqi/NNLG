@@ -88,7 +88,7 @@ class CourseUtil{
    * [param] null
    * [return]
    */
-  Future<String> getAllCourseSemesterList(String semester) async {
+  Future<String> getAllCourseSemesterList(String semester,int weekSum) async {
     bool brushFlag = false;
     // var resWeekCourseList={};
     Response response = await Dio(_options).request(
@@ -106,12 +106,12 @@ class CourseUtil{
     //检查是否登录超时，如果超时则重新登录
     if(!brushFlag) {
       if (!await LoginUtil.checkLoginTimeOut(response)) {
-        return CourseUtil().getAllCourseSemesterList(semester);
+        return CourseUtil().getAllCourseSemesterList(semester,weekSum);
       }
       brushFlag = true;
     }
     //debugPrint(response.toString());
-    String newTest = await CourseForAll(utf8.decode(response.data)).getAllSemesterJson(21);
+    String newTest = await CourseForAll(utf8.decode(response.data)).getAllSemesterJson(weekSum);
     // log(newTest);
     // resWeekCourseList = jsonDecode(newTest);
     return newTest;

@@ -77,13 +77,15 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
 
   ClassScheduleDao? _classScheduleDaoInstance;
 
+  ClassNewScheduleDao? _classNewScheduleDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 5,
+      version: 6,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -114,6 +116,12 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
     return _classScheduleDaoInstance ??=
         _$ClassScheduleDao(database, changeListener);
   }
+
+  @override
+  ClassNewScheduleDao get classNewScheduleDao {
+    return _classNewScheduleDaoInstance ??=
+        _$ClassNewScheduleDao(database, changeListener);
+  }
 }
 
 class _$ClassScheduleDao extends ClassScheduleDao {
@@ -133,18 +141,6 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'md5': item.md5,
                   'list': _stringListConverter.encode(item.list)
                 }),
-        _classNewScheduleEntityInsertionAdapter = InsertionAdapter(
-            database,
-            'ClassNewScheduleEntity',
-            (ClassNewScheduleEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'studentId': item.studentId,
-                  'semester': item.semester,
-                  'uid': item.uid,
-                  'dateTime': _dateTimeConverter.encode(item.dateTime),
-                  'md5': item.md5,
-                  'json': item.json
-                }),
         _classScheduleEntityDeletionAdapter = DeletionAdapter(
             database,
             'ClassScheduleEntity',
@@ -157,19 +153,6 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'dateTime': _dateTimeConverter.encode(item.dateTime),
                   'md5': item.md5,
                   'list': _stringListConverter.encode(item.list)
-                }),
-        _classNewScheduleEntityDeletionAdapter = DeletionAdapter(
-            database,
-            'ClassNewScheduleEntity',
-            ['id'],
-            (ClassNewScheduleEntity item) => <String, Object?>{
-                  'id': item.id,
-                  'studentId': item.studentId,
-                  'semester': item.semester,
-                  'uid': item.uid,
-                  'dateTime': _dateTimeConverter.encode(item.dateTime),
-                  'md5': item.md5,
-                  'json': item.json
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -181,14 +164,8 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   final InsertionAdapter<ClassScheduleEntity>
       _classScheduleEntityInsertionAdapter;
 
-  final InsertionAdapter<ClassNewScheduleEntity>
-      _classNewScheduleEntityInsertionAdapter;
-
   final DeletionAdapter<ClassScheduleEntity>
       _classScheduleEntityDeletionAdapter;
-
-  final DeletionAdapter<ClassNewScheduleEntity>
-      _classNewScheduleEntityDeletionAdapter;
 
   @override
   Future<List<ClassScheduleEntity>> findAllClassSchedule() async {
@@ -255,6 +232,63 @@ class _$ClassScheduleDao extends ClassScheduleDao {
             list: _stringListConverter.decode(row['list'] as String)),
         arguments: [uid]);
   }
+
+  @override
+  Future<void> insertClassSchedule(
+      ClassScheduleEntity classScheduleEntity) async {
+    await _classScheduleEntityInsertionAdapter.insert(
+        classScheduleEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> deleteClassSchedule(ClassScheduleEntity classScheduleEntity) {
+    return _classScheduleEntityDeletionAdapter
+        .deleteAndReturnChangedRows(classScheduleEntity);
+  }
+}
+
+class _$ClassNewScheduleDao extends ClassNewScheduleDao {
+  _$ClassNewScheduleDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _classNewScheduleEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'ClassNewScheduleEntity',
+            (ClassNewScheduleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'studentId': item.studentId,
+                  'semester': item.semester,
+                  'uid': item.uid,
+                  'dateTime': _dateTimeConverter.encode(item.dateTime),
+                  'md5': item.md5,
+                  'json': item.json
+                }),
+        _classNewScheduleEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'ClassNewScheduleEntity',
+            ['id'],
+            (ClassNewScheduleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'studentId': item.studentId,
+                  'semester': item.semester,
+                  'uid': item.uid,
+                  'dateTime': _dateTimeConverter.encode(item.dateTime),
+                  'md5': item.md5,
+                  'json': item.json
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<ClassNewScheduleEntity>
+      _classNewScheduleEntityInsertionAdapter;
+
+  final DeletionAdapter<ClassNewScheduleEntity>
+      _classNewScheduleEntityDeletionAdapter;
 
   @override
   Future<List<ClassNewScheduleEntity>> findAllClassNewSchedule() async {
@@ -324,23 +358,10 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   }
 
   @override
-  Future<void> insertClassSchedule(
-      ClassScheduleEntity classScheduleEntity) async {
-    await _classScheduleEntityInsertionAdapter.insert(
-        classScheduleEntity, OnConflictStrategy.abort);
-  }
-
-  @override
   Future<void> insertClassNewSchedule(
       ClassNewScheduleEntity classNewScheduleEntity) async {
     await _classNewScheduleEntityInsertionAdapter.insert(
         classNewScheduleEntity, OnConflictStrategy.abort);
-  }
-
-  @override
-  Future<int> deleteClassSchedule(ClassScheduleEntity classScheduleEntity) {
-    return _classScheduleEntityDeletionAdapter
-        .deleteAndReturnChangedRows(classScheduleEntity);
   }
 
   @override

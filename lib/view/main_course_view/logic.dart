@@ -16,9 +16,11 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/ClassNewScheduleDao.dart';
 import 'package:nnlg/dao/ClassScheduleDao.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
+import 'package:nnlg/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -70,38 +72,72 @@ class MainCourseViewLogic extends GetxController
   }
 
   //刷新课表
-  Future<void> onRefresh(String studentID,String nowCourseList,String showClassScheduleUUID) async {
+  Future<void> oldOnRefresh(String studentID, String nowCourseList,
+      String showClassScheduleUUID) async {
     if (state.courseRefreshStatus.value == 1) return; //反正同时多次触发
     state.courseRefreshStatus.value = 1; //设置当前课表刷新状态为进行中
-    try{
+    try {
       animationController?.forward(); //同步按钮动画执行
       //同步拉取教务系统课表
-      List<String> newestCourse = await CourseUtil().getAllCourseWeekList(nowCourseList);
+      List<String> newestCourse =
+          await CourseUtil().getAllCourseWeekList(nowCourseList);
 
       //获取本地最新课表数据
-      ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
-          .findNewestClassSchedule(
-          studentID, nowCourseList);
+      ClassScheduleEntity? newestClassSchedule =
+          await GetIt.I<ClassScheduleDao>()
+              .findNewestClassSchedule(studentID, nowCourseList);
+
+      //课表缓存逻辑执行
+      await oldCacheClassSchedule(studentID, nowCourseList, newestCourse);
+      //首次获取课表逻辑
+      await oldFirstClassScheduleLogic(
+          studentID, nowCourseList, newestCourse, showClassScheduleUUID);
+      //拉取显示最新课表逻辑
+      await oldNewestClassScheduleLogic(
+          studentID, nowCourseList, newestCourse, newestClassSchedule);
+      // ShareDateUtil().setWeekCourseList(newestCourse); //设置课表
+    } catch (e) {
+      ToastUtil.show('错误：${e.toString()}');
+    }
+    state.courseRefreshStatus.value = 0; //设置当前课表刷新状态为结束
+  }
+  //新 刷新课表
+  Future<void> onRefresh(String studentID, String nowCourseList,
+      String showClassScheduleUUID) async {
+    if (state.courseRefreshStatus.value == 1) return; //反正同时多次触发
+    state.courseRefreshStatus.value = 1; //设置当前课表刷新状态为进行中
+    try {
+      animationController?.forward(); //同步按钮动画执行
+      //同步拉取教务系统课表
+      String newestCourse =
+          await CourseUtil().getAllCourseSemesterList(nowCourseList,CourseData.ansWeek.value);
+
+      //获取本地最新课表数据
+      ClassNewScheduleEntity? newestClassNewSchedule =
+          await GetIt.I<ClassNewScheduleDao>()
+              .findNewestClassNewSchedule(studentID, nowCourseList);
 
       //课表缓存逻辑执行
       await cacheClassSchedule(studentID, nowCourseList, newestCourse);
       //首次获取课表逻辑
-      await firstClassScheduleLogic(studentID, nowCourseList, newestCourse,showClassScheduleUUID);
+      await firstClassScheduleLogic(
+          studentID, nowCourseList, newestCourse, showClassScheduleUUID);
       //拉取显示最新课表逻辑
-      await newestClassScheduleLogic(studentID, nowCourseList, newestCourse,newestClassSchedule);
+      await newestClassScheduleLogic(
+          studentID, nowCourseList, newestCourse, newestClassNewSchedule);
       // ShareDateUtil().setWeekCourseList(newestCourse); //设置课表
-    }catch(e){
+    } catch (e) {
       ToastUtil.show('错误：${e.toString()}');
     }
-    state.courseRefreshStatus.value = 0;//设置当前课表刷新状态为结束
+    state.courseRefreshStatus.value = 0; //设置当前课表刷新状态为结束
   }
 
-  //用于缓存课表的
-  cacheClassSchedule(String studentID, String semester, List<String> classSchedule) async {
+  //旧 用于缓存课表的
+  oldCacheClassSchedule(
+      String studentID, String semester, List<String> classSchedule) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
-        .findNewestClassSchedule(
-            studentID, semester);
+        .findNewestClassSchedule(studentID, semester);
     String scheduleMd5 = md5
         .convert(utf8.encode(jsonEncode(classSchedule).toString()))
         .toString(); //课表数据的md5码
@@ -127,7 +163,6 @@ class MainCourseViewLogic extends GetxController
     //如果内容相同那么久不用更新了，说明当前就已经是最新课表
     if (scheduleMd5 == newestClassSchedule.md5) return;
 
-
     //如果数据不相同那么存入
     await GetIt.I<ClassScheduleDao>().insertClassSchedule(ClassScheduleEntity(
             uid: Uuid().v1(),
@@ -142,45 +177,143 @@ class MainCourseViewLogic extends GetxController
             //课表数据的md5值
             list: classSchedule) //课表数据
         );
-
   }
 
-  //首次课表获取逻辑
-  firstClassScheduleLogic(String studentID,String semester,List<String> classSchedule,String showClassScheduleUUID) async{
+  //新 用于缓存课表的
+  cacheClassSchedule(
+      String studentID, String semester, String classSchedule) async {
+    //获取最新课表数据
+    ClassNewScheduleEntity? newestClassSchedule = await GetIt.I<ClassNewScheduleDao>()
+        .findNewestClassNewSchedule(studentID, semester);
+    String scheduleMd5 = md5
+        .convert(utf8.encode(jsonEncode(classSchedule).toString()))
+        .toString(); //课表数据的md5码
+    //如果没有任何一条记录那么直接先插入现在的数据
+    if (newestClassSchedule == null) {
+      //存入
+      await GetIt.I<ClassNewScheduleDao>()
+          .insertClassNewSchedule(ClassNewScheduleEntity(
+                  uid: Uuid().v1(),
+                  //UUID生成
+                  studentId: studentID,
+                  //用户学号
+                  semester: semester,
+                  //课表学期
+                  dateTime: DateTime.now(),
+                  //更新时间
+                  md5: scheduleMd5,
+                  //课表数据的md5值
+                  json: classSchedule) //课表数据
+              );
+      return; //如果不存在最新的那么直接退出
+    }
+
+    //如果内容相同那么久不用更新了，说明当前就已经是最新课表
+    if (scheduleMd5 == newestClassSchedule.md5) return;
+
+    //如果数据不相同那么存入
+    await GetIt.I<ClassNewScheduleDao>()
+        .insertClassNewSchedule(ClassNewScheduleEntity(
+                uid: Uuid().v1(),
+                //UUID生成
+                studentId: studentID,
+                //用户学号
+                semester: semester,
+                //课表学期
+                dateTime: DateTime.now(),
+                //更新时间
+                md5: scheduleMd5,
+                //课表数据的md5值
+                json: classSchedule) //课表数据
+            );
+  }
+
+  //旧 首次课表获取逻辑
+  oldFirstClassScheduleLogic(String studentID, String semester,
+      List<String> classSchedule, String showClassScheduleUUID) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
-        .findNewestClassSchedule(
-        studentID, semester);
-    if(showClassScheduleUUID==""){ //如果最新课表数据为空那么说明为第一次获取课表
-      ShareDateUtil().setOldShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+        .findNewestClassSchedule(studentID, semester);
+    if (showClassScheduleUUID == "") {
+      //如果最新课表数据为空那么说明为第一次获取课表
+      ShareDateUtil().setOldShowClassScheduleUUID(
+          (newestClassSchedule?.uid)!); //设置当前课表显示的UUID
       ShareDateUtil().setoldWeekCourseList(classSchedule); //直接显示这个课表
     }
   }
 
-  //最新课表显示逻辑
-  newestClassScheduleLogic(String studentID, String semester, List<String> classSchedule,ClassScheduleEntity? localNestScheduleEntity) async {
+  //新 首次课表获取逻辑
+  firstClassScheduleLogic(String studentID, String semester,
+      String classSchedule, String showClassScheduleUUID) async {
+    //获取最新课表数据
+    ClassNewScheduleEntity? newestClassNewSchedule =
+        await GetIt.I<ClassNewScheduleDao>()
+            .findNewestClassNewSchedule(studentID, semester);
+    if (showClassScheduleUUID == "") {
+      //如果最新课表数据为空那么说明为第一次获取课表
+      ShareDateUtil().setShowClassScheduleUUID(
+          (newestClassNewSchedule?.uid)!); //设置当前课表显示的UUID
+      ShareDateUtil().setWeekCourseJson(classSchedule); //直接显示这个课表
+    }
+  }
+
+  //旧 最新课表显示逻辑
+  oldNewestClassScheduleLogic(
+      String studentID,
+      String semester,
+      List<String> classSchedule,
+      ClassScheduleEntity? localNestScheduleEntity) async {
     //获取最新课表数据
     ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
-        .findNewestClassSchedule(
-        studentID, semester);
-    if(newestClassSchedule!.dateTime==localNestScheduleEntity!.dateTime) return; //如果没有刷新新的课表，直接跳过即可。
+        .findNewestClassSchedule(studentID, semester);
+    if (newestClassSchedule!.dateTime == localNestScheduleEntity!.dateTime)
+      return; //如果没有刷新新的课表，直接跳过即可。
     log('触发更新');
-    ShareDateUtil().setOldShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setOldShowClassScheduleUUID(
+        (newestClassSchedule?.uid)!); //设置当前课表显示的UUID
     ShareDateUtil().setoldWeekCourseList(classSchedule); //直接显示这个课表
   }
 
-  //显示指定UUID课表逻辑
-  showClassScheduleForUUID(String UUID)async{
-    ClassScheduleEntity? classSchedule = await GetIt.I<ClassScheduleDao>()
-        .findClassScheduleForUid(UUID);
-    ShareDateUtil().setOldShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
+  //新 最新课表显示逻辑
+  newestClassScheduleLogic(
+      String studentID,
+      String semester,
+      String classSchedule,
+      ClassNewScheduleEntity? localNestScheduleEntity) async {
+    //获取最新课表数据
+    ClassNewScheduleEntity? newestClassSchedule =
+        await GetIt.I<ClassNewScheduleDao>()
+            .findNewestClassNewSchedule(studentID, semester);
+    if (newestClassSchedule!.dateTime == localNestScheduleEntity!.dateTime)
+      return; //如果没有刷新新的课表，直接跳过即可。
+    log('触发更新');
+    ShareDateUtil()
+        .setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setWeekCourseJson(classSchedule); //直接显示这个课表
+  }
+
+  //旧 显示指定UUID课表逻辑
+  oldShowClassScheduleForUUID(String UUID) async {
+    ClassScheduleEntity? classSchedule =
+        await GetIt.I<ClassScheduleDao>().findClassScheduleForUid(UUID);
+    ShareDateUtil()
+        .setOldShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
     ShareDateUtil().setoldWeekCourseList((classSchedule?.list)!); //直接显示这个课表
   }
+
+  //新 显示指定UUID课表逻辑
+  showClassScheduleForUUID(String UUID) async {
+    ClassNewScheduleEntity? classSchedule =
+        await GetIt.I<ClassNewScheduleDao>().findClassNewScheduleForUid(UUID);
+    ShareDateUtil()
+        .setShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setWeekCourseJson((classSchedule?.json)!); //直接显示这个课表
+  }
+
   //显示历史变动课表项组件
-  showClassScheduleHistory(String studentID,String semester) async {
+  oldShowClassScheduleHistory(String studentID, String semester) async {
     List<ClassScheduleEntity> scheduleList = await GetIt.I<ClassScheduleDao>()
-        .findAllClassScheduleForStudentIdAndSemester(
-            studentID, semester);
+        .findAllClassScheduleForStudentIdAndSemester(studentID, semester);
     showDialog(
         context: Get.context!,
         barrierDismissible: false,
@@ -205,55 +338,207 @@ class MainCourseViewLogic extends GetxController
                     padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Column(
                       children: [
-                        Expanded(child: ListView.builder(
-                            itemCount: scheduleList.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              String timeForm =
-                                  '${formatDate(scheduleList[index].dateTime!,[yyyy,'-',mm,'-',dd,'  ',HH,':',mm])}';
-                              return InkWell(
-                                child: Container(
-                                  height: 60,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Text(
-                                            '更新时间：${timeForm}',
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: scheduleList.length,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                String timeForm =
+                                    '${formatDate(scheduleList[index].dateTime!, [
+                                      yyyy,
+                                      '-',
+                                      mm,
+                                      '-',
+                                      dd,
+                                      '  ',
+                                      HH,
+                                      ':',
+                                      mm
+                                    ])}';
+                                return InkWell(
+                                  child: Container(
+                                    height: 60,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '更新时间：${timeForm}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            ),
+                                            Visibility(
+                                              child: Text(
+                                                ' (当前)',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              visible: CourseData
+                                                      .oldShowClassScheduleUUID
+                                                      .value ==
+                                                  scheduleList[index].uid,
+                                            )
+                                          ],
+                                        ),
+                                        Text(
+                                            '课表UID值：${scheduleList[index].uid}',
                                             style: TextStyle(
-                                                color: Colors.black, fontSize: 12),
-                                          ),
-                                          Visibility(
-                                            child: Text(' (当前)',style: TextStyle(color: Colors.red),),
-                                            visible: CourseData.oldShowClassScheduleUUID.value==scheduleList[index].uid,
-                                          )
-                                        ],
-                                      ),
-                                      Text('课表UID值：${scheduleList[index].uid}',
-                                          style: TextStyle(
-                                              color: Colors.black, fontSize: 8)),
-                                      Text('课表MD5值：${scheduleList[index].md5}',
-                                          style: TextStyle(
-                                              color: Colors.black, fontSize: 8))
-                                    ],
+                                                color: Colors.black,
+                                                fontSize: 8)),
+                                        Text(
+                                            '课表MD5值：${scheduleList[index].md5}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 8))
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                onTap: () {
-                                  showClassScheduleForUUID((scheduleList[index]?.uid)!);
-                                  Navigator.pop(builder); //退出弹窗
-                                  Get.snackbar(
-                                    "课表通知",
-                                    "已选择${timeForm}历史缓存课表",
-                                    duration: Duration(milliseconds: 1500),
-                                  );
-                                },
-                              );
-                            }),flex: 1,),
+                                  onTap: () {
+                                    oldShowClassScheduleForUUID(
+                                        (scheduleList[index]?.uid)!);
+                                    Navigator.pop(builder); //退出弹窗
+                                    Get.snackbar(
+                                      "课表通知",
+                                      "已选择${timeForm}历史缓存课表",
+                                      duration: Duration(milliseconds: 1500),
+                                    );
+                                  },
+                                );
+                              }),
+                          flex: 1,
+                        ),
                         Container(
                           width: MediaQuery.of(builder).size.width,
-                          child: ElevatedButton(onPressed: (){
-                            Navigator.pop(builder);
-                          }, child: Text('取消')),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(builder);
+                              },
+                              child: Text('取消')),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(builder);
+                Get.back();
+              },
+            ),
+          );
+        });
+  }
+
+  //新 显示历史变动课表项组件
+  showClassScheduleHistory(String studentID, String semester) async {
+    List<ClassNewScheduleEntity> scheduleList =
+        await GetIt.I<ClassNewScheduleDao>()
+            .findAllClassNewScheduleForStudentIdAndSemester(
+                studentID, semester);
+    showDialog(
+        context: Get.context!,
+        barrierDismissible: false,
+        builder: (builder) {
+          return Scaffold(
+            backgroundColor: Colors.transparent,
+            body: InkWell(
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: Color.fromARGB(255, 247, 242, 249),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black45,
+                            blurRadius: 10,
+                            offset: Offset(1, 1))
+                      ]),
+                  height: 300,
+                  width: 260,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: scheduleList.length,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                String timeForm =
+                                    '${formatDate(scheduleList[index].dateTime!, [
+                                      yyyy,
+                                      '-',
+                                      mm,
+                                      '-',
+                                      dd,
+                                      '  ',
+                                      HH,
+                                      ':',
+                                      mm
+                                    ])}';
+                                return InkWell(
+                                  child: Container(
+                                    height: 60,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '更新时间：${timeForm}',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 12),
+                                            ),
+                                            Visibility(
+                                              child: Text(
+                                                ' (当前)',
+                                                style: TextStyle(
+                                                    color: Colors.red),
+                                              ),
+                                              visible: CourseData
+                                                      .showClassScheduleUUID
+                                                      .value ==
+                                                  scheduleList[index].uid,
+                                            )
+                                          ],
+                                        ),
+                                        Text(
+                                            '课表UID值：${scheduleList[index].uid}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 8)),
+                                        Text(
+                                            '课表MD5值：${scheduleList[index].md5}',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 8))
+                                      ],
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    showClassScheduleForUUID(
+                                        (scheduleList[index]?.uid)!);
+                                    Navigator.pop(builder); //退出弹窗
+                                    Get.snackbar(
+                                      "课表通知",
+                                      "已选择${timeForm}历史缓存课表",
+                                      duration: Duration(milliseconds: 1500),
+                                    );
+                                  },
+                                );
+                              }),
+                          flex: 1,
+                        ),
+                        Container(
+                          width: MediaQuery.of(builder).size.width,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pop(builder);
+                              },
+                              child: Text('取消')),
                         )
                       ],
                     ),
@@ -277,51 +562,54 @@ class MainCourseViewLogic extends GetxController
    * [param] null
    * [return]
    */
-  tableAdapter(List<dynamic> courses){
-    Map<String,dynamic> result={"tables":[]};
+  tableAdapter(List<dynamic> courses) {
+    Map<String, dynamic> result = {"tables": []};
     // log(jsonEncode(courses));
     // log('${courses.length}');
 
-    for(int x = 0 ; x<courses[0].length;++x){ //横向
+    for (int x = 0; x < courses[0].length; ++x) {
+      //横向
       String repeat = "[]";
-      int rowStart =0;
-      int rowEnd =0;
+      int rowStart = 0;
+      int rowEnd = 0;
       int columStart = 0;
-      int columEnd =0;
-      for(int y =0;y<courses.length;++y){ //竖向
+      int columEnd = 0;
+      for (int y = 0; y < courses.length; ++y) {
+        //竖向
         String inform = jsonEncode(courses[y][x]);
-        if(repeat!=inform || y==courses.length-1){
-          if(repeat!="[]" && columStart!=0){
+        if (repeat != inform || y == courses.length - 1) {
+          if (repeat != "[]" && columStart != 0) {
             // log(repeat);
             result['tables'].add({
-              "rowStart": rowStart+1,
-              "rowEnd": rowEnd+1,
+              "rowStart": rowStart + 1,
+              "rowEnd": rowEnd + 1,
               "columStart": columStart,
               "columEnd": columEnd,
-              "title": "${jsonDecode(repeat).length>1?"有多门课程同时进行，点击查看详细":jsonDecode(repeat)[0]['courseName']}",
+              "title":
+                  "${jsonDecode(repeat).length > 1 ? "有多门课程同时进行，点击查看详细" : jsonDecode(repeat)[0]['courseName']}",
               "style": {
-                "textColor": jsonDecode(repeat).length>1?[255,255,0,0]:[255,0,0,0]
+                "textColor": jsonDecode(repeat).length > 1
+                    ? [255, 255, 0, 0]
+                    : [255, 0, 0, 0]
               },
               "data": jsonDecode(repeat)
             });
           }
           rowStart = y;
           rowEnd = y;
-          columStart = x+1;
-          columEnd = x+1;
+          columStart = x + 1;
+          columEnd = x + 1;
           repeat = inform;
           continue;
         }
-        rowEnd= rowEnd<y?y:rowEnd;
+        rowEnd = rowEnd < y ? y : rowEnd;
       }
-
     }
     return result;
   }
-  
 
   //新！ 用来陈列数据列表或者刷新课表视图用
-  List<Widget> pullAllCourseSchedule(Map<dynamic,dynamic> courseJson){
+  List<Widget> pullAllCourseSchedule(Map<dynamic, dynamic> courseJson) {
     // log(jsonEncode(courseJson));
     remark.value = courseJson['remark']!;
     //开学时间
@@ -331,21 +619,21 @@ class MainCourseViewLogic extends GetxController
         int.parse(CourseData.schoolOpenTime.value.split('/')[2]));
     List courses = courseJson["courses"];
     log(jsonEncode(courses[4]));
-    List<Widget> scheduleList =[];
-    for(int i=0 ; i<courses.length;++i){
+    List<Widget> scheduleList = [];
+    for (int i = 0; i < courses.length; ++i) {
       scheduleList.add(ClassScheduleWidget(
         tableJson: tableAdapter(courses[i]),
         isNoon: CourseData.isNoonLineSwitch,
         isMin: CourseData.isMinForSchedule,
         // columTimeList: [],
         columTimeList: [
-          startSchoolTime.add(Duration(days: 7*i)),
-          startSchoolTime.add(Duration(days: 7*i+1)),
-          startSchoolTime.add(Duration(days: 7*i+2)),
-          startSchoolTime.add(Duration(days: 7*i+3)),
-          startSchoolTime.add(Duration(days: 7*i+4)),
-          startSchoolTime.add(Duration(days: 7*i+5)),
-          startSchoolTime.add(Duration(days: 7*i+6)),
+          startSchoolTime.add(Duration(days: 7 * i)),
+          startSchoolTime.add(Duration(days: 7 * i + 1)),
+          startSchoolTime.add(Duration(days: 7 * i + 2)),
+          startSchoolTime.add(Duration(days: 7 * i + 3)),
+          startSchoolTime.add(Duration(days: 7 * i + 4)),
+          startSchoolTime.add(Duration(days: 7 * i + 5)),
+          startSchoolTime.add(Duration(days: 7 * i + 6)),
         ],
       ));
     }
@@ -353,8 +641,10 @@ class MainCourseViewLogic extends GetxController
   }
 
   //测试新课表的数据加载与显示
-  debugCoursePullTest(){
-    CourseUtil().getAllCourseSemesterList("${CourseData.nowCourseList.value}").then((value) {
+  debugCoursePullTest() {
+    CourseUtil()
+        .getAllCourseSemesterList("${CourseData.nowCourseList.value}",CourseData.ansWeek.value)
+        .then((value) {
       state.debugCourseJson.value = jsonDecode(value);
       state.debugCourseJson.refresh();
     });
@@ -363,7 +653,6 @@ class MainCourseViewLogic extends GetxController
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
-
     //开学时间
     DateTime startSchoolTime = DateTime(
         int.parse(CourseData.schoolOpenTime.value.split('/')[0]),
@@ -948,10 +1237,17 @@ class MainCourseViewLogic extends GetxController
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.oldWeekCourseList.value);
-    debugCoursePullTest();//debug加载测试数据
+    // debugCoursePullTest(); //debug加载测试数据
     courseRefreshListen();
     //每次进入课表都进行一次课表同步
-    onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.oldShowClassScheduleUUID.value);
+    if (CourseData.newOrOldCourseScheduleChoose.value) {
+      onRefresh(AccountData.studentID, CourseData.nowCourseList.value,
+          CourseData.showClassScheduleUUID.value);
+    } else {
+      oldOnRefresh(AccountData.studentID, CourseData.nowCourseList.value,
+          CourseData.oldShowClassScheduleUUID.value);
+    }
+
     shakeListen();
   }
 

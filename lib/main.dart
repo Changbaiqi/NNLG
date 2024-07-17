@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
+import 'package:nnlg/dao/ClassNewScheduleDao.dart';
 import 'package:nnlg/dao/ClassScheduleDatabase.dart';
 import 'package:nnlg/view/router/AppPages.dart';
 import 'package:nnlg/view/router/Routes.dart';
@@ -13,13 +14,18 @@ void main() async{
 
   //数据库迁移更新
   final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db')
-      .addMigrations([Migration(4, 5, (database)async{
-        await database.update('ClassScheduleEntity', {'list': null});
+      .addMigrations([Migration(5, 6, (database)async{
+        // await database.update('ClassScheduleEntity', {'list': null});
+    // await database.execute('sql')
   })]).build();
-  
-  final dao = database.classScheduleDao;
+  // final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db').build();
+  final classScheduleDao = database.classScheduleDao;
+  final classNewScheduleDao = database.classNewScheduleDao;
+
   GetIt getIt = GetIt.instance;
-  getIt.registerSingleton<ClassScheduleDao>(dao,signalsReady: true);
+  getIt.registerSingleton<ClassScheduleDao>(classScheduleDao,signalsReady: true);
+  getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,signalsReady: true);
+
  return runApp(MyApp());
 }
 

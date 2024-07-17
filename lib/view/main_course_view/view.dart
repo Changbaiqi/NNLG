@@ -328,8 +328,13 @@ class MainCourseViewPage extends StatelessWidget {
                       break;
                     case '课表同步历史':
                       {
-                        logic.showClassScheduleHistory(AccountData.studentID,
-                            CourseData.nowCourseList.value);
+                        if(CourseData.newOrOldCourseScheduleChoose.value){
+                          logic.showClassScheduleHistory(AccountData.studentID,
+                              CourseData.nowCourseList.value);
+                        }else{
+                          logic.oldShowClassScheduleHistory(AccountData.studentID,
+                              CourseData.nowCourseList.value);
+                        }
                       }
                       break;
                   }
@@ -379,9 +384,9 @@ class MainCourseViewPage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         controller: logic.pageController,
 
-                        children: CourseData.newOrOldCourseScheduleChoose.value?(state.debugCourseJson.value["courses"] != null
+                        children: CourseData.newOrOldCourseScheduleChoose.value?(CourseData.weekCourseJson.value["courses"] != null
                             ? logic.pullAllCourseSchedule(
-                                state.debugCourseJson.value)
+                            CourseData.weekCourseJson.value)
                             : [
                                 Center(
                                   child: Text("课表加载中......"),

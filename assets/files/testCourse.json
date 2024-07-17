@@ -1,0 +1,372 @@
+[
+  [
+    [],
+    [],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "计算机基础实验室（4507）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "13-17(全部)[01-02节]",
+        "courseWeekList": [
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      },
+      {
+        "courseName": "习近平新时代中国特色社会主义思想概论[48][必修]",
+        "courseClassRoom": "多媒体教室1114",
+        "courseTeacher": "刘胜良",
+        "courseWeek": "1-14(全部)[01-02节]",
+        "courseWeekList": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      }
+    ],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "计算机基础实验室（4514）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "14-17(全部)[01-02节]",
+        "courseWeekList": [
+          14,
+          15,
+          16,
+          17
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      }
+    ],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "计算机基础实验室（4507）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "13-17(全部)[01-02节]",
+        "courseWeekList": [
+          13,
+          14,
+          15,
+          16,
+          17
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      },
+      {
+        "courseName": "习近平新时代中国特色社会主义思想概论[48][必修]",
+        "courseClassRoom": "多媒体教室1114",
+        "courseTeacher": "刘胜良",
+        "courseWeek": "1-14(全部)[01-02节]",
+        "courseWeekList": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      }
+    ],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "计算机基础实验室（4514）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "14-17(全部)[01-02节]",
+        "courseWeekList": [
+          14,
+          15,
+          16,
+          17
+        ],
+        "courseSectionList": [
+          1,
+          2
+        ]
+      }
+    ],
+    [],
+    [],
+    []
+  ],
+  [
+    [
+      {
+        "courseName": "软件工程[48][必修]",
+        "courseClassRoom": "计算机基础实验室（4427）",
+        "courseTeacher": "王晖高级工程师",
+        "courseWeek": "9-15(全部)[03-04节]",
+        "courseWeekList": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [],
+    [
+      {
+        "courseName": "软件工程[48][必修]",
+        "courseClassRoom": "多媒体教室4307",
+        "courseTeacher": "王晖高级工程师",
+        "courseWeek": "1-8,10-14(全部)[03-04节]",
+        "courseWeekList": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "虚拟化实验室（2）（2415）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "2-10,13-14(全部)[03-04节]",
+        "courseWeekList": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [],
+    [],
+    []
+  ],
+  [
+    [
+      {
+        "courseName": "软件工程[48][必修]",
+        "courseClassRoom": "计算机基础实验室（4427）",
+        "courseTeacher": "王晖高级工程师",
+        "courseWeek": "9-15(全部)[03-04节]",
+        "courseWeekList": [
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [],
+    [
+      {
+        "courseName": "软件工程[48][必修]",
+        "courseClassRoom": "多媒体教室4307",
+        "courseTeacher": "王晖高级工程师",
+        "courseWeek": "1-8,10-14(全部)[03-04节]",
+        "courseWeekList": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [
+      {
+        "courseName": "大数据技术基础[48][选修]",
+        "courseClassRoom": "虚拟化实验室（2）（2415）",
+        "courseTeacher": "韦晓红讲师（高校）",
+        "courseWeek": "2-10,13-14(全部)[03-04节]",
+        "courseWeekList": [
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          13,
+          14
+        ],
+        "courseSectionList": [
+          3,
+          4
+        ]
+      }
+    ],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ],
+  [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+]

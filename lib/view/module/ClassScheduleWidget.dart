@@ -6,10 +6,12 @@
  * @Description TODO 单个课表组件，用于渲染单个课表的显示的
  */
 
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/view/module/showCourseTableMessage.dart';
 
 class ClassScheduleWidget extends StatelessWidget {
   final tableJson; //课程信息的json
@@ -18,18 +20,18 @@ class ClassScheduleWidget extends StatelessWidget {
   final List<List<dynamic>> isOccupy = []; //用于标记哪些格子是用过的
   //默认课表时间
   List<dynamic> rowTimeList = [
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 10,minute: 5)},
-    {"start":TimeOfDay(hour: 10,minute: 25),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 12,minute: 00)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)},
-    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 30)}];
+    {"start":TimeOfDay(hour: 8,minute: 30),"end": TimeOfDay(hour: 9,minute: 15)},
+    {"start":TimeOfDay(hour: 9,minute: 20),"end": TimeOfDay(hour: 10,minute: 5)},
+    {"start":TimeOfDay(hour: 10,minute: 25),"end": TimeOfDay(hour: 11,minute: 10)},
+    {"start":TimeOfDay(hour: 11,minute: 15),"end": TimeOfDay(hour: 12,minute: 00)},
+    {"start":TimeOfDay(hour: 14,minute: 30),"end": TimeOfDay(hour: 15,minute: 15)},
+    {"start":TimeOfDay(hour: 15,minute: 20),"end": TimeOfDay(hour: 16,minute: 05)},
+    {"start":TimeOfDay(hour: 16,minute: 15),"end": TimeOfDay(hour: 17,minute: 00)},
+    {"start":TimeOfDay(hour: 17,minute: 05),"end": TimeOfDay(hour: 17,minute: 50)},
+    {"start":TimeOfDay(hour: 18,minute: 20),"end": TimeOfDay(hour: 19,minute: 05)},
+    {"start":TimeOfDay(hour: 19,minute: 10),"end": TimeOfDay(hour: 19,minute: 55)},
+    {"start":TimeOfDay(hour: 20,minute: 05),"end": TimeOfDay(hour: 20,minute: 50)},
+    {"start":TimeOfDay(hour: 20,minute: 55),"end": TimeOfDay(hour: 21,minute: 40)}];
   final List<String> weekToChar =["一","二","三","四","五","六","日"];
   //默认列时间
   List<dynamic> columTimeList=[
@@ -69,6 +71,16 @@ class ClassScheduleWidget extends StatelessWidget {
               )),
               ...columTimeList.map((e) => Expanded(
                   child: Container(
+                    decoration: BoxDecoration(
+                        color: DateTime.now().month == e.month &&
+                            DateTime.now().day == e.day
+                            ? Color.fromARGB(30, 59, 52, 86)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(8),
+                        border: DateTime.now().month == e.month &&
+                            DateTime.now().day == e.day
+                            ? Border.all(color: Color.fromARGB(130, 59, 52, 86))
+                            : Border.all(color: Colors.transparent)),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,7 +105,7 @@ class ClassScheduleWidget extends StatelessWidget {
                     child: Stack(
                       children: [
                         _backgroundLine(noonSwitch: isNoon),
-                        drawTable(tableJson)
+                        drawTable(tableJson),
                       ],
                     ),
                   )
@@ -119,7 +131,9 @@ class ClassScheduleWidget extends StatelessWidget {
     if(tableJson["tables"]==null) return Stack();
     List<Widget> list =[];
     List tables = tableJson["tables"];
-    tables.forEach((element) {
+    // log(courses.toString());
+    for(int i=0; i< tables.length;++i){
+      var element = tables[i];
       list.add(Positioned(
         child: InkWell(
           child: Container(
@@ -130,23 +144,25 @@ class ClassScheduleWidget extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Color.fromARGB(30, 59, 52, 86),
+                  color: Color.fromARGB((columTimeList[element['columStart']-1].month==DateTime.now().month) && (columTimeList[element['columStart']-1].day==DateTime.now().day)?130:30, 59, 52, 86),
                   //设置四周边框
                   border: new Border.all(
                       width: 1, color: Color.fromARGB(80, 59, 52, 86)),
                 ),
-                child: Center(child: Text(element["title"]),),
+                child: Text(element["title"],style: TextStyle(fontSize: 12,color: Color.fromARGB(element['style']['textColor'][0], element['style']['textColor'][1], element['style']['textColor'][2], element['style']['textColor'][3])),),
               ),
             ),
           ),
           onTap: (){
-
+            // log(element.toString());
+            showCourseTableMessage(Get.context!)
+                .show(element['data'], DateTime((columTimeList[element["columStart"]-1] as DateTime).year,(columTimeList[element["columStart"]-1] as DateTime).month,(columTimeList[element["columStart"]-1] as DateTime).day,),);
           },
         ),
         left: Get.context!.width / 8 * element["columStart"],
         top: 70.0*(element["rowStart"]-1)+(isNoon&&element["rowStart"]>=5?noonWidgetHeight:0),
       ));
-    });
+    }
     return Stack(
       children: list,
     );
@@ -276,8 +292,52 @@ class ClassScheduleWidget extends StatelessWidget {
         }
       }
     }else{
+
       for(int x=0;x<8;++x){
         for(int y = 0;y<12;++y){
+          //添加左侧时间
+          list.add(Positioned(
+            child: Container(
+              height: 70,
+              width: Get.context!.width / 8,
+              decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(
+                        width: 0.05,
+                        color: Colors.black
+                    ),
+                    right: BorderSide(
+                        width: 0.05,
+                        color: Colors.black
+                    ),
+                    top: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][x]["state"]&&isOccupy[y][x]["table"]["rowStart"]-1!=y)?Colors.transparent:Colors.black
+                    ),
+                    bottom: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][x]["state"]&&isOccupy[y][x]["table"]["rowEnd"]-1!=y)?Colors.transparent:Colors.black
+                    ),
+                  )),
+              child: Visibility(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('${y+1}',style: TextStyle(fontSize: 15),),
+                    Text('${rowTimeList[y]["start"].hour}:${rowTimeList[y]["start"].minute}',style: TextStyle(fontSize: 10),),
+                    Text('至',style: TextStyle(fontSize: 9),),
+                    Text('${rowTimeList[y]["end"].hour}:${rowTimeList[y]["end"].minute}',style: TextStyle(fontSize: 10),),
+                  ],
+                ),
+                visible: x==0?true:false,
+              ),
+            ),
+            left: Get.context!.width / 8 * x,
+            top: 70.0*y,
+          ));
+
+          //添加表格
           list.add(Positioned(
             child: Container(
               height: 70,

@@ -9,8 +9,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class FileUtils{
-  static Future<Map<String, dynamic>> loadJsonFromAssets(String filePath) async {
+  static Future<String> loadJsonFromAssets(String filePath) async {
     String jsonString = await rootBundle.loadString(filePath);
-    return jsonDecode(jsonString);
+    return jsonString;
   }
 }

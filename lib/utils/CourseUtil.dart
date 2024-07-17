@@ -80,8 +80,42 @@ class CourseUtil{
     return toJSONCourse(utf8.decode(response.data));
   }
 
-
-
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 一次性直接获取课表
+   * [date] 19:27 2024/7/15
+   * [param] null
+   * [return]
+   */
+  Future<String> getAllCourseSemesterList(String semester) async {
+    bool brushFlag = false;
+    // var resWeekCourseList={};
+    Response response = await Dio(_options).request(
+        '/gllgdxbwglxy_jsxsd/xskb/xskb_list.do',
+        options: Options(
+          method: 'POST',
+          contentType: 'application/x-www-form-urlencoded',
+          responseType: ResponseType.bytes,
+        ),
+        data: {
+          "xnxq01id": '${semester}',
+          "zc": ''
+        }
+    );
+    //检查是否登录超时，如果超时则重新登录
+    if(!brushFlag) {
+      if (!await LoginUtil.checkLoginTimeOut(response)) {
+        return CourseUtil().getAllCourseSemesterList(semester);
+      }
+      brushFlag = true;
+    }
+    //debugPrint(response.toString());
+    String newTest = await CourseForAll(utf8.decode(response.data)).getAllSemesterJson(21);
+    // log(newTest);
+    // resWeekCourseList = jsonDecode(newTest);
+    return newTest;
+  }
 
   //根据学期获取全部课表json并将其装载到课表数据存储
   Future<List<String>> getAllCourseWeekList(String semester) async {

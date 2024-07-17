@@ -6,6 +6,8 @@
  * @Description TODO
  */
 
+import 'dart:convert';
+
 import '../entity/CourseForm.dart';
 
 class CourseForAll {
@@ -205,7 +207,7 @@ class CourseForAll {
     // ObjectMapper objectMapper = new ObjectMapper();
     // HashMap<String,Object> result = new HashMap<>();
     Map<String, dynamic> result = {};
-    List<List<List<List<String?>>>> list = [];
+    List<List<List<List<Map<String,dynamic>?>>>> list = [];
     for (int i = 0; i < minWeek; i++) {
       list.add([]);
       for (int j = 0; j < 12; ++j) {
@@ -216,25 +218,26 @@ class CourseForAll {
       }
     }
 
+    Set<String> repeat = Set();//去重，防止重复添加
     for (int i = 0; i < courFormList.length; i++) {
       //第几行
       for (int j = 0; j < courFormList[i].length; ++j) {
         //第几列
         for (int z = 0; z < courFormList[i][j].length; ++z) {
           CourseForm? courseForm = courFormList[i][j][z];
-          if (courseForm == null) continue;
-
+          if (courseForm == null || repeat.contains(jsonEncode(courseForm.toJsonMap()))) continue;
           for (int week in courseForm.courseWeekList!) {
             for (int selection in courseForm.courseSectionList!) {
-              list[week - 1][selection - 1][j].add(courseForm.toJson());
+              list[week - 1][selection - 1][j].add(courseForm.toJsonMap());
             }
           }
+          repeat.add(jsonEncode(courseForm.toJsonMap()));
         }
       }
     }
 
     result["remark"] = remark;
     result["courses"] = list;
-    return result.toString();
+    return jsonEncode(result);
   }
 }

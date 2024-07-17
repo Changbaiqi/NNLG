@@ -9,7 +9,7 @@ class SoftwareDevelopmentTestViewPage extends StatelessWidget {
 
   final logic = Get.find<SoftwareDevelopmentTestViewLogic>();
   final state = Get.find<SoftwareDevelopmentTestViewLogic>().state;
-  final text = 1.obs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

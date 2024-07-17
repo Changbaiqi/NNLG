@@ -43,13 +43,15 @@ class ScoreInquiryViewLogic extends GetxController {
     double? num = double.tryParse(score);
     if (num == null) {
       if (score == '不合格') return Colors.red;
+      if (score == '不及格') return Colors.red;
       if (score == '合格') return Colors.amber;
+      if (score == '及格') return Colors.amber;
       if (score == '优') return Colors.deepPurple;
       return Colors.white;
     }
     if (num! < 60) return Colors.red;
     if (num == 60) return Colors.amber;
-    if (num > 90) return Colors.deepPurple;
+    if (num >= 90) return Colors.deepPurple;
 
     return Colors.white;
   }

@@ -73,7 +73,6 @@ class MainCourseViewLogic extends GetxController
     state.courseRefreshStatus.value = 1; //设置当前课表刷新状态为进行中
     try{
       animationController?.forward(); //同步按钮动画执行
-
       //同步拉取教务系统课表
       List<String> newestCourse = await CourseUtil().getAllCourseWeekList(nowCourseList);
 

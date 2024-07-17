@@ -10,6 +10,16 @@ class CourseForm{
   List<int>? courseWeekList;
   List<int>? courseSectionList;
 
+  Map<String,dynamic> toJsonMap(){
+    return {
+      "courseName": courseName,
+      "courseClassRoom":courseClassRoom,
+      "courseTeacher": courseTeacher,
+      "courseWeek": courseWeek,
+      "courseWeekList": courseWeekList,
+      "courseSectionList": courseSectionList
+    };
+  }
   String? toJson() {
     String stringBuffer= "";
     stringBuffer+="{";

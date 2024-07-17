@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:marquee/marquee.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
@@ -17,9 +18,7 @@ class MainCourseViewPage extends StatelessWidget {
   final logic = Get.put(MainCourseViewLogic());
 
   // final logic = Get.find<MainCourseViewLogic>();
-  final state = Get
-      .find<MainCourseViewLogic>()
-      .state;
+  final state = Get.find<MainCourseViewLogic>().state;
 
   @override
   Widget build(BuildContext context) {
@@ -34,33 +33,55 @@ class MainCourseViewPage extends StatelessWidget {
             // color: Colors.white
           ),
           child: Obx(() => Stack(
-            children: [
-              Opacity(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: Image.network('https://t.mwm.moe/fj/',fit: BoxFit.cover,),
-                ),
-                opacity: CourseData.isPictureBackground.value && CourseData.isRandomQuadraticBackground.value?CourseData.courseBackgroundOpacity.value:0,
-              ),
-              Opacity(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: CourseData.courseBackgroundInputUrl.value!=null?Image.network(CourseData.courseBackgroundInputUrl.value,fit: BoxFit.cover,):Container(),
-                ),
-                opacity: CourseData.isPictureBackground.value && CourseData.isUrlBackground.value?CourseData.courseBackgroundOpacity.value:0,
-              ),
-              Opacity(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: CourseData.courseBackgroundFilePath.value!=null?Image.file(File(CourseData.courseBackgroundFilePath.value),fit: BoxFit.cover,):Container(),
-                ),
-                opacity: CourseData.isPictureBackground.value && CourseData.isCustomerLocalBackground.value?CourseData.courseBackgroundOpacity.value:0,
-              )
-            ],
-          )),
+                children: [
+                  Opacity(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: Image.network(
+                        'https://t.mwm.moe/fj/',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    opacity: CourseData.isPictureBackground.value &&
+                            CourseData.isRandomQuadraticBackground.value
+                        ? CourseData.courseBackgroundOpacity.value
+                        : 0,
+                  ),
+                  Opacity(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: CourseData.courseBackgroundInputUrl.value != null
+                          ? Image.network(
+                              CourseData.courseBackgroundInputUrl.value,
+                              fit: BoxFit.cover,
+                            )
+                          : Container(),
+                    ),
+                    opacity: CourseData.isPictureBackground.value &&
+                            CourseData.isUrlBackground.value
+                        ? CourseData.courseBackgroundOpacity.value
+                        : 0,
+                  ),
+                  Opacity(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      child: CourseData.courseBackgroundFilePath.value != null
+                          ? Image.file(
+                              File(CourseData.courseBackgroundFilePath.value),
+                              fit: BoxFit.cover,
+                            )
+                          : Container(),
+                    ),
+                    opacity: CourseData.isPictureBackground.value &&
+                            CourseData.isCustomerLocalBackground.value
+                        ? CourseData.courseBackgroundOpacity.value
+                        : 0,
+                  )
+                ],
+              )),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -91,36 +112,36 @@ class MainCourseViewPage extends StatelessWidget {
             elevation: 1,
             title: Column(
               children: [
-                Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                  Row(
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() =>
-                          Column(
-                            children: [
-                              Text(
-                                '第 ${state.nowIndex.value} 周',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: state.nowIndex.value ==
-                                        CourseData.nowWeek.value
-                                        ? Colors.black
-                                        : Colors.redAccent),
-                              ),
-                              Text(
-                                '${CourseData.nowCourseList.value}',
-                                style: TextStyle(fontSize: 12),
-                              )
-                            ],
-                          )),
-                    ],
-                  ),
-                ]),
+                      Row(
+                        children: [
+                          Obx(() => Column(
+                                children: [
+                                  Text(
+                                    '第 ${state.nowIndex.value} 周',
+                                    style: TextStyle(
+                                        fontSize: 20,
+                                        color: state.nowIndex.value ==
+                                                CourseData.nowWeek.value
+                                            ? Colors.black
+                                            : Colors.redAccent),
+                                  ),
+                                  Text(
+                                    '${CourseData.nowCourseList.value}',
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              )),
+                        ],
+                      ),
+                    ]),
               ],
             ),
             actions: [
               IconButton(
-                icon: Obx(() =>
-                    Column(
+                icon: Obx(() => Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -148,18 +169,22 @@ class MainCourseViewPage extends StatelessWidget {
                       ],
                     )),
                 onPressed: () async {
-                  if(state.courseRefreshStatus.value==1) return; //防止重叠触发
+                  if (state.courseRefreshStatus.value == 1) return; //防止重叠触发
                   Get.snackbar(
                     "课表通知",
                     "正在同步官网课表...",
                     duration: Duration(milliseconds: 1500),
                   );
-                  logic.onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.showClassScheduleUUID.value).then((value) =>
-                      Get.snackbar(
-                        "课表通知",
-                        "同步完毕",
-                        duration: const Duration(milliseconds: 1500),
-                      ));
+                  logic
+                      .onRefresh(
+                          AccountData.studentID,
+                          CourseData.nowCourseList.value,
+                          CourseData.showClassScheduleUUID.value)
+                      .then((value) => Get.snackbar(
+                            "课表通知",
+                            "同步完毕",
+                            duration: const Duration(milliseconds: 1500),
+                          ));
                 },
               ),
               IconButton(
@@ -217,7 +242,8 @@ class MainCourseViewPage extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               '共享课表',
-                              style: TextStyle(fontSize: 12, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           )
                         ],
@@ -238,7 +264,8 @@ class MainCourseViewPage extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               '当前页设为本周',
-                              style: TextStyle(fontSize: 12, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           )
                         ],
@@ -259,7 +286,8 @@ class MainCourseViewPage extends StatelessWidget {
                             padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                             child: Text(
                               '课表同步历史',
-                              style: TextStyle(fontSize: 12, color: Colors.black),
+                              style:
+                                  TextStyle(fontSize: 12, color: Colors.black),
                             ),
                           )
                         ],
@@ -291,78 +319,96 @@ class MainCourseViewPage extends StatelessWidget {
                         //设置周数
                         ShareDateUtil()
                             .setSchoolOpenDate(
-                            "${now.year}/${now.month}/${now.day}")
-                            .then((value) =>
-                        CourseData.nowWeek.value =
-                            CourseUtil.getNowWeek(
-                                CourseData.schoolOpenTime.value,
-                                CourseData.ansWeek.value));
+                                "${now.year}/${now.month}/${now.day}")
+                            .then((value) => CourseData.nowWeek.value =
+                                CourseUtil.getNowWeek(
+                                    CourseData.schoolOpenTime.value,
+                                    CourseData.ansWeek.value));
                       }
                       break;
-                    case '课表同步历史':{
-                      logic.showClassScheduleHistory(AccountData.studentID,CourseData.nowCourseList.value);
-                    }
-                    break;
+                    case '课表同步历史':
+                      {
+                        logic.showClassScheduleHistory(AccountData.studentID,
+                            CourseData.nowCourseList.value);
+                      }
+                      break;
                   }
                 },
               )
             ],
           ),
           body: Obx(
-                () =>
-                RepaintBoundary(
-                    key: logic.courseWidgetKey,
-                    child: Column(
-                      children: [
-                        Visibility(child: Container(
-                          decoration: BoxDecoration(
-                              color: Color.fromARGB(180, 255, 242, 132)
+            () => RepaintBoundary(
+                key: logic.courseWidgetKey,
+                child: Column(
+                  children: [
+                    Obx(() => Visibility(
+                          child: Container(
+                            decoration: BoxDecoration(
+                                // color: Color.fromARGB(180, 255, 242, 132)
+                                ),
+                            height: 20,
+                            child: Row(
+                              children: [
+                                Obx(() => Container(
+                                      width: Get.context!.width,
+                                      child: Marquee(
+                                        text: '备注：${logic.remark.value}',
+                                        style: TextStyle(
+                                          fontSize: 13
+                                        ),
+                                        velocity: 30.0,
+                                        blankSpace: 20,
+                                        pauseAfterRound: Duration(seconds: 5),
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                      ),
+                                    ))
+                              ],
+                            ),
                           ),
-                          height: 20,
-                          child: Row(
-                            children: [
-                              Obx(() => Text('${logic.remark.value}'))
-                            ],
-                          ),
-                        ),visible: logic.remark.value!="",),
-                        Expanded(child: PageView(
-                          onPageChanged: (int index) {
-                            state.nowIndex.value = index;
-                            state.nowIndex.value += 1;
-                            // print('当前页面时$index');
-                          },
-                          reverse: false,
-                          scrollDirection: Axis.horizontal,
-                          controller: logic.pageController,
-                          children: state.debugCourseJson.value["courses"]!= null
-                              ? logic
-                              .pullAllCourseSchedule(state.debugCourseJson.value)
-                              : [
-                            Center(
-                              child: Text("课表加载中......"),
-                            )
-                            // children: CourseData.weekCourseList.value.length != 0
-                            //     ? logic
-                            //     .refreshAllCourseTable(CourseData.weekCourseList.value)
-                            //     : [
-                            //   Center(
-                            //     child: Text("课表加载中......"),
-                            //   )
-                          ],
-                        ),flex: 1,)
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //     // color: Color.fromARGB(255, 255, 251, 254),
-                        //       color: Colors.transparent
-                        //   ),
-                        //   height: MediaQuery
-                        //       .of(context)
-                        //       .size
-                        //       .height,
-                        //   child: ,
-                        // )
-                      ],
-                    )),
+                          visible: logic.remark.value != "",
+                        )),
+                    Expanded(
+                      child: PageView(
+                        onPageChanged: (int index) {
+                          state.nowIndex.value = index;
+                          state.nowIndex.value += 1;
+                          // print('当前页面时$index');
+                        },
+                        reverse: false,
+                        scrollDirection: Axis.horizontal,
+                        controller: logic.pageController,
+                        children: state.debugCourseJson.value["courses"] != null
+                            ? logic.pullAllCourseSchedule(
+                                state.debugCourseJson.value)
+                            : [
+                                Center(
+                                  child: Text("课表加载中......"),
+                                )
+                                // children: CourseData.weekCourseList.value.length != 0
+                                //     ? logic
+                                //     .refreshAllCourseTable(CourseData.weekCourseList.value)
+                                //     : [
+                                //   Center(
+                                //     child: Text("课表加载中......"),
+                                //   )
+                              ],
+                      ),
+                      flex: 1,
+                    )
+                    // Container(
+                    //   decoration: BoxDecoration(
+                    //     // color: Color.fromARGB(255, 255, 251, 254),
+                    //       color: Colors.transparent
+                    //   ),
+                    //   height: MediaQuery
+                    //       .of(context)
+                    //       .size
+                    //       .height,
+                    //   child: ,
+                    // )
+                  ],
+                )),
           ),
         ),
       ],

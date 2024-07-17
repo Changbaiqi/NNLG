@@ -72,8 +72,8 @@ class CourseForAll {
     }
 
     //备注信息截取
-    RegExp remarkPt = RegExp(
-        r' <th width="[^"]*" height="[^"]*" align="[^"]*">[^<]*" + "</th> <td colspan="[^"]*" align="[^"]*">([^<]*)</td>');
+
+    RegExp remarkPt = RegExp(r'<th width=\"[^\"]*\" height=\"[^\"]*\" align=\"[^\"]*\">[^<]*</th> <td colspan=\"[^\"]*\" align=\"[^\"]*\">([^<]*)</td>');
     Match? remarkMatcher = remarkPt.firstMatch(courseHTML);
     if (remarkMatcher != null) {
       remark = remarkMatcher.group(1);

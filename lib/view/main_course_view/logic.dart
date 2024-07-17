@@ -323,7 +323,7 @@ class MainCourseViewLogic extends GetxController
   //新！ 用来陈列数据列表或者刷新课表视图用
   List<Widget> pullAllCourseSchedule(Map<dynamic,dynamic> courseJson){
     // log(jsonEncode(courseJson));
-    remark.value = courseJson['remark']??"";
+    remark.value = courseJson['remark']!;
     //开学时间
     DateTime startSchoolTime = DateTime(
         int.parse(CourseData.schoolOpenTime.value.split('/')[0]),

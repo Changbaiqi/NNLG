@@ -20,6 +20,7 @@ class SoftwareDevelopmentTestViewPage extends StatelessWidget {
               child: ClassScheduleWidget(
                 tableJson: logic.tableJson.value,
                 isNoon: true,
+                isMin: logic.isMin,
                 columTimeList: [
                   DateTime(2024,7,15),
                   DateTime(2024,7,16),

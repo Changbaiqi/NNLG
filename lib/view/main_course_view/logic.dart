@@ -23,6 +23,7 @@ import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:nnlg/view/module/ClassScheduleWidget.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,7 +39,8 @@ class MainCourseViewLogic extends GetxController
     with SingleGetTickerProviderMixin {
   final MainCourseViewState state = MainCourseViewState();
   BuildContext? context;
-
+  final _isMin = true.obs; //是否为小节显示
+  final remark = "".obs; // 课表备注显示内容
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   final courseWidgetKey = GlobalKey(); //课表key
 
@@ -267,6 +269,97 @@ class MainCourseViewLogic extends GetxController
         });
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 课表数据与控件之间的数据适配器
+   * [date] 11:49 2024/7/17
+   * [param] null
+   * [return]
+   */
+  tableAdapter(List<dynamic> courses){
+    Map<String,dynamic> result={"tables":[]};
+    // log(jsonEncode(courses));
+    // log('${courses.length}');
+
+    for(int x = 0 ; x<courses[0].length;++x){ //横向
+      String repeat = "[]";
+      int rowStart =0;
+      int rowEnd =0;
+      int columStart = 0;
+      int columEnd =0;
+      for(int y =0;y<courses.length;++y){ //竖向
+        String inform = jsonEncode(courses[y][x]);
+        if(repeat!=inform || y==courses.length-1){
+          if(repeat!="[]" && columStart!=0){
+            // log(repeat);
+            result['tables'].add({
+              "rowStart": rowStart+1,
+              "rowEnd": rowEnd+1,
+              "columStart": columStart,
+              "columEnd": columEnd,
+              "title": "${jsonDecode(repeat).length>1?"有多门课程同时进行，点击查看详细":jsonDecode(repeat)[0]['courseName']}",
+              "style": {
+                "textColor": jsonDecode(repeat).length>1?[255,255,0,0]:[255,0,0,0]
+              },
+              "data": jsonDecode(repeat)
+            });
+          }
+          rowStart = y;
+          rowEnd = y;
+          columStart = x+1;
+          columEnd = x+1;
+          repeat = inform;
+          continue;
+        }
+        rowEnd= rowEnd<y?y:rowEnd;
+      }
+
+    }
+    return result;
+  }
+  
+
+  //新！ 用来陈列数据列表或者刷新课表视图用
+  List<Widget> pullAllCourseSchedule(Map<dynamic,dynamic> courseJson){
+    // log(jsonEncode(courseJson));
+    remark.value = courseJson['remark']??"";
+    //开学时间
+    DateTime startSchoolTime = DateTime(
+        int.parse(CourseData.schoolOpenTime.value.split('/')[0]),
+        int.parse(CourseData.schoolOpenTime.value.split('/')[1]),
+        int.parse(CourseData.schoolOpenTime.value.split('/')[2]));
+    List courses = courseJson["courses"];
+    log(jsonEncode(courses[4]));
+    List<Widget> scheduleList =[];
+    for(int i=0 ; i<courses.length;++i){
+      scheduleList.add(ClassScheduleWidget(
+        tableJson: tableAdapter(courses[i]),
+        isNoon: true,
+        isMin: _isMin,
+        // columTimeList: [],
+        columTimeList: [
+          startSchoolTime.add(Duration(days: 7*i)),
+          startSchoolTime.add(Duration(days: 7*i+1)),
+          startSchoolTime.add(Duration(days: 7*i+2)),
+          startSchoolTime.add(Duration(days: 7*i+3)),
+          startSchoolTime.add(Duration(days: 7*i+4)),
+          startSchoolTime.add(Duration(days: 7*i+5)),
+          startSchoolTime.add(Duration(days: 7*i+6)),
+        ],
+      ));
+    }
+    return scheduleList;
+  }
+
+  //测试新课表的数据加载与显示
+  debugCoursePullTest(){
+    CourseUtil().getAllCourseSemesterList("${CourseData.nowCourseList.value}").then((value) {
+      state.debugCourseJson.value = jsonDecode(value);
+      state.debugCourseJson.refresh();
+    });
+  }
+
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！
   //用来陈列数据列表或者刷新课表视图用
   List<Widget> refreshAllCourseTable(List<String> allList) {
@@ -312,14 +405,6 @@ class MainCourseViewLogic extends GetxController
       startSchoolTime = startSchoolTime.add(Duration(days: 7));
     }
 
-    //直接替换
-    // state.courseWeek.value.clear();
-    // state.courseWeek.value = _resCourseWeek;
-    // state.courseWeek.refresh();
-
-    // state.viewPageVar.value = viewPage();
-    // state.viewPageVar.refresh();
-    // ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
     return _resCourseWeek;
   }
 
@@ -863,7 +948,7 @@ class MainCourseViewLogic extends GetxController
   @override
   void onInit() {
     // refreshAllCourseTable(CourseData.weekCourseList.value);
-
+    debugCoursePullTest();//debug加载测试数据
     courseRefreshListen();
     //每次进入课表都进行一次课表同步
     onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.showClassScheduleUUID.value);

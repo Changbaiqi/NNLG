@@ -312,33 +312,56 @@ class MainCourseViewPage extends StatelessWidget {
                 () =>
                 RepaintBoundary(
                     key: logic.courseWidgetKey,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        // color: Color.fromARGB(255, 255, 251, 254),
-                        color: Colors.transparent
-                      ),
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height,
-                      child: PageView(
-                        onPageChanged: (int index) {
-                          state.nowIndex.value = index;
-                          state.nowIndex.value += 1;
-                          // print('当前页面时$index');
-                        },
-                        reverse: false,
-                        scrollDirection: Axis.horizontal,
-                        controller: logic.pageController,
-                        children: CourseData.weekCourseList.value.length != 0
-                            ? logic
-                            .refreshAllCourseTable(CourseData.weekCourseList.value)
-                            : [
-                          Center(
-                            child: Text("课表加载中......"),
-                          )
-                        ],
-                      ),
+                    child: Column(
+                      children: [
+                        Visibility(child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(180, 255, 242, 132)
+                          ),
+                          height: 20,
+                          child: Row(
+                            children: [
+                              Obx(() => Text('${logic.remark.value}'))
+                            ],
+                          ),
+                        ),visible: logic.remark.value!="",),
+                        Expanded(child: PageView(
+                          onPageChanged: (int index) {
+                            state.nowIndex.value = index;
+                            state.nowIndex.value += 1;
+                            // print('当前页面时$index');
+                          },
+                          reverse: false,
+                          scrollDirection: Axis.horizontal,
+                          controller: logic.pageController,
+                          children: state.debugCourseJson.value["courses"]!= null
+                              ? logic
+                              .pullAllCourseSchedule(state.debugCourseJson.value)
+                              : [
+                            Center(
+                              child: Text("课表加载中......"),
+                            )
+                            // children: CourseData.weekCourseList.value.length != 0
+                            //     ? logic
+                            //     .refreshAllCourseTable(CourseData.weekCourseList.value)
+                            //     : [
+                            //   Center(
+                            //     child: Text("课表加载中......"),
+                            //   )
+                          ],
+                        ),flex: 1,)
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     // color: Color.fromARGB(255, 255, 251, 254),
+                        //       color: Colors.transparent
+                        //   ),
+                        //   height: MediaQuery
+                        //       .of(context)
+                        //       .size
+                        //       .height,
+                        //   child: ,
+                        // )
+                      ],
                     )),
           ),
         ),

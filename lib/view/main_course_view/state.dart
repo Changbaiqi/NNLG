@@ -13,6 +13,9 @@ class MainCourseViewState {
   final courseWeek = <Widget>[].obs;
 
   final courseRefreshStatus =  0.obs;  //课表刷新状态，0为未开始刷新，1代表刷新中，3代表刷新结束
+
+  final debugCourseJson = RxMap();
+
   MainCourseViewState() {
     ///Initialize variables
   }

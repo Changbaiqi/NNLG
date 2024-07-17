@@ -11,8 +11,15 @@ class SoftwareDevelopmentTestViewLogic extends GetxController {
   final SoftwareDevelopmentTestViewState state = SoftwareDevelopmentTestViewState();
   final tableJson = RxMap();
   final courseTable = RxMap();
-
-
+  final isMin = false.obs;
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 课表数据与控件之间的适配器
+   * [date] 11:49 2024/7/17
+   * [param] null
+   * [return]
+   */
   tableAdapter(List<dynamic> courses){
     Map<String,dynamic> result={"tables":[]};
     // log(jsonEncode(courses));

@@ -336,7 +336,7 @@ class MainCourseViewLogic extends GetxController
       scheduleList.add(ClassScheduleWidget(
         tableJson: tableAdapter(courses[i]),
         isNoon: CourseData.isNoonLineSwitch,
-        isMin: _isMin,
+        isMin: CourseData.isMinForSchedule,
         // columTimeList: [],
         columTimeList: [
           startSchoolTime.add(Duration(days: 7*i)),

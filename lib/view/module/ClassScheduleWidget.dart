@@ -12,6 +12,7 @@ import 'dart:developer';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 
 class ClassScheduleWidget extends StatelessWidget {
@@ -134,8 +135,7 @@ class ClassScheduleWidget extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    isMin.value = !isMin.value;
-                    isMin.refresh();
+                    ShareDateUtil().setIsMinForSchedule(!isMin.value);
                   },
                 ),
               ),
@@ -182,7 +182,7 @@ class ClassScheduleWidget extends StatelessWidget {
                         Obx(() => InkWell(
                           child: _timeBackground(noonSwitch: isNoon.value,isMin: isMin.value),
                           onTap: (){
-                            isMin.value = !isMin.value;
+                            ShareDateUtil().setIsMinForSchedule(!isMin.value);
                           },
                         ),),
                         drawTable(tableJson),

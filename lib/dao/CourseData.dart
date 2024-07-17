@@ -16,7 +16,7 @@ class CourseData{
   //旧的存储每周的课表json数据
   static final oldWeekCourseList = <String>[].obs;
   //新的
-  static final weekCourseList = {}.obs;
+  static final weekCourseJson = {}.obs;
 
   //用于存储从官网最新拉取的课程表的列表
   static final semesterCourseList = <String>[].obs;
@@ -53,6 +53,7 @@ class CourseData{
   static final courseBackgroundOpacity = 0.0.obs; //背景透明度
 
   static final newOrOldCourseScheduleChoose = true.obs; //是采用新课表还是旧课表，true为新课表，默认也为新课表
+  static final isMinForSchedule = false.obs; //是否为小节显示
   //每大节的时间
   static final oldCourseTime = <String>[
     "08:30-10:05",

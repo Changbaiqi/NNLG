@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/AppUpdateData.dart';
@@ -41,6 +43,7 @@ class ShareDateUtil{
     await getSchoolOpenDate();
     await getSemesterWeekNum();
     await getoldWeekCourseList();
+    await getWeekCourseJson(); //获取课表本地缓存的数据
     await getSemesterCourseList();
     await getNowCourseList();
     await getOldCourseTimeList();
@@ -58,6 +61,7 @@ class ShareDateUtil{
     await getOldShowClassScheduleUUID(); //获取当前显示课表的UUID
     await getShowClassScheduleUUID();
     await getNewOrOldCourseScheduleChoose(); //是否选择新课表
+    await getIsMinForSchedule(); //获取是否为小节显示
 
 
     //打水功能相关功能信息加载
@@ -394,6 +398,22 @@ class ShareDateUtil{
     return oldWeekCourseList??<String>[];
   }
 
+  //新 设置本学期课表数据
+  setWeekCourseJson(String weekCourseJson) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('weekCourseJson', weekCourseJson).then((c){
+      CourseData.weekCourseJson.value = jsonDecode(weekCourseJson);
+      CourseData.weekCourseJson.refresh();
+    });
+  }
+
+  //新 获取本学期课表数据
+  Future<Map<dynamic,dynamic>> getWeekCourseJson() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? weekCourseJson = await prefs.getString('weekCourseJson');
+    CourseData.weekCourseJson.value.addAll(jsonDecode(weekCourseJson??"{}"));
+    return jsonDecode(weekCourseJson??"{}");
+  }
 
 
   //设置拉取的学期课程列表
@@ -929,6 +949,20 @@ class ShareDateUtil{
   Future<void> setNewOrOldCourseScheduleChoose(bool newOrOldCourseScheduleChoose) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('newOrOldCourseScheduleChoose', newOrOldCourseScheduleChoose).then((value) => CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose);
+  }
+
+  //获取是否为小节显示
+  Future<bool> getIsMinForSchedule() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isMinForSchedule = await prefs.getBool('isMinForSchedule');
+    CourseData.isMinForSchedule.value = isMinForSchedule??false;
+    return isMinForSchedule??false;
+  }
+
+  //设置是否为小节显示
+  Future<void> setIsMinForSchedule(bool isMinForSchedule) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isMinForSchedule', isMinForSchedule).then((value) => CourseData.isMinForSchedule.value = isMinForSchedule);
   }
 
 }

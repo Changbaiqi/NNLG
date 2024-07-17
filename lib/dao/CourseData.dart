@@ -30,6 +30,7 @@ class CourseData{
   static final oldShowClassScheduleEntity = Rx(ClassScheduleEntity);
   //新 用于存当前显示的课表实体对象
   static final showClassScheduleEntity = Rx(ClassNewScheduleEntity);
+
   //当前选择的课程表单
   static final nowCourseList="".obs;
 

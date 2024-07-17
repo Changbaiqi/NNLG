@@ -14,9 +14,17 @@ void main() async{
 
   //数据库迁移更新
   final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db')
-      .addMigrations([Migration(5, 6, (database)async{
+      .addMigrations([Migration(4, 6, (database)async{
         // await database.update('ClassScheduleEntity', {'list': null});
-    // await database.execute('sql')
+    await database.execute('''CREATE TABLE IF NOT EXISTS ClassNewScheduleEntity (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        studentId TEXT NOT NULL,
+        semester TEXT,
+        uid TEXT,
+        dateTime DATETIME,
+        md5 TEXT,
+        json TEXT
+    );''');
   })]).build();
   // final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db').build();
   final classScheduleDao = database.classScheduleDao;

@@ -179,6 +179,12 @@ class ClassScheduleWidget extends StatelessWidget {
                       children: [
                         Obx(() => _backgroundLine(
                             noonSwitch: isNoon, isMin: isMin.value)),
+                        Obx(() => InkWell(
+                          child: _timeBackground(noonSwitch: isNoon,isMin: isMin.value),
+                          onTap: (){
+                            isMin.value = !isMin.value;
+                          },
+                        ),),
                         drawTable(tableJson),
                       ],
                     ),
@@ -307,140 +313,6 @@ class ClassScheduleWidget extends StatelessWidget {
     //渲染背景线
     List<Widget> list = [];
     if (noonSwitch) {
-      //左侧时间轴渲染
-      if (isMin) {
-        //如果小节显示
-        for (int y = 0; y < 4; ++y) {
-          list.add(Positioned(
-            child: Container(
-              height: 70,
-              width: Get.context!.width / 8,
-              decoration: BoxDecoration(
-                  border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
-                top: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-                bottom: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-              )),
-              child: Visibility(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${y + 1}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '至',
-                      style: TextStyle(fontSize: 9),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                visible: 0 == 0 ? true : false,
-              ),
-            ),
-            left: Get.context!.width / 8 * 0,
-            top: 70.0 * y,
-          ));
-        }
-      } else {
-        for (int y = 0; y < 2; ++y) {
-          list.add(Positioned(
-            child: Container(
-              height: 140,
-              width: Get.context!.width / 8,
-              decoration: BoxDecoration(
-                  border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
-                top: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-                bottom: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-              )),
-              child: Visibility(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${y + 1}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '至',
-                      style: TextStyle(fontSize: 9),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                visible: 0 == 0 ? true : false,
-              ),
-            ),
-            left: Get.context!.width / 8 * 0,
-            top: 70.0 * (y * 2),
-          ));
-        }
-      }
-
       //表格线段渲染
       for (int x = 1; x < 8; ++x) {
         for (int y = 0; y < 4; ++y) {
@@ -508,6 +380,7 @@ class ClassScheduleWidget extends StatelessWidget {
           ));
         }
       }
+      //添加午休分割线
       list.add(Positioned(
         child: Container(
           height: noonWidgetHeight,
@@ -521,141 +394,6 @@ class ClassScheduleWidget extends StatelessWidget {
         left: 0,
         top: 70.0 * 4,
       ));
-
-      //左侧时间轴渲染
-      if (isMin) {
-        //如果小节显示
-        for (int y = 4; y < 12; ++y) {
-          list.add(Positioned(
-            child: Container(
-              height: 70,
-              width: Get.context!.width / 8,
-              decoration: BoxDecoration(
-                  border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
-                top: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-                bottom: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-              )),
-              child: Visibility(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${y + 1}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '至',
-                      style: TextStyle(fontSize: 9),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                visible: 0 == 0 ? true : false,
-              ),
-            ),
-            left: Get.context!.width / 8 * 0,
-            top: 70.0 * y + noonWidgetHeight,
-          ));
-        }
-      } else {
-        for (int y = 2; y < 6; ++y) {
-          list.add(Positioned(
-            child: Container(
-              height: 140,
-              width: Get.context!.width / 8,
-              decoration: BoxDecoration(
-                  border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
-                top: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-                bottom: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][0]["state"] &&
-                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-              )),
-              child: Visibility(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${y + 1}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '至',
-                      style: TextStyle(fontSize: 9),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                visible: 0 == 0 ? true : false,
-              ),
-            ),
-            left: Get.context!.width / 8 * 0,
-            top: 70.0 * (y * 2) + noonWidgetHeight,
-          ));
-        }
-      }
-
       for (int x = 1; x < 8; ++x) {
         for (int y = 4; y < 12; ++y) {
           list.add(Positioned(
@@ -725,70 +463,6 @@ class ClassScheduleWidget extends StatelessWidget {
     } else {
       for (int x = 0; x < 8; ++x) {
         for (int y = 0; y < 12; ++y) {
-          //添加左侧时间
-          list.add(Positioned(
-            child: Container(
-              height: 70,
-              width: Get.context!.width / 8,
-              decoration: BoxDecoration(
-                  border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
-                top: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][x]["state"] &&
-                            isOccupy[y][x]["table"]["rowStart"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-                bottom: BorderSide(
-                    width: 0.05,
-                    color: (isOccupy[y][x]["state"] &&
-                            isOccupy[y][x]["table"]["rowEnd"] - 1 != y)
-                        ? Colors.transparent
-                        : Colors.black),
-              )),
-              child: Visibility(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      '${y + 1}',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    Text(
-                      '至',
-                      style: TextStyle(fontSize: 9),
-                    ),
-                    Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
-                            HH,
-                            ":",
-                            nn
-                          ])
-                      }',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ),
-                visible: x == 0 ? true : false,
-              ),
-            ),
-            left: Get.context!.width / 8 * x,
-            top: 70.0 * y,
-          ));
-
           //添加表格
           list.add(Positioned(
             child: Container(
@@ -811,6 +485,348 @@ class ClassScheduleWidget extends StatelessWidget {
                         ? Colors.transparent
                         : Colors.black),
               )),
+            ),
+            left: Get.context!.width / 8 * x,
+            top: 70.0 * y,
+          ));
+        }
+      }
+    }
+
+    return Stack(
+      children: list,
+    );
+  }
+
+  Widget _timeBackground({bool noonSwitch=false,bool isMin=true}){
+    List<Widget> list = [];
+    //左侧时间轴渲染
+    if(noonSwitch){
+      if (isMin) {
+        //如果小节显示
+        for (int y = 0; y < 4; ++y) {
+          list.add(Positioned(
+            child: Container(
+              height: 70,
+              width: Get.context!.width / 8,
+              decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(width: 0.05, color: Colors.black),
+                    right: BorderSide(width: 0.05, color: Colors.black),
+                    top: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                    bottom: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                  )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '${y + 1}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  Text(
+                    '至',
+                    style: TextStyle(fontSize: 9),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+            left: Get.context!.width / 8 * 0,
+            top: 70.0 * y,
+          ));
+        }
+        //如果小节显示
+        for (int y = 4; y < 12; ++y) {
+          list.add(Positioned(
+            child: Container(
+              height: 70,
+              width: Get.context!.width / 8,
+              decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(width: 0.05, color: Colors.black),
+                    right: BorderSide(width: 0.05, color: Colors.black),
+                    top: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                    bottom: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                  )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '${y + 1}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  Text(
+                    '至',
+                    style: TextStyle(fontSize: 9),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+            left: Get.context!.width / 8 * 0,
+            top: 70.0 * y + noonWidgetHeight,
+          ));
+        }
+      } else {
+        for (int y = 0; y < 2; ++y) {
+          list.add(Positioned(
+            child: Container(
+                height: 140,
+                width: Get.context!.width / 8,
+                decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(width: 0.05, color: Colors.black),
+                      right: BorderSide(width: 0.05, color: Colors.black),
+                      top: BorderSide(
+                          width: 0.05,
+                          color: (isOccupy[y][0]["state"] &&
+                              isOccupy[y][0]["table"]["rowStart"] - 1 != y)
+                              ? Colors.transparent
+                              : Colors.black),
+                      bottom: BorderSide(
+                          width: 0.05,
+                          color: (isOccupy[y][0]["state"] &&
+                              isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
+                              ? Colors.transparent
+                              : Colors.black),
+                    )),
+                child:  Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${y + 1}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      '${
+                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
+                            HH,
+                            ":",
+                            nn
+                          ])
+                      }',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    Text(
+                      '至',
+                      style: TextStyle(fontSize: 9),
+                    ),
+                    Text(
+                      '${
+                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
+                            HH,
+                            ":",
+                            nn
+                          ])
+                      }',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                  ],
+                )
+            ),
+            left: Get.context!.width / 8 * 0,
+            top: 70.0 * (y * 2),
+          ));
+        }
+        for (int y = 2; y < 6; ++y) {
+          list.add(Positioned(
+            child: Container(
+              height: 140,
+              width: Get.context!.width / 8,
+              decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(width: 0.05, color: Colors.black),
+                    right: BorderSide(width: 0.05, color: Colors.black),
+                    top: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowStart"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                    bottom: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][0]["state"] &&
+                            isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                  )),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '${y + 1}',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                  Text(
+                    '至',
+                    style: TextStyle(fontSize: 9),
+                  ),
+                  Text(
+                    '${
+                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
+                          HH,
+                          ":",
+                          nn
+                        ])
+                    }',
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+            left: Get.context!.width / 8 * 0,
+            top: 70.0 * (y * 2) + noonWidgetHeight,
+          ));
+        }
+      }
+    }else{
+      for (int x = 0; x < 8; ++x) {
+        for (int y = 0; y < 12; ++y) {
+          //添加左侧时间
+          list.add(Positioned(
+            child: Container(
+              height: 70,
+              width: Get.context!.width / 8,
+              decoration: BoxDecoration(
+                  border: Border(
+                    left: BorderSide(width: 0.05, color: Colors.black),
+                    right: BorderSide(width: 0.05, color: Colors.black),
+                    top: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][x]["state"] &&
+                            isOccupy[y][x]["table"]["rowStart"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                    bottom: BorderSide(
+                        width: 0.05,
+                        color: (isOccupy[y][x]["state"] &&
+                            isOccupy[y][x]["table"]["rowEnd"] - 1 != y)
+                            ? Colors.transparent
+                            : Colors.black),
+                  )),
+              child: Visibility(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${y + 1}',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    Text(
+                      '${
+                          formatDate(DateTime(DateTime
+                              .now()
+                              .year, DateTime
+                              .now()
+                              .month, DateTime
+                              .now()
+                              .day, rowTimeList[y]["start"].hour,
+                              rowTimeList[y]["start"].minute), [
+                            HH,
+                            ":",
+                            nn
+                          ])
+                      }',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    Text(
+                      '至',
+                      style: TextStyle(fontSize: 9),
+                    ),
+                    Text(
+                      '${
+                          formatDate(DateTime(DateTime
+                              .now()
+                              .year, DateTime
+                              .now()
+                              .month, DateTime
+                              .now()
+                              .day, rowTimeList[y]["end"].hour,
+                              rowTimeList[y]["end"].minute), [
+                            HH,
+                            ":",
+                            nn
+                          ])
+                      }',
+                      style: TextStyle(fontSize: 10),
+                    ),
+                  ],
+                ),
+                visible: x == 0 ? true : false,
+              ),
             ),
             left: Get.context!.width / 8 * x,
             top: 70.0 * y,

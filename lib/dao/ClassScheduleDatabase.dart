@@ -10,6 +10,7 @@ import 'dart:async';
 
 import 'package:floor/floor.dart';
 import 'package:nnlg/dao/ClassScheduleDao.dart';
+import 'package:nnlg/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 import 'package:nnlg/dao/entity/DateTimeConverter.dart';
 import 'package:nnlg/dao/entity/StringListConverter.dart';
@@ -17,7 +18,7 @@ import 'package:sqflite/sqflite.dart' as sqflite;
 
 part 'ClassScheduleDatabase.g.dart'; // 生成的代码会在那里
 @TypeConverters([DateTimeConverter,StringListConverter])
-@Database(version: 5, entities: [ClassScheduleEntity])
+@Database(version: 5, entities: [ClassScheduleEntity,ClassNewScheduleEntity])
 abstract class ClassScheduleDatabase extends FloorDatabase {
   ClassScheduleDao get classScheduleDao;
 }

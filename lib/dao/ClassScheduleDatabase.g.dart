@@ -100,6 +100,8 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ClassScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `list` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `ClassNewScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `json` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -131,6 +133,18 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'md5': item.md5,
                   'list': _stringListConverter.encode(item.list)
                 }),
+        _classNewScheduleEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'ClassNewScheduleEntity',
+            (ClassNewScheduleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'studentId': item.studentId,
+                  'semester': item.semester,
+                  'uid': item.uid,
+                  'dateTime': _dateTimeConverter.encode(item.dateTime),
+                  'md5': item.md5,
+                  'json': item.json
+                }),
         _classScheduleEntityDeletionAdapter = DeletionAdapter(
             database,
             'ClassScheduleEntity',
@@ -143,6 +157,19 @@ class _$ClassScheduleDao extends ClassScheduleDao {
                   'dateTime': _dateTimeConverter.encode(item.dateTime),
                   'md5': item.md5,
                   'list': _stringListConverter.encode(item.list)
+                }),
+        _classNewScheduleEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'ClassNewScheduleEntity',
+            ['id'],
+            (ClassNewScheduleEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'studentId': item.studentId,
+                  'semester': item.semester,
+                  'uid': item.uid,
+                  'dateTime': _dateTimeConverter.encode(item.dateTime),
+                  'md5': item.md5,
+                  'json': item.json
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -154,8 +181,14 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   final InsertionAdapter<ClassScheduleEntity>
       _classScheduleEntityInsertionAdapter;
 
+  final InsertionAdapter<ClassNewScheduleEntity>
+      _classNewScheduleEntityInsertionAdapter;
+
   final DeletionAdapter<ClassScheduleEntity>
       _classScheduleEntityDeletionAdapter;
+
+  final DeletionAdapter<ClassNewScheduleEntity>
+      _classNewScheduleEntityDeletionAdapter;
 
   @override
   Future<List<ClassScheduleEntity>> findAllClassSchedule() async {
@@ -224,6 +257,73 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   }
 
   @override
+  Future<List<ClassNewScheduleEntity>> findAllClassNewSchedule() async {
+    return _queryAdapter.queryList('SELECT * FROM ClassNewScheduleEntity',
+        mapper: (Map<String, Object?> row) => ClassNewScheduleEntity(
+            id: row['id'] as int?,
+            studentId: row['studentId'] as String?,
+            semester: row['semester'] as String?,
+            uid: row['uid'] as String?,
+            dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
+            md5: row['md5'] as String?,
+            json: row['json'] as String?));
+  }
+
+  @override
+  Future<List<ClassNewScheduleEntity>>
+      findAllClassNewScheduleForStudentIdAndSemester(
+    String studentId,
+    String semester,
+  ) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ClassNewScheduleEntity WHERE studentId= ?1 and semester= ?2 ORDER BY dateTime DESC',
+        mapper: (Map<String, Object?> row) => ClassNewScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, json: row['json'] as String?),
+        arguments: [studentId, semester]);
+  }
+
+  @override
+  Future<ClassNewScheduleEntity?> findClassNewScheduleForUid(String uid) async {
+    return _queryAdapter.query(
+        'SELECT * FROM ClassNewScheduleEntity WHERE uid= ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => ClassNewScheduleEntity(
+            id: row['id'] as int?,
+            studentId: row['studentId'] as String?,
+            semester: row['semester'] as String?,
+            uid: row['uid'] as String?,
+            dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
+            md5: row['md5'] as String?,
+            json: row['json'] as String?),
+        arguments: [uid]);
+  }
+
+  @override
+  Future<ClassNewScheduleEntity?> findNewestClassNewSchedule(
+    String studentId,
+    String semester,
+  ) async {
+    return _queryAdapter.query(
+        'SELECT * FROM ClassNewScheduleEntity WHERE studentId= ?1 AND semester= ?2 ORDER BY dateTime DESC LIMIT 1',
+        mapper: (Map<String, Object?> row) => ClassNewScheduleEntity(id: row['id'] as int?, studentId: row['studentId'] as String?, semester: row['semester'] as String?, uid: row['uid'] as String?, dateTime: _dateTimeConverter.decode(row['dateTime'] as int?), md5: row['md5'] as String?, json: row['json'] as String?),
+        arguments: [studentId, semester]);
+  }
+
+  @override
+  Future<List<ClassNewScheduleEntity>> findClassNewScheduleListForUid(
+      String uid) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM ClassNewScheduleEntity WHERE uid= ?1',
+        mapper: (Map<String, Object?> row) => ClassNewScheduleEntity(
+            id: row['id'] as int?,
+            studentId: row['studentId'] as String?,
+            semester: row['semester'] as String?,
+            uid: row['uid'] as String?,
+            dateTime: _dateTimeConverter.decode(row['dateTime'] as int?),
+            md5: row['md5'] as String?,
+            json: row['json'] as String?),
+        arguments: [uid]);
+  }
+
+  @override
   Future<void> insertClassSchedule(
       ClassScheduleEntity classScheduleEntity) async {
     await _classScheduleEntityInsertionAdapter.insert(
@@ -231,9 +331,23 @@ class _$ClassScheduleDao extends ClassScheduleDao {
   }
 
   @override
+  Future<void> insertClassNewSchedule(
+      ClassNewScheduleEntity classNewScheduleEntity) async {
+    await _classNewScheduleEntityInsertionAdapter.insert(
+        classNewScheduleEntity, OnConflictStrategy.abort);
+  }
+
+  @override
   Future<int> deleteClassSchedule(ClassScheduleEntity classScheduleEntity) {
     return _classScheduleEntityDeletionAdapter
         .deleteAndReturnChangedRows(classScheduleEntity);
+  }
+
+  @override
+  Future<int> deleteClassNewSchedule(
+      ClassNewScheduleEntity classNewScheduleEntity) {
+    return _classNewScheduleEntityDeletionAdapter
+        .deleteAndReturnChangedRows(classNewScheduleEntity);
   }
 }
 

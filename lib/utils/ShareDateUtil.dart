@@ -56,6 +56,7 @@ class ShareDateUtil{
     await getCourseBackgroundInputUrl(); //获取背景url
     await getCourseBackgroundOpacity(); //获取背景透明度
     await getOldShowClassScheduleUUID(); //获取当前显示课表的UUID
+    await getShowClassScheduleUUID();
     await getNewOrOldCourseScheduleChoose(); //是否选择新课表
 
 
@@ -112,6 +113,7 @@ class ShareDateUtil{
     //课表信息数据
     await setoldWeekCourseList(<String>[]);
     await setOldShowClassScheduleUUID('');
+    await setShowClassScheduleUUID('');
 
     //清空VIP账号信息数据
     XiaoBeiData.xiaobeiAccount='';
@@ -881,7 +883,7 @@ class ShareDateUtil{
     return opacity??0.5;
   }
 
-  //设置当前显示的课表UUID
+  //旧 设置当前显示的课表UUID
   setOldShowClassScheduleUUID(String oldShowClassScheduleUUID)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('oldShowClassScheduleUUID', oldShowClassScheduleUUID).then((c){
@@ -890,11 +892,28 @@ class ShareDateUtil{
     });
   }
 
-  //获取当前显示的课表UUID
+  //旧 获取当前显示的课表UUID
   Future<String> getOldShowClassScheduleUUID() async {
     final prefs = await SharedPreferences.getInstance();
     String? uuid = await prefs.getString('oldShowClassScheduleUUID');
     CourseData.oldShowClassScheduleUUID.value = uuid??"";
+    return uuid??"";
+  }
+
+  //新 设置当前显示的课表UUID
+  setShowClassScheduleUUID(String showClassScheduleUUID)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('showClassScheduleUUID', showClassScheduleUUID).then((c){
+      CourseData.showClassScheduleUUID.value= showClassScheduleUUID;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+  }
+
+  //新 获取当前显示的课表UUID
+  Future<String> getShowClassScheduleUUID() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? uuid = await prefs.getString('showClassScheduleUUID');
+    CourseData.showClassScheduleUUID.value = uuid??"";
     return uuid??"";
   }
 

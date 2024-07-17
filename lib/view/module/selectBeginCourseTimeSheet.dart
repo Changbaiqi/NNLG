@@ -53,23 +53,23 @@ class _CeshiState extends State<Ceshi> {
   //初始化数据
   _CeshiState(){
     //初始化时间选择存储
-    List<String> oneStart = (CourseData.courseTime[0].split("-")[0]).split(":");
-    List<String> oneEnd = (CourseData.courseTime[0].split("-")[1]).split(":");
+    List<String> oneStart = (CourseData.oldCourseTime[0].split("-")[0]).split(":");
+    List<String> oneEnd = (CourseData.oldCourseTime[0].split("-")[1]).split(":");
 
-    List<String> twoStart = (CourseData.courseTime[1].split("-")[0]).split(":");
-    List<String> twoEnd = (CourseData.courseTime[1].split("-")[1]).split(":");
+    List<String> twoStart = (CourseData.oldCourseTime[1].split("-")[0]).split(":");
+    List<String> twoEnd = (CourseData.oldCourseTime[1].split("-")[1]).split(":");
 
-    List<String> threeStart = (CourseData.courseTime[2].split("-")[0]).split(":");
-    List<String> threeEnd = (CourseData.courseTime[2].split("-")[1]).split(":");
+    List<String> threeStart = (CourseData.oldCourseTime[2].split("-")[0]).split(":");
+    List<String> threeEnd = (CourseData.oldCourseTime[2].split("-")[1]).split(":");
 
-    List<String> fourStart = (CourseData.courseTime[3].split("-")[0]).split(":");
-    List<String> fourEnd = (CourseData.courseTime[3].split("-")[1]).split(":");
+    List<String> fourStart = (CourseData.oldCourseTime[3].split("-")[0]).split(":");
+    List<String> fourEnd = (CourseData.oldCourseTime[3].split("-")[1]).split(":");
 
-    List<String> fiveStart = (CourseData.courseTime[4].split("-")[0]).split(":");
-    List<String> fiveEnd = (CourseData.courseTime[4].split("-")[1]).split(":");
+    List<String> fiveStart = (CourseData.oldCourseTime[4].split("-")[0]).split(":");
+    List<String> fiveEnd = (CourseData.oldCourseTime[4].split("-")[1]).split(":");
 
-    List<String> sixStart = (CourseData.courseTime[5].split("-")[0]).split(":");
-    List<String> sixEnd = (CourseData.courseTime[5].split("-")[1]).split(":");
+    List<String> sixStart = (CourseData.oldCourseTime[5].split("-")[0]).split(":");
+    List<String> sixEnd = (CourseData.oldCourseTime[5].split("-")[1]).split(":");
 
     resDataTime.add(DateTime(0,0,0, int.parse(oneStart[0]),int.parse(oneStart[1])) );
     resDataTime.add(DateTime(0,0,0, int.parse(oneEnd[0]),int.parse(oneEnd[1])) );
@@ -381,9 +381,9 @@ class _CeshiState extends State<Ceshi> {
               )),
 
 
-        /*for( int i =1 ; i <= CourseData.courseTime.length ; ++i){
+        /*for( int i =1 ; i <= CourseData.oldCourseTime.length ; ++i){
 
-      CourseData.courseTime[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
+      CourseData.oldCourseTime[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
 
     }
 

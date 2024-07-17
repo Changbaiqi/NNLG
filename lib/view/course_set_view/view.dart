@@ -847,7 +847,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[0]}',
+                                      '${CourseData.oldCourseTime.value[0]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -866,7 +866,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[1]}',
+                                      '${CourseData.oldCourseTime.value[1]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -885,7 +885,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[2]}',
+                                      '${CourseData.oldCourseTime.value[2]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -904,7 +904,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[3]}',
+                                      '${CourseData.oldCourseTime.value[3]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -923,7 +923,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[4]}',
+                                      '${CourseData.oldCourseTime.value[4]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -942,7 +942,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           fontSize: 15, color: Colors.black45),
                                     ),
                                     Text(
-                                      '${CourseData.courseTime.value[5]}',
+                                      '${CourseData.oldCourseTime.value[5]}',
                                       style: TextStyle(
                                           fontSize: 15, color: Colors.black45),
                                     )
@@ -964,15 +964,15 @@ class CourseSetViewPage extends StatelessWidget {
                       List<String> resTime = [];
                       //用于刷新控件
                       for (int i = 1;
-                          i <= CourseData.courseTime.value.length;
+                          i <= CourseData.oldCourseTime.value.length;
                           ++i) {
                         resTime.add(
                             '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
-                        // CourseData.courseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
+                        // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
                       }
                       //用于刷新课表的时间显示控件
                       await ShareDateUtil()
-                          .setCourseTimeList(resTime)
+                          .setOldCourseTimeList(resTime)
                           .then((value) {
                         Get.snackbar(
                           "课表通知",

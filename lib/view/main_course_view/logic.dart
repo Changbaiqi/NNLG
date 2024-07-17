@@ -389,7 +389,7 @@ class MainCourseViewLogic extends GetxController
           for (int z = 0; z < json[x][y].length; ++z) {
             //添加授课时间json
             (json[x][y][z] as LinkedHashMap<String, dynamic>)
-                .addAll({"courseTime": "${CourseData.courseTime.value[x]}"});
+                .addAll({"courseTime": "${CourseData.oldCourseTime.value[x]}"});
           }
           _resCourseList.add(courseTableWidget(json[x][y] ?? "无课",
               startSchoolTime.add(Duration(days: y) /*传入相应的授课日期*/)));
@@ -512,7 +512,7 @@ class MainCourseViewLogic extends GetxController
               ),
               Center(
                 child: Text(
-                  '${CourseData.courseTime.value[i].split("-")[0]}\n至\n${CourseData.courseTime.value[i].split("-")[1]}',
+                  '${CourseData.oldCourseTime.value[i].split("-")[0]}\n至\n${CourseData.oldCourseTime.value[i].split("-")[1]}',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10),
                 ),

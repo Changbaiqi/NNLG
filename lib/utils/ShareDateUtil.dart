@@ -43,7 +43,7 @@ class ShareDateUtil{
     await getWeekCourseList();
     await getSemesterCourseList();
     await getNowCourseList();
-    await getCourseTimeList();
+    await getOldCourseTimeList();
     await getColorClassSchedule();
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
@@ -444,14 +444,14 @@ class ShareDateUtil{
   }
 
   //设置拉取的学期课程列表
-  Future<void> setCourseTimeList(List<String> courseTimeList) async{
+  Future<void> setOldCourseTimeList(List<String> courseTimeList) async{
     final prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('courseTimeList', courseTimeList).then((c){
       // CourseData.courseTime= courseTimeList;
-      CourseData.courseTime.value.clear();
-      CourseData.courseTime.value.addAll(courseTimeList);
-      CourseData.courseTime.refresh();
+      CourseData.oldCourseTime.value.clear();
+      CourseData.oldCourseTime.value.addAll(courseTimeList);
+      CourseData.oldCourseTime.refresh();
       return courseTimeList;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
@@ -459,13 +459,13 @@ class ShareDateUtil{
   }
 
   //获取学期课程列表
-  Future<List<String>> getCourseTimeList() async {
+  Future<List<String>> getOldCourseTimeList() async {
     final prefs = await SharedPreferences.getInstance();
     List<String>? courseTimeList = await prefs.getStringList('courseTimeList');
     if(courseTimeList!=null){
-      CourseData.courseTime.value.clear();
-      CourseData.courseTime.value.addAll(courseTimeList);
-      CourseData.courseTime.refresh();
+      CourseData.oldCourseTime.value.clear();
+      CourseData.oldCourseTime.value.addAll(courseTimeList);
+      CourseData.oldCourseTime.refresh();
     }
     return courseTimeList??<String>[];
   }

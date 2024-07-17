@@ -46,7 +46,7 @@ class CourseData{
   static final courseBackgroundOpacity = 0.0.obs; //背景透明度
 
   //每大节的时间
-  static final courseTime = <String>[
+  static final oldCourseTime = <String>[
     "08:30-10:05",
     "10:25-12:00",
     "14:30-16:05",
@@ -55,6 +55,9 @@ class CourseData{
     "20:05-21:40"
   ].obs;
 
+  // static final courseTime = <String>[
+  //
+  // ];
 
 /*
   * 第一大节：8:30-10:05

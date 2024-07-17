@@ -101,22 +101,22 @@ class CourseSharedShowViewLogic extends GetxController {
 
     // state.viewPageVar.value = viewPage();
     // state.viewPageVar.refresh();
-    // ShareDateUtil().setWeekCourseList(CourseData.weekCourseList.value);
+    // ShareDateUtil().setoldoldWeekCourseList(CourseData.oldWeekCourseList.value);
     return _resCourseWeek;
   }
 
   //用于刷新列表控件用的
   void loadCourseTable() {
-    if (CourseData.weekCourseList.value == null ||
-        CourseData.weekCourseList.value.length == 0) {
+    if (CourseData.oldWeekCourseList.value == null ||
+        CourseData.oldWeekCourseList.value.length == 0) {
       Future.wait([
         CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}"),
       ]).then((value) {
         //获取到数据后刷新
-        refreshAllCourseTable(CourseData.weekCourseList.value);
+        refreshAllCourseTable(CourseData.oldWeekCourseList.value);
       });
     } else {
-      refreshAllCourseTable(CourseData.weekCourseList.value);
+      refreshAllCourseTable(CourseData.oldWeekCourseList.value);
     }
   }
 
@@ -413,7 +413,7 @@ class CourseSharedShowViewLogic extends GetxController {
   @override
   void onInit() {
     state.accountData.value = Get.arguments['data'];
-    // refreshAllCourseTable(CourseData.weekCourseList.value);
+    // refreshAllCourseTable(CourseData.oldoldWeekCourseList.value);
     //每次进入课表都进行一次课表同步
     state.getShareCourseData("new");
     onRefresh();

@@ -12,14 +12,16 @@ class CourseData{
   //课表的所有JSON数据
   static final sourseAllJSON="".obs;
 
-  //存储每周的课表json数据
-  static final weekCourseList = <String>[].obs;
+  //旧的存储每周的课表json数据
+  static final oldWeekCourseList = <String>[].obs;
+  //新的
+  static final weekCourseList = {}.obs;
 
   //用于存储从官网最新拉取的课程表的列表
   static final semesterCourseList = <String>[].obs;
 
   //当前显示课表的UUID值
-  static final showClassScheduleUUID = "".obs;
+  static final oldShowClassScheduleUUID = "".obs;
 
   //用于存当前显示的课表实体对象
   static final showClassScheduleEntity = Rx(ClassScheduleEntity);
@@ -45,6 +47,7 @@ class CourseData{
   static final courseBackgroundInputUrl = "".obs; //手动输入的背景图片url
   static final courseBackgroundOpacity = 0.0.obs; //背景透明度
 
+  static final newOrOldCourseScheduleChoose = true.obs; //是采用新课表还是旧课表，true为新课表，默认也为新课表
   //每大节的时间
   static final oldCourseTime = <String>[
     "08:30-10:05",
@@ -55,9 +58,21 @@ class CourseData{
     "20:05-21:40"
   ].obs;
 
-  // static final courseTime = <String>[
-  //
-  // ];
+  //小节时间
+  static final courseTime = <String>[
+    "08:30-09:15",
+    "09:20-10:05",
+    "10:25-11:10",
+    "11:15-12:00",
+    "14:30-15:15",
+    "15:20-16:05",
+    "16:15-17:00",
+    "17:05-17:50",
+    "18:20-19:05",
+    "19:10-19:55",
+    "20:05-20:50",
+    "20:55-21:40"
+  ].obs;
 
 /*
   * 第一大节：8:30-10:05

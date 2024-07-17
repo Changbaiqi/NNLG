@@ -152,8 +152,8 @@ class MainCourseViewLogic extends GetxController
         .findNewestClassSchedule(
         studentID, semester);
     if(showClassScheduleUUID==""){ //如果最新课表数据为空那么说明为第一次获取课表
-      ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
-      ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
+      ShareDateUtil().setOldShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+      ShareDateUtil().setoldWeekCourseList(classSchedule); //直接显示这个课表
     }
   }
 
@@ -165,16 +165,16 @@ class MainCourseViewLogic extends GetxController
         studentID, semester);
     if(newestClassSchedule!.dateTime==localNestScheduleEntity!.dateTime) return; //如果没有刷新新的课表，直接跳过即可。
     log('触发更新');
-    ShareDateUtil().setShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
-    ShareDateUtil().setWeekCourseList(classSchedule); //直接显示这个课表
+    ShareDateUtil().setOldShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setoldWeekCourseList(classSchedule); //直接显示这个课表
   }
 
   //显示指定UUID课表逻辑
   showClassScheduleForUUID(String UUID)async{
     ClassScheduleEntity? classSchedule = await GetIt.I<ClassScheduleDao>()
         .findClassScheduleForUid(UUID);
-    ShareDateUtil().setShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
-    ShareDateUtil().setWeekCourseList((classSchedule?.list)!); //直接显示这个课表
+    ShareDateUtil().setOldShowClassScheduleUUID((classSchedule?.uid)!); //设置当前课表显示的UUID
+    ShareDateUtil().setoldWeekCourseList((classSchedule?.list)!); //直接显示这个课表
   }
   //显示历史变动课表项组件
   showClassScheduleHistory(String studentID,String semester) async {
@@ -225,7 +225,7 @@ class MainCourseViewLogic extends GetxController
                                           ),
                                           Visibility(
                                             child: Text(' (当前)',style: TextStyle(color: Colors.red),),
-                                            visible: CourseData.showClassScheduleUUID.value==scheduleList[index].uid,
+                                            visible: CourseData.oldShowClassScheduleUUID.value==scheduleList[index].uid,
                                           )
                                         ],
                                       ),
@@ -410,16 +410,16 @@ class MainCourseViewLogic extends GetxController
 
   //用于刷新列表控件用的
   void loadCourseTable() {
-    if (CourseData.weekCourseList.value == null ||
-        CourseData.weekCourseList.value.length == 0) {
+    if (CourseData.oldWeekCourseList.value == null ||
+        CourseData.oldWeekCourseList.value.length == 0) {
       Future.wait([
         CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}"),
       ]).then((value) {
         //获取到数据后刷新
-        refreshAllCourseTable(CourseData.weekCourseList.value);
+        refreshAllCourseTable(CourseData.oldWeekCourseList.value);
       });
     } else {
-      refreshAllCourseTable(CourseData.weekCourseList.value);
+      refreshAllCourseTable(CourseData.oldWeekCourseList.value);
     }
   }
 
@@ -947,11 +947,11 @@ class MainCourseViewLogic extends GetxController
 
   @override
   void onInit() {
-    // refreshAllCourseTable(CourseData.weekCourseList.value);
+    // refreshAllCourseTable(CourseData.oldWeekCourseList.value);
     debugCoursePullTest();//debug加载测试数据
     courseRefreshListen();
     //每次进入课表都进行一次课表同步
-    onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.showClassScheduleUUID.value);
+    onRefresh(AccountData.studentID,CourseData.nowCourseList.value,CourseData.oldShowClassScheduleUUID.value);
     shakeListen();
   }
 

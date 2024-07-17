@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppUpdateData.dart';
 import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/HexColor.dart';
 import 'package:nnlg/utils/MainUserUtil.dart';
@@ -15,6 +16,7 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/UserHeadPortraitUtil.dart';
 import 'package:nnlg/utils/edusys/Account.dart';
 import 'package:nnlg/view/VIPFunList.dart';
+import 'package:nnlg/view/module/selectCourseTimeSheet.dart';
 import 'package:nnlg/view/module/showUpdateDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
@@ -416,7 +418,9 @@ class MainUserViewPage extends StatelessWidget {
                             ),
                             onTap: () {
                               //进入软件测试页面
-                              Get.toNamed(Routes.SoftwareDevelopmentTestView);
+                              // Get.toNamed(Routes.SoftwareDevelopmentTestView);
+                              selectCourseTimeSheet.show(Get.context!, 12, CourseData.courseTime);
+
                             },
                           ),
                         ),

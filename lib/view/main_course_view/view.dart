@@ -1,4 +1,4 @@
-import 'dart:developer';
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -179,7 +179,7 @@ class MainCourseViewPage extends StatelessWidget {
                       .onRefresh(
                           AccountData.studentID,
                           CourseData.nowCourseList.value,
-                          CourseData.showClassScheduleUUID.value)
+                          CourseData.oldShowClassScheduleUUID.value)
                       .then((value) => Get.snackbar(
                             "课表通知",
                             "同步完毕",
@@ -378,21 +378,21 @@ class MainCourseViewPage extends StatelessWidget {
                         reverse: false,
                         scrollDirection: Axis.horizontal,
                         controller: logic.pageController,
-                        children: state.debugCourseJson.value["courses"] != null
+
+                        children: CourseData.newOrOldCourseScheduleChoose.value?(state.debugCourseJson.value["courses"] != null
                             ? logic.pullAllCourseSchedule(
                                 state.debugCourseJson.value)
                             : [
                                 Center(
                                   child: Text("课表加载中......"),
-                                )
-                                // children: CourseData.weekCourseList.value.length != 0
-                                //     ? logic
-                                //     .refreshAllCourseTable(CourseData.weekCourseList.value)
-                                //     : [
-                                //   Center(
-                                //     child: Text("课表加载中......"),
-                                //   )
-                              ],
+                                )]):(CourseData.oldWeekCourseList.value.length != 0
+                                    ? logic
+                                    .refreshAllCourseTable(CourseData.oldWeekCourseList.value)
+                                    : [
+                                  Center(
+                                    child: Text("课表加载中......"),
+                                  )
+                              ]),
                       ),
                       flex: 1,
                     )

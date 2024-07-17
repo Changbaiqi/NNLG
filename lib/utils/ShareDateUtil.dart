@@ -40,10 +40,11 @@ class ShareDateUtil{
     //课表信息页初始化信息加载
     await getSchoolOpenDate();
     await getSemesterWeekNum();
-    await getWeekCourseList();
+    await getoldWeekCourseList();
     await getSemesterCourseList();
     await getNowCourseList();
     await getOldCourseTimeList();
+    await getCourseTimeList();
     await getColorClassSchedule();
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
@@ -54,7 +55,8 @@ class ShareDateUtil{
     await getCourseBackgroundFilePath(); //获取本地图片路径
     await getCourseBackgroundInputUrl(); //获取背景url
     await getCourseBackgroundOpacity(); //获取背景透明度
-    await getShowClassScheduleUUID(); //获取当前显示课表的UUID
+    await getOldShowClassScheduleUUID(); //获取当前显示课表的UUID
+    await getNewOrOldCourseScheduleChoose(); //是否选择新课表
 
 
     //打水功能相关功能信息加载
@@ -108,8 +110,8 @@ class ShareDateUtil{
     await setAutoLogin(false);
 
     //课表信息数据
-    await setWeekCourseList(<String>[]);
-    await setShowClassScheduleUUID('');
+    await setoldWeekCourseList(<String>[]);
+    await setOldShowClassScheduleUUID('');
 
     //清空VIP账号信息数据
     XiaoBeiData.xiaobeiAccount='';
@@ -369,25 +371,25 @@ class ShareDateUtil{
 
 
   //设置本学期课表数据
-  setWeekCourseList(List<String> weekCourseList) async{
+  setoldWeekCourseList(List<String> oldWeekCourseList) async{
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setStringList('weekCourseList', weekCourseList).then((c){
-      CourseData.weekCourseList.value = weekCourseList;
-      CourseData.weekCourseList.refresh();
+    await prefs.setStringList('oldWeekCourseList', oldWeekCourseList).then((c){
+      CourseData.oldWeekCourseList.value = oldWeekCourseList;
+      CourseData.oldWeekCourseList.refresh();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
   }
 
   //获取本学期课表数据
-  Future<List<String>> getWeekCourseList() async {
+  Future<List<String>> getoldWeekCourseList() async {
     final prefs = await SharedPreferences.getInstance();
-    List<String>? weekCourseList = await prefs.getStringList('weekCourseList');
-    // CourseData.weekCourseList.value = weekCourseList??<String>[];
-    CourseData.weekCourseList.value.clear();
-    CourseData.weekCourseList.value.addAll(weekCourseList??<String>[]);
-    return weekCourseList??<String>[];
+    List<String>? oldWeekCourseList = await prefs.getStringList('oldWeekCourseList');
+    // CourseData.oldWeekCourseList.value = oldWeekCourseList??<String>[];
+    CourseData.oldWeekCourseList.value.clear();
+    CourseData.oldWeekCourseList.value.addAll(oldWeekCourseList??<String>[]);
+    return oldWeekCourseList??<String>[];
   }
 
 
@@ -447,7 +449,7 @@ class ShareDateUtil{
   Future<void> setOldCourseTimeList(List<String> courseTimeList) async{
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.setStringList('courseTimeList', courseTimeList).then((c){
+    await prefs.setStringList('oldCourseTimeList', courseTimeList).then((c){
       // CourseData.courseTime= courseTimeList;
       CourseData.oldCourseTime.value.clear();
       CourseData.oldCourseTime.value.addAll(courseTimeList);
@@ -461,7 +463,7 @@ class ShareDateUtil{
   //获取学期课程列表
   Future<List<String>> getOldCourseTimeList() async {
     final prefs = await SharedPreferences.getInstance();
-    List<String>? courseTimeList = await prefs.getStringList('courseTimeList');
+    List<String>? courseTimeList = await prefs.getStringList('oldCourseTimeList');
     if(courseTimeList!=null){
       CourseData.oldCourseTime.value.clear();
       CourseData.oldCourseTime.value.addAll(courseTimeList);
@@ -471,7 +473,32 @@ class ShareDateUtil{
   }
 
 
+//设置拉取的学期课程列表
+  Future<void> setCourseTimeList(List<String> courseTimeList) async{
+    final prefs = await SharedPreferences.getInstance();
 
+    await prefs.setStringList('courseTimeList', courseTimeList).then((c){
+      // CourseData.courseTime= courseTimeList;
+      CourseData.courseTime.value.clear();
+      CourseData.courseTime.value.addAll(courseTimeList);
+      CourseData.courseTime.refresh();
+      return courseTimeList;
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+    //print('设置的Cookie：${ContextDate.token}');
+  }
+
+  //获取学期课程列表
+  Future<List<String>> getCourseTimeList() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? courseTimeList = await prefs.getStringList('courseTimeList');
+    if(courseTimeList!=null && courseTimeList.length==12){
+      CourseData.courseTime.value.clear();
+      CourseData.courseTime.value.addAll(courseTimeList);
+      CourseData.courseTime.refresh();
+    }
+    return courseTimeList??<String>[];
+  }
 
 
 
@@ -855,20 +882,34 @@ class ShareDateUtil{
   }
 
   //设置当前显示的课表UUID
-  setShowClassScheduleUUID(String showClassScheduleUUID)async{
+  setOldShowClassScheduleUUID(String oldShowClassScheduleUUID)async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('showClassScheduleUUID', showClassScheduleUUID).then((c){
-      CourseData.showClassScheduleUUID.value= showClassScheduleUUID;
+    await prefs.setString('oldShowClassScheduleUUID', oldShowClassScheduleUUID).then((c){
+      CourseData.oldShowClassScheduleUUID.value= oldShowClassScheduleUUID;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }
 
   //获取当前显示的课表UUID
-  Future<String> getShowClassScheduleUUID() async {
+  Future<String> getOldShowClassScheduleUUID() async {
     final prefs = await SharedPreferences.getInstance();
-    String? uuid = await prefs.getString('showClassScheduleUUID');
-    CourseData.showClassScheduleUUID.value = uuid??"";
+    String? uuid = await prefs.getString('oldShowClassScheduleUUID');
+    CourseData.oldShowClassScheduleUUID.value = uuid??"";
     return uuid??"";
+  }
+
+  //获取是否为本地背景课表
+  Future<bool> getNewOrOldCourseScheduleChoose() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? newOrOldCourseScheduleChoose = await prefs.getBool('newOrOldCourseScheduleChoose');
+    CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose??true;
+    return newOrOldCourseScheduleChoose??false;
+  }
+
+  //设置是否为本地背景课表
+  Future<void> setNewOrOldCourseScheduleChoose(bool newOrOldCourseScheduleChoose) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('newOrOldCourseScheduleChoose', newOrOldCourseScheduleChoose).then((value) => CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose);
   }
 
 }

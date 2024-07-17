@@ -120,8 +120,8 @@ class CourseSharedShowViewPage extends StatelessWidget {
           reverse: false,
           scrollDirection: Axis.horizontal,
           controller: logic.pageController,
-          children: CourseData.weekCourseList.value.length != 0
-              ? logic.refreshAllCourseTable(state.weekCourseList.value)
+          children: CourseData.oldWeekCourseList.value.length != 0
+              ? logic.refreshAllCourseTable(state.oldWeekCourseList.value)
               : [
             Center(
               child: Text("课表加载中......"),

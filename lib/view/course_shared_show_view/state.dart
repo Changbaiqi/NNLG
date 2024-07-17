@@ -10,7 +10,7 @@ class CourseSharedShowViewState {
 
   final selectSemester = "".obs; //当前选择的学年
   final semesterList = [].obs; //学期列表
-  final weekCourseList = [] .obs;//课表json
+  final oldWeekCourseList = [] .obs;//课表json
 
   final title = "".obs;
   final  viewPageVar=(null as Widget?).obs;
@@ -36,9 +36,9 @@ class CourseSharedShowViewState {
         semesterList.value = value['data']['semesterList'];
 
       selectSemester.value = value['data']['selectSemester'];
-      weekCourseList.value = value['data']['courseList'];
+      oldWeekCourseList.value = value['data']['courseList'];
       // print('${value['data']['courseList'] as List}');
-      weekCourseList.refresh();
+      oldWeekCourseList.refresh();
     });
   }
   CourseSharedShowViewState() {

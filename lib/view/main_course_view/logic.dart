@@ -101,6 +101,7 @@ class MainCourseViewLogic extends GetxController
     }
     state.courseRefreshStatus.value = 0; //设置当前课表刷新状态为结束
   }
+
   //新 刷新课表
   Future<void> onRefresh(String studentID, String nowCourseList,
       String showClassScheduleUUID) async {
@@ -109,8 +110,8 @@ class MainCourseViewLogic extends GetxController
     try {
       animationController?.forward(); //同步按钮动画执行
       //同步拉取教务系统课表
-      String newestCourse =
-          await CourseUtil().getAllCourseSemesterList(nowCourseList,CourseData.ansWeek.value);
+      String newestCourse = await CourseUtil()
+          .getAllCourseSemesterList(nowCourseList, CourseData.ansWeek.value);
 
       //获取本地最新课表数据
       ClassNewScheduleEntity? newestClassNewSchedule =
@@ -130,6 +131,7 @@ class MainCourseViewLogic extends GetxController
       ToastUtil.show('错误：${e.toString()}');
     }
     state.courseRefreshStatus.value = 0; //设置当前课表刷新状态为结束
+    CourseData.weekCourseJson.refresh();
   }
 
   //旧 用于缓存课表的
@@ -183,8 +185,9 @@ class MainCourseViewLogic extends GetxController
   cacheClassSchedule(
       String studentID, String semester, String classSchedule) async {
     //获取最新课表数据
-    ClassNewScheduleEntity? newestClassSchedule = await GetIt.I<ClassNewScheduleDao>()
-        .findNewestClassNewSchedule(studentID, semester);
+    ClassNewScheduleEntity? newestClassSchedule =
+        await GetIt.I<ClassNewScheduleDao>()
+            .findNewestClassNewSchedule(studentID, semester);
     String scheduleMd5 = md5
         .convert(utf8.encode(jsonEncode(classSchedule).toString()))
         .toString(); //课表数据的md5码
@@ -618,13 +621,25 @@ class MainCourseViewLogic extends GetxController
         int.parse(CourseData.schoolOpenTime.value.split('/')[1]),
         int.parse(CourseData.schoolOpenTime.value.split('/')[2]));
     List courses = courseJson["courses"];
-    log(jsonEncode(courses[4]));
+    // log(jsonEncode(courses[4]));
     List<Widget> scheduleList = [];
+    // log(courses.toString());
     for (int i = 0; i < courses.length; ++i) {
       scheduleList.add(ClassScheduleWidget(
         tableJson: tableAdapter(courses[i]),
         isNoon: CourseData.isNoonLineSwitch,
         isMin: CourseData.isMinForSchedule,
+        isColor: CourseData.isColorClassSchedule,
+        rowTimeList: CourseData.courseTime
+            .map((element) => {
+                  "start": TimeOfDay(
+                      hour: int.parse(element.split('-')[0].split(':')[0]),
+                      minute: int.parse(element.split('-')[0].split(':')[1])),
+                  "end": TimeOfDay(
+                      hour: int.parse(element.split('-')[1].split(':')[0]),
+                      minute: int.parse(element.split('-')[1].split(':')[1]))
+                })
+            .toList(),
         // columTimeList: [],
         columTimeList: [
           startSchoolTime.add(Duration(days: 7 * i)),
@@ -643,7 +658,8 @@ class MainCourseViewLogic extends GetxController
   //测试新课表的数据加载与显示
   debugCoursePullTest() {
     CourseUtil()
-        .getAllCourseSemesterList("${CourseData.nowCourseList.value}",CourseData.ansWeek.value)
+        .getAllCourseSemesterList(
+            "${CourseData.nowCourseList.value}", CourseData.ansWeek.value)
         .then((value) {
       state.debugCourseJson.value = jsonDecode(value);
       state.debugCourseJson.refresh();
@@ -1081,7 +1097,7 @@ class MainCourseViewLogic extends GetxController
         .add(userAccelerometerEvents.listen((UserAccelerometerEvent event) {
       //不受重力的影响
       // print("event的值${event}");
-      int value = 4;
+      int value = 7;
       if (event.x >= value ||
           event.x <= -value ||
           event.y >= value ||

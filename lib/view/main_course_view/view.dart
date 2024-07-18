@@ -17,7 +17,6 @@ class MainCourseViewPage extends StatelessWidget {
   MainCourseViewPage({Key? key}) : super(key: key);
   final logic = Get.put(MainCourseViewLogic());
 
-  // final logic = Get.find<MainCourseViewLogic>();
   final state = Get.find<MainCourseViewLogic>().state;
 
   @override
@@ -175,16 +174,29 @@ class MainCourseViewPage extends StatelessWidget {
                     "正在同步官网课表...",
                     duration: Duration(milliseconds: 1500),
                   );
-                  logic
-                      .onRefresh(
-                          AccountData.studentID,
-                          CourseData.nowCourseList.value,
-                          CourseData.oldShowClassScheduleUUID.value)
-                      .then((value) => Get.snackbar(
-                            "课表通知",
-                            "同步完毕",
-                            duration: const Duration(milliseconds: 1500),
-                          ));
+                  if(CourseData.newOrOldCourseScheduleChoose.value){
+                    logic
+                        .onRefresh(
+                        AccountData.studentID,
+                        CourseData.nowCourseList.value,
+                        CourseData.showClassScheduleUUID.value)
+                        .then((value) => Get.snackbar(
+                      "课表通知",
+                      "同步完毕",
+                      duration: const Duration(milliseconds: 1500),
+                    ));
+                  }else{
+                    logic
+                        .oldOnRefresh(
+                        AccountData.studentID,
+                        CourseData.nowCourseList.value,
+                        CourseData.oldShowClassScheduleUUID.value)
+                        .then((value) => Get.snackbar(
+                      "课表通知",
+                      "同步完毕",
+                      duration: const Duration(milliseconds: 1500),
+                    ));
+                  }
                 },
               ),
               IconButton(

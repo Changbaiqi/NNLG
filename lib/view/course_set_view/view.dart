@@ -864,11 +864,11 @@ class CourseSetViewPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      '各大节课时间',
+                                      '各小节课时间',
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     Text(
-                                      '调节每大节课的起止时间',
+                                      '调节每小节课的起止时间',
                                       style: TextStyle(
                                           fontSize: 10, color: Colors.black45),
                                     ),

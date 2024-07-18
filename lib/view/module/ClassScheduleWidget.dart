@@ -20,6 +20,7 @@ class ClassScheduleWidget extends StatelessWidget {
   final isNoon;
   final noonWidgetHeight = 23.0; //午休控件高度
   final isMin; //是否小节显示
+  final isColor; //是否彩色显示
   final List<List<dynamic>> isOccupy = []; //用于标记哪些格子是用过的
   //默认课表时间
   List<dynamic> rowTimeList = [
@@ -87,12 +88,14 @@ class ClassScheduleWidget extends StatelessWidget {
 
   // static final _weekViewKey = GlobalKey();
 
-  ClassScheduleWidget(
-      {this.tableJson,
-      required this.isNoon,
-      columTimeList,
-      rowTimeList,
-      required this.isMin}) {
+  ClassScheduleWidget({
+    this.tableJson,
+    required this.isNoon,
+    columTimeList,
+    rowTimeList,
+    required this.isMin,
+    this.isColor,
+  }) {
     if (columTimeList != null) this.columTimeList = columTimeList;
     if (rowTimeList != null) this.rowTimeList = rowTimeList;
     // if(isMin!=null) this.isMin.value = isMin;
@@ -131,9 +134,9 @@ class ClassScheduleWidget extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Obx(() => Text(
-                          '${isMin.value ? '小' : '大'}节\n显示',
-                          style: TextStyle(fontSize: 10),
-                        )),
+                              '${isMin.value ? '小' : '大'}节\n显示',
+                              style: TextStyle(fontSize: 10),
+                            )),
                       ),
                     ),
                   ),
@@ -144,25 +147,28 @@ class ClassScheduleWidget extends StatelessWidget {
               ),
               ...columTimeList
                   .map((e) => Expanded(
-                          child: Container(
-                        decoration: BoxDecoration(
-                            color: DateTime.now().month == e.month &&
-                                    DateTime.now().day == e.day
-                                ? Color.fromARGB(30, 59, 52, 86)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                            border: DateTime.now().month == e.month &&
-                                    DateTime.now().day == e.day
-                                ? Border.all(
-                                    color: Color.fromARGB(130, 59, 52, 86))
-                                : Border.all(color: Colors.transparent)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text('周${weekToChar[e.weekday - 1]}'),
-                            Text('${e.month}/${e.day}')
-                          ],
+                          child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: DateTime.now().month == e.month &&
+                                      DateTime.now().day == e.day
+                                  ? Color.fromARGB(30, 59, 52, 86)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                              border: DateTime.now().month == e.month &&
+                                      DateTime.now().day == e.day
+                                  ? Border.all(
+                                      color: Color.fromARGB(130, 59, 52, 86))
+                                  : Border.all(color: Colors.transparent)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text('周${weekToChar[e.weekday - 1]}'),
+                              Text('${e.month}/${e.day}')
+                            ],
+                          ),
                         ),
                       )))
                   .toList()
@@ -178,19 +184,21 @@ class ClassScheduleWidget extends StatelessWidget {
                   Container(
                     // decoration: BoxDecoration(color: Colors.amber),
                     height: 1000,
-                    child: Stack(
-                      children: [
-                        Obx(() => _backgroundLine(
-                            noonSwitch: isNoon.value, isMin: isMin.value)),
-                        Obx(() => InkWell(
-                          child: _timeBackground(noonSwitch: isNoon.value,isMin: isMin.value),
-                          onTap: (){
-                            ShareDateUtil().setIsMinForSchedule(!isMin.value);
-                          },
-                        ),),
-                        drawTable(tableJson),
-                      ],
-                    ),
+                    child: Obx(() => Stack(
+                          children: [
+                            _backgroundLine(
+                                noonSwitch: isNoon.value, isMin: isMin.value),
+                            InkWell(
+                              child: _timeBackground(
+                                  noonSwitch: isNoon.value, isMin: isMin.value),
+                              onTap: () {
+                                ShareDateUtil()
+                                    .setIsMinForSchedule(!isMin.value);
+                              },
+                            ),
+                            drawTable(tableJson),
+                          ],
+                        )),
                   )
                 ],
               )),
@@ -217,6 +225,20 @@ class ClassScheduleWidget extends StatelessWidget {
     // log(courses.toString());
     for (int i = 0; i < tables.length; ++i) {
       var element = tables[i];
+      var hash = element["title"].hashCode;
+      var hexColor = hash.toRadixString(16).substring(
+          0,
+          hash.toRadixString(16).length < 6
+              ? hash.toRadixString(16).length
+              : 6);
+      var colorInt = int.parse(hexColor, radix: 16);
+      // 提取ARGB分量
+      var alpha = (colorInt >> 24) & 0xFF;
+      var red = (colorInt >> 16) & 0xFF;
+      var green = (colorInt >> 8) & 0xFF;
+      var blue = colorInt & 0xFF;
+      // 创建Color对象
+      var color = Color.fromARGB(60, red, green, blue);
       list.add(Positioned(
         child: InkWell(
           child: Container(
@@ -229,16 +251,19 @@ class ClassScheduleWidget extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Color.fromARGB(
-                      (columTimeList[element['columStart'] - 1].month ==
-                                  DateTime.now().month) &&
-                              (columTimeList[element['columStart'] - 1].day ==
-                                  DateTime.now().day)
-                          ? 130
-                          : 30,
-                      59,
-                      52,
-                      86),
+                  color: isColor.value
+                      ? color
+                      : Color.fromARGB(
+                          (columTimeList[element['columStart'] - 1].month ==
+                                      DateTime.now().month) &&
+                                  (columTimeList[element['columStart'] - 1]
+                                          .day ==
+                                      DateTime.now().day)
+                              ? 130
+                              : 30,
+                          59,
+                          52,
+                          86),
                   //设置四周边框
                   border: new Border.all(
                       width: 1, color: Color.fromARGB(80, 59, 52, 86)),
@@ -350,13 +375,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                     Text(
@@ -364,13 +387,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 9),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                   ],
@@ -430,13 +451,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                     Text(
@@ -444,13 +463,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 9),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                   ],
@@ -501,10 +518,10 @@ class ClassScheduleWidget extends StatelessWidget {
     );
   }
 
-  Widget _timeBackground({bool noonSwitch=false,bool isMin=true}){
+  Widget _timeBackground({bool noonSwitch = false, bool isMin = true}) {
     List<Widget> list = [];
     //左侧时间轴渲染
-    if(noonSwitch){
+    if (noonSwitch) {
       if (isMin) {
         //如果小节显示
         for (int y = 0; y < 4; ++y) {
@@ -514,21 +531,21 @@ class ClassScheduleWidget extends StatelessWidget {
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                    left: BorderSide(width: 0.05, color: Colors.black),
-                    right: BorderSide(width: 0.05, color: Colors.black),
-                    top: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                left: BorderSide(width: 0.05, color: Colors.black),
+                right: BorderSide(width: 0.05, color: Colors.black),
+                top: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                    bottom: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                        ? Colors.transparent
+                        : Colors.black),
+                bottom: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                  )),
+                        ? Colors.transparent
+                        : Colors.black),
+              )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -538,13 +555,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                   Text(
@@ -552,13 +567,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 9),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -576,21 +589,21 @@ class ClassScheduleWidget extends StatelessWidget {
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                    left: BorderSide(width: 0.05, color: Colors.black),
-                    right: BorderSide(width: 0.05, color: Colors.black),
-                    top: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                left: BorderSide(width: 0.05, color: Colors.black),
+                right: BorderSide(width: 0.05, color: Colors.black),
+                top: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                    bottom: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                        ? Colors.transparent
+                        : Colors.black),
+                bottom: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                  )),
+                        ? Colors.transparent
+                        : Colors.black),
+              )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -600,13 +613,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                   Text(
@@ -614,13 +625,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 9),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -638,22 +647,22 @@ class ClassScheduleWidget extends StatelessWidget {
                 width: Get.context!.width / 8,
                 decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(width: 0.05, color: Colors.black),
-                      right: BorderSide(width: 0.05, color: Colors.black),
-                      top: BorderSide(
-                          width: 0.05,
-                          color: (isOccupy[y][0]["state"] &&
+                  left: BorderSide(width: 0.05, color: Colors.black),
+                  right: BorderSide(width: 0.05, color: Colors.black),
+                  top: BorderSide(
+                      width: 0.05,
+                      color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                              ? Colors.transparent
-                              : Colors.black),
-                      bottom: BorderSide(
-                          width: 0.05,
-                          color: (isOccupy[y][0]["state"] &&
+                          ? Colors.transparent
+                          : Colors.black),
+                  bottom: BorderSide(
+                      width: 0.05,
+                      color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                              ? Colors.transparent
-                              : Colors.black),
-                    )),
-                child:  Column(
+                          ? Colors.transparent
+                          : Colors.black),
+                )),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -662,13 +671,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                     Text(
@@ -676,18 +683,15 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 9),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                   ],
-                )
-            ),
+                )),
             left: Get.context!.width / 8 * 0,
             top: 70.0 * (y * 2),
           ));
@@ -699,21 +703,21 @@ class ClassScheduleWidget extends StatelessWidget {
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                    left: BorderSide(width: 0.05, color: Colors.black),
-                    right: BorderSide(width: 0.05, color: Colors.black),
-                    top: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                left: BorderSide(width: 0.05, color: Colors.black),
+                right: BorderSide(width: 0.05, color: Colors.black),
+                top: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                    bottom: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                        ? Colors.transparent
+                        : Colors.black),
+                bottom: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                  )),
+                        ? Colors.transparent
+                        : Colors.black),
+              )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -723,13 +727,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                   Text(
@@ -737,13 +739,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 9),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -754,8 +754,8 @@ class ClassScheduleWidget extends StatelessWidget {
           ));
         }
       }
-    }else{
-      if(isMin) {
+    } else {
+      if (isMin) {
         for (int y = 0; y < 12; ++y) {
           list.add(Positioned(
             child: Container(
@@ -763,21 +763,21 @@ class ClassScheduleWidget extends StatelessWidget {
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                    left: BorderSide(width: 0.05, color: Colors.black),
-                    right: BorderSide(width: 0.05, color: Colors.black),
-                    top: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                left: BorderSide(width: 0.05, color: Colors.black),
+                right: BorderSide(width: 0.05, color: Colors.black),
+                top: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                    bottom: BorderSide(
-                        width: 0.05,
-                        color: (isOccupy[y][0]["state"] &&
+                        ? Colors.transparent
+                        : Colors.black),
+                bottom: BorderSide(
+                    width: 0.05,
+                    color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                            ? Colors.transparent
-                            : Colors.black),
-                  )),
+                        ? Colors.transparent
+                        : Colors.black),
+              )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -787,13 +787,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                   Text(
@@ -801,13 +799,11 @@ class ClassScheduleWidget extends StatelessWidget {
                     style: TextStyle(fontSize: 9),
                   ),
                   Text(
-                    '${
-                        formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
+                    '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
                           HH,
                           ":",
                           nn
-                        ])
-                    }',
+                        ])}',
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -817,7 +813,7 @@ class ClassScheduleWidget extends StatelessWidget {
             top: 70.0 * y,
           ));
         }
-      }else{
+      } else {
         for (int y = 0; y < 6; ++y) {
           list.add(Positioned(
             child: Container(
@@ -825,22 +821,22 @@ class ClassScheduleWidget extends StatelessWidget {
                 width: Get.context!.width / 8,
                 decoration: BoxDecoration(
                     border: Border(
-                      left: BorderSide(width: 0.05, color: Colors.black),
-                      right: BorderSide(width: 0.05, color: Colors.black),
-                      top: BorderSide(
-                          width: 0.05,
-                          color: (isOccupy[y][0]["state"] &&
+                  left: BorderSide(width: 0.05, color: Colors.black),
+                  right: BorderSide(width: 0.05, color: Colors.black),
+                  top: BorderSide(
+                      width: 0.05,
+                      color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowStart"] - 1 != y)
-                              ? Colors.transparent
-                              : Colors.black),
-                      bottom: BorderSide(
-                          width: 0.05,
-                          color: (isOccupy[y][0]["state"] &&
+                          ? Colors.transparent
+                          : Colors.black),
+                  bottom: BorderSide(
+                      width: 0.05,
+                      color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
-                              ? Colors.transparent
-                              : Colors.black),
-                    )),
-                child:  Column(
+                          ? Colors.transparent
+                          : Colors.black),
+                )),
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -849,13 +845,11 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 15),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2]["start"].hour, rowTimeList[y*2]["start"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                     Text(
@@ -863,18 +857,15 @@ class ClassScheduleWidget extends StatelessWidget {
                       style: TextStyle(fontSize: 9),
                     ),
                     Text(
-                      '${
-                          formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y*2+1]["end"].hour, rowTimeList[y*2+1]["end"].minute), [
+                      '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
                             HH,
                             ":",
                             nn
-                          ])
-                      }',
+                          ])}',
                       style: TextStyle(fontSize: 10),
                     ),
                   ],
-                )
-            ),
+                )),
             left: Get.context!.width / 8 * 0,
             top: 70.0 * (y * 2),
           ));

@@ -9,14 +9,21 @@ import 'package:nnlg/view/router/AppPages.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
 import 'dao/ClassScheduleDao.dart';
-void main() async{
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //数据库迁移更新
-  final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db')
-      .addMigrations([Migration(4, 6, (database)async{
-        // await database.update('ClassScheduleEntity', {'list': null});
-    await database.execute('''CREATE TABLE IF NOT EXISTS ClassNewScheduleEntity (
+  final database = await $FloorClassScheduleDatabase
+      .databaseBuilder('app_database.db')
+      .addMigrations([
+    Migration(4, 6, (database) async {
+      await database.update('ClassScheduleEntity', {'list': null});
+    }),
+    Migration(5, 6, (database) async {
+      // await database.update('ClassScheduleEntity', {'list': null});
+      await database
+          .execute('''CREATE TABLE IF NOT EXISTS ClassNewScheduleEntity (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         studentId TEXT NOT NULL,
         semester TEXT,
@@ -25,18 +32,20 @@ void main() async{
         md5 TEXT,
         json TEXT
     );''');
-  })]).build();
+    })
+  ]).build();
   // final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db').build();
   final classScheduleDao = database.classScheduleDao;
   final classNewScheduleDao = database.classNewScheduleDao;
 
   GetIt getIt = GetIt.instance;
-  getIt.registerSingleton<ClassScheduleDao>(classScheduleDao,signalsReady: true);
-  getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,signalsReady: true);
+  getIt.registerSingleton<ClassScheduleDao>(classScheduleDao,
+      signalsReady: true);
+  getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,
+      signalsReady: true);
 
- return runApp(MyApp());
+  return runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -47,15 +56,10 @@ class MyApp extends StatelessWidget {
       designSize: const Size(2080, 2340),
       minTextAdapt: true,
       splitScreenMode: true,
-
       child: MaterialApp(
         home: GetMaterialApp(
-            initialRoute: Routes.Start,
-            getPages: AppPages.pages
-        ),
+            initialRoute: Routes.Start, getPages: AppPages.pages),
       ),
     );
   }
 }
-
-

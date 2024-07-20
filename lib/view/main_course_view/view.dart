@@ -116,23 +116,61 @@ class MainCourseViewPage extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Obx(() => Column(
-                                children: [
-                                  Text(
-                                    '第 ${state.nowIndex.value} 周',
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        color: state.nowIndex.value ==
-                                                CourseData.nowWeek.value
-                                            ? Colors.black
-                                            : Colors.redAccent),
+                          Obx(() => InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10)
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      '第 ${state.nowIndex.value} 周',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          color: state.nowIndex.value ==
+                                              CourseData.nowWeek.value
+                                              ? Colors.black
+                                              : Colors.redAccent),
+                                    ),
+                                    Text(
+                                      '${CourseData.nowCourseList.value}',
+                                      style: TextStyle(fontSize: 12),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: (){
+                              showDialog(context: context, barrierColor: Colors.transparent,builder: (builder){
+                                return Dialog(
+                                  child: Container(
+                                    height: 250,
+                                    decoration: BoxDecoration(
+                                        color: Color.fromARGB(
+                                            255, 231, 231, 231),
+                                      borderRadius: BorderRadius.circular(20)
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                      child: ListView(
+                                        children: [
+                                          Wrap(
+                                            spacing: 5,
+                                            runSpacing: 5,
+                                            alignment: WrapAlignment.center,
+                                            children: logic.weekChooseWidgetList(builder),
+                                          )
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  Text(
-                                    '${CourseData.nowCourseList.value}',
-                                    style: TextStyle(fontSize: 12),
-                                  )
-                                ],
-                              )),
+                                );
+                              });
+                            },
+                          )),
                         ],
                       ),
                     ]),
@@ -394,7 +432,7 @@ class MainCourseViewPage extends StatelessWidget {
                         },
                         reverse: false,
                         scrollDirection: Axis.horizontal,
-                        controller: logic.pageController,
+                        controller: logic.pageController.value,
 
                         children: CourseData.newOrOldCourseScheduleChoose.value?(CourseData.weekCourseJson.value["courses"] != null
                             ? logic.pullAllCourseSchedule(

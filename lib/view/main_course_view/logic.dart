@@ -55,19 +55,19 @@ class MainCourseViewLogic extends GetxController
     ),
   );
 
-  final PageController pageController = PageController(
+  final pageController = PageController(
     initialPage: CourseData.nowWeek.value - 1,
-  );
+  ).obs;
 
   //向下翻一页
   updateNextPage() {
-    pageController.nextPage(
-        duration: Duration(milliseconds: 900), curve: Curves.ease);
+    pageController.value
+        .nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease);
   }
 
   //向上翻一页
   updatePreviousPage() {
-    pageController.previousPage(
+    pageController.value.previousPage(
         duration: Duration(milliseconds: 900), curve: Curves.ease);
   }
 
@@ -569,8 +569,8 @@ class MainCourseViewLogic extends GetxController
     Map<String, dynamic> result = {"tables": []};
     // log(jsonEncode(courses));
     // log('${courses.length}');
-
     for (int x = 0; x < courses[0].length; ++x) {
+      // log(jsonEncode(courses));
       //横向
       String repeat = "[]";
       int rowStart = 0;
@@ -580,7 +580,33 @@ class MainCourseViewLogic extends GetxController
       for (int y = 0; y < courses.length; ++y) {
         //竖向
         String inform = jsonEncode(courses[y][x]);
-        if (repeat != inform || y == courses.length - 1) {
+        if (repeat != inform || y == 4) {
+          if (repeat != "[]" && columStart != 0 ) {
+            // log(repeat);
+            result['tables'].add({
+              "rowStart": rowStart + 1,
+              "rowEnd": rowEnd + 1,
+              "columStart": columStart,
+              "columEnd": columEnd,
+              "title":
+                  "${jsonDecode(repeat).length > 1 ? "有多门课程同时进行，点击查看详细" : jsonDecode(repeat)[0]['courseName']}",
+              "style": {
+                "textColor": jsonDecode(repeat).length > 1
+                    ? [255, 255, 0, 0]
+                    : [255, 0, 0, 0]
+              },
+              "data": jsonDecode(repeat)
+            });
+          }
+          rowStart = y;
+          rowEnd = y;
+          columStart = x + 1;
+          columEnd = x + 1;
+          repeat = inform;
+        } else {
+          rowEnd = rowEnd < y ? y : rowEnd;
+        }
+        if (repeat != '[]' && y == courses.length - 1) {
           if (repeat != "[]" && columStart != 0) {
             // log(repeat);
             result['tables'].add({
@@ -605,9 +631,9 @@ class MainCourseViewLogic extends GetxController
           repeat = inform;
           continue;
         }
-        rowEnd = rowEnd < y ? y : rowEnd;
       }
     }
+
     return result;
   }
 
@@ -1104,8 +1130,9 @@ class MainCourseViewLogic extends GetxController
           event.y <= -value ||
           event.z >= value ||
           event.z <= -value) {
-        if (pageController.hasClients && CourseData.isShakeToNowSchedule.value)
-          pageController.animateToPage(CourseData.nowWeek.value - 1,
+        if (pageController.value.hasClients &&
+            CourseData.isShakeToNowSchedule.value)
+          pageController.value.animateToPage(CourseData.nowWeek.value - 1,
               duration: const Duration(milliseconds: 500),
               curve: Curves.decelerate);
       }
@@ -1248,6 +1275,43 @@ class MainCourseViewLogic extends GetxController
           animationController?.reset();
         }
       });
+  }
+
+  //第几周的快速选择卡
+  weekChooseWidgetList(_context) {
+    List<Widget> list = [];
+    for (int i = 0; i < CourseData.ansWeek.value; ++i) {
+      list.add(Obx(() => InkWell(
+            borderRadius: BorderRadius.circular(10),
+            child: Container(
+              height: 50,
+              width: 50,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: pageController.value.page == i
+                      ? Color.fromARGB(255, 250, 203, 164)
+                      : Color.fromARGB(100, 255, 255, 255)),
+              child: Center(
+                child: Text(
+                  '${i + 1}',
+                  style: TextStyle(
+                      color: pageController.value.page == i
+                          ? Color.fromARGB(255, 253, 103, 103)
+                          : Color.fromARGB(255, 0, 0, 0)),
+                ),
+              ),
+            ),
+            onTap: () {
+              // pageController.value.jumpToPage(i);
+              pageController.value.animateToPage(i,
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.decelerate);
+              pageController.refresh();
+              Navigator.pop(_context);
+            },
+          )));
+    }
+    return list;
   }
 
   @override

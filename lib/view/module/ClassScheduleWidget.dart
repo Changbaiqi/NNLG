@@ -165,8 +165,8 @@ class ClassScheduleWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text('周${weekToChar[e.weekday - 1]}'),
-                              Text('${e.month}/${e.day}')
+                              Text('周${weekToChar[e.weekday - 1]}',style: TextStyle(fontSize: 15),),
+                              Text('${e.month}/${e.day}',style: TextStyle(fontSize: 12),)
                             ],
                           ),
                         ),

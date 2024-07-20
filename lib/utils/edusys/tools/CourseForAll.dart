@@ -218,6 +218,7 @@ class CourseForAll {
       }
     }
 
+
     Set<String> repeat = Set();//去重，防止重复添加
     for (int i = 0; i < courFormList.length; i++) {
       //第几行
@@ -225,13 +226,13 @@ class CourseForAll {
         //第几列
         for (int z = 0; z < courFormList[i][j].length; ++z) {
           CourseForm? courseForm = courFormList[i][j][z];
-          if (courseForm == null || repeat.contains(jsonEncode(courseForm.toJsonMap()))) continue;
+          if (courseForm == null || repeat.contains(jsonEncode(courseForm.toJsonMap())+"$j")) continue;
           for (int week in courseForm.courseWeekList!) {
             for (int selection in courseForm.courseSectionList!) {
               list[week - 1][selection - 1][j].add(courseForm.toJsonMap());
             }
           }
-          repeat.add(jsonEncode(courseForm.toJsonMap()));
+          repeat.add(jsonEncode(courseForm.toJsonMap())+"$j");
         }
       }
     }

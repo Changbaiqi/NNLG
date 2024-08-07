@@ -1,12 +1,10 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/CourseData.dart';
 import 'package:nnlg/dao/WeekDayForm.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 

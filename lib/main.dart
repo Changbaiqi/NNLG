@@ -57,8 +57,11 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
-        home: GetMaterialApp(
-            initialRoute: Routes.Start, getPages: AppPages.pages),
+        home: MediaQuery(
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+          child: GetMaterialApp(
+              initialRoute: Routes.Start, getPages: AppPages.pages),
+        ),
       ),
     );
   }

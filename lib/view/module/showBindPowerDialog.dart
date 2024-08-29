@@ -59,13 +59,14 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
   TextEditingController _emailEdit = TextEditingController();
   //预警金额
   TextEditingController _dormEdit = TextEditingController();
-
+  var future;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      resizeToAvoidBottomInset: false,
       body: FutureBuilder(
-        future: _loadData(),
+        future: future,
         builder: (context,snapshot){
 
           print(snapshot.connectionState);
@@ -80,7 +81,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
     );
   }
 
-   Future _loadData() async {
+    Future _loadData() async {
     //检测远程端是否登录
     if(ContextDate.ContextVIPTken==''){
       await MainUserUtil()
@@ -311,9 +312,9 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
     return RegExp(regexEmail).hasMatch(input);
   }
 
-
-
-
-
+  @override
+  void initState() {
+    future = _loadData();
+  }
 }
 

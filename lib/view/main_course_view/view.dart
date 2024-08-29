@@ -243,22 +243,48 @@ class MainCourseViewPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.share,
+                      Icons.update,
                       color: Colors.black,
                       size: 20,
                     ),
                     Text(
-                      '分享',
+                      '同步历史',
                       style: TextStyle(fontSize: 8, color: Colors.black),
                     )
                   ],
                 ),
                 onPressed: () async {
-                  logic.capturePngFilePath(logic.courseWidgetKey); //图片分享
-                  // logic.savePhoto(); //存储到本地
-                  // logic.savePhoto();
+                  if(CourseData.newOrOldCourseScheduleChoose.value){
+                    logic.showClassScheduleHistory(AccountData.studentID,
+                        CourseData.nowCourseList.value);
+                  }else{
+                    logic.oldShowClassScheduleHistory(AccountData.studentID,
+                        CourseData.nowCourseList.value);
+                  }
                 },
               ),
+              // IconButton(
+              //   icon: Column(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     crossAxisAlignment: CrossAxisAlignment.center,
+              //     children: [
+              //       Icon(
+              //         Icons.share,
+              //         color: Colors.black,
+              //         size: 20,
+              //       ),
+              //       Text(
+              //         '分享',
+              //         style: TextStyle(fontSize: 8, color: Colors.black),
+              //       )
+              //     ],
+              //   ),
+              //   onPressed: () async {
+              //     logic.capturePngFilePath(logic.courseWidgetKey); //图片分享
+              //     // logic.savePhoto(); //存储到本地
+              //     // logic.savePhoto();
+              //   },
+              // ),
               PopupMenuButton(
                 position: PopupMenuPosition.under,
                 icon: Column(

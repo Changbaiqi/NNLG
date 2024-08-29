@@ -321,7 +321,7 @@ class MainCourseViewLogic extends GetxController
         context: Get.context!,
         barrierDismissible: false,
         builder: (builder) {
-          return Scaffold(
+          return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Scaffold(
             backgroundColor: Colors.transparent,
             body: InkWell(
               child: Center(
@@ -347,22 +347,22 @@ class MainCourseViewLogic extends GetxController
                               itemBuilder: (BuildContext ctxt, int index) {
                                 String timeForm =
                                     '${formatDate(scheduleList[index].dateTime!, [
-                                      yyyy,
-                                      '-',
-                                      mm,
-                                      '-',
-                                      dd,
-                                      '  ',
-                                      HH,
-                                      ':',
-                                      mm
-                                    ])}';
+                                  yyyy,
+                                  '-',
+                                  mm,
+                                  '-',
+                                  dd,
+                                  '  ',
+                                  HH,
+                                  ':',
+                                  mm
+                                ])}';
                                 return InkWell(
                                   child: Container(
                                     height: 60,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -379,8 +379,8 @@ class MainCourseViewLogic extends GetxController
                                                     color: Colors.red),
                                               ),
                                               visible: CourseData
-                                                      .oldShowClassScheduleUUID
-                                                      .value ==
+                                                  .oldShowClassScheduleUUID
+                                                  .value ==
                                                   scheduleList[index].uid,
                                             )
                                           ],
@@ -430,7 +430,7 @@ class MainCourseViewLogic extends GetxController
                 Get.back();
               },
             ),
-          );
+          ));
         });
   }
 
@@ -444,7 +444,7 @@ class MainCourseViewLogic extends GetxController
         context: Get.context!,
         barrierDismissible: false,
         builder: (builder) {
-          return Scaffold(
+          return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Scaffold(
             backgroundColor: Colors.transparent,
             body: InkWell(
               child: Center(
@@ -470,22 +470,22 @@ class MainCourseViewLogic extends GetxController
                               itemBuilder: (BuildContext ctxt, int index) {
                                 String timeForm =
                                     '${formatDate(scheduleList[index].dateTime!, [
-                                      yyyy,
-                                      '-',
-                                      mm,
-                                      '-',
-                                      dd,
-                                      '  ',
-                                      HH,
-                                      ':',
-                                      mm
-                                    ])}';
+                                  yyyy,
+                                  '-',
+                                  mm,
+                                  '-',
+                                  dd,
+                                  '  ',
+                                  HH,
+                                  ':',
+                                  mm
+                                ])}';
                                 return InkWell(
                                   child: Container(
                                     height: 60,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -502,8 +502,8 @@ class MainCourseViewLogic extends GetxController
                                                     color: Colors.red),
                                               ),
                                               visible: CourseData
-                                                      .showClassScheduleUUID
-                                                      .value ==
+                                                  .showClassScheduleUUID
+                                                  .value ==
                                                   scheduleList[index].uid,
                                             )
                                           ],
@@ -553,7 +553,7 @@ class MainCourseViewLogic extends GetxController
                 Get.back();
               },
             ),
-          );
+          ));
         });
   }
 

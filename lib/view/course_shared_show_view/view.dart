@@ -70,9 +70,10 @@ class CourseSharedShowViewPage extends StatelessWidget {
                           child: Text(e,style: TextStyle(fontSize: 15),),
                         )))
                         .toList(),
-                    onChanged: (value) {
+                    onChanged: (value) async {
                       state.selectSemester.value = value!;
-                      state.getShareCourseData(state.selectSemester.value);
+                      await state.getShareCourseData(state.selectSemester.value);
+                      // state.oldWeekCourseList.refresh();
                       // logic.showScoreList(state.selectTime.value);
                       // state.mfuture = logic.future();
                     }),
@@ -120,7 +121,7 @@ class CourseSharedShowViewPage extends StatelessWidget {
           reverse: false,
           scrollDirection: Axis.horizontal,
           controller: logic.pageController,
-          children: CourseData.oldWeekCourseList.value.length != 0
+          children: state.oldWeekCourseList.value.length != 0
               ? logic.refreshAllCourseTable(state.oldWeekCourseList.value)
               : [
             Center(

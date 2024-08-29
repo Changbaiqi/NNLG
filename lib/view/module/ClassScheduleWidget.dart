@@ -8,12 +8,21 @@
 
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:tencent_kit/tencent_kit.dart';
 
 class ClassScheduleWidget extends StatelessWidget {
   final tableJson; //课程信息的json
@@ -86,8 +95,8 @@ class ClassScheduleWidget extends StatelessWidget {
     DateTime.now()
   ];
 
-  // static final _weekViewKey = GlobalKey();
-
+  final _weekViewKey = GlobalKey();
+  final _tableViewKey = GlobalKey();
   ClassScheduleWidget({
     this.tableJson,
     required this.isNoon,
@@ -116,96 +125,233 @@ class ClassScheduleWidget extends StatelessWidget {
         {"state": false, "table": {}}
       ]);
 
-    return Column(
-      children: [
-        Container(
-          // key: _weekViewKey,
-          height: 50,
-          child: Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                    padding: EdgeInsets.all(4),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: Colors.black12,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Obx(() => Text(
-                              '${isMin.value ? '小' : '大'}节\n显示',
-                              style: TextStyle(fontSize: 10),
-                            )),
+    return RepaintBoundary(
+      key: _weekViewKey,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.black12,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Obx(() => Text(
+                            '${isMin.value ? '小' : '大'}节\n显示',
+                            style: TextStyle(fontSize: 10),
+                          )),
+                        ),
                       ),
                     ),
+                    onTap: () {
+                      ShareDateUtil().setIsMinForSchedule(!isMin.value);
+                    },
                   ),
-                  onTap: () {
-                    ShareDateUtil().setIsMinForSchedule(!isMin.value);
-                  },
                 ),
-              ),
-              ...columTimeList
-                  .map((e) => Expanded(
-                          child: Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: DateTime.now().month == e.month &&
-                                      DateTime.now().day == e.day
-                                  ? Color.fromARGB(30, 59, 52, 86)
-                                  : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8),
-                              border: DateTime.now().month == e.month &&
-                                      DateTime.now().day == e.day
-                                  ? Border.all(
-                                      color: Color.fromARGB(130, 59, 52, 86))
-                                  : Border.all(color: Colors.transparent)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text('周${weekToChar[e.weekday - 1]}',style: TextStyle(fontSize: 15),),
-                              Text('${e.month}/${e.day}',style: TextStyle(fontSize: 12),)
-                            ],
-                          ),
+                ...columTimeList
+                    .map((e) => Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: DateTime.now().month == e.month &&
+                                DateTime.now().day == e.day
+                                ? Color.fromARGB(30, 59, 52, 86)
+                                : Colors.transparent,
+                            borderRadius: BorderRadius.circular(8),
+                            border: DateTime.now().month == e.month &&
+                                DateTime.now().day == e.day
+                                ? Border.all(
+                                color: Color.fromARGB(130, 59, 52, 86))
+                                : Border.all(color: Colors.transparent)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '周${weekToChar[e.weekday - 1]}',
+                              style: TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              '${e.month}/${e.day}',
+                              style: TextStyle(fontSize: 12),
+                            )
+                          ],
                         ),
-                      )))
-                  .toList()
-            ],
+                      ),
+                    )))
+                    .toList()
+              ],
+            ),
           ),
-        ),
-        Expanded(
-          child: MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView(
-                children: [
-                  Container(
-                    // decoration: BoxDecoration(color: Colors.amber),
-                    height: 1000,
-                    child: Obx(() => Stack(
+          Expanded(
+            child: MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Container(
+                      // decoration: BoxDecoration(color: Colors.amber),
+                      height: 900,
+                      child: Obx(() => RepaintBoundary(
+                        key: _tableViewKey,
+                        child: Stack(
                           children: [
                             _backgroundLine(
                                 noonSwitch: isNoon.value, isMin: isMin.value),
                             InkWell(
+                              highlightColor: Colors.transparent,
+                              splashColor: Colors.transparent,
                               child: _timeBackground(
                                   noonSwitch: isNoon.value, isMin: isMin.value),
                               onTap: () {
                                 ShareDateUtil()
                                     .setIsMinForSchedule(!isMin.value);
                               },
+                              onLongPress: () async {
+                                // await capturePngFilePath(_tableViewKey,_weekViewKey);
+                                await capturePngFilePath(_weekViewKey,_weekViewKey);
+                              },
                             ),
                             drawTable(tableJson),
                           ],
-                        )),
-                  )
-                ],
-              )),
-          flex: 1,
-        )
-      ],
+                        ),
+                      )),
+                    )
+                  ],
+                )),
+            flex: 1,
+          )
+        ],
+      ),
     );
+  }
+
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 课表图片分享
+   * [date] 13:24 2024/3/22
+   * [param] null
+   * [return]
+   */
+  Future<String?> capturePngFilePath(weekKey,tableKey) async {
+    // TencentKitPlatform.instance.shareText(
+    //   scene: TencentScene.kScene_QQ,
+    //   summary: '分享测试',
+    // );
+    try {
+      RenderRepaintBoundary weekBoundary =
+      weekKey.currentContext.findRenderObject();
+      RenderRepaintBoundary boundary =
+          tableKey.currentContext.findRenderObject();
+      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+
+      ui.Image weekImage = await weekBoundary.toImage(pixelRatio: dpr);
+      ui.Image image = await boundary.toImage(pixelRatio: dpr);
+      weekImage.height+image.height;
+
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List picBytes = byteData!.buffer.asUint8List();
+
+      var tempDir = await getTemporaryDirectory();
+      // 判断路径是否存在
+      bool isDirExist = await Directory(tempDir.path).exists();
+      if (!isDirExist) Directory(tempDir.path).create();
+      var file =
+          await File(tempDir.path + "${DateTime.now().toIso8601String()}.png")
+              .writeAsBytes(picBytes);
+      await Share.shareXFiles([XFile(file.path)], text: '南理校园助手');
+      return file.path;
+    } catch (e) {
+      print(e);
+    }
+    return null;
+  }
+
+  //申请存本地相册权限
+  Future<bool> getPormiation() async {
+    if (Platform.isIOS) {
+      var status = await Permission.photos.status;
+      if (status.isDenied) {
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.photos,
+        ].request();
+        // saveImage(globalKey);
+      }
+      return status.isGranted;
+    } else {
+      var status = await Permission.storage.status;
+      if (status.isDenied) {
+        Map<Permission, PermissionStatus> statuses = await [
+          Permission.storage,
+        ].request();
+      }
+      return status.isGranted;
+    }
+  }
+
+  //保存到相册
+  void savePhoto() async {
+    RenderRepaintBoundary? boundary = _weekViewKey.currentContext!
+        .findRenderObject() as RenderRepaintBoundary?;
+
+    double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+    var image = await boundary!.toImage(pixelRatio: dpr);
+    // 将image转化成byte
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    //获取保存相册权限，如果没有，则申请改权限
+    bool permition = await getPormiation();
+
+    var status = await Permission.photos.status;
+    if (permition) {
+      if (Platform.isIOS) {
+        if (status.isGranted) {
+          Uint8List images = byteData!.buffer.asUint8List();
+          final result = await ImageGallerySaver.saveImage(images,
+              quality: 60, name: "hello");
+          File saveFile = new File(result.replaceAll("file://", ""));
+          await TencentKitPlatform.instance.shareImage(
+              scene: TencentScene.kScene_QQ, imageUri: Uri.file(saveFile.path));
+          // EasyLoading.showToast("保存成功");
+        }
+        if (status.isDenied) {
+          print("IOS拒绝");
+        }
+      } else {
+        //安卓
+        if (status.isGranted) {
+          print("Android已授权");
+          Uint8List images = byteData!.buffer.asUint8List();
+          final result = await ImageGallerySaver.saveImage(images,
+              quality: 60, isReturnImagePathOfIOS: true);
+          // print(result);
+          if (result != null) {
+            print(result['filePath']);
+            // EasyLoading.showToast("保存成功");
+            File saveFile =
+                new File(result['filePath'].replaceAll("content://", ""));
+            await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
+                text: '南理校园助手');
+          } else {
+            print('error');
+            // toast("保存失败");
+          }
+        }
+      }
+    } else {
+      //重新请求--第一次请求权限时，保存方法不会走，需要重新调一次
+      savePhoto();
+    }
   }
 
   /**

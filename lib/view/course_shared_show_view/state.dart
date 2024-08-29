@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,14 @@ class CourseSharedShowViewState {
   //课表显示的列表
   final courseWeek = <Widget>[].obs;
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 获取课表对应json数据
+   * [date] 23:09 2024/8/7
+   * [param] null
+   * [return]
+   */
   getShareCourseData(String semester) async {
     await ShareCourseWeb().getShareCourseData(accountData.value['userAccount'],semester).then((value){
       // print(value.data.courseList);
@@ -37,7 +46,7 @@ class CourseSharedShowViewState {
 
       selectSemester.value = value['data']['selectSemester'];
       oldWeekCourseList.value = value['data']['courseList'];
-      // print('${value['data']['courseList'] as List}');
+      log('${value['data']['courseList'] as List}');
       oldWeekCourseList.refresh();
     });
   }

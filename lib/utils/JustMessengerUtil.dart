@@ -127,9 +127,6 @@ class JustMessengerUtil{
         'http://card.beitoucloud.com/bwgl_remoteservice/cardController/getAccountBln',
         options: Options(
             method: 'GET',
-            // contentType: 'multipart/form-data; boundary=----WebKitFormBoundaryZbrCdfxSNKXrm4u9',
-            // responseType: ResponseType.plain,
-            // receiveTimeout: 4000,
             headers: {
               'Authorization': 'bearer ${AccountData.justMessengerAccess_Token.value}',
               'Host': 'card.beitoucloud.com',

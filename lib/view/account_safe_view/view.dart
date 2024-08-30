@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:nnlg/dao/LoginData.dart';
+import 'package:nnlg/utils/ShareDateUtil.dart';
 
+import '../../dao/CourseData.dart';
 import 'logic.dart';
 
 class AccountSafeViewPage extends StatelessWidget {
@@ -18,7 +20,7 @@ class AccountSafeViewPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        title: Text('账号安全与隐私'),
+        title: Text('设置、账号安全及隐私'),
       ),
       body: Container(
         child: ListView(
@@ -77,6 +79,53 @@ class AccountSafeViewPage extends StatelessWidget {
               onTapDown: (v){
                 // log('true');
                 state.eyeState.value = true;
+              },
+            ),
+            InkWell(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                child: Container(
+                  height: 80,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '极速启动',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            Text(
+                              '开启将会先进入离线模式快速查看课表，\n其余功能也不会受影响，但是会等待登\n录认证成功后才会准许使用',
+                              style: TextStyle(
+                                  fontSize: 10, color: Colors.black45),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+                            Obx(() => Switch(
+                                value: CourseData.isColorClassSchedule.value,
+                                onChanged: (v) {
+                                  ShareDateUtil().setColorClassSchedule(v);
+                                }))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              onTap: () {
+                ShareDateUtil().setColorClassSchedule(
+                    !CourseData.isColorClassSchedule.value);
               },
             ),
           ],

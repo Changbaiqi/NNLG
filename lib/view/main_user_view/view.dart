@@ -262,6 +262,43 @@ class MainUserViewPage extends StatelessWidget {
                         ),
                       ),
                     ),
+                    //账号安全与隐私
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Container(
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: Card(
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                  child: Text(
+                                    '设置、账号安全及隐私',
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                  child: SvgPicture.asset('assets/images/safe.svg',height: 25,width: 25,),
+                                  // child: Image.asset(
+                                  //   'assets/images/backLogin.png',
+                                  //   width: 25,
+                                  //   height: 25,
+                                  // ),
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              Get.toNamed(Routes.AccountSafe);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
                     //探索新版
                     Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
@@ -306,43 +343,6 @@ class MainUserViewPage extends StatelessWidget {
                                 else
                                   showUpdateDialog.autoDialog(context, -1);
                               });
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                    //账号安全与隐私
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        child: Card(
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Text(
-                                    '账号安全与隐私',
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                  child: SvgPicture.asset('assets/images/safe.svg',height: 25,width: 25,),
-                                  // child: Image.asset(
-                                  //   'assets/images/backLogin.png',
-                                  //   width: 25,
-                                  //   height: 25,
-                                  // ),
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Get.toNamed(Routes.AccountSafe);
                             },
                           ),
                         ),

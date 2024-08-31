@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 
@@ -112,9 +113,9 @@ class AccountSafeViewPage extends StatelessWidget {
                           children: [
                             // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
                             Obx(() => Switch(
-                                value: CourseData.isColorClassSchedule.value,
+                                value: ContextDate.isTopSpeedStart.value,
                                 onChanged: (v) {
-                                  ShareDateUtil().setColorClassSchedule(v);
+                                  ShareDateUtil().setTopSpeedStart(!ContextDate.isTopSpeedStart.value);
                                 }))
                           ],
                         ),

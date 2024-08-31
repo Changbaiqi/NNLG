@@ -88,6 +88,9 @@ class ShareDateUtil{
     //初始化不更新的版本标记
     await getNoUpdateVersion();
 
+    //初始化极速启动
+    await getTopSpeedStart();
+
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
 
@@ -963,6 +966,21 @@ class ShareDateUtil{
   Future<void> setIsMinForSchedule(bool isMinForSchedule) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isMinForSchedule', isMinForSchedule).then((value) => CourseData.isMinForSchedule.value = isMinForSchedule);
+  }
+
+  //获取是否为极速启动
+  Future<bool> getTopSpeedStart() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? isTopSpeedStart = await prefs.getBool('isTopSpeedStart');
+    // ContextData isColorClassSchedule.value = isColorClassSchedule??false;
+    ContextDate.isTopSpeedStart.value = isTopSpeedStart??false;
+    return isTopSpeedStart??false;
+  }
+
+  //设置是否为极速启动
+  Future<void> setTopSpeedStart(bool isOpen) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isTopSpeedStart', isOpen).then((value) => ContextDate.isTopSpeedStart.value = isOpen);
   }
 
 }

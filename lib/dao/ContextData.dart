@@ -14,5 +14,6 @@ class ContextDate{
   static String ContextCookie = '';
 
   static final onLineTotalCount = 0.obs; //数据监听器
+  static final isTopSpeedStart = false.obs; //是否为极速启动
 
 }

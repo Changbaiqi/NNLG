@@ -6,9 +6,9 @@
  * @Description TODO 单个课表组件，用于渲染单个课表的显示的
  */
 
-import 'dart:convert';
-import 'dart:developer';
+import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -24,13 +24,111 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 
-class ClassScheduleWidget extends StatelessWidget {
+class ClassScheduleWidget extends StatefulWidget {
+  // const ClassScheduleWidget({super.key});
+  final tableJson; //课程信息的json
+  final isNoon;
+  final isMin; //是否小节显示
+  final isColor; //是否彩色显示
+  //默认课表时间
+  List<dynamic> rowTimeList = [
+    {
+      "start": TimeOfDay(hour: 8, minute: 30),
+      "end": TimeOfDay(hour: 9, minute: 15)
+    },
+    {
+      "start": TimeOfDay(hour: 9, minute: 20),
+      "end": TimeOfDay(hour: 10, minute: 5)
+    },
+    {
+      "start": TimeOfDay(hour: 10, minute: 25),
+      "end": TimeOfDay(hour: 11, minute: 10)
+    },
+    {
+      "start": TimeOfDay(hour: 11, minute: 15),
+      "end": TimeOfDay(hour: 12, minute: 00)
+    },
+    {
+      "start": TimeOfDay(hour: 14, minute: 30),
+      "end": TimeOfDay(hour: 15, minute: 15)
+    },
+    {
+      "start": TimeOfDay(hour: 15, minute: 20),
+      "end": TimeOfDay(hour: 16, minute: 05)
+    },
+    {
+      "start": TimeOfDay(hour: 16, minute: 15),
+      "end": TimeOfDay(hour: 17, minute: 00)
+    },
+    {
+      "start": TimeOfDay(hour: 17, minute: 05),
+      "end": TimeOfDay(hour: 17, minute: 50)
+    },
+    {
+      "start": TimeOfDay(hour: 18, minute: 20),
+      "end": TimeOfDay(hour: 19, minute: 05)
+    },
+    {
+      "start": TimeOfDay(hour: 19, minute: 10),
+      "end": TimeOfDay(hour: 19, minute: 55)
+    },
+    {
+      "start": TimeOfDay(hour: 20, minute: 05),
+      "end": TimeOfDay(hour: 20, minute: 50)
+    },
+    {
+      "start": TimeOfDay(hour: 20, minute: 55),
+      "end": TimeOfDay(hour: 21, minute: 40)
+    }
+  ];
+
+  //默认列时间
+  List<dynamic> columTimeList = [
+    DateTime.now(),
+    DateTime.now(),
+    DateTime.now(),
+    DateTime.now(),
+    DateTime.now(),
+    DateTime.now(),
+    DateTime.now()
+  ];
+
+  ClassScheduleWidget({
+    this.tableJson,
+    required this.isNoon,
+    columTimeList,
+    rowTimeList,
+    required this.isMin,
+    this.isColor,
+  }) {
+    if (columTimeList != null) this.columTimeList = columTimeList;
+    if (rowTimeList != null) this.rowTimeList = rowTimeList;
+  }
+
+  @override
+  State<ClassScheduleWidget> createState() => _ClassScheduleWidgetState(
+      tableJson: tableJson,
+      isNoon: isNoon,
+      columTimeList: columTimeList,
+      rowTimeList: rowTimeList,
+      isMin: isMin,
+      isColor: isColor);
+}
+
+class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
+    with SingleTickerProviderStateMixin {
   final tableJson; //课程信息的json
   final isNoon;
   final noonWidgetHeight = 23.0; //午休控件高度
   final isMin; //是否小节显示
   final isColor; //是否彩色显示
   final List<List<dynamic>> isOccupy = []; //用于标记哪些格子是用过的
+  /// 动画类
+  late Animation<double> animation;
+
+  /// 动画控制器
+  late AnimationController animationController;
+
   //默认课表时间
   List<dynamic> rowTimeList = [
     {
@@ -97,7 +195,8 @@ class ClassScheduleWidget extends StatelessWidget {
 
   final _weekViewKey = GlobalKey();
   final _tableViewKey = GlobalKey();
-  ClassScheduleWidget({
+
+  _ClassScheduleWidgetState({
     this.tableJson,
     required this.isNoon,
     columTimeList,
@@ -144,9 +243,9 @@ class ClassScheduleWidget extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Obx(() => Text(
-                            '${isMin.value ? '小' : '大'}节\n显示',
-                            style: TextStyle(fontSize: 10),
-                          )),
+                                '${isMin.value ? '小' : '大'}节\n显示',
+                                style: TextStyle(fontSize: 10),
+                              )),
                         ),
                       ),
                     ),
@@ -157,36 +256,36 @@ class ClassScheduleWidget extends StatelessWidget {
                 ),
                 ...columTimeList
                     .map((e) => Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: DateTime.now().month == e.month &&
-                                DateTime.now().day == e.day
-                                ? Color.fromARGB(30, 59, 52, 86)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(8),
-                            border: DateTime.now().month == e.month &&
-                                DateTime.now().day == e.day
-                                ? Border.all(
-                                color: Color.fromARGB(130, 59, 52, 86))
-                                : Border.all(color: Colors.transparent)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              '周${weekToChar[e.weekday - 1]}',
-                              style: TextStyle(fontSize: 15),
+                            child: Padding(
+                          padding: EdgeInsets.all(4),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: DateTime.now().month == e.month &&
+                                        DateTime.now().day == e.day
+                                    ? Color.fromARGB(30, 59, 52, 86)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(8),
+                                border: DateTime.now().month == e.month &&
+                                        DateTime.now().day == e.day
+                                    ? Border.all(
+                                        color: Color.fromARGB(130, 59, 52, 86))
+                                    : Border.all(color: Colors.transparent)),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '周${weekToChar[e.weekday - 1]}',
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                Text(
+                                  '${e.month}/${e.day}',
+                                  style: TextStyle(fontSize: 12),
+                                )
+                              ],
                             ),
-                            Text(
-                              '${e.month}/${e.day}',
-                              style: TextStyle(fontSize: 12),
-                            )
-                          ],
-                        ),
-                      ),
-                    )))
+                          ),
+                        )))
                     .toList()
               ],
             ),
@@ -202,29 +301,32 @@ class ClassScheduleWidget extends StatelessWidget {
                       // decoration: BoxDecoration(color: Colors.amber),
                       height: 900,
                       child: Obx(() => RepaintBoundary(
-                        key: _tableViewKey,
-                        child: Stack(
-                          children: [
-                            _backgroundLine(
-                                noonSwitch: isNoon.value, isMin: isMin.value),
-                            InkWell(
-                              highlightColor: Colors.transparent,
-                              splashColor: Colors.transparent,
-                              child: _timeBackground(
-                                  noonSwitch: isNoon.value, isMin: isMin.value),
-                              onTap: () {
-                                ShareDateUtil()
-                                    .setIsMinForSchedule(!isMin.value);
-                              },
-                              onLongPress: () async {
-                                // await capturePngFilePath(_tableViewKey,_weekViewKey);
-                                await capturePngFilePath(_weekViewKey,_weekViewKey);
-                              },
+                            key: _tableViewKey,
+                            child: Stack(
+                              children: [
+                                _backgroundLine(
+                                    noonSwitch: isNoon.value,
+                                    isMin: isMin.value),
+                                InkWell(
+                                  highlightColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
+                                  child: _timeBackground(
+                                      noonSwitch: isNoon.value,
+                                      isMin: isMin.value),
+                                  onTap: () {
+                                    ShareDateUtil()
+                                        .setIsMinForSchedule(!isMin.value);
+                                  },
+                                  onLongPress: () async {
+                                    // await capturePngFilePath(_tableViewKey,_weekViewKey);
+                                    await capturePngFilePath(
+                                        _weekViewKey, _weekViewKey);
+                                  },
+                                ),
+                                drawTable(tableJson),
+                              ],
                             ),
-                            drawTable(tableJson),
-                          ],
-                        ),
-                      )),
+                          )),
                     )
                   ],
                 )),
@@ -243,21 +345,21 @@ class ClassScheduleWidget extends StatelessWidget {
    * [param] null
    * [return]
    */
-  Future<String?> capturePngFilePath(weekKey,tableKey) async {
+  Future<String?> capturePngFilePath(weekKey, tableKey) async {
     // TencentKitPlatform.instance.shareText(
     //   scene: TencentScene.kScene_QQ,
     //   summary: '分享测试',
     // );
     try {
       RenderRepaintBoundary weekBoundary =
-      weekKey.currentContext.findRenderObject();
+          weekKey.currentContext.findRenderObject();
       RenderRepaintBoundary boundary =
           tableKey.currentContext.findRenderObject();
       double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
 
       ui.Image weekImage = await weekBoundary.toImage(pixelRatio: dpr);
       ui.Image image = await boundary.toImage(pixelRatio: dpr);
-      weekImage.height+image.height;
+      weekImage.height + image.height;
 
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
@@ -362,6 +464,9 @@ class ClassScheduleWidget extends StatelessWidget {
    * [param] null
    * [return]
    */
+  final _opacityTween = Tween<double>(begin: 0.1, end: 1.0).obs;
+  final _sizeTween = Tween<double>(begin: 0.3, end: 0.0).obs;
+
   Widget drawTable(tableJson) {
     // if(tableJson==null) return Stack();
     // log(jsonEncode(tableJson));
@@ -386,53 +491,55 @@ class ClassScheduleWidget extends StatelessWidget {
       // 创建Color对象
       var color = Color.fromARGB(60, red, green, blue);
       list.add(Positioned(
-        child: InkWell(
-          child: Container(
-            height: 70.0 * (element["rowEnd"] - element["rowStart"] + 1),
-            width: Get.context!.width /
-                8 *
-                (element["columEnd"] - element["columStart"] + 1),
-            child: Padding(
-              padding: EdgeInsets.all(2.5),
+        child: Obx(() => Transform(
+          child: Opacity(
+            child: InkWell(
               child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: isColor.value
-                      ? color
-                      : Color.fromARGB(
+                height: 70.0 * (element["rowEnd"] - element["rowStart"] + 1),
+                width: Get.context!.width /
+                    8 *
+                    (element["columEnd"] - element["columStart"] + 1),
+                child: Padding(
+                  padding: EdgeInsets.all(2.5),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: isColor.value
+                          ? color
+                          : Color.fromARGB(
                           (columTimeList[element['columStart'] - 1].month ==
-                                      DateTime.now().month) &&
-                                  (columTimeList[element['columStart'] - 1]
-                                          .day ==
-                                      DateTime.now().day)
+                              DateTime.now().month) &&
+                              (columTimeList[element['columStart'] - 1]
+                                  .day ==
+                                  DateTime.now().day)
                               ? 130
                               : 30,
                           59,
                           52,
                           86),
-                  //设置四周边框
-                  border: new Border.all(
-                      width: 1, color: Color.fromARGB(80, 59, 52, 86)),
-                ),
-                child: Text(
-                  element["title"],
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color.fromARGB(
-                          element['style']['textColor'][0],
-                          element['style']['textColor'][1],
-                          element['style']['textColor'][2],
-                          element['style']['textColor'][3])),
+                      //设置四周边框
+                      border: new Border.all(
+                          width: 1, color: Color.fromARGB(80, 59, 52, 86)),
+                    ),
+                    child: Text(
+                      element["title"],
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Color.fromARGB(
+                              element['style']['textColor'][0],
+                              element['style']['textColor'][1],
+                              element['style']['textColor'][2],
+                              element['style']['textColor'][3])),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          onTap: () {
-            // log(element.toString());
-            var res = element['data'];
-            var nowDate = DateTime.now();
-            for (int i = 0; i < res.length; ++i) {
-              res[i]['courseTime'] =
+              onTap: () {
+                // log(element.toString());
+                var res = element['data'];
+                var nowDate = DateTime.now();
+                for (int i = 0; i < res.length; ++i) {
+                  res[i]['courseTime'] =
                   "${formatDate(DateTime(nowDate.year, nowDate.month, nowDate.day, rowTimeList[element["rowStart"] - 1]['start'].hour, rowTimeList[element["rowStart"] - 1]['start'].minute), [
                     HH,
                     ":",
@@ -442,17 +549,24 @@ class ClassScheduleWidget extends StatelessWidget {
                     ":",
                     nn
                   ])}";
-            }
-            showCourseTableMessage(Get.context!).show(
-              element['data'],
-              DateTime(
-                (columTimeList[element["columStart"] - 1] as DateTime).year,
-                (columTimeList[element["columStart"] - 1] as DateTime).month,
-                (columTimeList[element["columStart"] - 1] as DateTime).day,
-              ),
-            );
-          },
-        ),
+                }
+                showCourseTableMessage(Get.context!).show(
+                  element['data'],
+                  DateTime(
+                    (columTimeList[element["columStart"] - 1] as DateTime).year,
+                    (columTimeList[element["columStart"] - 1] as DateTime)
+                        .month,
+                    (columTimeList[element["columStart"] - 1] as DateTime).day,
+                  ),
+                );
+              },
+            ),
+            opacity: _opacityTween.value.evaluate(animation),
+          ),
+          alignment: Alignment.center,
+          transform:
+          Matrix4.rotationX(pi * _sizeTween.value.evaluate(animation)),
+        )),
         left: Get.context!.width / 8 * element["columStart"],
         top: 70.0 * (element["rowStart"] - 1) +
             (isNoon.value && element["rowStart"] >= 5 ? noonWidgetHeight : 0),
@@ -1022,5 +1136,34 @@ class ClassScheduleWidget extends StatelessWidget {
     return Stack(
       children: list,
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// 1. 初始化动画控制器
+    animationController = AnimationController(
+      // 动画绘制到屏幕外部时, 减少消耗
+      vsync: this,
+      // 动画持续时间 2 秒
+      duration: Duration(milliseconds: 500),
+    );
+
+    animation =
+        CurvedAnimation(parent: animationController, curve: Curves.linear)
+          ..addListener(() {
+            _opacityTween.refresh();
+            _sizeTween.refresh();
+          });
+    animationController.forward();
+  }
+
+  /// 该方法与 initState 对应
+  @override
+  void dispose() {
+    /// 释放动画控制器
+    animationController.dispose();
+    super.dispose();
   }
 }

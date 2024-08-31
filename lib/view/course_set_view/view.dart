@@ -523,57 +523,57 @@ class CourseSetViewPage extends StatelessWidget {
                       !CourseData.isShakeToNowSchedule.value);
                 },
               ),
-              InkWell(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Container(
-                    height: 65,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                          child: Container(
-                            width: 250,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '采用最新课表爬虫算法',
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Text(
-                                  '默认开启最新爬虫算法，一般情况也推荐使用最新',
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      fontSize: 10, color: Colors.black45),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Row(
-                            children: [
-                              // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
-                              Obx(() => Switch(
-                                  value: CourseData.newOrOldCourseScheduleChoose.value,
-                                  onChanged: (v) {
-                                    ShareDateUtil().setNewOrOldCourseScheduleChoose(v);
-                                  }))
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-                onTap: () {
-                  ShareDateUtil().setNewOrOldCourseScheduleChoose(
-                      !CourseData.newOrOldCourseScheduleChoose.value);
-                },
-              ),
+              // InkWell(
+              //   child: Padding(
+              //     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              //     child: Container(
+              //       height: 65,
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //         children: [
+              //           Padding(
+              //             padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+              //             child: Container(
+              //               width: 250,
+              //               child: Column(
+              //                 crossAxisAlignment: CrossAxisAlignment.start,
+              //                 children: [
+              //                   Text(
+              //                     '采用最新课表爬虫算法',
+              //                     style: TextStyle(fontSize: 20),
+              //                   ),
+              //                   Text(
+              //                     '默认开启最新爬虫算法，一般情况也推荐使用最新',
+              //                     maxLines: 2,
+              //                     style: TextStyle(
+              //                         fontSize: 10, color: Colors.black45),
+              //                   ),
+              //                 ],
+              //               ),
+              //             ),
+              //           ),
+              //           Padding(
+              //             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+              //             child: Row(
+              //               children: [
+              //                 // Image.asset('assets/images/end.png',height: 17,width: 17,color: Colors.black45,),
+              //                 Obx(() => Switch(
+              //                     value: CourseData.newOrOldCourseScheduleChoose.value,
+              //                     onChanged: (v) {
+              //                       ShareDateUtil().setNewOrOldCourseScheduleChoose(v);
+              //                     }))
+              //               ],
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              //   onTap: () {
+              //     ShareDateUtil().setNewOrOldCourseScheduleChoose(
+              //         !CourseData.newOrOldCourseScheduleChoose.value);
+              //   },
+              // ),
               InkWell(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -626,7 +626,7 @@ class CourseSetViewPage extends StatelessWidget {
                 ),
                 onTap: () {
                   //用于选择开学年月日
-                  selectNowCourseListSheet(context).show().then((value) async{
+                  selectNowCourseListSheet(context).show().then((value) async {
                     if (value != null) {
                       Get.snackbar(
                         "课表通知",
@@ -635,9 +635,9 @@ class CourseSetViewPage extends StatelessWidget {
                       );
                       CourseData.nowCourseList.value = value;
                       ShareDateUtil().setNowCourseList(value);
-                      if(CourseData.newOrOldCourseScheduleChoose.value){
+                      if (CourseData.newOrOldCourseScheduleChoose.value) {
                         await logic.onRefresh();
-                      }else{
+                      } else {
                         await logic.oldOnRefresh();
                       }
                       Get.snackbar(
@@ -847,290 +847,326 @@ class CourseSetViewPage extends StatelessWidget {
                   });
                 },
               ),
-              CourseData.newOrOldCourseScheduleChoose.value?
-              InkWell(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Container(
-                      height: 600,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '各小节课时间',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    Text(
-                                      '调节每小节课的起止时间',
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.black45),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/end.png',
-                                      height: 17,
-                                      width: 17,
-                                      color: Colors.black45,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: CourseData.courseTime.map((element) => Padding(
-                              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '第${state.courseCount.value>=12?state.courseCount.value=1:++state.courseCount.value}小节',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black45),
-                                  ),
-                                  Text(
-                                    '${CourseData.courseTime.value[state.courseCount.value-1]}',
-                                    style: TextStyle(
-                                        fontSize: 15, color: Colors.black45),
-                                  )
-                                ],
-                              ),
-                            ),).toList(),
-                          )
-                        ],
-                      )),
-                ),
-                onTap: () async {
-                  //调节时间
-                  await selectCourseTimeSheet.show(Get.context!,12,CourseData.courseTime.value).then((resDataTime) async{
-                    if (resDataTime != null) {
-                      List<String> resTime = [];
-                      //用于刷新控件
-                      for (int i = 1; i <= CourseData.courseTime.value.length; ++i) {
-                        resTime.add('${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
-                        // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
-                      }
-                      //用于刷新课表的时间显示控件
-                      await ShareDateUtil()
-                          .setCourseTimeList(resTime)
-                          .then((value) {
-                        Get.snackbar(
-                          "课表通知",
-                          "修改成功",
-                          duration: Duration(milliseconds: 1500),
-                        );
-                      });
-                    }
-                  });
-                },
-              ):
-              InkWell(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Container(
-                      height: 400,
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '各大节课时间',
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    Text(
-                                      '调节每大节课的起止时间',
-                                      style: TextStyle(
-                                          fontSize: 10, color: Colors.black45),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/end.png',
-                                      height: 17,
-                                      width: 17,
-                                      color: Colors.black45,
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                                child: Row(
+              CourseData.newOrOldCourseScheduleChoose.value
+                  ? InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Container(
+                            height: 600,
+                            child: Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      '第一大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '各小节课时间',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          Text(
+                                            '调节每小节课的起止时间',
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.black45),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[0]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/end.png',
+                                            height: 17,
+                                            width: 17,
+                                            color: Colors.black45,
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                                child: Row(
+                                Column(
+                                  children: CourseData.courseTime
+                                      .map(
+                                        (element) => Padding(
+                                          padding: EdgeInsets.fromLTRB(
+                                              20, 20, 20, 0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                '第${state.courseCount.value >= 12 ? state.courseCount.value = 1 : ++state.courseCount.value}小节',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black45),
+                                              ),
+                                              Text(
+                                                '${CourseData.courseTime.value[state.courseCount.value - 1]}',
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black45),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                                )
+                              ],
+                            )),
+                      ),
+                      onTap: () async {
+                        //调节时间
+                        await selectCourseTimeSheet
+                            .show(Get.context!, 12, CourseData.courseTime.value)
+                            .then((resDataTime) async {
+                          if (resDataTime != null) {
+                            List<String> resTime = [];
+                            //用于刷新控件
+                            for (int i = 1;
+                                i <= CourseData.courseTime.value.length;
+                                ++i) {
+                              resTime.add(
+                                  '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
+                              // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
+                            }
+                            //用于刷新课表的时间显示控件
+                            await ShareDateUtil()
+                                .setCourseTimeList(resTime)
+                                .then((value) {
+                              Get.snackbar(
+                                "课表通知",
+                                "修改成功",
+                                duration: Duration(milliseconds: 1500),
+                              );
+                            });
+                          }
+                        });
+                      },
+                    )
+                  : InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Container(
+                            height: 400,
+                            child: Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      '第二大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '各大节课时间',
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          Text(
+                                            '调节每大节课的起止时间',
+                                            style: TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.black45),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[1]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            'assets/images/end.png',
+                                            height: 17,
+                                            width: 17,
+                                            color: Colors.black45,
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                Column(
                                   children: [
-                                    Text(
-                                      '第三大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第一大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[0]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[2]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第二大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[1]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第三大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[2]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第四大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[3]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第五大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[4]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.fromLTRB(20, 10, 20, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            '第六大节',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          ),
+                                          Text(
+                                            '${CourseData.oldCourseTime.value[5]}',
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black45),
+                                          )
+                                        ],
+                                      ),
                                     )
                                   ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '第四大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[3]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '第五大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[4]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '第六大节',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    ),
-                                    Text(
-                                      '${CourseData.oldCourseTime.value[5]}',
-                                      style: TextStyle(
-                                          fontSize: 15, color: Colors.black45),
-                                    )
-                                  ],
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      )),
-                ),
-                onTap: () async {
-                  //调节时间
+                                )
+                              ],
+                            )),
+                      ),
+                      onTap: () async {
+                        //调节时间
 
-                  await selectBeginCourseTimeSheet(context)
-                      .show()
-                      .then((resDataTime) async {
-                    if (resDataTime != null) {
-                      List<String> resTime = [];
-                      //用于刷新控件
-                      for (int i = 1;
-                          i <= CourseData.oldCourseTime.value.length;
-                          ++i) {
-                        resTime.add(
-                            '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
-                        // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
-                      }
-                      //用于刷新课表的时间显示控件
-                      await ShareDateUtil()
-                          .setOldCourseTimeList(resTime)
-                          .then((value) {
-                        Get.snackbar(
-                          "课表通知",
-                          "修改成功",
-                          duration: Duration(milliseconds: 1500),
-                        );
-                      });
-                    }
-                  });
-                },
-              )
+                        await selectBeginCourseTimeSheet(context)
+                            .show()
+                            .then((resDataTime) async {
+                          if (resDataTime != null) {
+                            List<String> resTime = [];
+                            //用于刷新控件
+                            for (int i = 1;
+                                i <= CourseData.oldCourseTime.value.length;
+                                ++i) {
+                              resTime.add(
+                                  '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
+                              // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
+                            }
+                            //用于刷新课表的时间显示控件
+                            await ShareDateUtil()
+                                .setOldCourseTimeList(resTime)
+                                .then((value) {
+                              Get.snackbar(
+                                "课表通知",
+                                "修改成功",
+                                duration: Duration(milliseconds: 1500),
+                              );
+                            });
+                          }
+                        });
+                      },
+                    )
             ],
           )),
     );

@@ -98,6 +98,7 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
     ShareDateUtil().initLoading().then((value) async {
       //print('${CourseData.nowWeek}');
 
+
       if (LoginData.autoLogin.value &&
           LoginData.account.isNotEmpty &&
           LoginData.password.isNotEmpty) {
@@ -136,13 +137,17 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
                   ShareDateUtil().setIdentMainTag(value["data"]["user"]["identMainTag"]); //设置主认证标签
                 }
               });
-
-              toMain();
+              //若开启了极速启动那么久没必要通过登录后再跳转逻辑了
+              if(!ContextDate.isTopSpeedStart.value) toMain();
             } else {
               ToastUtil.show('${value['msg']}');
               toLogin();
             }
           });
+          //如果打开了极速启动，那么先执行启动工作
+          if(ContextDate.isTopSpeedStart.value){
+            Get.offNamed(Routes.Main);
+          }
         });
       } else {
         toLogin();

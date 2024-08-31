@@ -60,7 +60,7 @@ class ShareDateUtil{
     await getCourseBackgroundOpacity(); //获取背景透明度
     await getOldShowClassScheduleUUID(); //获取当前显示课表的UUID
     await getShowClassScheduleUUID();
-    await getNewOrOldCourseScheduleChoose(); //是否选择新课表
+    // await getNewOrOldCourseScheduleChoose(); //是否选择新课表
     await getIsMinForSchedule(); //获取是否为小节显示
 
 
@@ -119,9 +119,11 @@ class ShareDateUtil{
 
     //课表信息数据
     await setoldWeekCourseList(<String>[]);
-    await setOldShowClassScheduleUUID('');
+    // await setOldShowClassScheduleUUID(''); 旧课表
     await setShowClassScheduleUUID('');
 
+    //关闭极速启动
+    await setTopSpeedStart(false);
     //清空VIP账号信息数据
     XiaoBeiData.xiaobeiAccount='';
     XiaoBeiData.xiaobeiPassword='';
@@ -941,18 +943,18 @@ class ShareDateUtil{
   }
 
   //获取是否为本地背景课表
-  Future<bool> getNewOrOldCourseScheduleChoose() async{
-    final prefs = await SharedPreferences.getInstance();
-    bool? newOrOldCourseScheduleChoose = await prefs.getBool('newOrOldCourseScheduleChoose');
-    CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose??true;
-    return newOrOldCourseScheduleChoose??false;
-  }
-
-  //设置是否为本地背景课表
-  Future<void> setNewOrOldCourseScheduleChoose(bool newOrOldCourseScheduleChoose) async{
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('newOrOldCourseScheduleChoose', newOrOldCourseScheduleChoose).then((value) => CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose);
-  }
+  // Future<bool> getNewOrOldCourseScheduleChoose() async{
+  //   final prefs = await SharedPreferences.getInstance();
+  //   bool? newOrOldCourseScheduleChoose = await prefs.getBool('newOrOldCourseScheduleChoose');
+  //   CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose??true;
+  //   return newOrOldCourseScheduleChoose??false;
+  // }
+  //
+  // //设置是否为本地背景课表
+  // Future<void> setNewOrOldCourseScheduleChoose(bool newOrOldCourseScheduleChoose) async{
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.setBool('newOrOldCourseScheduleChoose', newOrOldCourseScheduleChoose).then((value) => CourseData.newOrOldCourseScheduleChoose.value = newOrOldCourseScheduleChoose);
+  // }
 
   //获取是否为小节显示
   Future<bool> getIsMinForSchedule() async{

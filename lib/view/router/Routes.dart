@@ -30,4 +30,5 @@ class Routes{
   static const NnlgCommunity = '/nnlgCommunity';
   static const AccountSafe = '/accountSafe';
   static const SoftwareDevelopmentTestView = '/SoftwareDevelopmentTestViewComponent';
+  static const CardMessageSet = '/CardMessageSetView';
 }

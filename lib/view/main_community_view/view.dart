@@ -156,7 +156,7 @@ class MainCommunityViewPage extends StatelessWidget {
               ),
             ),
           ),
-          //宿舍电费
+          //信息卡片
           Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
@@ -172,9 +172,7 @@ class MainCommunityViewPage extends StatelessWidget {
                   ]),
               // height: 260,
               width: MediaQuery.of(context).size.width,
-              child: Obx(() => state.isBindDorm.value
-                  ? logic.bindingJustMessengerCard()
-                  : logic.noBindDormCard()),
+              child: logic.bindDormCard(),
             ),
           ),
 

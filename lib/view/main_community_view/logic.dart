@@ -9,6 +9,7 @@ import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/module/DashedLind.dart';
+import 'package:nnlg/view/router/Routes.dart';
 
 import 'state.dart';
 
@@ -475,7 +476,7 @@ class MainCommunityViewLogic extends GetxController {
     state.isLoginJustMessenger.value = true;
   }
 
-  noBindDormCard() {
+  bindDormCard() {
     return Container(
         // height: ,
         child: Column(
@@ -555,7 +556,9 @@ class MainCommunityViewLogic extends GetxController {
                   ],
                 ),
               ),
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(Routes.CardMessageSet);
+              },
             )
           ],
         ));

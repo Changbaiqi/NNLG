@@ -6,6 +6,8 @@ import 'package:nnlg/view/account_safe_view/binding.dart';
 import 'package:nnlg/view/account_safe_view/view.dart';
 import 'package:nnlg/view/authentication_standards_view/binding.dart';
 import 'package:nnlg/view/authentication_standards_view/view.dart';
+import 'package:nnlg/view/card_message_set_view/binding.dart';
+import 'package:nnlg/view/card_message_set_view/view.dart';
 import 'package:nnlg/view/chit_chat_view/binding.dart';
 import 'package:nnlg/view/chit_chat_view/view.dart';
 import 'package:nnlg/view/course_set_view/binding.dart';
@@ -84,5 +86,6 @@ abstract class AppPages{
     GetPage(name: Routes.NnlgCommunity, page: ()=>NnlgCommunityViewPage(),binding: NnlgCommunityViewBinding()), //校园社区
     GetPage(name: Routes.AccountSafe, page: ()=>AccountSafeViewPage(),binding: AccountSafeViewBinding()), //账号安全与隐私
     GetPage(name: Routes.SoftwareDevelopmentTestView, page: ()=>SoftwareDevelopmentTestViewPage(),binding:  SoftwareDevelopmentTestViewBinding()), //用于测试的页面
+    GetPage(name: Routes.CardMessageSet, page: ()=>CardMessageSetViewPage(),binding:  CardMessageSetViewBinding()), //卡片设置
   ];
 }

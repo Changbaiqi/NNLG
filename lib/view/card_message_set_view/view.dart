@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/AccountData.dart';
@@ -84,7 +86,7 @@ class CardMessageSetViewPage extends StatelessWidget {
                             style: TextStyle(fontSize: 20),
                           ),
                           Text(
-                            '${AccountData.justMessengerAccount.value.isEmpty?"点击此处绑定宿舍":"当前绑定宿舍：${AccountData.justMessengerAccount.value}"}',
+                            '${logic.selectData.value.length!=3?"点击此处绑定宿舍":"当前绑定宿舍：${AccountData.dormLoudongId}${AccountData.dormRoom}"}',
                             style: TextStyle(
                                 fontSize: 10, color: Colors.black45),
                           ),
@@ -104,8 +106,7 @@ class CardMessageSetViewPage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // ShareDateUtil().setColorClassSchedule(
-              //     !CourseData.isColorClassSchedule.value);
+              logic.dormPicker();
             },
           ),
         ],

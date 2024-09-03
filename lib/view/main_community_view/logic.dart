@@ -11,6 +11,7 @@ import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/module/DashedLind.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
+import '../../utils/PowerDormUtil.dart';
 import 'state.dart';
 
 class MainCommunityViewLogic extends GetxController {
@@ -101,49 +102,7 @@ class MainCommunityViewLogic extends GetxController {
     });
   }
 
-  /**
-   * [title]
-   * [author] 长白崎
-   * [description] TODO 测试宿舍选择弹窗
-   * [date] 1:14 2024/2/26
-   * [param] null
-   * [return]
-   */
-  void _testPicker() {
-    var multiData = {
-      '桂林': {
-        '7栋': [],
-        '8栋': [],
-        '9栋': [],
-        '10A栋': [],
-        '10B栋': [],
-      }
-    };
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 35; ++y)
-        multiData['桂林']?['7栋']?.add('${x * 100 + y}');
-    }
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 32; ++y)
-        multiData['桂林']?['8栋']?.add('${x * 100 + y}');
-    }
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 31; ++y)
-        multiData['桂林']?['9栋']?.add('${x * 100 + y}');
-    }
 
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 13; ++y)
-        multiData['桂林']?['10A栋']?.add('${x * 100 + y}');
-    }
-
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 13; ++y)
-        multiData['桂林']?['10B栋']?.add('${x * 100 + y}');
-    }
-
-    Pickers.showMultiLinkPicker(context!, data: multiData, columeNum: 3);
-  }
 
   /**
    * [title]
@@ -508,32 +467,32 @@ class MainCommunityViewLogic extends GetxController {
               ],
             ),
             //宿舍信息
-            Column(
-              children: state.isBindDorm.value?[
+            Obx(() => Column(
+              children: AccountData.powerMoney.value!=""?[
                 Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
-                    height: 30,
-                    child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20),),),
-                  ),),
+                  height: 30,
+                  child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20),),),
+                ),),
                 DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
                 Container(
-                    height: 10,
-                  ),
+                  height: 10,
+                ),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('绑定宿舍：${"8栋403"}'),),
-                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${114514}'),)
-                    ],
-                  ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}'),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${AccountData.powerMoney.value}￥'),)
+                  ],
+                ),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('邮箱预警：${"关闭"}'),),
-                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('预警余额：${"10￥"}'),)
-                    ],
-                  ),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('邮箱预警：${"关闭"}'),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('预警余额：${"10￥"}'),)
+                  ],
+                ),
               ]:[],
-            ),
+            )),
             InkWell(
               borderRadius: BorderRadius.circular(20),
               child: Container(
@@ -568,5 +527,10 @@ class MainCommunityViewLogic extends GetxController {
   void onInit() {
     getOnClickTotal(); //初始化获取点击统计
     initJustMessenger(); //初始化一信通
+    if(AccountData.dormCampus.value!="" && AccountData.dormLoudongId.value!="" && AccountData.dormRoom .value!="") {
+      PowerDormUtil().getDormPower(AccountData.dormCampus.value, AccountData.dormLoudongId.value, AccountData.dormRoom .value).then((v){
+        AccountData.powerMoney.value = v;
+      });
+    }
   }
 }

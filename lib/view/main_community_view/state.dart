@@ -10,7 +10,7 @@ class MainCommunityViewState {
   final isBindDorm = false.obs; //是否绑定了宿舍
   final dormDong = "".obs; //宿舍楼栋
   final dormRoom ="".obs; //宿舍房号
-  
+
 
   MainCommunityViewState() {
     ///Initialize variables

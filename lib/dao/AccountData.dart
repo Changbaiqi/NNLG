@@ -24,6 +24,10 @@ class AccountData{
   static final justMessengerToken_Type = "".obs;
   static final justMessengerExpires_in = 0.obs;
   static final justMessengerJti = "".obs;
+  static final dormCampus = "".obs; //校区
+  static final dormLoudongId = "".obs; //宿舍楼栋
+  static final dormRoom = "".obs; //房间ID
+  static final powerMoney = "".obs; //电费金额
 
   static IOWebSocketChannel? channel=null;
 }

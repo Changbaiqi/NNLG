@@ -75,6 +75,9 @@ class ShareDateUtil{
     //一信通数据加载
     await getJustMessengerAccount();
     await getJustMessengerPassword();
+    await getDormCampus();
+    await getDormLoudongId();
+    await getDormRoom();
 
     //初始化通知寄存版本号
     await getNoticeId();
@@ -984,5 +987,53 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isTopSpeedStart', isOpen).then((value) => ContextDate.isTopSpeedStart.value = isOpen);
   }
+
+  //获取当前绑定宿舍校区
+  Future<String> getDormCampus() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? dormCampus = await prefs.getString('dormCampus');
+    AccountData.dormCampus.value= dormCampus??"";
+    return dormCampus??"";
+  }
+
+  //设置当前绑定宿舍校区
+  setDormCampus(String dormCampus)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('dormCampus', dormCampus).then((c){
+      AccountData.dormCampus.value= dormCampus;
+    });
+  }
+
+  //获取当前绑定宿舍楼栋
+  Future<String> getDormLoudongId() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? dormLoudongId = await prefs.getString('dormLoudongId');
+    AccountData.dormLoudongId.value= dormLoudongId??"";
+    return dormLoudongId??"";
+  }
+
+  //设置当前绑定宿舍楼栋
+  setDormLoudongId(String dormLoudongId)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('dormLoudongId', dormLoudongId).then((c){
+      AccountData.dormLoudongId.value= dormLoudongId;
+    });
+  }
+
+  //获取当前绑定宿舍Room
+  Future<String> getDormRoom() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? dormRoom = await prefs.getString('dormRoom');
+    AccountData.dormRoom.value= dormRoom??"";
+    return dormRoom??"";
+  }
+  //设置当前绑定宿舍Room
+  setDormRoom(String dormRoom)async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('dormRoom', dormRoom).then((c){
+      AccountData.dormRoom.value= dormRoom;
+    });
+  }
+
 
 }

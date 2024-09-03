@@ -8,6 +8,7 @@ import 'package:nnlg/utils/AccountUtil.dart';
 import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
+import 'package:nnlg/view/module/DashedLind.dart';
 
 import 'state.dart';
 
@@ -472,6 +473,92 @@ class MainCommunityViewLogic extends GetxController {
     loginJustMessage(AccountData.justMessengerAccount.value,
         AccountData.justMessengerPassword.value, false);
     state.isLoginJustMessenger.value = true;
+  }
+
+  noBindDormCard() {
+    return Container(
+        // height: ,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //水卡信息
+
+            Column(
+              children:
+              state.isLoginJustMessenger.value?[
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
+                  height: 30,
+                  child: Center(child: Text('水卡信息',style: TextStyle(fontSize: 20),),),
+                ),),
+                DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
+                Container(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('卡号：${state.justMessengerCardCode}'),),
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('余额：${state.justMessengerMoney}'),)
+                  ],
+                ),
+
+              ]:[
+
+              ],
+            ),
+            //宿舍信息
+            Column(
+              children: state.isBindDorm.value?[
+                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
+                    height: 30,
+                    child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20),),),
+                  ),),
+                DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
+                Container(
+                    height: 10,
+                  ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('绑定宿舍：${"8栋403"}'),),
+                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${114514}'),)
+                    ],
+                  ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('邮箱预警：${"关闭"}'),),
+                      Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('预警余额：${"10￥"}'),)
+                    ],
+                  ),
+              ]:[],
+            ),
+            InkWell(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20))
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '卡片设置',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Icon(
+                      Icons.settings,
+                      size: 20,
+                    )
+                  ],
+                ),
+              ),
+              onTap: () {},
+            )
+          ],
+        ));
   }
 
   @override

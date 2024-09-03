@@ -36,11 +36,11 @@ class ScoreInquiryViewPage extends StatelessWidget {
                 value: state.selectTime.value,
                 items: state.searList.value
                     .map((e) => DropdownMenuItem(
-                        value: e,
-                        child: Container(
-                          alignment: Alignment.centerLeft,
-                          child: Text(e),
-                        )))
+                    value: e,
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(e),
+                    )))
                     .toList(),
                 onChanged: (value) {
                   state.selectTime.value = value!;
@@ -86,7 +86,7 @@ class ScoreInquiryViewPage extends StatelessWidget {
                                 verticalOffset: 50.0,
                                 child: FadeInAnimation(
                                   child:
-                                      showchildElement(state.scoreList[index]),
+                                  showchildElement(state.scoreList[index]),
                                 ),
                               ));
                         },

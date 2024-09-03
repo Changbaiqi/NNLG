@@ -1,11 +1,7 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/utils/CourseScoreUtil.dart';
-import 'package:nnlg/utils/JustMessengerUtil.dart';
-import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
@@ -160,7 +156,7 @@ class MainCommunityViewPage extends StatelessWidget {
               ),
             ),
           ),
-          //校园卡信息
+          //宿舍电费
           Padding(
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
@@ -176,11 +172,34 @@ class MainCommunityViewPage extends StatelessWidget {
                   ]),
               // height: 260,
               width: MediaQuery.of(context).size.width,
-              child: Obx(() => state.isLoginJustMessenger.value
+              child: Obx(() => state.isBindDorm.value
                   ? logic.bindingJustMessengerCard()
-                  : logic.noJustMessengerCard()),
+                  : logic.noBindDormCard()),
             ),
           ),
+
+          // //校园卡信息
+          // Padding(
+          //   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: BorderRadius.all(Radius.circular(20)),
+          //         boxShadow: [
+          //           BoxShadow(
+          //               offset: Offset(0.0, 7.0),
+          //               blurRadius: 14.0,
+          //               spreadRadius: 0,
+          //               color: Color(0xFFdfdfdf))
+          //         ]),
+          //     // height: 260,
+          //     width: MediaQuery.of(context).size.width,
+          //     child: Obx(() => state.isLoginJustMessenger.value
+          //         ? logic.bindingJustMessengerCard()
+          //         : logic.noJustMessengerCard()),
+          //   ),
+          // ),
+
           Container(
             height: 40,
           )

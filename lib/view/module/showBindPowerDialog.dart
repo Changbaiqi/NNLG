@@ -9,9 +9,6 @@ import '../../utils/MainUserUtil.dart';
 
 class showBindPowerDialog extends Dialog{
 
-  final List<String> _animals = ['7栋','8栋', '9栋','10A栋', '10B栋'];
-  String? _selectRoom;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -48,7 +45,26 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
 
   FixedExtentScrollController _controller = FixedExtentScrollController();
 
-  final List<String> _dong = ['7栋','8栋', '9栋','10A栋', '10B栋'];
+  final List<String> _dong = ['桂林7栋','桂林8栋', '桂林9栋','桂林10A栋', '桂林10B栋','桂林14A栋','桂林14B栋','桂林13栋'];
+  final _showValue ={
+    "7栋": "桂林7栋",
+    "8栋": "桂林8栋",
+    "9栋": "桂林9栋",
+    "10A栋": "桂林A栋",
+    "10B栋": "桂林10B栋",
+    "14A栋": "桂林14A栋",
+    "14B栋": "桂林14B栋"
+  };
+  final _showKey ={
+    "桂林7栋": "7栋",
+    "桂林8栋": "8栋",
+    "桂林9栋": "9栋",
+    "桂林A栋": "10A栋",
+    "桂林10B栋": "10B栋",
+    "桂林14A栋": "14A栋",
+    "桂林14B栋": "14B栋"
+  };
+
 
   bool _sw = false; //预警开关
   String? _selectDong; //栋号选择
@@ -65,7 +81,8 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      body: FutureBuilder(
+      body: MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+      child: FutureBuilder(
         future: future,
         builder: (context,snapshot){
 
@@ -77,7 +94,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
           }
 
         },
-      ),
+      ),),
     );
   }
 
@@ -104,7 +121,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
       if(value['code']==200){
 
 
-        this._selectDong = value['data']['power_bind_dong'];
+        this._selectDong = _showValue[value['data']['power_bind_dong']];
         this._roomEdit.text = value['data']['power_bind_room'];
         this._emailEdit.text= value['data']['power_bind_email'];
         this._sw = value['data']['power_dorm_sw']==1?true:false;
@@ -132,7 +149,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 70,
+                width: 90,
                 height: 50,
                 child: StatefulBuilder(
                   builder: (context,setState){
@@ -142,7 +159,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                             value: e,
                             child: Container(
                               alignment: Alignment.centerLeft,
-                              child: Text(e),
+                              child: Text(e,style: TextStyle(fontSize: 13),),
                             ))).toList(),
                         onChanged: (value) {
                             _selectDong = value;
@@ -152,7 +169,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                 ),
               ),
               Container(
-                width: 200,
+                width: 180,
                 child: TextField(
                   controller: _roomEdit,
                   keyboardType: TextInputType.number,
@@ -233,7 +250,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                   onPressed: (){
                     if(_checkAll()){
 
-                      PowerDormUtil().setBindDorm(_selectDong!, _roomEdit.text,
+                      PowerDormUtil().setBindDorm(_showKey[_selectDong!]!, _roomEdit.text,
                           _emailEdit.text, double.parse(_dormEdit.text==null?"10":"${_dormEdit.text}"), _sw?1:0).then((value){
                          if(value['code']==200){
                            ToastUtil.show('设置成功');

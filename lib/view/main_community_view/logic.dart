@@ -7,6 +7,7 @@ import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/utils/AccountUtil.dart';
 import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/utils/edusys/Account.dart';
 import 'package:nnlg/view/SchoolCardInformSet.dart';
 import 'package:nnlg/view/module/DashedLind.dart';
 import 'package:nnlg/view/router/Routes.dart';
@@ -104,6 +105,7 @@ class MainCommunityViewLogic extends GetxController {
 
 
 
+
   /**
    * [title]
    * [author] 长白崎
@@ -149,9 +151,9 @@ class MainCommunityViewLogic extends GetxController {
           return;
         }
 
-        state.justMessengerMoney.value =
+        AccountData.justMessengerMoney.value =
             value['data'][0]['accountBlance'].toString(); //赋值金额
-        state.justMessengerCardCode.value = value['data'][0]['crdId'];
+        AccountData.justMessengerCardCode.value = value['data'][0]['crdId'];
       });
       // JustMessengerUtil().getMoney().then((value){
       //   // Get.snackbar("金额", '${value['data']}');
@@ -160,144 +162,8 @@ class MainCommunityViewLogic extends GetxController {
       if (isShowSnackbar)
         Get.snackbar('提示', '登录成功',
             duration: const Duration(milliseconds: 1500));
-      state.isLoginJustMessenger.value = true; //设置为成功登录状态
+      AccountData.isLoginJustMessenger.value = true; //设置为成功登录状态
     });
-  }
-
-  /**
-   * [title]
-   * [author] 长白崎
-   * [description] TODO 没绑定时候的一信通卡片信息
-   * [date] 22:51 2024/2/25
-   * [param] null
-   * [return]
-   */
-  noJustMessengerCard() {
-    List<Widget> _seelist = [
-      Image.asset(
-        'assets/images/close_eye.png',
-        height: 25,
-        width: 25,
-      ),
-      Image.asset(
-        'assets/images/open_eye.png',
-        height: 25,
-        width: 25,
-      )
-    ];
-    return Column(
-      children: [
-        Center(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Container(
-              height: 55,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: inputAccountController,
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.person),
-                        label: Text('账号'),
-                        hintText: '请输入校园一信通账号/手机号',
-                        enabledBorder: OutlineInputBorder(
-                            // borderRadius: BorderRadius.all(
-                            //     Radius.circular(100)
-                            // )
-                            ),
-                        focusedBorder: OutlineInputBorder(
-                            // borderRadius: BorderRadius.all(
-                            //     Radius.circular(100)
-                            // )
-                            ),
-                      ),
-                      /*onChanged: (account){
-                  _account = account;
-                },*/
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-            child: Container(
-              height: 55,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Obx(() => TextField(
-                          controller: inputPasswordController,
-                          obscureText: seeNo_Off.value,
-                          maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 14,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.lock),
-                            label: Text('密码'),
-                            hintText: '请输入校园一信通密码',
-                            enabledBorder: OutlineInputBorder(
-                                // borderRadius: BorderRadius.all(
-                                //     Radius.circular(100)
-                                // )
-                                ),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  seeNo_Off.value = !seeNo_Off.value;
-                                },
-                                icon: _seelist[seeNo_Off.value ? 0 : 1]),
-                            focusedBorder: OutlineInputBorder(
-                                // borderRadius: BorderRadius.all(
-                                //     Radius.circular(100)
-                                // )
-                                ),
-                          ),
-                          /*onChanged: (password){
-                    _password = password;
-                  },*/
-                        )),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Center(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-            child: Container(
-              width: MediaQuery.of(context!).size.width,
-              height: 45,
-              child: ElevatedButton(
-                child: Text('校园一信通绑定'),
-                onPressed: () {
-                  //检测输入的内容是否为空
-                  if (inputAccountController.text.isEmpty ||
-                      inputPasswordController.text.isEmpty) {
-                    Get.snackbar("提示", "输入的内容不能为空",
-                        duration: const Duration(milliseconds: 1500));
-                    return;
-                  }
-
-                  //登录
-                  loginJustMessage(inputAccountController.text,
-                      inputPasswordController.text, true);
-                  // _testPicker();
-                },
-              ),
-            ),
-          ),
-        )
-      ],
-    );
   }
 
   /**
@@ -311,34 +177,15 @@ class MainCommunityViewLogic extends GetxController {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Obx(() => Text('卡号：${state.justMessengerCardCode.value}')),
-              Obx(() => Text('${state.justMessengerUserName.value}')),
-              // Container(
-              //   width: 60,
-              //   height: 20,
-              //   child: ElevatedButton(
-              //     onPressed: () {
-              //       Navigator.of(context!)
-              //           .push(MaterialPageRoute(builder: (builder) {
-              //         return SchoolCardInformSet();
-              //       }));
-              //     },
-              //     child: Text(
-              //       '设置',
-              //       style: TextStyle(fontSize: 12),
-              //     ),
-              //     style: ButtonStyle(
-              //         backgroundColor:
-              //             MaterialStateProperty.all(Colors.blueGrey)),
-              //   ),
-              // )
+              Obx(() => Text('卡号：${AccountData.justMessengerCardCode.value}')),
+              Obx(() => Text('${AccountData.justMessengerUserName.value}')),
             ],
           ),
         ),
         Padding(
           padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
           child: Obx(() => Text(
-                '￥ ${state.justMessengerMoney}',
+                '￥ ${AccountData.justMessengerMoney.value}',
                 style: TextStyle(fontSize: 35),
               )),
         ),
@@ -346,28 +193,6 @@ class MainCommunityViewLogic extends GetxController {
           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
           child: Column(
             children: [
-              // Text(
-              //   '宿舍状态',
-              //   style: TextStyle(fontSize: 20),
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('绑定宿舍：'),
-              //     Text('8403'),
-              //   ],
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [
-              //     Text('宿舍电费：'),
-              //     Text('40￥'),
-              //   ],
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: [Text('预警金额：'), Text('20￥')],
-              // ),
               Container(
                 width: MediaQuery.of(context!).size.width,
                 child: ElevatedButton(
@@ -432,9 +257,32 @@ class MainCommunityViewLogic extends GetxController {
     //直接自动登录
     loginJustMessage(AccountData.justMessengerAccount.value,
         AccountData.justMessengerPassword.value, false);
-    state.isLoginJustMessenger.value = true;
+    AccountData.isLoginJustMessenger.value = true;
   }
 
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 刷新卡片数据
+   * [date] 16:43 2024/9/4
+   * [param] null
+   * [return]
+   */
+  refreshCard(){
+    if(AccountData.dormCampus.value!="" && AccountData.dormLoudongId.value!="" && AccountData.dormRoom .value!="") {
+      PowerDormUtil().getDormPower(AccountData.dormCampus.value, AccountData.dormLoudongId.value, AccountData.dormRoom .value).then((v){
+        AccountData.powerMoney.value = v;
+      });
+    }
+  }
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 卡片数据
+   * [date] 16:41 2024/9/4
+   * [param] null
+   * [return]
+   */
   bindDormCard() {
     return Container(
         // height: ,
@@ -443,9 +291,9 @@ class MainCommunityViewLogic extends GetxController {
           children: [
             //水卡信息
 
-            Column(
+            Obx(() => Column(
               children:
-              state.isLoginJustMessenger.value?[
+              AccountData.isLoginJustMessenger.value?[
                 Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
                   height: 30,
                   child: Center(child: Text('水卡信息',style: TextStyle(fontSize: 20),),),
@@ -454,18 +302,18 @@ class MainCommunityViewLogic extends GetxController {
                 Container(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('卡号：${state.justMessengerCardCode}'),),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('余额：${state.justMessengerMoney}'),)
-                  ],
-                ),
+               Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child:  Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Text('卡号：${AccountData.justMessengerCardCode.value}'),
+                   Text('余额：${AccountData.justMessengerMoney.value}')
+                 ],
+               ),),
 
               ]:[
 
               ],
-            ),
+            )),
             //宿舍信息
             Obx(() => Column(
               children: AccountData.powerMoney.value!=""?[
@@ -477,47 +325,76 @@ class MainCommunityViewLogic extends GetxController {
                 Container(
                   height: 10,
                 ),
-                Row(
+                Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}'),),
+                    Text('校区：${AccountData.dormCampus.value}'),
+                    Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}')
+                  ],
+                ),),
+                Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
                     Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${AccountData.powerMoney.value}￥'),)
                   ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(padding: EdgeInsets.fromLTRB(10, 0, 0, 0),child: Text('邮箱预警：${"关闭"}'),),
-                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('预警余额：${"10￥"}'),)
-                  ],
-                ),
+                ),),
               ]:[],
             )),
-            InkWell(
-              borderRadius: BorderRadius.circular(20),
-              child: Container(
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20))
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '卡片设置',
-                      style: TextStyle(fontSize: 16),
+            Row(
+              children: [
+                Expanded(child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(0))
                     ),
-                    Icon(
-                      Icons.settings,
-                      size: 20,
-                    )
-                  ],
-                ),
-              ),
-              onTap: () {
-                Get.toNamed(Routes.CardMessageSet);
-              },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '刷新数据',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Icon(
+                          Icons.refresh,
+                          size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    refreshCard();
+                  },
+                ),flex: 1,),
+                Expanded(child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(0),bottomRight: Radius.circular(20))
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '卡片设置',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        Icon(
+                          Icons.settings,
+                          size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Get.toNamed(Routes.CardMessageSet);
+                  },
+                ),flex: 1,),
+              ],
             )
           ],
         ));
@@ -527,10 +404,6 @@ class MainCommunityViewLogic extends GetxController {
   void onInit() {
     getOnClickTotal(); //初始化获取点击统计
     initJustMessenger(); //初始化一信通
-    if(AccountData.dormCampus.value!="" && AccountData.dormLoudongId.value!="" && AccountData.dormRoom .value!="") {
-      PowerDormUtil().getDormPower(AccountData.dormCampus.value, AccountData.dormLoudongId.value, AccountData.dormRoom .value).then((v){
-        AccountData.powerMoney.value = v;
-      });
-    }
+    refreshCard(); //刷新卡片数据
   }
 }

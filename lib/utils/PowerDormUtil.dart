@@ -29,6 +29,7 @@ class PowerDormUtil {
    * 用于设置修改预警绑定的邮箱
    */
   Future<LinkedHashMap> setBindDorm(
+      String power_bind_campus,
       String power_bind_dong,
       String power_bind_room,
       String power_bind_email,
@@ -36,6 +37,7 @@ class PowerDormUtil {
       int power_dorm_sw) async {
     Response response = await Dio(_options).request('/user/setBindDorm',
         data: {
+          "power_bind_campus": "${power_bind_campus}",
           "power_bind_dong": "${power_bind_dong}",
           "power_bind_room": "${power_bind_room}",
           "power_bind_email": "${power_bind_email}",
@@ -122,7 +124,53 @@ class PowerDormUtil {
         powerUrl = "http://221.7.150.22:10005/v1/cgElec/elec/query";
         loudong_id = "6819";
       }
-    } else if (campus == "南宁") {}
+    } else if (campus == "南宁") {
+      if(loudong_id=="15-1栋"||loudong_id=="15-1"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="4320";
+      }
+      if(loudong_id=="15-2栋"||loudong_id=="15-2"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="4523";
+      }
+      if(loudong_id=="13-1栋"||loudong_id=="13-1"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="4722";
+      }
+      if(loudong_id=="13-2栋"||loudong_id=="13-2"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+    loudong_id="5158";
+      }
+      if(loudong_id=="17栋"||loudong_id=="17"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="5623";
+      }
+      if(loudong_id=="18栋"||loudong_id=="18"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="6068";
+      }
+      if(loudong_id=="19栋"||loudong_id=="19"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="6267";
+      }
+      if(loudong_id=="20栋"||loudong_id=="20"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="6454";
+      }
+      if(loudong_id=="21栋"||loudong_id=="21"){
+        roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
+        powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
+        loudong_id="6899";
+      }
+    }
     Response response = await Dio(_options).request('${roomUrl}',
         options: Options(
           method: 'POST',

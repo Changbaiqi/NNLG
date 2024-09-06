@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_pickers/pickers.dart';
+import 'package:get/get.dart';
 import 'package:nnlg/dao/ContextData.dart';
 import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
@@ -12,7 +14,7 @@ class showBindPowerDialog extends Dialog{
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 340,
+      height: 360,
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -45,32 +47,14 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
 
   FixedExtentScrollController _controller = FixedExtentScrollController();
 
-  final List<String> _dong = ['桂林7栋','桂林8栋', '桂林9栋','桂林10A栋', '桂林10B栋','桂林14A栋','桂林14B栋','桂林13栋'];
-  final _showValue ={
-    "7栋": "桂林7栋",
-    "8栋": "桂林8栋",
-    "9栋": "桂林9栋",
-    "10A栋": "桂林A栋",
-    "10B栋": "桂林10B栋",
-    "14A栋": "桂林14A栋",
-    "14B栋": "桂林14B栋"
-  };
-  final _showKey ={
-    "桂林7栋": "7栋",
-    "桂林8栋": "8栋",
-    "桂林9栋": "9栋",
-    "桂林A栋": "10A栋",
-    "桂林10B栋": "10B栋",
-    "桂林14A栋": "14A栋",
-    "桂林14B栋": "14B栋"
-  };
 
 
   bool _sw = false; //预警开关
-  String? _selectDong; //栋号选择
+  // String? _selectDong; //栋号选择
 
+  final selectData = <dynamic>['无','无','无'].obs;
   //房号输入
-  TextEditingController _roomEdit = TextEditingController();
+  // TextEditingController _roomEdit = TextEditingController();
   //邮箱输入
   TextEditingController _emailEdit = TextEditingController();
   //预警金额
@@ -121,8 +105,11 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
       if(value['code']==200){
 
 
-        this._selectDong = _showValue[value['data']['power_bind_dong']];
-        this._roomEdit.text = value['data']['power_bind_room'];
+        // this._selectDong = _showValue[value['data']['power_bind_dong']];
+        selectData.value[0] = value['data']['power_bind_campus'].toString();
+        selectData.value[1]=value['data']['power_bind_dong'].toString();
+        // this._roomEdit.text = value['data']['power_bind_room'];
+        selectData.value[2]=value['data']['power_bind_room'].toString();
         this._emailEdit.text= value['data']['power_bind_email'];
         this._sw = value['data']['power_dorm_sw']==1?true:false;
         this._dormEdit.text ="${value['data']['power_min_money']}";
@@ -148,40 +135,39 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                width: 90,
-                height: 50,
-                child: StatefulBuilder(
-                  builder: (context,setState){
-                    return DropdownButton<String>(
-                        value: _selectDong,
-                        items: _dong.map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              child: Text(e,style: TextStyle(fontSize: 13),),
-                            ))).toList(),
-                        onChanged: (value) {
-                            _selectDong = value;
-                            setState((){});
-                        });
-                  },
-                ),
-              ),
-              Container(
-                width: 180,
-                child: TextField(
-                  controller: _roomEdit,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))//设置只能输入数字
-                  ],
-                  decoration: InputDecoration(
-                    label: Text('房号'),
-                    hintText: '请输入除栋号后的房号',
+
+            ],
+          ),
+          Column(
+            children: [
+              Obx(() => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Text('校区'),
+                      Text('${selectData[0]}')
+                    ],
                   ),
-                ),
-              ),
+                  Column(
+                    children: [
+                      Text('楼栋'),
+                      Text('${selectData[1]}')
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text('房号'),
+                      Text('${selectData[2]}')
+                    ],
+                  )
+                ],
+              )),
+             Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
+               height: 35,
+               width: 250,
+               child:  ElevatedButton(onPressed: (){dormPicker();}, child: Text('选择预警宿舍')),
+             ),)
             ],
           ),
           Row(
@@ -250,7 +236,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                   onPressed: (){
                     if(_checkAll()){
 
-                      PowerDormUtil().setBindDorm(_showKey[_selectDong!]!, _roomEdit.text,
+                      PowerDormUtil().setBindDorm(selectData.value[0],selectData.value[1], selectData.value[2],
                           _emailEdit.text, double.parse(_dormEdit.text==null?"10":"${_dormEdit.text}"), _sw?1:0).then((value){
                          if(value['code']==200){
                            ToastUtil.show('设置成功');
@@ -286,21 +272,24 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
    * 综合检测条件合格
    */
   bool _checkAll(){
-    String? roomT = _roomEdit.text;
+    // String? roomT = _roomEdit.text;
     String? emailT = _emailEdit.text;
     String? dormT = _dormEdit.text;
     //检查是否选择了楼栋
     //print('${_selectDong}');
-    if( _selectDong==null){
-      ToastUtil.show('请选择楼栋');
-      return false;
-    }
+    // if( _selectDong==null){
+    //   ToastUtil.show('请选择楼栋');
+    //   return false;
+    // }
     //检查是否输入了房号
-    if(roomT== null || roomT.isEmpty || roomT==''){
-      ToastUtil.show('请输入房号');
+    // if(roomT== null || roomT.isEmpty || roomT==''){
+    //   ToastUtil.show('请输入房号');
+    //   return false;
+    // }
+    if(selectData[0]=='无' || selectData[1]=='无' || selectData[2]=='无'){
+      ToastUtil.show('请选择预警宿舍');
       return false;
     }
-
     //检查是否填写了邮箱
     if(emailT== null || emailT.isEmpty|| emailT==''){
       ToastUtil.show('请输入邮箱不能为空');
@@ -327,6 +316,74 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
   bool _checkEmail(String input){
     String regexEmail = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*\$";
     return RegExp(regexEmail).hasMatch(input);
+  }
+
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] TODO 宿舍选择弹窗
+   * [date] 1:14 2024/2/26
+   * [param] null
+   * [return]
+   */
+  List<dynamic> dormPicker()  {
+
+    var multiData = {
+      '桂林': {
+        '7栋': [],
+        '8栋': [],
+        '9栋': [],
+        '10A栋': [],
+        '10B栋': [],
+        '12栋': [],
+        '13栋': [],
+        '14A栋': [],
+        '14B栋': [],
+      },
+      '南宁': {
+        '13-1栋': [],
+        '13-2栋': [],
+        '15-1栋': [],
+        '15-2栋': [],
+        '17栋': [],
+        '18栋': [],
+        '19栋': [],
+        '20栋': [],
+        '21栋': [],
+      }
+    };
+    for (int x = 1; x <= 6; ++x) {
+      for (int y = 1; y <= 35; ++y) {
+        multiData['桂林']?['7栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['8栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['9栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['10A栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['10B栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['12栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['13栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['14A栋']?.add('${x * 100 + y}');
+        multiData['桂林']?['14B栋']?.add('${x * 100 + y}');
+      }
+    }
+    for (int x = 1; x <= 6; ++x) {
+      for (int y = 1; y <= 47; ++y) {
+        multiData['南宁']?['13-1栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['13-2栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['15-1栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['15-2栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['17栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['18栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['19栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['20栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['21栋']?.add('${x * 100 + y}');
+      }
+    }
+
+    Pickers.showMultiLinkPicker(context, data: multiData,selectData: selectData, columeNum: 3,onConfirm: (p,covariant) async{
+      selectData.value = p ;
+      selectData.refresh();
+    });
+    return selectData;
   }
 
   @override

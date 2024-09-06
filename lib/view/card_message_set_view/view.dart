@@ -64,8 +64,9 @@ class CardMessageSetViewPage extends StatelessWidget {
               ),
             ),
             onTap: () {
-              // ShareDateUtil().setColorClassSchedule(
-              //     !CourseData.isColorClassSchedule.value);
+              showDialog(context: context, builder: (builder){
+                return logic.noJustMessengerCard();
+              });
             },
           ),
           InkWell(

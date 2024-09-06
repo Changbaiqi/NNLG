@@ -219,6 +219,7 @@ flutter:
     - assets/images/score_inquiry.svg
     - assets/images/score_inquiry2.svg
     - assets/images/teach_eval.svg
+    - assets/images/fun.svg
     - assets/images/position.json
     - assets/audio/sendMessage.mp3
     - assets/files/scheduleJson.json

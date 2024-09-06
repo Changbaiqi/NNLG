@@ -24,6 +24,11 @@ class AccountData{
   static final justMessengerToken_Type = "".obs;
   static final justMessengerExpires_in = 0.obs;
   static final justMessengerJti = "".obs;
+  static final justMessengerMoney = "".obs; //水卡余额
+  static final justMessengerCardCode = "".obs; //水卡的ID
+  static final isLoginJustMessenger = false.obs; //一信通当前是否登录成功的状态
+  static final justMessengerUserName = "".obs;
+
   static final dormCampus = "".obs; //校区
   static final dormLoudongId = "".obs; //宿舍楼栋
   static final dormRoom = "".obs; //房间ID

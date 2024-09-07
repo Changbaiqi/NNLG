@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -117,60 +116,67 @@ class MainCourseViewPage extends StatelessWidget {
                       Row(
                         children: [
                           Obx(() => InkWell(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10)
-                                ),
-                                child: Column(
-                                  children: [
-                                    Text(
-                                      '第 ${state.nowIndex.value} 周',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          color: state.nowIndex.value ==
-                                              CourseData.nowWeek.value
-                                              ? Colors.black
-                                              : Colors.redAccent),
-                                    ),
-                                    Text(
-                                      '${CourseData.nowCourseList.value}',
-                                      style: TextStyle(fontSize: 12),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: (){
-                              showDialog(context: context, barrierColor: Colors.transparent,builder: (builder){
-                                return Dialog(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                   child: Container(
-                                    height: 250,
                                     decoration: BoxDecoration(
-                                        color: Color.fromARGB(
-                                            255, 231, 231, 231),
-                                      borderRadius: BorderRadius.circular(20)
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                      child: ListView(
-                                        children: [
-                                          Wrap(
-                                            spacing: 5,
-                                            runSpacing: 5,
-                                            alignment: WrapAlignment.center,
-                                            children: logic.weekChooseWidgetList(builder),
-                                          )
-                                        ],
-                                      ),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          '第 ${state.nowIndex.value} 周',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: state.nowIndex.value ==
+                                                      CourseData.nowWeek.value
+                                                  ? Colors.black
+                                                  : Colors.redAccent),
+                                        ),
+                                        Text(
+                                          '${CourseData.nowCourseList.value}',
+                                          style: TextStyle(fontSize: 12),
+                                        )
+                                      ],
                                     ),
                                   ),
-                                );
-                              });
-                            },
-                          )),
+                                ),
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      barrierColor: Colors.transparent,
+                                      builder: (builder) {
+                                        return Dialog(
+                                          child: Container(
+                                            height: 250,
+                                            decoration: BoxDecoration(
+                                                color: Color.fromARGB(
+                                                    255, 231, 231, 231),
+                                                borderRadius:
+                                                    BorderRadius.circular(20)),
+                                            child: Padding(
+                                              padding: EdgeInsets.fromLTRB(
+                                                  10, 10, 10, 10),
+                                              child: ListView(
+                                                children: [
+                                                  Wrap(
+                                                    spacing: 5,
+                                                    runSpacing: 5,
+                                                    alignment:
+                                                        WrapAlignment.center,
+                                                    children: logic
+                                                        .weekChooseWidgetList(
+                                                            builder),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                },
+                              )),
                         ],
                       ),
                     ]),
@@ -212,29 +218,17 @@ class MainCourseViewPage extends StatelessWidget {
                     "正在同步官网课表...",
                     duration: Duration(milliseconds: 1500),
                   );
-                  if(CourseData.newOrOldCourseScheduleChoose.value){
-                    logic
-                        .onRefresh(
-                        AccountData.studentID,
-                        CourseData.nowCourseList.value,
-                        CourseData.showClassScheduleUUID.value)
-                        .then((value) => Get.snackbar(
-                      "课表通知",
-                      "同步完毕",
-                      duration: const Duration(milliseconds: 1500),
-                    ));
-                  }else{
-                    logic
-                        .oldOnRefresh(
-                        AccountData.studentID,
-                        CourseData.nowCourseList.value,
-                        CourseData.oldShowClassScheduleUUID.value)
-                        .then((value) => Get.snackbar(
-                      "课表通知",
-                      "同步完毕",
-                      duration: const Duration(milliseconds: 1500),
-                    ));
-                  }
+
+                  logic
+                      .onRefresh(
+                          AccountData.studentID,
+                          CourseData.nowCourseList.value,
+                          CourseData.showClassScheduleUUID.value)
+                      .then((value) => Get.snackbar(
+                            "课表通知",
+                            "同步完毕",
+                            duration: const Duration(milliseconds: 1500),
+                          ));
                 },
               ),
               IconButton(
@@ -254,37 +248,10 @@ class MainCourseViewPage extends StatelessWidget {
                   ],
                 ),
                 onPressed: () async {
-                  if(CourseData.newOrOldCourseScheduleChoose.value){
-                    logic.showClassScheduleHistory(AccountData.studentID,
-                        CourseData.nowCourseList.value);
-                  }else{
-                    logic.oldShowClassScheduleHistory(AccountData.studentID,
-                        CourseData.nowCourseList.value);
-                  }
+                  logic.showClassScheduleHistory(
+                      AccountData.studentID, CourseData.nowCourseList.value);
                 },
               ),
-              // IconButton(
-              //   icon: Column(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     crossAxisAlignment: CrossAxisAlignment.center,
-              //     children: [
-              //       Icon(
-              //         Icons.share,
-              //         color: Colors.black,
-              //         size: 20,
-              //       ),
-              //       Text(
-              //         '分享',
-              //         style: TextStyle(fontSize: 8, color: Colors.black),
-              //       )
-              //     ],
-              //   ),
-              //   onPressed: () async {
-              //     logic.capturePngFilePath(logic.courseWidgetKey); //图片分享
-              //     // logic.savePhoto(); //存储到本地
-              //     // logic.savePhoto();
-              //   },
-              // ),
               PopupMenuButton(
                 position: PopupMenuPosition.under,
                 icon: Column(
@@ -404,13 +371,8 @@ class MainCourseViewPage extends StatelessWidget {
                       break;
                     case '课表同步历史':
                       {
-                        if(CourseData.newOrOldCourseScheduleChoose.value){
-                          logic.showClassScheduleHistory(AccountData.studentID,
-                              CourseData.nowCourseList.value);
-                        }else{
-                          logic.oldShowClassScheduleHistory(AccountData.studentID,
-                              CourseData.nowCourseList.value);
-                        }
+                        logic.showClassScheduleHistory(AccountData.studentID,
+                            CourseData.nowCourseList.value);
                       }
                       break;
                   }
@@ -435,13 +397,12 @@ class MainCourseViewPage extends StatelessWidget {
                                       width: Get.context!.width,
                                       child: Marquee(
                                         text: '备注：${logic.remark.value}',
-                                        style: TextStyle(
-                                          fontSize: 13
-                                        ),
+                                        style: TextStyle(fontSize: 13),
                                         velocity: 30.0,
                                         blankSpace: 20,
                                         pauseAfterRound: Duration(seconds: 5),
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                       ),
                                     ))
                               ],
@@ -459,35 +420,18 @@ class MainCourseViewPage extends StatelessWidget {
                         reverse: false,
                         scrollDirection: Axis.horizontal,
                         controller: logic.pageController.value,
-
-                        children: CourseData.newOrOldCourseScheduleChoose.value?(CourseData.weekCourseJson.value["courses"] != null
-                            ? logic.pullAllCourseSchedule(
-                            CourseData.weekCourseJson.value)
-                            : [
-                                Center(
-                                  child: Text("课表加载中......"),
-                                )]):(CourseData.oldWeekCourseList.value.length != 0
-                                    ? logic
-                                    .refreshAllCourseTable(CourseData.oldWeekCourseList.value)
-                                    : [
-                                  Center(
-                                    child: Text("课表加载中......"),
-                                  )
-                              ]),
+                        children:
+                            CourseData.weekCourseJson.value["courses"] != null
+                                ? logic.pullAllCourseSchedule(
+                                    CourseData.weekCourseJson.value)
+                                : [
+                                    Center(
+                                      child: Text("课表加载中......"),
+                                    )
+                                  ],
                       ),
                       flex: 1,
                     )
-                    // Container(
-                    //   decoration: BoxDecoration(
-                    //     // color: Color.fromARGB(255, 255, 251, 254),
-                    //       color: Colors.transparent
-                    //   ),
-                    //   height: MediaQuery
-                    //       .of(context)
-                    //       .size
-                    //       .height,
-                    //   child: ,
-                    // )
                   ],
                 )),
           ),

@@ -1,10 +1,16 @@
 package com.cbq.nnlg;
 
-import android.os.Handler;
-import android.os.Message;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.eclipsesource.v8.V8;
 
@@ -12,22 +18,81 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+import java.util.List;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 
-public class MainActivity extends FlutterActivity {
+public class MainActivity extends FlutterActivity implements LocationListener {
+
+    static LocationManager locationManager;
+    static double publicLongitude=0.0;
+    static double publicLatitude=0.0;
+    static double publicAltitude=0.0;
+    static double publicAccuracy=0.0;
 
 
-    
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        System.out.println("当前经度："+location.getLongitude());
+        System.out.println("当前纬度："+location.getLatitude());
+        System.out.println("当前海拔："+location.getAltitude()+"米");
+        System.out.println("精度："+location.getAccuracy());
+        MainActivity.publicLongitude = location.getLongitude();
+        MainActivity.publicLatitude = location.getLatitude();
+        MainActivity.publicAltitude = location.getAltitude();
+        MainActivity.publicAccuracy = location.getAccuracy();
+    }
 
+    @Override
+    public void onLocationChanged(@NonNull List<Location> locations) {
+        LocationListener.super.onLocationChanged(locations);
+    }
+
+    @Override
+    public void onFlushComplete(int requestCode) {
+        LocationListener.super.onFlushComplete(requestCode);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        LocationListener.super.onStatusChanged(provider, status, extras);
+    }
+
+    @Override
+    public void onProviderEnabled(@NonNull String provider) {
+        LocationListener.super.onProviderEnabled(provider);
+    }
+
+    @Override
+    public void onProviderDisabled(@NonNull String provider) {
+        LocationListener.super.onProviderDisabled(provider);
+    }
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
+
+
+        locationManager =(LocationManager)getSystemService(LOCATION_SERVICE);
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},1);
+
+        }
+
+
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,0.5f,this);
+        MethodChannel methodChannel_Location = new MethodChannel(flutterEngine.getDartExecutor(),"LocationInfo");
+        methodChannel_Location.setMethodCallHandler(new MethodChannel.MethodCallHandler() {
+            @Override
+            public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+                result.success("{\"longitude\":"+MainActivity.publicLongitude+",\"latitude\":"+MainActivity.publicLatitude+",\"altitude\":"+MainActivity.publicAltitude+",\"accuracy\":"+MainActivity.publicAccuracy+"}");
+            }
+        });
+
 
         MethodChannel methodChannel = new MethodChannel(flutterEngine.getDartExecutor(),"Login");
         methodChannel.setMethodCallHandler(new MethodChannel.MethodCallHandler() {

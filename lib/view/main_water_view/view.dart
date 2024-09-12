@@ -40,7 +40,8 @@ class MainWaterViewPage extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 50, color: Colors.orange),
                               ),
-                              Text('当前所选设备编号：${state.divice.value ?? "未知"}')
+                              Text('当前所选设备编号：${state.divice.value ?? "未知"}'),
+                              Obx(() => Text('经度：${state.longitude.value} 纬度度：${state.latitude.value} 高度：${state.altitude.value}',style: TextStyle(fontSize: 10),))
                             ],
                           )),
                     ),

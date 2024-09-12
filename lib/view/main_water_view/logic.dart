@@ -7,10 +7,11 @@ import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
+import 'package:nnlg/utils/LocationInfoUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
 
 import 'state.dart';
-
+import 'package:amap_flutter_location/amap_flutter_location.dart';
 class MainWaterViewLogic extends GetxController {
   final MainWaterViewState state = MainWaterViewState();
   BuildContext? context=null;
@@ -236,6 +237,7 @@ class MainWaterViewLogic extends GetxController {
       /// 是否允许app访问地理位置
       permission = await Geolocator.checkPermission();
 
+
       if (permission == LocationPermission.denied) {
         /// 之前访问设备位置的权限被拒绝，重新申请权限
         permission = await Geolocator.requestPermission();
@@ -250,6 +252,7 @@ class MainWaterViewLogic extends GetxController {
       }
       /// 允许访问地理位置，获取地理位置
       Position position = await Geolocator.getCurrentPosition();
+
       longitude = position.longitude;
       latitude = position.latitude;
     } catch (e) {
@@ -259,18 +262,19 @@ class MainWaterViewLogic extends GetxController {
 
   void test()async{
 
+
     Timer.periodic(Duration(seconds: 2), (timer) async{
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      print(position);
-      print(position.altitude);
-      print(position.altitudeAccuracy);
-      // print(position.)
+
+      var locationInfo =await LocationInfoUtil.getLocationInfo();
+      state.longitude.value = locationInfo['longitude'];
+      state.latitude.value = locationInfo['latitude'];
+      state.altitude.value = locationInfo['altitude'];
     });
   }
   @override
   void onInit() {
-    // _determinePosition();
-    // test();
+    _determinePosition();
+    test();
     WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         state.money.value = value;
     });

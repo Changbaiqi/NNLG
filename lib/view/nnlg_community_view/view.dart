@@ -10,7 +10,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
 
   final logic = Get.put(NnlgCommunityViewLogic());
   final state = Get.find<NnlgCommunityViewLogic>().state;
-
+  final isClose = true.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,19 +21,19 @@ class NnlgCommunityViewPage extends StatelessWidget {
         },
       ),
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(FloatingActionButtonLocation.endFloat,1,-90),
-      body: Column(
+      body: isClose.value?Container(child: Center(child: Text('暂未开放，敬请期待'),),):Column(
         children: [
           Container(
-            height: 100,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: [
-                topCommunityMode('趣事板块',true),
-                topCommunityMode('计算机板块',false),
-                topCommunityMode('抽象人板块',false),
-                topCommunityMode('小作文板块',false)
-              ],
-            )
+              height: 100,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: [
+                  topCommunityMode('趣事板块',true),
+                  topCommunityMode('计算机板块',false),
+                  topCommunityMode('抽象人板块',false),
+                  topCommunityMode('小作文板块',false)
+                ],
+              )
           ),
           Expanded(child: ListView(
             children: [

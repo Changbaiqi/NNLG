@@ -96,7 +96,7 @@ class PowerDormUtil {
       if (loudong_id == "9" || loudong_id == "9栋") {
         roomUrl = "http://221.7.150.22:10005/v1/cgElec/room/query";
         powerUrl = "http://221.7.150.22:10005/v1/cgElec/elec/query";
-        loudong_id = "B4320";
+        loudong_id = "4320";
       }
       if (loudong_id == "7" || loudong_id == "7栋") {
         roomUrl = "http://221.7.150.22:10005/v1/cgElec/room/query";

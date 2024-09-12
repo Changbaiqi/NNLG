@@ -406,7 +406,7 @@ class MainCourseViewLogic extends GetxController
     return result;
   }
 
-  //新！ 用来陈列数据列表或者刷新课表视图用
+  //用来陈列数据列表或者刷新课表视图用
   List<Widget> pullAllCourseSchedule(Map<dynamic, dynamic> courseJson) {
     // log(jsonEncode(courseJson));
     remark.value = courseJson['remark']!;
@@ -425,7 +425,7 @@ class MainCourseViewLogic extends GetxController
         isNoon: CourseData.isNoonLineSwitch,
         isMin: CourseData.isMinForSchedule,
         isColor: CourseData.isColorClassSchedule,
-        rowTimeList: CourseData.courseTime
+        rowTimeList: CourseData.courseTime.value
             .map((element) => {
                   "start": TimeOfDay(
                       hour: int.parse(element.split('-')[0].split(':')[0]),
@@ -447,6 +447,7 @@ class MainCourseViewLogic extends GetxController
         ],
       ));
     }
+
     return scheduleList;
   }
 

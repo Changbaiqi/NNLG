@@ -327,7 +327,6 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
    * [return]
    */
   List<dynamic> dormPicker()  {
-
     var multiData = {
       '桂林': {
         '7栋': [],
@@ -360,22 +359,72 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
         multiData['桂林']?['10A栋']?.add('${x * 100 + y}');
         multiData['桂林']?['10B栋']?.add('${x * 100 + y}');
         multiData['桂林']?['12栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['13栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['14A栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['14B栋']?.add('${x * 100 + y}');
       }
     }
+    //桂林13栋
+    for (int j = 1; j <= 9; ++j)
+      for (int i = 1; i <= 8; ++i)
+        multiData['桂林']?['13栋']?.add('${j * 100 + i}');
+    for (int i = 1001; i <= 1008; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    for (int i = 1101; i <= 1108; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    for (int i = 1001; i <= 1008; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    //桂林14A栋
+    for (int j = 1; j <= 6; ++j)
+      for (int i = 1; i <= 64; ++i)
+        multiData['桂林']?['14A栋']?.add('${j * 1000 + i}');
+    //桂林14B栋
+    for (int i = 1066; i <= 1141; ++i) multiData['桂林']?['14B栋']?.add('${i}');
+    for (int j = 2; j <= 6; ++j)
+      for (int i = 64; i <= 139; ++i)
+        multiData['桂林']?['14B栋']?.add('${j * 1000 + i}');
+
+    //南宁校区----
+
+
+
+    //13-2栋
+    for (int j = 1; j <= 9; ++j){
+      for (int i = 40; i <= 88; ++i) {
+        multiData['南宁']?['13-2栋']?.add('${j * 100 + i}');
+      }
+    }
+    for (int i = 38; i <= 288; ++i) {
+      multiData['南宁']?['13-2栋']?.add('${1000 + i}');
+    }
+    //15-1
+    for (int j = 1; j <= 6; ++j) {
+      for (int i = 1; i <= 47; ++i) {
+        multiData['南宁']?['15-1栋']?.add('${j * 100 + i}');
+      }
+    }
+    //15-2栋
+    for (int i = 33; i <= 68; ++i){ multiData['南宁']?['15-2栋']?.add('${100 + i}');}
+    for (int j = 2; j <= 6; ++j){
+      for (int i = 49; i <= 84; ++i) {
+        multiData['南宁']?['15-2栋']?.add('${j * 100 + i}');
+      }
+    }
+
+    //13-1、17、20、21栋
+    for (int j = 1; j <= 9; ++j) {
+      for (int i = 1; i <= 36; ++i) {
+        multiData['南宁']?['13-1栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['17栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['20栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['21栋']?.add('${j * 100 + i}');
+      }
+    }
+    for (int i = 1; i <= 236; ++i) {
+      multiData['南宁']?['13-1栋']?.add('${1000 + i}');
+      multiData['南宁']?['17栋']?.add('${1000 + i}');
+      multiData['南宁']?['20栋']?.add('${1000 + i}');
+      multiData['南宁']?['21栋']?.add('${1000 + i}');
+    }
+    //18、19栋
     for (int x = 1; x <= 6; ++x) {
       for (int y = 1; y <= 47; ++y) {
-        multiData['南宁']?['13-1栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['13-2栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['15-1栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['15-2栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['17栋']?.add('${x * 100 + y}');
         multiData['南宁']?['18栋']?.add('${x * 100 + y}');
         multiData['南宁']?['19栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['20栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['21栋']?.add('${x * 100 + y}');
       }
     }
 

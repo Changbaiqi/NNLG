@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/CourseData.dart';
@@ -422,12 +423,19 @@ class MainCourseViewPage extends StatelessWidget {
                         controller: logic.pageController.value,
                         children:
                             CourseData.weekCourseJson.value["courses"] != null
-                                ? logic.pullAllCourseSchedule(
-                                    CourseData.weekCourseJson.value)
-                                : [
-                                    Center(
-                                      child: Text("课表加载中......"),
-                                    )
+                                ? logic.pullAllCourseSchedule(CourseData.weekCourseJson): [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Lottie.asset('assets/images/shareLoadingLottie.json',
+                                      height: 100, width: 200),
+                                  Text("课表加载中......"),
+                                  ConstrainedBox(constraints: BoxConstraints(
+                                    maxWidth: 250,
+                                  ),child: Text('tips:若长时间未加载，可尝试在左上角课表设置中重新选择一下“学期课表”',maxLines: 5,softWrap: true,style: TextStyle(color: Colors.black45),),)
+                                ],
+                              )
                                   ],
                       ),
                       flex: 1,

@@ -635,11 +635,7 @@ class CourseSetViewPage extends StatelessWidget {
                       );
                       CourseData.nowCourseList.value = value;
                       ShareDateUtil().setNowCourseList(value);
-                      if (CourseData.newOrOldCourseScheduleChoose.value) {
-                        await logic.onRefresh();
-                      } else {
-                        await logic.oldOnRefresh();
-                      }
+                      await logic.onRefresh();
                       Get.snackbar(
                         "课表通知",
                         "课表切换成功",

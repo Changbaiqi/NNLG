@@ -70,20 +70,8 @@ class CourseSetViewLogic extends GetxController {
   }
 
 
-  //旧 刷新课表
-  Future<void> oldOnRefresh() async {
 
-    //同步拉取教务系统课表
-    List<String> newestCourse = await CourseUtil().getAllCourseWeekList("${CourseData.nowCourseList.value}");
-    //课表缓存逻辑执行
-    await oldCacheClassSchedule(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    //首次获取课表逻辑
-    await oldFirstClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    //拉取显示最新课表逻辑
-    await oldNewestClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    // ShareDateUtil().setoldWeekCourseList(newestCourse); //设置课表
-  }
-  //新 刷新课表
+  //刷新课表
   Future<void> onRefresh() async {
 
     //同步拉取教务系统课表
@@ -242,16 +230,7 @@ class CourseSetViewLogic extends GetxController {
   }
 
 
-  //旧 最新课表显示逻辑
-  oldNewestClassScheduleLogic(String studentId, String semester, List<String> classSchedule) async {
-    //获取最新课表数据
-    ClassScheduleEntity? newestClassSchedule = await GetIt.I<ClassScheduleDao>()
-        .findNewestClassSchedule(
-        AccountData.studentID, CourseData.nowCourseList.value);
-    ShareDateUtil().setOldShowClassScheduleUUID((newestClassSchedule?.uid)!); //设置当前课表显示的UUID
-    ShareDateUtil().setoldWeekCourseList(classSchedule); //直接显示这个课表
-  }
-  //新 最新课表显示逻辑
+  //最新课表显示逻辑
   newestClassScheduleLogic(String studentId, String semester, String classSchedule) async {
     //获取最新课表数据
     ClassNewScheduleEntity? newestClassSchedule = await GetIt.I<ClassNewScheduleDao>()

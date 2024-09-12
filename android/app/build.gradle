@@ -12,14 +12,14 @@ if (flutterRoot == null) {
 }
 
 
-def flutterVersionCode= '25'
+def flutterVersionCode= '26'
 //def flutterVersionCode = '9999999'
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '1'
 //}
 
-def flutterVersionName = '3.5.4·亚托莉'
+def flutterVersionName = '3.5.5·亚托莉'
 //def flutterVersionName = localProperties.getProperty('flutter.versionName')
 //if (flutterVersionName == null) {
 //    //flutterVersionName = '1.0'
@@ -51,6 +51,9 @@ android {
         versionName flutterVersionName
         multiDexEnabled true
     }
+    buildFeatures {
+        compose true
+    }
 
     buildTypes {
         debug {
@@ -72,6 +75,7 @@ dependencies{
 //    implementation('com.android.support.multidex:1.0.3')
     implementation ('com.eclipsesource.j2v8:j2v8:6.2.0@aar')
     implementation('com.amap.api:3dmap:8.1.0')
+//    implementation('androidx.glance:glance-appwidget:1.1.0')
 }
 
 

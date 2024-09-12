@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
@@ -214,8 +215,62 @@ class MainWaterViewLogic extends GetxController {
       Get.snackbar("提示", "请先绑定账号",duration: Duration(milliseconds: 1500),);
   }
 
+
+  /// 位置服务
+  Future _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+    double longitude=0;
+    double latitude=0;
+    try {
+      /// 手机GPS服务是否已启用。
+      serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        //定位服务未启用，要求用户启用定位服务
+        var res = await Geolocator.openLocationSettings();
+        if (!res) {
+          /// 被拒绝
+          return;
+        }
+      }
+      /// 是否允许app访问地理位置
+      permission = await Geolocator.checkPermission();
+
+      if (permission == LocationPermission.denied) {
+        /// 之前访问设备位置的权限被拒绝，重新申请权限
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          /// 再次被拒绝。根据Android指南，你的应用现在应该显示一个解释性UI。
+          return;
+        }
+      } else if (permission == LocationPermission.deniedForever) {
+        /// 之前权限被永久拒绝，打开app权限设置页面
+        await Geolocator.openAppSettings();
+        return;
+      }
+      /// 允许访问地理位置，获取地理位置
+      Position position = await Geolocator.getCurrentPosition();
+      longitude = position.longitude;
+      latitude = position.latitude;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void test()async{
+
+    Timer.periodic(Duration(seconds: 2), (timer) async{
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      print(position);
+      print(position.altitude);
+      print(position.altitudeAccuracy);
+      // print(position.)
+    });
+  }
   @override
   void onInit() {
+    // _determinePosition();
+    // test();
     WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         state.money.value = value;
     });

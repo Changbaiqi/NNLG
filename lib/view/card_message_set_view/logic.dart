@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pickers/pickers.dart';
@@ -11,8 +10,9 @@ import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 
 import 'state.dart';
+
 /**
- * [title] 
+ * [title]
  * [author] 长白崎
  * [description] //TODO 宿舍选择
  * [date] 20:31 2024/9/3
@@ -33,8 +33,7 @@ class CardMessageSetViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  List<dynamic> dormPicker()  {
-
+  List<dynamic> dormPicker() {
     var multiData = {
       '桂林': {
         '7栋': [],
@@ -67,31 +66,85 @@ class CardMessageSetViewLogic extends GetxController {
         multiData['桂林']?['10A栋']?.add('${x * 100 + y}');
         multiData['桂林']?['10B栋']?.add('${x * 100 + y}');
         multiData['桂林']?['12栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['13栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['14A栋']?.add('${x * 100 + y}');
-        multiData['桂林']?['14B栋']?.add('${x * 100 + y}');
       }
     }
-    for (int x = 1; x <= 6; ++x) {
-      for (int y = 1; y <= 47; ++y) {
-        multiData['南宁']?['13-1栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['13-2栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['15-1栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['15-2栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['17栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['18栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['19栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['20栋']?.add('${x * 100 + y}');
-        multiData['南宁']?['21栋']?.add('${x * 100 + y}');
+    //桂林13栋
+    for (int j = 1; j <= 9; ++j)
+      for (int i = 1; i <= 8; ++i)
+        multiData['桂林']?['13栋']?.add('${j * 100 + i}');
+    for (int i = 1001; i <= 1008; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    for (int i = 1101; i <= 1108; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    for (int i = 1001; i <= 1008; ++i) multiData['桂林']?['13栋']?.add('${i}');
+    //桂林14A栋
+    for (int j = 1; j <= 6; ++j)
+      for (int i = 1; i <= 64; ++i)
+        multiData['桂林']?['14A栋']?.add('${j * 1000 + i}');
+    //桂林14B栋
+    for (int i = 1066; i <= 1141; ++i) multiData['桂林']?['14B栋']?.add('${i}');
+    for (int j = 2; j <= 6; ++j)
+      for (int i = 64; i <= 139; ++i)
+        multiData['桂林']?['14B栋']?.add('${j * 1000 + i}');
+
+    //南宁校区----
+
+
+
+    //13-2栋
+    for (int j = 1; j <= 9; ++j){
+      for (int i = 40; i <= 88; ++i) {
+        multiData['南宁']?['13-2栋']?.add('${j * 100 + i}');
+      }
+    }
+    for (int i = 38; i <= 288; ++i) {
+      multiData['南宁']?['13-2栋']?.add('${1000 + i}');
+    }
+    //15-1
+    for (int j = 1; j <= 6; ++j) {
+      for (int i = 1; i <= 47; ++i) {
+        multiData['南宁']?['15-1栋']?.add('${j * 100 + i}');
+      }
+    }
+    //15-2栋
+    for (int i = 33; i <= 68; ++i){ multiData['南宁']?['15-2栋']?.add('${100 + i}');}
+    for (int j = 2; j <= 6; ++j){
+      for (int i = 49; i <= 84; ++i) {
+        multiData['南宁']?['15-2栋']?.add('${j * 100 + i}');
       }
     }
 
-    Pickers.showMultiLinkPicker(Get.context!, data: multiData,selectData: selectData, columeNum: 3,onConfirm: (p,covariant) async{
+    //13-1、17、20、21栋
+    for (int j = 1; j <= 9; ++j) {
+      for (int i = 1; i <= 36; ++i) {
+        multiData['南宁']?['13-1栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['17栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['20栋']?.add('${j * 100 + i}');
+        multiData['南宁']?['21栋']?.add('${j * 100 + i}');
+      }
+    }
+    for (int i = 1; i <= 236; ++i) {
+      multiData['南宁']?['13-1栋']?.add('${1000 + i}');
+      multiData['南宁']?['17栋']?.add('${1000 + i}');
+      multiData['南宁']?['20栋']?.add('${1000 + i}');
+      multiData['南宁']?['21栋']?.add('${1000 + i}');
+    }
+    //18、19栋
+    for (int x = 1; x <= 6; ++x) {
+      for (int y = 1; y <= 47; ++y) {
+        multiData['南宁']?['18栋']?.add('${x * 100 + y}');
+        multiData['南宁']?['19栋']?.add('${x * 100 + y}');
+      }
+    }
+
+    Pickers.showMultiLinkPicker(Get.context!,
+        data: multiData,
+        selectData: selectData,
+        columeNum: 3, onConfirm: (p, covariant) async {
       selectData.value = p;
       ShareDateUtil().setDormCampus(selectData[0]);
       ShareDateUtil().setDormLoudongId(selectData[1]);
       ShareDateUtil().setDormRoom(selectData[2]);
-      AccountData.powerMoney.value = await PowerDormUtil().getDormPower(selectData[0], selectData[1], selectData[2]);
+      AccountData.powerMoney.value = await PowerDormUtil()
+          .getDormPower(selectData[0], selectData[1], selectData[2]);
     });
     return selectData;
   }
@@ -104,10 +157,7 @@ class CardMessageSetViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  bingJustMessage(){
-
-  }
-
+  bingJustMessage() {}
 
   /**
    * [title]
@@ -117,7 +167,8 @@ class CardMessageSetViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  loginJustMessage(String account, String password, bool isShowSnackbar,{showCxt}) {
+  loginJustMessage(String account, String password, bool isShowSnackbar,
+      {showCxt}) {
     JustMessengerUtil().loginPost(account, password).then((value) async {
       // print(value);
       if (value['resultCode'] != null) {
@@ -166,7 +217,7 @@ class CardMessageSetViewLogic extends GetxController {
         Get.snackbar('提示', '登录成功',
             duration: const Duration(milliseconds: 1500));
         AccountData.isLoginJustMessenger.value = true; //设置为成功登录状态
-        if(showCxt!=null){
+        if (showCxt != null) {
           Navigator.pop(showCxt);
         }
       }
@@ -188,17 +239,20 @@ class CardMessageSetViewLogic extends GetxController {
     ];
     BuildContext? showCtxt = null;
     return Scaffold(
-      backgroundColor: Color.fromRGBO(0,0,0,0),
+      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
       body: Stack(
         children: [
           InkWell(
-            child: Container(width: Get.context!.width,height: Get.context!.height,),
-            onTap: (){
+            child: Container(
+              width: Get.context!.width,
+              height: Get.context!.height,
+            ),
+            onTap: () {
               Navigator.pop(showCtxt!);
             },
           ),
           Builder(
-            builder: (ctxt){
+            builder: (ctxt) {
               showCtxt = ctxt;
               return Center(
                 child: Container(
@@ -206,8 +260,7 @@ class CardMessageSetViewLogic extends GetxController {
                   width: 300,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+                      borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     children: [
                       Center(
@@ -228,19 +281,16 @@ class CardMessageSetViewLogic extends GetxController {
                                       label: Text('账号'),
                                       hintText: '请输入校园一信通账号/手机号',
                                       enabledBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
+                                          // borderRadius: BorderRadius.all(
+                                          //     Radius.circular(100)
+                                          // )
+                                          ),
                                       focusedBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
+                                          // borderRadius: BorderRadius.all(
+                                          //     Radius.circular(100)
+                                          // )
+                                          ),
                                     ),
-                                    /*onChanged: (account){
-                  _account = account;
-                },*/
                                   ),
                                 ),
                               ],
@@ -257,36 +307,38 @@ class CardMessageSetViewLogic extends GetxController {
                               children: [
                                 Expanded(
                                   child: Obx(() => TextField(
-                                    controller: inputPasswordController,
-                                    obscureText: seeNo_Off.value,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.lock),
-                                      label: Text('密码'),
-                                      hintText: '请输入校园一信通密码',
-                                      enabledBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            seeNo_Off.value = !seeNo_Off.value;
-                                          },
-                                          icon: _seelist[seeNo_Off.value ? 0 : 1]),
-                                      focusedBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                    ),
-                                    /*onChanged: (password){
+                                        controller: inputPasswordController,
+                                        obscureText: seeNo_Off.value,
+                                        maxLines: 1,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                        decoration: InputDecoration(
+                                          prefixIcon: Icon(Icons.lock),
+                                          label: Text('密码'),
+                                          hintText: '请输入校园一信通密码',
+                                          enabledBorder: OutlineInputBorder(
+                                              // borderRadius: BorderRadius.all(
+                                              //     Radius.circular(100)
+                                              // )
+                                              ),
+                                          suffixIcon: IconButton(
+                                              onPressed: () {
+                                                seeNo_Off.value =
+                                                    !seeNo_Off.value;
+                                              },
+                                              icon: _seelist[
+                                                  seeNo_Off.value ? 0 : 1]),
+                                          focusedBorder: OutlineInputBorder(
+                                              // borderRadius: BorderRadius.all(
+                                              //     Radius.circular(100)
+                                              // )
+                                              ),
+                                        ),
+                                        /*onChanged: (password){
                     _password = password;
                   },*/
-                                  )),
+                                      )),
                                 ),
                               ],
                             ),
@@ -306,13 +358,17 @@ class CardMessageSetViewLogic extends GetxController {
                                 if (inputAccountController.text.isEmpty ||
                                     inputPasswordController.text.isEmpty) {
                                   Get.snackbar("提示", "输入的内容不能为空",
-                                      duration: const Duration(milliseconds: 1500));
+                                      duration:
+                                          const Duration(milliseconds: 1500));
                                   return;
                                 }
 
                                 //登录
-                                bool state = await loginJustMessage(inputAccountController.text,
-                                    inputPasswordController.text, true,showCxt: showCtxt);
+                                bool state = await loginJustMessage(
+                                    inputAccountController.text,
+                                    inputPasswordController.text,
+                                    true,
+                                    showCxt: showCtxt);
                                 // _testPicker();
                               },
                             ),
@@ -332,11 +388,15 @@ class CardMessageSetViewLogic extends GetxController {
 
   @override
   Future<void> onInit() async {
-    if(AccountData.dormCampus.value!="" && AccountData.dormLoudongId.value!="" && AccountData.dormRoom .value!="") {
+    if (AccountData.dormCampus.value != "" &&
+        AccountData.dormLoudongId.value != "" &&
+        AccountData.dormRoom.value != "") {
       selectData.add(AccountData.dormCampus.value);
       selectData.add(AccountData.dormLoudongId.value);
       selectData.add(AccountData.dormRoom.value);
-      PowerDormUtil().getDormPower(selectData[0], selectData[1], selectData[2]).then((v){
+      PowerDormUtil()
+          .getDormPower(selectData[0], selectData[1], selectData[2])
+          .then((v) {
         AccountData.powerMoney.value = v;
       });
     }

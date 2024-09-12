@@ -183,7 +183,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
   final List<String> weekToChar = ["一", "二", "三", "四", "五", "六", "日"];
 
   //默认列时间
-  List<dynamic> columTimeList = [
+  List<DateTime> columTimeList = [
     DateTime.now(),
     DateTime.now(),
     DateTime.now(),
@@ -316,6 +316,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                                   onTap: () {
                                     ShareDateUtil()
                                         .setIsMinForSchedule(!isMin.value);
+                                    // columTimeList.reactive;
+
                                   },
                                   onLongPress: () async {
                                     // await capturePngFilePath(_tableViewKey,_weekViewKey);

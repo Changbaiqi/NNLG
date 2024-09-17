@@ -89,6 +89,8 @@ dependencies:
   gbk_codec: ^0.4.0 #GBK编码
   marquee: ^2.2.3 # 跑马灯效果
   geolocator: ^12.0.0 #获取地理位置，用于打水饮水机位置定位
+  showcaseview: ^3.0.0 #蒙版提示，用于软件初始用户的使用引导
+  wifi_hunter: ^1.1.1 #用于检测周围AP，用于判断当前饮水机位置
 
 tencent_kit:
   app_id: 123

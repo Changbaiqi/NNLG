@@ -32,6 +32,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:shake_animation_widget/shake_animation_widget.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 import 'package:uuid/uuid.dart';
 
@@ -41,6 +42,7 @@ class MainCourseViewLogic extends GetxController
     with SingleGetTickerProviderMixin {
   final MainCourseViewState state = MainCourseViewState();
   BuildContext? context;
+  BuildContext? showCaseContext;
   final _isMin = true.obs; //是否为小节显示
   final remark = "".obs; // 课表备注显示内容
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
@@ -58,6 +60,11 @@ class MainCourseViewLogic extends GetxController
   final pageController = PageController(
     initialPage: CourseData.nowWeek.value - 1,
   ).obs;
+
+
+  GlobalKey showCase_1 = GlobalKey();
+  GlobalKey showCase_2= GlobalKey();
+
 
   //向下翻一页
   updateNextPage() {
@@ -665,9 +672,14 @@ class MainCourseViewLogic extends GetxController
     }
     return list;
   }
+  someEvent()async{
+    await Future.delayed(Duration(seconds: 3),);
+    ShowCaseWidget.of(showCaseContext!).startShowCase([showCase_1,showCase_2]);
+  }
 
   @override
   void onInit() {
+    someEvent();
     // refreshAllCourseTable(CourseData.oldWeekCourseList.value);
     // debugCoursePullTest(); //debug加载测试数据
     courseRefreshListen();

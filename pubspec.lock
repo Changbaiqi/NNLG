@@ -1256,6 +1256,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "1.0.4"
+  showcaseview:
+    dependency: "direct main"
+    description:
+      name: showcaseview
+      sha256: f236c1f44b286e1ba888f8701adca067af92c33e29ea937d0fe9b4a29d4cd41e
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1557,6 +1565,14 @@ packages:
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
     version: "2.4.5"
+  wifi_hunter:
+    dependency: "direct main"
+    description:
+      name: wifi_hunter
+      sha256: "736deeeb9191975f5284b05a0004226d512c42af3a1fb7cb47cf5804b6e9d0fc"
+      url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
+    source: hosted
+    version: "1.1.1+2"
   win32:
     dependency: transitive
     description:

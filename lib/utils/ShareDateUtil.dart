@@ -1035,5 +1035,27 @@ class ShareDateUtil{
     });
   }
 
+  //设置本学期课表数据
+  setTestList(List<String> testList) async{
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setStringList('testCourseList', testList).then((c){
+      WaterData.testData.value = testList;
+      WaterData.testData.refresh();
+      //print('当前设定的Cookie：${ContextDate.cookie}');
+    });
+    //print('设置的Cookie：${ContextDate.token}');
+  }
+
+  //获取本学期课表数据
+  Future<List<String>> getTestList() async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String>? testList = await prefs.getStringList('testList');
+    // CourseData.oldWeekCourseList.value = oldWeekCourseList??<String>[];
+    WaterData.testData.value.clear();
+    WaterData.testData.value.addAll(testList??<String>[]);
+    return testList??<String>[];
+  }
+
 
 }

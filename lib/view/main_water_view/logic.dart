@@ -1,6 +1,7 @@
 
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,6 +9,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
 import 'package:nnlg/utils/LocationInfoUtil.dart';
+import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
 
 import 'state.dart';
@@ -260,6 +262,15 @@ class MainWaterViewLogic extends GetxController {
     }
   }
 
+  //根据气压计算海拔高度
+  calculateAltitude(double pressure){
+    final double P0 = 1013.25; //海平面标准气压
+    final double R = 287.05; //气体常数
+    final double T0= 288.15; //海平面温度
+    final double g = 9.80665; //重力加速度
+    return (P0-pressure)*R*T0/(g*P0);
+  }
+
   void test()async{
 
 
@@ -269,11 +280,15 @@ class MainWaterViewLogic extends GetxController {
       state.longitude.value = locationInfo['longitude'];
       state.latitude.value = locationInfo['latitude'];
       state.altitude.value = locationInfo['altitude'];
+      state.sensor.value = locationInfo['sensor'];
+      state.sensorAltitude1.value = calculateAltitude(state.sensor.value);
+      state.sensorAltitude2.value = 44330000*(1.0-(pow(state.sensor.value/1013.25, 1.0/5255.0)));
     });
   }
   @override
   void onInit() {
-    _determinePosition();
+    // ShareDateUtil().getTestList();
+    // _determinePosition();
     test();
     WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         state.money.value = value;

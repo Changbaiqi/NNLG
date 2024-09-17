@@ -15,5 +15,6 @@ class ContextDate{
 
   static final onLineTotalCount = 0.obs; //数据监听器
   static final isTopSpeedStart = false.obs; //是否为极速启动
+  static final beginnerGuidance = {}.obs; //用于新手引导的数据
 
 }

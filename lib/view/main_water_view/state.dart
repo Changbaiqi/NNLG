@@ -8,6 +8,10 @@ class MainWaterViewState {
   final latitude = 0.0.obs;
   final altitude = 0.0.obs;
   final altitudeAccuracy = 0.0.obs;
+
+  final sensor = 0.0.obs;
+  final sensorAltitude1 = 0.0.obs;
+  final sensorAltitude2 = 0.0.obs;
   MainWaterViewState() {
     ///Initialize variables
   }

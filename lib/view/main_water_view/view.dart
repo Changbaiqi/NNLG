@@ -30,7 +30,7 @@ class MainWaterViewPage extends StatelessWidget {
               return Column(
                 children: [
                   Container(
-                    height: 130,
+                    height: 155,
                     width: MediaQuery.of(context).size.width,
                     child: Card(
                       child: Obx(() => Column(
@@ -41,7 +41,9 @@ class MainWaterViewPage extends StatelessWidget {
                                     fontSize: 50, color: Colors.orange),
                               ),
                               Text('当前所选设备编号：${state.divice.value ?? "未知"}'),
-                              Obx(() => Text('经度：${state.longitude.value} 纬度度：${state.latitude.value} 高度：${state.altitude.value}',style: TextStyle(fontSize: 10),))
+                              Obx(() => Text('经度：${state.longitude.value.toStringAsFixed(2)} 纬度度：${state.latitude.value.toStringAsFixed(2)} GPS高度：${state.altitude.value.toStringAsFixed(2)}',style: TextStyle(fontSize: 10),)),
+                              Obx(() => Text('算法1气压计算高度：${state.sensorAltitude1.value.toStringAsFixed(2)} 算法2气压计算高度：${state.sensorAltitude2.value.toStringAsFixed(2)}',style: TextStyle(fontSize: 10),)),
+                              Obx(() => Text('算法1GPS平均高度：${((state.sensorAltitude1.value+state.altitude.value)/2.0).toStringAsFixed(2)} 算法2GPS平均高度：${((state.sensorAltitude2.value+state.altitude.value)/2.0).toStringAsFixed(2)}',style: TextStyle(fontSize: 10),))
                             ],
                           )),
                     ),

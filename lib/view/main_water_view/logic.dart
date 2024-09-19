@@ -289,7 +289,7 @@ class MainWaterViewLogic extends GetxController {
   void onInit() {
     // ShareDateUtil().getTestList();
     // _determinePosition();
-    test();
+    // test();
     WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         state.money.value = value;
     });

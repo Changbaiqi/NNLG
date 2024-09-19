@@ -81,32 +81,32 @@ public class MainActivity extends FlutterActivity implements LocationListener, S
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
 
-        //获取定位服务
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //获取压力传感器服务
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor mPresssure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);//获取气压硬件对象
+//        //获取定位服务
+//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        //获取压力传感器服务
+//        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+//        Sensor mPresssure = sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);//获取气压硬件对象
 
-        //申请定位权限
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+//        //申请定位权限
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+//
+//        }
+//        //进行定位数据监听操作
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0.5f, this);
+//        //用于dart和Java间的调用
+//        MethodChannel methodChannel_Location = new MethodChannel(flutterEngine.getDartExecutor(), "LocationInfo");
+//        methodChannel_Location.setMethodCallHandler((@NonNull MethodCall call, @NonNull MethodChannel.Result result) -> {
+//            result.success("{\"longitude\":" + MainActivity.publicLongitude + ",\"latitude\":" + MainActivity.publicLatitude + ",\"altitude\":" + MainActivity.publicAltitude + ",\"accuracy\":" + MainActivity.publicAccuracy + ",\"sensor\":" + MainActivity.publicSensor + "}");
+//        });
 
-        }
-        //进行定位数据监听操作
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0.5f, this);
-        //用于dart和Java间的调用
-        MethodChannel methodChannel_Location = new MethodChannel(flutterEngine.getDartExecutor(), "LocationInfo");
-        methodChannel_Location.setMethodCallHandler((@NonNull MethodCall call, @NonNull MethodChannel.Result result) -> {
-            result.success("{\"longitude\":" + MainActivity.publicLongitude + ",\"latitude\":" + MainActivity.publicLatitude + ",\"altitude\":" + MainActivity.publicAltitude + ",\"accuracy\":" + MainActivity.publicAccuracy + ",\"sensor\":" + MainActivity.publicSensor + "}");
-        });
 
-
-        //气压传感器
-        if (mPresssure != null) {
-            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            sensorManager.registerListener(this,mPresssure,SensorManager.SENSOR_DELAY_NORMAL);
-        }
+//        //气压传感器
+//        if (mPresssure != null) {
+//            sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+//            sensorManager.registerListener(this,mPresssure,SensorManager.SENSOR_DELAY_NORMAL);
+//        }
 
 
 //        MethodChannel methodChannel = new MethodChannel(flutterEngine.getDartExecutor(),"Login");

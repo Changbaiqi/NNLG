@@ -226,6 +226,7 @@ flutter:
     - assets/images/fun.svg
     - assets/images/position.json
     - assets/audio/sendMessage.mp3
+    - assets/files/localWaterList.json
     - assets/files/scheduleJson.json
     - assets/files/testCourse.json
   # To add assets to your application, add an assets section, like this:

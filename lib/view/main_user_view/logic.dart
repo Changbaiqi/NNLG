@@ -16,6 +16,6 @@ class MainUserViewLogic extends GetxController {
   }
   @override
   void onInit() {
-    showEvent();
+    // showEvent();
   }
 }

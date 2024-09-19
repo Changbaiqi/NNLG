@@ -1,16 +1,23 @@
 
 
 import 'dart:async';
+import 'dart:collection';
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
+import 'package:nnlg/utils/FileUtils.dart';
 import 'package:nnlg/utils/LocationInfoUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
+import 'package:wifi_hunter/wifi_hunter.dart';
+import 'package:wifi_hunter/wifi_hunter_result.dart';
 
 import 'state.dart';
 import 'package:amap_flutter_location/amap_flutter_location.dart';
@@ -285,11 +292,85 @@ class MainWaterViewLogic extends GetxController {
       state.sensorAltitude2.value = 44330000*(1.0-(pow(state.sensor.value/1013.25, 1.0/5255.0)));
     });
   }
+
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 获取最强信号的前4个AP的MAC地址
+   * [date] 20:33 2024/9/19
+   * [param] null
+   * [return]
+   */
+  getAPTopList() async{
+      // setState(() => huntButtonColor = Colors.red);
+    var wiFiHunterResult = WiFiHunterResult();
+      try {
+        wiFiHunterResult = (await WiFiHunter.huntWiFiNetworks)!;
+      } on PlatformException catch (exception) {
+        print(exception.toString());
+      }
+      List result = [];
+      for (int i = 0; i < wiFiHunterResult.results.length; i++) {
+        if(wiFiHunterResult.results[i].frequency<5000) continue; //过滤频率低于5KHZ的
+        if(wiFiHunterResult.results[i].ssid!="NNLGXY") continue; //过滤非NNLGXY名称的AP
+          result.add({
+            "SSID": wiFiHunterResult.results[i].ssid, //AP名称
+            "Level": wiFiHunterResult.results[i].level, //信号强度
+            "BSSID": wiFiHunterResult.results[i].bssid, //MAC地址
+            "Capabilities": wiFiHunterResult.results[i].capabilities, //不懂啥玩意
+            "Frequency": wiFiHunterResult.results[i].frequency.toString(), //频率
+            "Channel Width": wiFiHunterResult.results[i].channelWidth.toString(), //信道
+            "Timestamp": wiFiHunterResult.results[i].timestamp.toString() //时间
+          });
+      }
+      if(result.length==0){
+        ToastUtil.show("未定位到相关设备，可能是您未靠近饮水机或您点击定位过于频繁（限制两分钟4次定位频率）");
+      }
+      result.sort((a,b)=>b["Level"].compareTo(a["Level"])); //根据信号强度排序
+    return result;
+  }
+
+  /**
+   * [title]
+   * [author] 长白崎
+   * [description] //TODO 通过AP探测对应饮水机位置
+   * [date] 20:46 2024/9/19
+   * [param] null
+   * [return]
+   */
+  Future<LinkedHashMap<dynamic,dynamic>?> detectWater()async{
+    List resultAp = await getAPTopList(); //获取AP列表，以信号强度排序
+    var localInformList = jsonDecode((await FileUtils.loadJsonFromAssets('assets/files/localWaterList.json')));
+    // print(localInformList.toString());
+
+    int maxComp =0; int index=-1; //最大匹配AP数量，匹配编号
+    for(int i= 0 ;i<localInformList.length;++i){
+      int localLen =localInformList[i]['ap'].length; //本地对照组数量
+      int nowLen = resultAp.length; //当前实际对照组数量
+      int resCompNum = 0; //临时计数
+
+      for(int j =0; j<nowLen;++j){
+       for(int z =0 ; z <localLen;++z){
+         if(resultAp[j]['BSSID']==localInformList[i]['ap'][z]) ++resCompNum;
+       }
+      }
+      if(maxComp<resCompNum){
+        maxComp = resCompNum;
+        index = i;
+      }
+    }
+    if(index==-1) return null;
+
+    return localInformList[index];
+  }
+
   @override
   void onInit() {
     // ShareDateUtil().getTestList();
     // _determinePosition();
     // test();
+
+
     WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
         state.money.value = value;
     });

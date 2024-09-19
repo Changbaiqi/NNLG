@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hms_scan_kit/toast_utils.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/WaterData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
 import 'package:nnlg/view/ScanKit_Water.dart';
 import 'package:nnlg/view/router/Routes.dart';
@@ -236,6 +238,34 @@ class MainWaterViewPage extends StatelessWidget {
               }));
               //ToastUtil().show(result);
               WaterUtil().bindCoolWater(result);
+            },
+          ),
+        ),
+        Container(
+          height: 60,
+          width: 110,
+          child: ElevatedButton(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.search), Text('自动探测饮水机',style: TextStyle(fontSize: 8),)],
+              ),
+            ),
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.green),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)))),
+            onPressed: () async {
+              logic.detectWater().then((value){
+                if(value==null){
+                  ToastUtil.show('探测失败，未找到附近收录的机子');
+                  return;
+                }
+                ToastUtil.show('已绑定${value['inform']['label']}');
+                WaterData.coolWater.value = value['coldDeviceId'];
+                WaterData.hotWater.value = value['hotDeviceId'];
+                print("输出饮水机信息"+value.toString());
+              });
             },
           ),
         ),

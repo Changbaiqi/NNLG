@@ -28,16 +28,18 @@ class SoftwareDevelopmentTestViewLogic extends GetxController {
     list.clear();
     for (int i = 0; i < wiFiHunterResult.value.results.length; i++) {
       if(wiFiHunterResult.value.results[i].frequency<5000) continue;
+      if(wiFiHunterResult.value.results[i].ssid!="NNLGXY") continue; //过滤非NNLGXY名称的AP
       list.add({
+        "SSID": wiFiHunterResult.value.results[i].ssid, //AP名称
         "Level": wiFiHunterResult.value.results[i].level,
         "BSSID": wiFiHunterResult.value.results[i].bssid,
         "Capabilities": wiFiHunterResult.value.results[i].capabilities,
         "Frequency": wiFiHunterResult.value.results[i].frequency.toString(),
         "Channel Width": wiFiHunterResult.value.results[i].channelWidth.toString(),
-        "Timestamp": wiFiHunterResult.value.results[i].timestamp.toString()
+        "Timestamp": DateTime.fromMicrosecondsSinceEpoch(wiFiHunterResult.value.results[i].timestamp).toString()
       });
     }
-    list.value.sort((a,b)=>a["Level"].compareTo(b["Level"]));
+    list.value.sort((a,b)=>b["Level"].compareTo(a["Level"]));
     // if (!mounted) return;
     wiFiHunterResult.refresh();
     list.refresh();

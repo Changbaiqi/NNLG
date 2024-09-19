@@ -679,7 +679,7 @@ class MainCourseViewLogic extends GetxController
 
   @override
   void onInit() {
-    someEvent();
+    // someEvent();
     // refreshAllCourseTable(CourseData.oldWeekCourseList.value);
     // debugCoursePullTest(); //debug加载测试数据
     courseRefreshListen();

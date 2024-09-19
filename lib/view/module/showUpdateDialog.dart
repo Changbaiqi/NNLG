@@ -102,7 +102,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
@@ -161,7 +161,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                         ],
                       )),
                       Padding(padding: EdgeInsets.fromLTRB(0, 0, 0, 10),child: Column(
-                        children: _initButton()
+                          children: _initButton()
                       ),)
                     ],
                   ),
@@ -171,7 +171,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
           )
         ],
       ),
-    );
+    ));
 
 
 

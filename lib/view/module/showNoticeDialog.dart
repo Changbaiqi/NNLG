@@ -69,7 +69,7 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
       backgroundColor: Colors.transparent,
       body: WillPopScope(
         child: Stack(
@@ -125,13 +125,13 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                         ),
                         Expanded(
                             child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                          // child: Markdown(data: widget._json['content'],),
-                          child: MarkdownWidget(
-                            data: widget._json['content'],
-                            shrinkWrap: true,
-                          ),
-                        )),
+                              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              // child: Markdown(data: widget._json['content'],),
+                              child: MarkdownWidget(
+                                data: widget._json['content'],
+                                shrinkWrap: true,
+                              ),
+                            )),
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
                           child: Row(
@@ -142,8 +142,8 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                                 child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.blueGrey)),
+                                        MaterialStateProperty.all(
+                                            Colors.blueGrey)),
                                     child: Text('不再提醒'),
                                     onPressed: () {
                                       ShareDateUtil()
@@ -159,8 +159,8 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
                                 child: ElevatedButton(
                                     style: ButtonStyle(
                                         backgroundColor:
-                                            MaterialStateProperty.all(
-                                                Colors.blueGrey)),
+                                        MaterialStateProperty.all(
+                                            Colors.blueGrey)),
                                     child: Text('取  消'),
                                     onPressed: () {
                                       _animationController!
@@ -186,7 +186,7 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
           return false;
         },
       ),
-    );
+    ));
   }
 
   /**

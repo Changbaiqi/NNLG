@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "tables": [
+    {
+      "rowStart": 1,
+      "rowEnd": 2,
+      "columStart": 1,
+      "columEnd": 1,
+      "title": "课程1",
+      "data": []
+    },
+    {
+      "rowStart": 1,
+      "rowEnd": 4,
+      "columStart": 3,
+      "columEnd": 3,
+      "title": "课程2",
+      "data": []
+    },
+    {
+      "rowStart": 5,
+      "rowEnd": 6,
+      "columStart": 2,
+      "columEnd": 2,
+      "title": "课程3",
+      "data": []
+    },
+    {
+      "rowStart": 7,
+      "rowEnd": 10,
+      "columStart": 2,
+      "columEnd": 2,
+      "title": "课程3",
+      "data": []
+    },
+    {
+      "rowStart": 6,
+      "rowEnd": 10,
+      "columStart": 3,
+      "columEnd": 3,
+      "title": "课程3"
+    },
+    {
+      "rowStart": 7,
+      "rowEnd": 10,
+      "columStart": 5,
+      "columEnd": 7,
+      "title": "课程4"
+    }
+  ]
+}

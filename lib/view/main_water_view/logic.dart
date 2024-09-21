@@ -187,7 +187,8 @@ class MainWaterViewLogic extends GetxController {
     if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
       if(WaterData.hotWater.isNotEmpty) {
         WaterUtil().closeWater(WaterData.hotWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
-          Get.snackbar("提示", "${value['message']}",duration: Duration(milliseconds: 1500),);
+          // Get.snackbar("提示", "${value['message']}",duration: Duration(milliseconds: 1500),);
+          ToastUtil.show('${value['message']}');
           //用于刷新金额
           Timer(Duration(seconds: 1),(){
             WaterUtil().getMenoy(WaterData.waterAccount.value, WaterData.waterSaler.value).then((value){
@@ -214,7 +215,8 @@ class MainWaterViewLogic extends GetxController {
     if(WaterData.waterAccount.isNotEmpty&& WaterData.cardNum.isNotEmpty) {
       if(WaterData.coolWater.isNotEmpty) {
         WaterUtil().openWater(WaterData.coolWater.value, WaterData.cardNum.value, WaterData.waterAccount.value).then((value){
-          Get.snackbar("提示", "${value['message']}",duration: Duration(milliseconds: 1500),);
+          // Get.snackbar("提示", "${value['message']}",duration: Duration(milliseconds: 1500),);
+          ToastUtil.show('${value['message']}');
         });
 
       }
@@ -307,6 +309,7 @@ class MainWaterViewLogic extends GetxController {
       try {
         wiFiHunterResult = (await WiFiHunter.huntWiFiNetworks)!;
       } on PlatformException catch (exception) {
+        ToastUtil.show('您点击定位过于频繁（限制两分钟4次定位频率）');
         print(exception.toString());
       }
       List result = [];
@@ -322,9 +325,6 @@ class MainWaterViewLogic extends GetxController {
             "Channel Width": wiFiHunterResult.results[i].channelWidth.toString(), //信道
             "Timestamp": wiFiHunterResult.results[i].timestamp.toString() //时间
           });
-      }
-      if(result.length==0){
-        ToastUtil.show("未定位到相关设备，可能是您未靠近饮水机或您点击定位过于频繁（限制两分钟4次定位频率）");
       }
       result.sort((a,b)=>b["Level"].compareTo(a["Level"])); //根据信号强度排序
     return result;

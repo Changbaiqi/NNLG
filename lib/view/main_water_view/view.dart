@@ -7,6 +7,7 @@ import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
 import 'package:nnlg/view/ScanKit_Water.dart';
 import 'package:nnlg/view/router/Routes.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'logic.dart';
 
@@ -48,6 +49,22 @@ class MainWaterViewPage extends StatelessWidget {
                               // Obx(() => Text('算法1GPS平均高度：${((state.sensorAltitude1.value+state.altitude.value)/2.0).toStringAsFixed(2)} 算法2GPS平均高度：${((state.sensorAltitude2.value+state.altitude.value)/2.0).toStringAsFixed(2)}',style: TextStyle(fontSize: 10),))
                             ],
                           )),
+                    ),
+                  ),
+                  Container(
+                    height: 00,
+                    width: MediaQuery.of(context).size.width,
+                    child: Card(
+                      child: Obx(() => Column(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: Row(
+                              children: [Icon(Icons.cloud_download),Text('数据同步中')],
+                            ),
+                          )
+                        ],
+                      )),
                     ),
                   ),
                   Container(
@@ -97,8 +114,8 @@ class MainWaterViewPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          height: 150,
-          width: 150,
+          height: 100,
+          width: 100,
           child: ElevatedButton(
             child: Text('开',style: TextStyle(fontSize: 20,color: Colors.black54)),
             style: ButtonStyle(
@@ -111,8 +128,8 @@ class MainWaterViewPage extends StatelessWidget {
           ),
         ),
         Container(
-          height: 150,
-          width: 150,
+          height: 100,
+          width: 100,
           child: ElevatedButton(
             child: Text('关',style: TextStyle(fontSize: 20,color: Colors.black54),),
             style: ButtonStyle(
@@ -133,8 +150,8 @@ class MainWaterViewPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Container(
-          height: 150,
-          width: 150,
+          height: 100,
+          width: 100,
           child: ElevatedButton(
             child: Text('开',style: TextStyle(fontSize: 20,color: Colors.black54)),
             style: ButtonStyle(
@@ -148,8 +165,8 @@ class MainWaterViewPage extends StatelessWidget {
           ),
         ),
         Container(
-          height: 150,
-          width: 150,
+          height: 100,
+          width: 100,
           child: ElevatedButton(
             child: Text('关',style: TextStyle(fontSize: 20,color: Colors.black54)),
             style: ButtonStyle(
@@ -262,9 +279,9 @@ class MainWaterViewPage extends StatelessWidget {
                   return;
                 }
                 ToastUtil.show('已绑定${value['inform']['label']}');
-                WaterData.coolWater.value = value['coldDeviceId'];
-                WaterData.hotWater.value = value['hotDeviceId'];
-                print("输出饮水机信息"+value.toString());
+                ShareDateUtil().setCoolWater(value['coldDeviceId']);
+                ShareDateUtil().setHotWater(value['hotDeviceId']);
+                // print("输出饮水机信息"+value.toString());
               });
             },
           ),

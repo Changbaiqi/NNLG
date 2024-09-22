@@ -232,8 +232,6 @@ class MainWaterViewLogic extends GetxController {
   Future _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
-    double longitude=0;
-    double latitude=0;
     try {
       /// 手机GPS服务是否已启用。
       serviceEnabled = await Geolocator.isLocationServiceEnabled();
@@ -248,24 +246,23 @@ class MainWaterViewLogic extends GetxController {
       /// 是否允许app访问地理位置
       permission = await Geolocator.checkPermission();
 
-
       if (permission == LocationPermission.denied) {
         /// 之前访问设备位置的权限被拒绝，重新申请权限
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+          // ToastUtil.show('饮水机探测需要您的定位权限才能定位周围饮水机否则无法正常使用');
+          Get.snackbar("提示", "自动探测功能需要获取你当前位置和周围设备的信息才能知道，若拒绝权限申请将无法正常使用此功能。",
+              duration: Duration(milliseconds: 5000));
           /// 再次被拒绝。根据Android指南，你的应用现在应该显示一个解释性UI。
           return;
         }
       } else if (permission == LocationPermission.deniedForever) {
+        Get.snackbar("提示", "请到“设置->权限”授予本软件位置定位权限",
+            duration: Duration(milliseconds: 2000));
         /// 之前权限被永久拒绝，打开app权限设置页面
-        await Geolocator.openAppSettings();
+        // await Geolocator.openAppSettings();
         return;
       }
-      /// 允许访问地理位置，获取地理位置
-      Position position = await Geolocator.getCurrentPosition();
-
-      longitude = position.longitude;
-      latitude = position.latitude;
     } catch (e) {
       print(e);
     }
@@ -304,6 +301,8 @@ class MainWaterViewLogic extends GetxController {
    * [return]
    */
   getAPTopList() async{
+
+    await _determinePosition();
       // setState(() => huntButtonColor = Colors.red);
     var wiFiHunterResult = WiFiHunterResult();
       try {

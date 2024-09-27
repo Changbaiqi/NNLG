@@ -365,7 +365,7 @@ class MainCourseViewLogic extends GetxController
               "columStart": columStart,
               "columEnd": columEnd,
               "title":
-                  "${jsonDecode(repeat).length > 1 ? "有多门课程同时进行，点击查看详细" : jsonDecode(repeat)[0]['courseName']}",
+                  "${jsonDecode(repeat).length > 1 ? "有多门课程同时进行，点击查看详细" : (jsonDecode(repeat)[0]['courseName']+"${jsonDecode(repeat)[0]['courseClassRoom']}")}",
               "style": {
                 "textColor": jsonDecode(repeat).length > 1
                     ? [255, 255, 0, 0]

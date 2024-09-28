@@ -13,6 +13,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:date_format/date_format.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
@@ -523,15 +524,26 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       border: new Border.all(
                           width: 1, color: Color.fromARGB(80, 59, 52, 86)),
                     ),
-                    child: Text(
-                      element["title"],
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Color.fromARGB(
-                              element['style']['textColor'][0],
-                              element['style']['textColor'][1],
-                              element['style']['textColor'][2],
-                              element['style']['textColor'][3])),
+                    child: RichText(
+                      text: TextSpan(
+                        text: (element["title"].length>11?'${element["title"].substring(0,11)}...':'${element["title"]}'),
+                        children:
+                          element['data'].length ==1?
+                          [TextSpan(
+                            text: '${element['data'][0]['courseClassRoom']}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.deepOrange
+                            )
+                          )]:[],
+                        style: TextStyle(
+                            fontSize: 11,
+                            color: Color.fromARGB(
+                                element['style']['textColor'][0],
+                                element['style']['textColor'][1],
+                                element['style']['textColor'][2],
+                                element['style']['textColor'][3])),
+                      ),
                     ),
                   ),
                 ),

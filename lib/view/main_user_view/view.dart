@@ -21,6 +21,8 @@ import 'package:nnlg/view/module/showUpdateDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../../dao/CustomThemeData.dart';
+import '../../utils/CustomerThemeUtil.dart';
 import 'logic.dart';
 
 class MainUserViewPage extends StatelessWidget {
@@ -31,6 +33,7 @@ class MainUserViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['color'] as List, Colors.white),
       body: ShowCaseWidget(
         builder: (showCaseContext){
           logic.showCaseContext = showCaseContext;
@@ -42,6 +45,7 @@ class MainUserViewPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
                     child: Card(
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['forceColor'] as List, Colors.white),
                       child: Container(
                         // height: 470,
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -162,7 +166,7 @@ class MainUserViewPage extends StatelessWidget {
                                         ),
                                         Text(
                                           '${AccountData.studentName}',
-                                          style: TextStyle(fontSize: 20),
+                                          style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                         ),
                                       ],
                                     ),
@@ -176,6 +180,7 @@ class MainUserViewPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Visibility(visible: AccountData.isIdent.value,child: Card(
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                                       child: Container(
                                         height: 40,
                                         width:
@@ -190,31 +195,33 @@ class MainUserViewPage extends StatelessWidget {
                                                   .identMainColor.value),
                                               size: 20,
                                             ),
-                                            Padding(padding: EdgeInsets.fromLTRB(5, 0, 0, 0),child: Text('${AccountData.identMainTag}'),)
+                                            Padding(padding: EdgeInsets.fromLTRB(5, 0, 0, 0),child: Text('${AccountData.identMainTag}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),),)
                                           ],
                                         ),
                                       ),
                                     )),
                                     Card(
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                                       child: Container(
                                         height: 40,
                                         width: MediaQuery.of(context).size.width,
                                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                         child: Row(
                                           children: [
-                                            Text('学号：${AccountData.studentID}')
+                                            Text('学号：${AccountData.studentID}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),)
                                           ],
                                         ),
                                       ),
                                     ),
                                     Card(
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                                       child: Container(
                                         height: 40,
                                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                                         width: MediaQuery.of(context).size.width,
                                         child: Row(
                                           children: [
-                                            Text('专业方向：${AccountData.studentMajor}')
+                                            Text('专业方向：${AccountData.studentMajor}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),)
                                           ],
                                         ),
                                       ),
@@ -236,6 +243,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -245,7 +253,7 @@ class MainUserViewPage extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
                                         '关于软件和作者',
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                       ),
                                     ),
                                     Padding(
@@ -254,6 +262,7 @@ class MainUserViewPage extends StatelessWidget {
                                         'assets/images/about.svg',
                                         width: 30,
                                         height: 30,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List, Colors.white),
                                       ),
                                     ),
                                   ],
@@ -273,6 +282,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -282,12 +292,12 @@ class MainUserViewPage extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
                                         '设置、账号安全及隐私',
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                       ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: SvgPicture.asset('assets/images/safe.svg',height: 25,width: 25,),
+                                      child: SvgPicture.asset('assets/images/safe.svg',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List, Colors.white),),
                                       // child: Image.asset(
                                       //   'assets/images/backLogin.png',
                                       //   width: 25,
@@ -310,6 +320,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -319,7 +330,7 @@ class MainUserViewPage extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
                                         '探索新版',
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                       ),
                                     ),
                                     Padding(
@@ -328,6 +339,7 @@ class MainUserViewPage extends StatelessWidget {
                                         'assets/images/bbgx.png',
                                         width: 29,
                                         height: 29,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List, Colors.white),
                                       ),
                                     ),
                                   ],
@@ -359,6 +371,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -368,7 +381,7 @@ class MainUserViewPage extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
                                         '退出登录',
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                       ),
                                     ),
                                     Padding(
@@ -377,6 +390,7 @@ class MainUserViewPage extends StatelessWidget {
                                         'assets/images/backLogin.png',
                                         width: 25,
                                         height: 25,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List, Colors.white),
                                       ),
                                     ),
                                   ],
@@ -398,6 +412,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -407,7 +422,7 @@ class MainUserViewPage extends StatelessWidget {
                                       padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                                       child: Text(
                                         '软件开发测试',
-                                        style: TextStyle(fontSize: 15),
+                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List, Colors.white)),
                                       ),
                                     ),
                                     Padding(
@@ -416,6 +431,7 @@ class MainUserViewPage extends StatelessWidget {
                                         'assets/images/backLogin.png',
                                         width: 25,
                                         height: 25,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List, Colors.white),
                                       ),
                                     ),
                                   ],

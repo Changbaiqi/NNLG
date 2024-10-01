@@ -4,7 +4,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/utils/AccountUtil.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/edusys/Account.dart';
@@ -39,7 +41,7 @@ class MainCommunityViewLogic extends GetxController {
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 11),
+            style: TextStyle(fontSize: 11,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),
           )
         ],
       ),
@@ -62,7 +64,7 @@ class MainCommunityViewLogic extends GetxController {
           ),
           Text(
             label,
-            style: TextStyle(fontSize: 11),
+            style: TextStyle(fontSize: 11,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),
           )
         ],
       ),
@@ -296,7 +298,7 @@ class MainCommunityViewLogic extends GetxController {
               AccountData.isLoginJustMessenger.value?[
                 Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
                   height: 30,
-                  child: Center(child: Text('水卡信息',style: TextStyle(fontSize: 20),),),
+                  child: Center(child: Text('水卡信息',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),),
                 ),),
                 DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
                 Container(
@@ -305,8 +307,8 @@ class MainCommunityViewLogic extends GetxController {
                Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child:  Row(
                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                  children: [
-                   Text('卡号：${AccountData.justMessengerCardCode.value}'),
-                   Text('余额：${AccountData.justMessengerMoney.value}')
+                   Text('卡号：${AccountData.justMessengerCardCode.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
+                   Text('余额：${AccountData.justMessengerMoney.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),)
                  ],
                ),),
 
@@ -319,7 +321,7 @@ class MainCommunityViewLogic extends GetxController {
               children: AccountData.powerMoney.value!=""?[
                 Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
                   height: 30,
-                  child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20),),),
+                  child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),),
                 ),),
                 DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
                 Container(
@@ -328,14 +330,14 @@ class MainCommunityViewLogic extends GetxController {
                 Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('校区：${AccountData.dormCampus.value}'),
-                    Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}')
+                    Text('校区：${AccountData.dormCampus.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
+                    Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),)
                   ],
                 ),),
                 Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${AccountData.powerMoney.value}￥'),)
+                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${AccountData.powerMoney.value}￥',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),)
                   ],
                 ),),
               ]:[],

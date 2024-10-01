@@ -3,9 +3,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 import 'package:nnlg/utils/CusBehavior.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/FileUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../dao/CustomThemeData.dart';
 import 'logic.dart';
 
 class AboutMeViewPage extends StatelessWidget {
@@ -30,7 +32,7 @@ class AboutMeViewPage extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTable']!['color'] as List, Colors.white),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(

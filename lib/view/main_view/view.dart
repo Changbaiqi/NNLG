@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/view/main_community_view/view.dart';
 import 'package:nnlg/view/main_course_view/view.dart';
 import 'package:nnlg/view/main_user_view/view.dart';
 import 'package:nnlg/view/main_water_view/view.dart';
 import 'package:nnlg/view/nnlg_community_view/view.dart';
 
+import '../../dao/CustomThemeData.dart';
 import 'logic.dart';
 
 class MainViewPage extends StatelessWidget {
@@ -66,10 +68,10 @@ class MainViewPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(500)),
-                  color: Colors.white,
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableBackground']!['color'] as List, Colors.white),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.black45,
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableBackground']!['color'] as List, Colors.white),
                         blurRadius: 100,
                         spreadRadius: 1,
                         offset: Offset(0, 40))
@@ -91,9 +93,9 @@ class MainViewPage extends StatelessWidget {
                         children: [
                           Icon(Icons.bakery_dining, color: state.index.value ==
                               0
-                              ? Colors.blue
-                              : Colors.black,),
-                          Text('主页', style: TextStyle(fontSize: 12),),
+                              ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonIsPress']!['color'] as List, Colors.white)
+                              : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white),),
+                          Text('主页', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white),),),
                         ],
                       ),
                       splashRadius: 27,
@@ -105,9 +107,9 @@ class MainViewPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.water_drop, color: state.index.value == 1
-                              ? Colors.blue
-                              : Colors.black,),
-                          Text('打水', style: TextStyle(fontSize: 12),),
+                              ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonIsPress']!['color'] as List, Colors.white)
+                              : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white),),
+                          Text('打水', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white)),),
                         ],
                       ),
                       splashRadius: 27,
@@ -123,9 +125,9 @@ class MainViewPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.discord, color: state.index.value == 3
-                              ? Colors.blue
-                              : Colors.black,),
-                          Text('社区', style: TextStyle(fontSize: 12),),
+                              ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonIsPress']!['color'] as List, Colors.white)
+                              : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white),),
+                          Text('社区', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white)),),
                         ],
                       ),
                       splashRadius: 27,
@@ -137,9 +139,9 @@ class MainViewPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.person, color: state.index.value == 4
-                              ? Colors.blue
-                              : Colors.black,),
-                          Text('我的', style: TextStyle(fontSize: 12),),
+                              ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonIsPress']!['color'] as List, Colors.white)
+                              : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white),),
+                          Text('我的', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableButtonNoPress']!['color'] as List, Colors.white)),),
                         ],
                       ),
                       splashRadius: 27,

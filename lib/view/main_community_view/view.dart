@@ -2,9 +2,11 @@ import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/view/module/showBindPowerDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
+import '../../utils/CustomerThemeUtil.dart';
 import 'logic.dart';
 
 class MainCommunityViewPage extends StatelessWidget {
@@ -16,19 +18,22 @@ class MainCommunityViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     logic.context = context;
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['color'] as List, Colors.white),
       body: ListView(
         children: [
           //头部显示--------------------
           Container(
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
                       offset: Offset(0.0, 7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color: Color(0xFFdfdfdf))
+                      // color: Color(0xFFdfdfdf)
+                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                  )
                 ]),
             height: 100,
             child: Padding(
@@ -41,21 +46,21 @@ class MainCommunityViewPage extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('在线人数'),
+                          Text('在线人数',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
                           Obx(() => AnimatedFlipCounter(
                                 value:
                                     ContextDate.onLineTotalCount.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30),
+                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white),),
                               ))
                         ],
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('软件点击量'),
+                          Text('软件点击量',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
                           Obx(() => AnimatedFlipCounter(
                                 value: state.onClickTotal.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30),
+                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white),),
                               ))
                         ],
                       )
@@ -70,14 +75,16 @@ class MainCommunityViewPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
                         offset: Offset(0.0, 7.0),
                         blurRadius: 14.0,
                         spreadRadius: 0,
-                        color: Color(0xFFdfdfdf))
+                        // color: Color(0xFFdfdfdf)
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                    )
                   ]),
               // height: 170,
               child: GridView.count(
@@ -161,14 +168,17 @@ class MainCommunityViewPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  // color: Colors.white,
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
                         offset: Offset(0.0, 7.0),
                         blurRadius: 14.0,
                         spreadRadius: 0,
-                        color: Color(0xFFdfdfdf))
+                        // color: Color(0xFFdfdfdf)
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                    )
                   ]),
               // height: 260,
               width: MediaQuery.of(context).size.width,

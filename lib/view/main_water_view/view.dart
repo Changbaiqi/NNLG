@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hms_scan_kit/toast_utils.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/dao/WaterData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/utils/WaterUtil.dart';
@@ -20,11 +22,12 @@ class MainWaterViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     logic.context = context;
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['color'] as List, Colors.white),
       resizeToAvoidBottomInset: false,
       endDrawer: Drawer(
           width: 200,
           child: Center(
-            child: Text('加载中...'),
+            child: Text('加载中...',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List, Colors.white)),),
           )),
       body: RefreshIndicator(
         child: ListView.builder(
@@ -36,6 +39,7 @@ class MainWaterViewPage extends StatelessWidget {
                     height: 130,
                     width: MediaQuery.of(context).size.width,
                     child: Card(
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['forceColor'] as List, Colors.white),
                       child: Obx(() => Column(
                             children: [
                               Text(
@@ -43,7 +47,7 @@ class MainWaterViewPage extends StatelessWidget {
                                 style: TextStyle(
                                     fontSize: 50, color: Colors.orange),
                               ),
-                              Text('当前所选设备编号：${state.divice.value ?? "未知"}'),
+                              Text('当前所选设备编号：${state.divice.value ?? "未知"}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List, Colors.white)),),
                               // Obx(() => Text('经度：${state.longitude.value.toStringAsFixed(2)} 纬度度：${state.latitude.value.toStringAsFixed(2)} GPS高度：${state.altitude.value.toStringAsFixed(2)}',style: TextStyle(fontSize: 10),)),
                               // Obx(() => Text('算法1气压计算高度：${state.sensorAltitude1.value.toStringAsFixed(2)} 算法2气压计算高度：${state.sensorAltitude2.value.toStringAsFixed(2)}',style: TextStyle(fontSize: 10),)),
                               // Obx(() => Text('算法1GPS平均高度：${((state.sensorAltitude1.value+state.altitude.value)/2.0).toStringAsFixed(2)} 算法2GPS平均高度：${((state.sensorAltitude2.value+state.altitude.value)/2.0).toStringAsFixed(2)}',style: TextStyle(fontSize: 10),))
@@ -55,12 +59,13 @@ class MainWaterViewPage extends StatelessWidget {
                     height: 00,
                     width: MediaQuery.of(context).size.width,
                     child: Card(
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['forceColor'] as List, Colors.white),
                       child: Obx(() => Column(
                         children: [
                           Container(
                             width: 100,
                             child: Row(
-                              children: [Icon(Icons.cloud_download),Text('数据同步中')],
+                              children: [Icon(Icons.cloud_download),Text('数据同步中',)],
                             ),
                           )
                         ],
@@ -72,6 +77,7 @@ class MainWaterViewPage extends StatelessWidget {
                     child: Column(
                       children: [
                         Card(
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['forceColor'] as List, Colors.white),
                           child: Column(
                             children: [
                               Padding(
@@ -90,6 +96,7 @@ class MainWaterViewPage extends StatelessWidget {
                           ),
                         ),
                         Card(
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['forceColor'] as List, Colors.white),
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
                             child: bingAccount(),

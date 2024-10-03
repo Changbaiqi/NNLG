@@ -16,14 +16,18 @@ import 'package:date_format/date_format.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/showCourseTableMessage.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tencent_kit/tencent_kit.dart';
+
+import '../../utils/CustomerThemeUtil.dart';
 
 class ClassScheduleWidget extends StatefulWidget {
   // const ClassScheduleWidget({super.key});
@@ -240,12 +244,12 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       padding: EdgeInsets.all(4),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Colors.black12,
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['foregroundColor'] as List),
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Obx(() => Text(
                                 '${isMin.value ? '小' : '大'}节\n显示',
-                                style: TextStyle(fontSize: 10),
+                                style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                               )),
                         ),
                       ),
@@ -277,11 +281,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                               children: [
                                 Text(
                                   '周${weekToChar[e.weekday - 1]}',
-                                  style: TextStyle(fontSize: 15),
+                                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                                 Text(
                                   '${e.month}/${e.day}',
-                                  style: TextStyle(fontSize: 12),
+                                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 )
                               ],
                             ),
@@ -538,11 +542,13 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           )]:[],
                         style: TextStyle(
                             fontSize: 11,
-                            color: Color.fromARGB(
-                                element['style']['textColor'][0],
-                                element['style']['textColor'][1],
-                                element['style']['textColor'][2],
-                                element['style']['textColor'][3])),
+                            // color: Color.fromARGB(
+                            //     element['style']['textColor'][0],
+                            //     element['style']['textColor'][1],
+                            //     element['style']['textColor'][2],
+                            //     element['style']['textColor'][3])
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
+                        ),
                       ),
                     ),
                   ),
@@ -624,20 +630,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
+                right: BorderSide(width: 0.05, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
               )),
               child: Visibility(
                 child: Column(
@@ -646,7 +652,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                   children: [
                     Text(
                       '${y + 1}',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
@@ -654,11 +660,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '至',
-                      style: TextStyle(fontSize: 9),
+                      style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
@@ -666,7 +672,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                   ],
                 ),
@@ -684,9 +690,9 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
           height: noonWidgetHeight,
           width: Get.context!.width,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.05)),
+              border: Border.all(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List ), width: 0.05)),
           child: Center(
-            child: Text("午休"),
+            child: Text("午休",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),
           ),
         ),
         left: 0,
@@ -700,20 +706,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
+                right: BorderSide(width: 0.05, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
               )),
               child: Visibility(
                 child: Column(
@@ -722,7 +728,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                   children: [
                     Text(
                       '${y + 1}',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
@@ -730,11 +736,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '至',
-                      style: TextStyle(fontSize: 9),
+                      style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
@@ -742,7 +748,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                   ],
                 ),
@@ -771,13 +777,13 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
                             isOccupy[y][x]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['courseLineColor'] as List )),
               )),
             ),
             left: Get.context!.width / 8 * x,
@@ -826,7 +832,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 children: [
                   Text(
                     '${y + 1}',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
@@ -834,11 +840,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '至',
-                    style: TextStyle(fontSize: 9),
+                    style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
@@ -846,7 +852,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                 ],
               ),
@@ -884,7 +890,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 children: [
                   Text(
                     '${y + 1}',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
@@ -892,11 +898,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '至',
-                    style: TextStyle(fontSize: 9),
+                    style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
@@ -904,7 +910,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                 ],
               ),
@@ -942,7 +948,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                   children: [
                     Text(
                       '${y + 1}',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
@@ -950,11 +956,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '至',
-                      style: TextStyle(fontSize: 9),
+                      style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
@@ -962,7 +968,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                   ],
                 )),
@@ -998,7 +1004,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 children: [
                   Text(
                     '${y + 1}',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
@@ -1006,11 +1012,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '至',
-                    style: TextStyle(fontSize: 9),
+                    style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
@@ -1018,7 +1024,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                 ],
               ),
@@ -1058,7 +1064,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 children: [
                   Text(
                     '${y + 1}',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["start"].hour, rowTimeList[y]["start"].minute), [
@@ -1066,11 +1072,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '至',
-                    style: TextStyle(fontSize: 9),
+                    style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                   Text(
                     '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y]["end"].hour, rowTimeList[y]["end"].minute), [
@@ -1078,7 +1084,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           ":",
                           nn
                         ])}',
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                   ),
                 ],
               ),
@@ -1116,7 +1122,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                   children: [
                     Text(
                       '${y + 1}',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2]["start"].hour, rowTimeList[y * 2]["start"].minute), [
@@ -1124,11 +1130,11 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '至',
-                      style: TextStyle(fontSize: 9),
+                      style: TextStyle(fontSize: 9,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                     Text(
                       '${formatDate(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, rowTimeList[y * 2 + 1]["end"].hour, rowTimeList[y * 2 + 1]["end"].minute), [
@@ -1136,7 +1142,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             ":",
                             nn
                           ])}',
-                      style: TextStyle(fontSize: 10),
+                      style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                     ),
                   ],
                 )),

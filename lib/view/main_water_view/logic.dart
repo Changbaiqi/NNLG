@@ -10,7 +10,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/dao/WaterData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/FileUtils.dart';
 import 'package:nnlg/utils/LocationInfoUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -51,15 +53,19 @@ class MainWaterViewLogic extends GetxController {
 
     showDialog(context: context!, builder: (builder){
 
-      return Dialog(
+      return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Dialog(
         child: Container(
           height: 300,
+          decoration: BoxDecoration(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['foregroundColor'] as List ),
+            borderRadius: BorderRadius.circular(20)
+          ),
           child: Column(
             children: [
               Row(
                 children: [
                   Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text('请输入微信扫码后的链接',style: TextStyle(fontSize: 20),),
+                    child: Text('请输入微信扫码后的链接',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List )),),
                   ),
 
                 ],),
@@ -67,6 +73,7 @@ class MainWaterViewLogic extends GetxController {
                 children: [
                   Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                     child: TextField(
+                      style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List )),
                       decoration: InputDecoration(
                           labelText: '链接',
                           hintText: '请输入链接'
@@ -90,7 +97,8 @@ class MainWaterViewLogic extends GetxController {
                               state.bingCard.value = WaterData.cardNum.value;
                               Get.snackbar("提示", "绑定成功",
                                 duration: Duration(milliseconds: 1500),);
-                              Navigator.pop(context!);
+                              // Navigator.pop(context!);
+                              Navigator.pop(builder);
                               //更新数据
                               WaterUtil()
                                   .getMenoy(
@@ -122,7 +130,8 @@ class MainWaterViewLogic extends GetxController {
                   width: MediaQuery.of(context!).size.width,
                   child: MaterialButton(
                     onPressed: (){
-                      Navigator.pop(context!);
+                      // Navigator.pop(context!);
+                      Navigator.pop(builder!);
                     },
                     child: Text('取消'),
                     color: Colors.white60,
@@ -132,7 +141,7 @@ class MainWaterViewLogic extends GetxController {
             ],
           ),
         ),
-      );
+      ));
     });
 
 

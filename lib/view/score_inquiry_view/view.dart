@@ -6,6 +6,8 @@ import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 
 import 'logic.dart';
 
@@ -22,16 +24,19 @@ class ScoreInquiryViewPage extends StatelessWidget {
     var childAspectRatio = itemWidth / itemHeight;
 
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['backgroundColor'] as List),
       appBar: AppBar(
         elevation: 1,
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['foregroundColor'] as List),
+        // backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              '成绩查询',
-            ),
+              '成绩查询',style: TextStyle(
+              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['textColor'] as List)
+            ),),
             Obx(() => DropdownButton<String>(
                 value: state.selectTime.value,
                 items: state.searList.value
@@ -39,7 +44,7 @@ class ScoreInquiryViewPage extends StatelessWidget {
                     value: e,
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(e),
+                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['textColor'] as List)),),
                     )))
                     .toList(),
                 onChanged: (value) {

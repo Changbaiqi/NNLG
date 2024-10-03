@@ -19,8 +19,11 @@ class AboutMeViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
       appBar: AppBar(
-        title: Text('关于软件和作者'),
+        backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List ),
+        title: Text('关于软件和作者',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['textColor'] as List )),),
       ),
       body: Container(
         child: ListView(
@@ -32,14 +35,16 @@ class AboutMeViewPage extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                   child: Container(
                     decoration: BoxDecoration(
-                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTable']!['color'] as List, Colors.white),
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List ),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
                               offset: Offset(0.0, 7.0),
                               blurRadius: 14.0,
                               spreadRadius: 0,
-                              color: Color(0xFFdfdfdf))
+                              // color: Color(0xFFdfdfdf)
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List )
+                          )
                         ]),
                     child: Padding(
                       padding: EdgeInsets.fromLTRB(10, 20, 10, 20),

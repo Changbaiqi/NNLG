@@ -3,6 +3,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
@@ -16,10 +18,12 @@ class TrainPlanViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['backgroundColor'] as List),
       appBar: AppBar(
-        title: Text('培养计划'),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
+        title: Text('培养计划',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),),
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
+        // backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 1,
       ),
       body: Obx(() => state.mapList.value.length == 0
@@ -52,6 +56,7 @@ class TrainPlanViewPage extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: InkWell(
         child: Card(
+          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
           child: Container(
             height: 60,
             child: Stack(
@@ -73,14 +78,14 @@ class TrainPlanViewPage extends StatelessWidget {
                     top: 10,
                     child: Text(
                       '$semester',
-                      style: TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                     )),
                 Positioned(
                     left: 40,
                     top: 35,
                     child: Text(
                       '人话：$translate',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                      style: TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['hintTextColor'] as List)),
                     )),
                 Visibility(
                     visible: CourseData.nowCourseList.value == '$semester'
@@ -97,7 +102,7 @@ class TrainPlanViewPage extends StatelessWidget {
                                   width: 35),
                               Text('当前课表',
                                   style: TextStyle(
-                                      fontSize: 12, color: Colors.black54))
+                                      fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['hintTextColor'] as List)))
                             ],
                           ),
                         )))

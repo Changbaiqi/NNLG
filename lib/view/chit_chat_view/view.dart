@@ -7,6 +7,8 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:markdown_widget/markdown_widget.dart';
 
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:roundcheckbox/roundcheckbox.dart';
 
@@ -30,12 +32,14 @@ class ChitChatViewPage extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        // backgroundColor: Colors.white,
+        backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
         title: Text(
           '聊天室',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
         ),
       ),
       body: Container(
@@ -77,7 +81,8 @@ class ChitChatViewPage extends StatelessWidget {
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                // color: Colors.white,
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
                 boxShadow: [
                   BoxShadow(
                     color: Color(0x14000000),
@@ -95,7 +100,7 @@ class ChitChatViewPage extends StatelessWidget {
                         child: InkWell(
                           child: Row(
                             children: [
-                              Text('Markdown'),
+                              Text('Markdown',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
                               Obx(
                                     () =>
                                     Padding(
@@ -135,7 +140,7 @@ class ChitChatViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '@AI',
-                                style: TextStyle(fontSize: 12),
+                                style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                               ),
                               Obx(
                                     () =>
@@ -198,10 +203,12 @@ class ChitChatViewPage extends StatelessWidget {
                                   bottom: 10.0),
                               hintText: "发送",
                               hintStyle: TextStyle(
-                                  color: Color(0xFFADB3BA), fontSize: 15),
+                                  color: Color(0xFFADB3BA),
+                                  fontSize: 15),
                             ),
                             style: TextStyle(
-                                color: Color(0xFF03073C), fontSize: 15),
+                                color: Color(0xFF03073C),
+                                fontSize: 15),
                           ),
                         ),
                       ),
@@ -306,7 +313,7 @@ class ChitChatViewPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text('${messageJson['userId']}'),
+                      Text('${messageJson['userId']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
                       //标识
                       Visibility(
                         visible: (messageJson['userId'] == '21060231' ||
@@ -348,7 +355,8 @@ class ChitChatViewPage extends StatelessWidget {
                               .width / 1.3,
                         ),
                         decoration: BoxDecoration(
-                            color: Colors.black54,
+                            // color: Colors.black54,
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         // child: Padding(
                         //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
@@ -417,17 +425,17 @@ class ChitChatViewPage extends StatelessWidget {
                                 ? Text(
                               '软件作者',
                               style: TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                  fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                             )
                                 : Text(
                               'AI',
                               style: TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                  fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                             ),
                           ),
                         ),
                       ),
-                      Text('${messageJson['userId']}'),
+                      Text('${messageJson['userId']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
                     ],
                   ),
                   Padding(
@@ -442,7 +450,8 @@ class ChitChatViewPage extends StatelessWidget {
                               .width / 1.3,
                         ),
                         decoration: BoxDecoration(
-                            color: Colors.black54,
+                            // color: Colors.black54,
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         // child: Padding(
                         //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),

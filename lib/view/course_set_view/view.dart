@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/selectBeginCourseTimeSheet.dart';
 import 'package:nnlg/view/module/selectCourseTimeSheet.dart';
@@ -21,13 +23,15 @@ class CourseSetViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List ),
       appBar: AppBar(
         title: Text(
           '课表设置',
-          style: TextStyle(fontSize: 20, color: Colors.black),
+          style: TextStyle(fontSize: 20, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List ),),
         ),
         elevation: 0,
         backgroundColor: Colors.transparent,
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
       ),
       body: Obx(() => ListView(
             children: [
@@ -35,7 +39,7 @@ class CourseSetViewPage extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                 child: Text(
                   '课表设置',
-                  style: TextStyle(fontSize: 13, color: Colors.black54),
+                  style: TextStyle(fontSize: 13, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                 ),
               ),
               InkWell(
@@ -53,12 +57,12 @@ class CourseSetViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '彩色课表',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                               ),
                               Text(
                                 '此选项可以将不同课程进行不同颜色的区分',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black45),
+                                    fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
                               ),
                             ],
                           ),
@@ -100,12 +104,12 @@ class CourseSetViewPage extends StatelessWidget {
                               children: [
                                 Text(
                                   '纯白背景/图片背景',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                 ),
                                 Text(
                                   '此选项可以调整课表背景图片',
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.black45),
+                                      fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
                                 ),
                               ],
                             ),
@@ -150,7 +154,7 @@ class CourseSetViewPage extends StatelessWidget {
                                             children: [
                                               Text(
                                                 '背景透明度   ${(CourseData.courseBackgroundOpacity.value * 100).toInt()}',
-                                                style: TextStyle(fontSize: 15),
+                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                               ),
                                             ],
                                           ),
@@ -192,7 +196,7 @@ class CourseSetViewPage extends StatelessWidget {
                                             children: [
                                               Text(
                                                 '随机二次元背景图',
-                                                style: TextStyle(fontSize: 15),
+                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                               ),
                                             ],
                                           ),
@@ -259,7 +263,7 @@ class CourseSetViewPage extends StatelessWidget {
                                                   Text(
                                                     '自定义图片URL背景图',
                                                     style:
-                                                        TextStyle(fontSize: 15),
+                                                        TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                                   ),
                                                 ],
                                               ),
@@ -306,8 +310,9 @@ class CourseSetViewPage extends StatelessWidget {
                                               controller:
                                                   logic.backGroundUrlController,
                                               decoration: InputDecoration(
-                                                label: Text('URL'),
+                                                label: Text('URL',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
                                                 hintText: '请输入图片URL链接',
+                                                hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
                                                 contentPadding:
                                                     EdgeInsets.fromLTRB(
                                                         10, 0, 10, 0),
@@ -354,7 +359,7 @@ class CourseSetViewPage extends StatelessWidget {
                                                   Text(
                                                     '自定义背景图',
                                                     style:
-                                                        TextStyle(fontSize: 15),
+                                                        TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                                   ),
                                                 ],
                                               ),
@@ -399,10 +404,13 @@ class CourseSetViewPage extends StatelessWidget {
                                             padding: EdgeInsets.fromLTRB(
                                                 35, 0, 35, 0),
                                             child: ElevatedButton(
+                                              style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ))
+                                              ),
                                                 onPressed: () async {
                                                   await logic.getImage();
                                                 },
-                                                child: Text('选择图片')),
+                                                child: Text('选择图片',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
                                           ),
                                         )
                                       ],
@@ -438,13 +446,16 @@ class CourseSetViewPage extends StatelessWidget {
                               children: [
                                 Text(
                                   '摇一摇返回当前周',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                 ),
                                 Text(
                                   '此选项可以在浏览其他周课表时摇一摇手机快速移动到当前周课表',
                                   maxLines: 2,
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.black45),
+                                      fontSize: 10,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )
+                                  ),
                                 ),
                               ],
                             ),
@@ -489,13 +500,16 @@ class CourseSetViewPage extends StatelessWidget {
                               children: [
                                 Text(
                                   '午休分割线',
-                                  style: TextStyle(fontSize: 20),
+                                  style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                 ),
                                 Text(
                                   '是否显示课表午休分割线',
                                   maxLines: 2,
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.black45),
+                                      fontSize: 10,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )
+                                  ),
                                 ),
                               ],
                             ),
@@ -589,12 +603,15 @@ class CourseSetViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '学期课表',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                               ),
                               Text(
                                 '此项为必选，会根据官网拉取最新的课表数据',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black45),
+                                    fontSize: 10,
+                                    // color: Colors.black45
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                ),
                               ),
                             ],
                           ),
@@ -608,14 +625,18 @@ class CourseSetViewPage extends StatelessWidget {
                                 child: Text(
                                   '${CourseData.nowCourseList.value}',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.black45),
+                                      fontSize: 14,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                  ),
                                 ),
                               ),
                               Image.asset(
                                 'assets/images/end.png',
                                 height: 17,
                                 width: 17,
-                                color: Colors.black45,
+                                // color: Colors.black45,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
                               )
                             ],
                           ),
@@ -669,12 +690,15 @@ class CourseSetViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '开学时间',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                               ),
                               Text(
                                 '判断是否为假期中以及自动判断周数',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black45),
+                                    fontSize: 10,
+                                    // color: Colors.black45
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                ),
                               ),
                             ],
                           ),
@@ -688,14 +712,18 @@ class CourseSetViewPage extends StatelessWidget {
                                 child: Text(
                                   '${CourseData.schoolOpenTime.value}',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.black45),
+                                      fontSize: 14,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                  ),
                                 ),
                               ),
                               Image.asset(
                                 'assets/images/end.png',
                                 height: 17,
                                 width: 17,
-                                color: Colors.black45,
+                                // color: Colors.black45,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
                               )
                             ],
                           ),
@@ -736,12 +764,15 @@ class CourseSetViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '当前周数',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                               ),
                               Text(
                                 '开学到现在第几周',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black45),
+                                    fontSize: 10,
+                                    // color: Colors.black45
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                ),
                               ),
                             ],
                           ),
@@ -755,14 +786,18 @@ class CourseSetViewPage extends StatelessWidget {
                                 child: Text(
                                   '${CourseData.nowWeek.value == 0 ? '假期中' : CourseData.nowWeek.value}',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.black45),
+                                      fontSize: 14,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                  ),
                                 ),
                               ),
                               Image.asset(
                                 'assets/images/end.png',
                                 height: 17,
                                 width: 17,
-                                color: Colors.black45,
+                                // color: Colors.black45,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
                               )
                             ],
                           ),
@@ -794,12 +829,15 @@ class CourseSetViewPage extends StatelessWidget {
                             children: [
                               Text(
                                 '本学期总周数',
-                                style: TextStyle(fontSize: 20),
+                                style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                               ),
                               Text(
                                 '请选择本学期总共多少周',
                                 style: TextStyle(
-                                    fontSize: 10, color: Colors.black45),
+                                    fontSize: 10,
+                                    // color: Colors.black45
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                ),
                               ),
                             ],
                           ),
@@ -813,14 +851,18 @@ class CourseSetViewPage extends StatelessWidget {
                                 child: Text(
                                   '${CourseData.ansWeek.value}',
                                   style: TextStyle(
-                                      fontSize: 14, color: Colors.black45),
+                                      fontSize: 14,
+                                      // color: Colors.black45
+                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                  ),
                                 ),
                               ),
                               Image.asset(
                                 'assets/images/end.png',
                                 height: 17,
                                 width: 17,
-                                color: Colors.black45,
+                                // color: Colors.black45,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
                               )
                             ],
                           ),
@@ -863,13 +905,15 @@ class CourseSetViewPage extends StatelessWidget {
                                         children: [
                                           Text(
                                             '各小节课时间',
-                                            style: TextStyle(fontSize: 20),
+                                            style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
                                           ),
                                           Text(
                                             '调节每小节课的起止时间',
                                             style: TextStyle(
                                                 fontSize: 10,
-                                                color: Colors.black45),
+                                                // color: Colors.black45
+                                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -882,7 +926,8 @@ class CourseSetViewPage extends StatelessWidget {
                                             'assets/images/end.png',
                                             height: 17,
                                             width: 17,
-                                            color: Colors.black45,
+                                            // color: Colors.black45,
+                                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
                                           )
                                         ],
                                       ),
@@ -903,13 +948,13 @@ class CourseSetViewPage extends StatelessWidget {
                                                 '第${state.courseCount.value >= 12 ? state.courseCount.value = 1 : ++state.courseCount.value}小节',
                                                 style: TextStyle(
                                                     fontSize: 15,
-                                                    color: Colors.black45),
+                                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
                                               ),
                                               Text(
                                                 '${CourseData.courseTime.value[state.courseCount.value - 1]}',
                                                 style: TextStyle(
                                                     fontSize: 15,
-                                                    color: Colors.black45),
+                                                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
                                               )
                                             ],
                                           ),

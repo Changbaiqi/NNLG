@@ -18,13 +18,13 @@ class MainCommunityViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     logic.context = context;
     return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['color'] as List, Colors.white),
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['color'] as List ),
       body: ListView(
         children: [
           //头部显示--------------------
           Container(
             decoration: BoxDecoration(
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
@@ -32,7 +32,7 @@ class MainCommunityViewPage extends StatelessWidget {
                       blurRadius: 14.0,
                       spreadRadius: 0,
                       // color: Color(0xFFdfdfdf)
-                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
                   )
                 ]),
             height: 100,
@@ -46,21 +46,21 @@ class MainCommunityViewPage extends StatelessWidget {
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('在线人数',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
+                          Text('在线人数',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
                           Obx(() => AnimatedFlipCounter(
                                 value:
                                     ContextDate.onLineTotalCount.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white),),
+                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
                               ))
                         ],
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('软件点击量',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white)),),
+                          Text('软件点击量',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
                           Obx(() => AnimatedFlipCounter(
                                 value: state.onClickTotal.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List, Colors.white),),
+                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
                               ))
                         ],
                       )
@@ -75,7 +75,7 @@ class MainCommunityViewPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
@@ -83,7 +83,7 @@ class MainCommunityViewPage extends StatelessWidget {
                         blurRadius: 14.0,
                         spreadRadius: 0,
                         // color: Color(0xFFdfdfdf)
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
                     )
                   ]),
               // height: 170,
@@ -169,7 +169,7 @@ class MainCommunityViewPage extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   // color: Colors.white,
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white),
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
@@ -177,7 +177,7 @@ class MainCommunityViewPage extends StatelessWidget {
                         blurRadius: 14.0,
                         spreadRadius: 0,
                         // color: Color(0xFFdfdfdf)
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List, Colors.white)
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
                     )
                   ]),
               // height: 260,

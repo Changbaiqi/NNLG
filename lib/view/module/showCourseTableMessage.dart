@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 
 
@@ -59,19 +61,19 @@ class _showCourseTableMessageChildState extends State<_showCourseTableMessageChi
         children: [
           Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('课程：',style: TextStyle(fontSize: 16),),Text('${courseJSON[i]['courseName']}')],),
+            child: Row(children: [Text('课程：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseName']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课地点：',style: TextStyle(fontSize: 16),),Text('${courseJSON[i]['courseClassRoom']}')],),
+            child: Row(children: [Text('授课地点：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseClassRoom']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课日期时间：',style: TextStyle(fontSize: 16),),Text('${dateTime.month}月${dateTime.day}日   ${courseJSON[i]['courseTime']}')],),
+            child: Row(children: [Text('授课日期时间：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${dateTime.month}月${dateTime.day}日   ${courseJSON[i]['courseTime']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课老师：',style: TextStyle(fontSize: 16),),Text('${courseJSON[i]['courseTeacher']}')],),
+            child: Row(children: [Text('授课老师：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseTeacher']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
           ),
         ],
       ));
@@ -82,12 +84,16 @@ class _showCourseTableMessageChildState extends State<_showCourseTableMessageChi
   Widget build(BuildContext context) {
 
     return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List)
+      ),
       height: 300,
       child: Column(
         children: [
           Container(
             height: 20,
-            child: Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),child: Text("${_nowIndex}/${_sumIndex}"),),
+            child: Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),child: Text("${_nowIndex}/${_sumIndex}",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),),
           ),
           Expanded(
               flex: 1,
@@ -105,9 +111,12 @@ class _showCourseTableMessageChildState extends State<_showCourseTableMessageChi
               height: 50,
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['foregroundColor'] as List))
+                ),
                   onPressed: (){
                     Navigator.of(context).pop();
-                  }, child: Text('确定',style: TextStyle(color: Colors.black54),)
+                  }, child: Text('确定',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)
               ),
             ),
           )

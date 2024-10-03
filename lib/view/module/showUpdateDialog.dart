@@ -1,11 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/utils/AppUpdateUtil.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -129,7 +132,8 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                     maxHeight: 500,
                   ),
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 247, 242, 249),
+                      // color: Color.fromARGB(255, 247, 242, 249),
+                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['backgroundColor'] as List),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
@@ -140,7 +144,7 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                     children: [
                       Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 0),child: Text(
                         '发现新版本',
-                        style: TextStyle(fontSize: 25),
+                        style: TextStyle(fontSize: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),
                       ),),
                       Expanded(flex: 1,child: ListView(
                         children: [
@@ -148,11 +152,11 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>  with Sing
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('版本号：',style: TextStyle(fontSize: 15,color: Colors.black54),),
-                                Text("v${AppInfoData.version}--->${widget._json["version"]}·${widget._json['mark']}"),
-                                Text('版本代号：',style: TextStyle(fontSize: 15,color: Colors.black54),),
-                                Text('${widget._json["mark"]}'),
-                                Text('更新内容：',style: TextStyle(fontSize: 15,color: Colors.black54),),
+                                Text('版本号：',style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),),
+                                Text("v${AppInfoData.version}--->${widget._json["version"]}·${widget._json['mark']}",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),),
+                                Text('版本代号：',style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),),
+                                Text('${widget._json["mark"]}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),),
+                                Text('更新内容：',style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showUpdateDialog']!['textColor'] as List)),),
                                 // Markdown(data: widget._json['content'],physics: NeverScrollableScrollPhysics(),shrinkWrap: true,)
                                 MarkdownWidget(data: widget._json['content'],shrinkWrap: true,)
                                 // Text('${widget._json['content']}')

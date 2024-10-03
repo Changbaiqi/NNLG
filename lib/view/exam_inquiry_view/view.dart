@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:sqflite/utils/utils.dart';
 
 import 'logic.dart';
@@ -22,20 +24,25 @@ class ExamInquiryViewPage extends StatelessWidget {
     var childAspectRatio = itemWidth / itemHeight;
 
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
       appBar: AppBar(
-        foregroundColor: Colors.black,
+        // foregroundColor: Colors.black,
+
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['foregroundColor'] as List ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('考试安排'),
+            Text('考试安排',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),),
             Obx(() => DropdownButton<String>(
                 value: state.selectTime.value,
+
                 items: state.searList.value
                     .map((e) => DropdownMenuItem(
                     value: e,
+
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(e),
+                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['foregroundColor'] as List )),),
                     )))
                     .toList(),
                 onChanged: (value) {
@@ -45,7 +52,8 @@ class ExamInquiryViewPage extends StatelessWidget {
                 }))
           ],
         ),
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
+        backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
         elevation: 1,
       ),
       body: Obx((){

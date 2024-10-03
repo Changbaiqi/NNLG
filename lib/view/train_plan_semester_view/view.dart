@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
 
 import 'logic.dart';
@@ -14,20 +16,22 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['backgroundColor'] as List),
       appBar: AppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text('${state.semester.value}', style: TextStyle(fontSize: 18)),
+            Text('${state.semester.value}', style: TextStyle(fontSize: 18,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List))),
             Text(
               '${state.translate.value}',
-              style: TextStyle(fontSize: 12, color: Colors.black54),
+              style: TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['hintTextColor'] as List)),
             )
           ],
         ),
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
+        // foregroundColor: Colors.black,
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
+        backgroundColor: Colors.transparent,
         elevation: 1,
       ),
       body: ListView.builder(
@@ -73,7 +77,8 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
         // width: 150,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: Colors.white,
+            // color: Colors.white,
+          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
             // color: Color.fromARGB(255, colorR, colorG, colorB),
             borderRadius: BorderRadius.all(Radius.circular(15)),
             boxShadow: [
@@ -91,7 +96,7 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               child: Center(
                 child: Text(
                   '${trainPlanInForm.number}',
-                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                  style: TextStyle(fontSize: 18, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
               ),
             ),
@@ -104,13 +109,13 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '编号：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${trainPlanInForm.code}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )
@@ -125,11 +130,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '名称：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.courseName}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -142,11 +147,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '开课单位：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.unit}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -159,11 +164,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '学分：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.credit}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -176,11 +181,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '学时：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.creditHour}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -193,11 +198,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '考核模式：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.evaMode}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -210,11 +215,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '课程属性：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.property}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),
@@ -227,11 +232,11 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
               children: [
                 Text(
                   '是否考核：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 ),
                 Text(
                   '${trainPlanInForm.isExam}',
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
                 )
               ],
             ),

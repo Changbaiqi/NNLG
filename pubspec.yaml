@@ -146,6 +146,7 @@ flutter:
     - assets/images/2.0x/backLogin.png
     - assets/images/3.0x/backLogin.png
     - assets/images/4.0x/backLogin.png
+    - assets/images/backgroundTest.jpg
     - assets/images/user.jpg
     - assets/images/2.0x/user.jpg
     - assets/images/3.0x/user.jpg
@@ -230,6 +231,10 @@ flutter:
     - assets/files/scheduleJson.json
     - assets/files/testCourse.json
     - assets/files/aboutMe.md
+    - assets/theme/atriTheme.json
+    - assets/theme/blackTheme.json
+    - assets/theme/blueTheme.json
+    - assets/theme/whiteTheme.json
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

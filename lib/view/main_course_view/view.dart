@@ -6,7 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:marquee/marquee.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/view/module/showCourseSharedSelectDialog.dart';
 import 'package:nnlg/view/router/Routes.dart';
@@ -32,7 +34,8 @@ class MainCourseViewPage extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 255, 251, 254),
+                // color: Color.fromARGB(255, 255, 251, 254),
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
                 // color: Colors.white
               ),
               child: Obx(() => Stack(
@@ -99,12 +102,16 @@ class MainCourseViewPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.settings,
-                          color: Colors.black,
+                          // color: Colors.black,
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
                           size: 20,
                         ),
                         Text(
                           '课表设置',
-                          style: TextStyle(fontSize: 8, color: Colors.black),
+                          style: TextStyle(fontSize: 8,
+                              // color: Colors.black
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
+                          ),
                         )
                       ],
                     ),
@@ -140,12 +147,12 @@ class MainCourseViewPage extends StatelessWidget {
                                               fontSize: 20,
                                               color: state.nowIndex.value ==
                                                   CourseData.nowWeek.value
-                                                  ? Colors.black
-                                                  : Colors.redAccent),
+                                                  ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nowWeekColor'] as List)
+                                                  : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonNowWeekColor'] as List)),
                                         ),
                                         Text(
                                           '${CourseData.nowCourseList.value}',
-                                          style: TextStyle(fontSize: 12),
+                                          style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                         )
                                       ],
                                     ),
@@ -203,8 +210,8 @@ class MainCourseViewPage extends StatelessWidget {
                           child: Icon(
                             Icons.cached_sharp,
                             color: state.courseRefreshStatus.value == 1
-                                ? Colors.red
-                                : Colors.black,
+                                ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
+                                : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
                             size: 20,
                           ),
                         ),
@@ -215,8 +222,8 @@ class MainCourseViewPage extends StatelessWidget {
                           style: TextStyle(
                               fontSize: 8,
                               color: state.courseRefreshStatus.value == 1
-                                  ? Colors.red
-                                  : Colors.black),
+                                  ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
+                                  : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                         )
                       ],
                     )),
@@ -247,12 +254,12 @@ class MainCourseViewPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.update,
-                          color: Colors.black,
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
                           size: 20,
                         ),
                         Text(
                           '同步历史',
-                          style: TextStyle(fontSize: 8, color: Colors.black),
+                          style: TextStyle(fontSize: 8, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                         )
                       ],
                     ),
@@ -269,12 +276,12 @@ class MainCourseViewPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.menu,
-                          color: Colors.black,
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
                           size: 20,
                         ),
                         Text(
                           '更多',
-                          style: TextStyle(fontSize: 8, color: Colors.black),
+                          style: TextStyle(fontSize: 8, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                         )
                       ],
                     ),
@@ -295,7 +302,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '共享课表',
                                   style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
+                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -309,7 +316,7 @@ class MainCourseViewPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.build,
-                                color: Colors.black,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                                 size: 20,
                               ),
                               Padding(
@@ -317,7 +324,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '当前页设为本周',
                                   style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
+                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -339,7 +346,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '课表同步历史',
                                   style:
-                                  TextStyle(fontSize: 12, color: Colors.black),
+                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -406,7 +413,7 @@ class MainCourseViewPage extends StatelessWidget {
                                   width: Get.context!.width,
                                   child: Marquee(
                                     text: '备注：${logic.remark.value}',
-                                    style: TextStyle(fontSize: 13),
+                                    style: TextStyle(fontSize: 13,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                     velocity: 30.0,
                                     blankSpace: 20,
                                     pauseAfterRound: Duration(seconds: 5),
@@ -438,10 +445,10 @@ class MainCourseViewPage extends StatelessWidget {
                                 children: [
                                   Lottie.asset('assets/images/shareLoadingLottie.json',
                                       height: 100, width: 200),
-                                  Text("课表加载中......"),
+                                  Text("课表加载中......",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),
                                   ConstrainedBox(constraints: BoxConstraints(
                                     maxWidth: 250,
-                                  ),child: Text('tips:若长时间未加载，可尝试在左上角课表设置中重新选择一下“学期课表”',maxLines: 5,softWrap: true,style: TextStyle(color: Colors.black45),),)
+                                  ),child: Text('tips:若长时间未加载，可尝试在左上角课表设置中重新选择一下“学期课表”',maxLines: 5,softWrap: true,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),)
                                 ],
                               )
                             ],

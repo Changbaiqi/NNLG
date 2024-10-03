@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/view/nnlg_community_view/CustomFloatingActionButtonLocation.dart';
 
 import 'logic.dart';
@@ -14,6 +16,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['nnlg_community_view']!['backgroundColor'] as List ),
       floatingActionButton: FloatingActionButton(
         child: Text('发布'),
         onPressed: (){
@@ -21,7 +24,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
         },
       ),
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(FloatingActionButtonLocation.endFloat,1,-90),
-      body: isClose.value?Container(child: Center(child: Text('暂未开放，敬请期待'),),):Column(
+      body: isClose.value?Container(child: Center(child: Text('暂未开放，敬请期待',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['nnlg_community_view']!['textColor'] as List )),),),):Column(
         children: [
           Container(
               height: 100,

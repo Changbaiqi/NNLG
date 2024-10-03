@@ -1,0 +1,29 @@
+{
+  "main_view":{
+    "bottomNavigate": {
+      "backgroundColor": [255,59,59,59],
+      "selectColor": [255,59,59,59],
+      "nonSelectColor": [255,255,255,255],
+      "textColor": [255,255,255,255]
+    }
+  },
+  "main_community_view":{
+    "backgroundColor": [255,22,23,31],
+    "forceColor": [255,59,59,59],
+    "textColor": [255,255,255,255]
+  },
+  "main_water_view":{
+    "color": [255,22,23,31],
+    "forceColor": [255,59,59,59],
+    "textColor": [255,255,255,255]
+  },
+  "main_user_view":{
+    "color": [255,22,23,31],
+    "forceColor": [255,59,59,59],
+    "defaultIconColor": [255,255,255,255],
+    "textColor": [255,255,255,255]
+  },
+  "about_me_view":{
+    "color": [255,255,255,255]
+  }
+}

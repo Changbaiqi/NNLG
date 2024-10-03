@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_pickers/pickers.dart';
+import 'package:flutter_pickers/style/picker_style.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/ContextData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 
@@ -18,7 +21,8 @@ class showBindPowerDialog extends Dialog{
       width: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        color: Colors.white,
+        // color: Colors.white,
+        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List)
       ),
       child: showBindPowerDialogMain(),
     );
@@ -64,6 +68,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
+      // backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List),
       resizeToAvoidBottomInset: false,
       body: MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
       child: FutureBuilder(
@@ -72,7 +77,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
 
           print(snapshot.connectionState);
           if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(child: Text('加载中...'),);
+            return Center(child: Text('加载中...',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),);
           }else{
             return _loadAC();
           }
@@ -131,7 +136,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
       child: Column(
         children: [
           Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-            child: Text('宿舍电费预警',style: TextStyle(fontSize: 20),),),
+            child: Text('宿舍电费预警',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -145,20 +150,20 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                 children: [
                   Column(
                     children: [
-                      Text('校区'),
-                      Text('${selectData[0]}')
+                      Text('校区',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
+                      Text('${selectData[0]}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),)
                     ],
                   ),
                   Column(
                     children: [
-                      Text('楼栋'),
-                      Text('${selectData[1]}')
+                      Text('楼栋',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
+                      Text('${selectData[1]}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),)
                     ],
                   ),
                   Column(
                     children: [
-                      Text('房号'),
-                      Text('${selectData[2]}')
+                      Text('房号',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
+                      Text('${selectData[2]}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),)
                     ],
                   )
                 ],
@@ -166,7 +171,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
              Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
                height: 35,
                width: 250,
-               child:  ElevatedButton(onPressed: (){dormPicker();}, child: Text('选择预警宿舍')),
+               child:  ElevatedButton(onPressed: (){dormPicker();},style: ButtonStyle(backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['foregroundColor'] as List))), child: Text('选择预警宿舍',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),)),
              ),)
             ],
           ),
@@ -175,16 +180,18 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
             children: [
               Container(
                 width: 70,
-                child: Text('E-mail：'),
+                child: Text('E-mail：',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
               ),
               Container(
                 width: 200,
                 child: TextField(
                   controller: _emailEdit,
                   keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),
                   decoration: InputDecoration(
-                    label: Text('绑定邮箱'),
+                    label: Text('绑定邮箱',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
                     hintText: '请输入预警信息接收的邮箱',
+                    hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['hintTextColor'] as List))
                   ),
                 ),
               )
@@ -195,18 +202,20 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
             children: [
               Container(
                 width: 70,
-                child: Text('预警金额：'),
+                child: Text('预警金额：',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
               ),
               Container(
                 width: 200,
                 child: TextField(
                   controller: _dormEdit,
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))
                   ],
                   decoration: InputDecoration(
-                    label: Text('预警金额'),
+                    hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['hintTextColor'] as List)),
+                    label: Text('预警金额',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
                     hintText: '请输入触发预警的金额',
                   ),
                 ),
@@ -216,7 +225,7 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Text('是否开启预警：'),
+              Text('是否开启预警：',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
               StatefulBuilder(builder: (context,setState){
 
                 return Switch(value: _sw, onChanged: (bool value){
@@ -232,7 +241,10 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
               Container(
                 width: 120,
                 child: ElevatedButton(
-                  child: Text('确认'),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['foregroundColor'] as List))
+                  ),
+                  child: Text('确认',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
                   onPressed: (){
                     if(_checkAll()){
 
@@ -253,9 +265,9 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
                 width: 120,
                 child: ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(Colors.white)
+                      backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['foregroundColor'] as List))
                   ),
-                  child: Text('取消',style: TextStyle(color: Colors.black45),),
+                  child: Text('取消',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List)),),
                   onPressed: (){
                     Navigator.of(context).pop();
                   },
@@ -428,7 +440,12 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
       }
     }
 
-    Pickers.showMultiLinkPicker(context, data: multiData,selectData: selectData, columeNum: 3,onConfirm: (p,covariant) async{
+    Pickers.showMultiLinkPicker(context, data: multiData,selectData: selectData,pickerStyle: PickerStyle(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List),
+      textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
+      headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
+    ), columeNum: 3,onConfirm: (p,covariant) async{
+
       selectData.value = p ;
       selectData.refresh();
     });

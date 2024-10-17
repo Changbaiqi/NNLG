@@ -23,6 +23,9 @@ class TrainPlanViewPage extends StatelessWidget {
         title: Text('培养计划',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),),
         foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
         // backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['defaultIconColor'] as List )
+        ),
         backgroundColor: Colors.transparent,
         elevation: 1,
       ),
@@ -56,7 +59,7 @@ class TrainPlanViewPage extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: InkWell(
         child: Card(
-          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
+          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['itemBackgroundColor'] as List),
           child: Container(
             height: 60,
             child: Stack(

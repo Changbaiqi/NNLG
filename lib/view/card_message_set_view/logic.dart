@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pickers/pickers.dart';
+import 'package:flutter_pickers/style/picker_style.dart';
 import 'package:get/get.dart';
 import 'package:nnlg/dao/AccountData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/JustMessengerUtil.dart';
 import 'package:nnlg/utils/PowerDormUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
@@ -136,8 +139,14 @@ class CardMessageSetViewLogic extends GetxController {
     }
 
     Pickers.showMultiLinkPicker(Get.context!,
+
         data: multiData,
         selectData: selectData,
+        pickerStyle: PickerStyle(
+          backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List),
+          textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
+            headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
+        ),
         columeNum: 3, onConfirm: (p, covariant) async {
       selectData.value = p;
       ShareDateUtil().setDormCampus(selectData[0]);
@@ -238,7 +247,7 @@ class CardMessageSetViewLogic extends GetxController {
       )
     ];
     BuildContext? showCtxt = null;
-    return Scaffold(
+    return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Scaffold(
       backgroundColor: Color.fromRGBO(0, 0, 0, 0),
       body: Stack(
         children: [
@@ -259,7 +268,8 @@ class CardMessageSetViewLogic extends GetxController {
                   height: 210,
                   width: 300,
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                    // color: Colors.white,
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['backgroundColor'] as List ),
                       borderRadius: BorderRadius.circular(10)),
                   child: Column(
                     children: [
@@ -274,22 +284,24 @@ class CardMessageSetViewLogic extends GetxController {
                                   child: TextField(
                                     controller: inputAccountController,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                        fontSize: 14,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )
                                     ),
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.person),
-                                      label: Text('账号'),
+                                      prefixIcon: Icon(Icons.person,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
+                                      label: Text('账号',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
                                       hintText: '请输入校园一信通账号/手机号',
+                                      hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),
                                       enabledBorder: OutlineInputBorder(
-                                          // borderRadius: BorderRadius.all(
-                                          //     Radius.circular(100)
-                                          // )
-                                          ),
+                                        // borderRadius: BorderRadius.all(
+                                        //     Radius.circular(100)
+                                        // )
+                                      ),
                                       focusedBorder: OutlineInputBorder(
-                                          // borderRadius: BorderRadius.all(
-                                          //     Radius.circular(100)
-                                          // )
-                                          ),
+                                        // borderRadius: BorderRadius.all(
+                                        //     Radius.circular(100)
+                                        // )
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -307,38 +319,40 @@ class CardMessageSetViewLogic extends GetxController {
                               children: [
                                 Expanded(
                                   child: Obx(() => TextField(
-                                        controller: inputPasswordController,
-                                        obscureText: seeNo_Off.value,
-                                        maxLines: 1,
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                        ),
-                                        decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.lock),
-                                          label: Text('密码'),
-                                          hintText: '请输入校园一信通密码',
-                                          enabledBorder: OutlineInputBorder(
-                                              // borderRadius: BorderRadius.all(
-                                              //     Radius.circular(100)
-                                              // )
-                                              ),
-                                          suffixIcon: IconButton(
-                                              onPressed: () {
-                                                seeNo_Off.value =
-                                                    !seeNo_Off.value;
-                                              },
-                                              icon: _seelist[
-                                                  seeNo_Off.value ? 0 : 1]),
-                                          focusedBorder: OutlineInputBorder(
-                                              // borderRadius: BorderRadius.all(
-                                              //     Radius.circular(100)
-                                              // )
-                                              ),
-                                        ),
-                                        /*onChanged: (password){
+                                    controller: inputPasswordController,
+                                    obscureText: seeNo_Off.value,
+                                    maxLines: 1,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )
+                                    ),
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.lock,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
+                                      label: Text('密码',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
+                                      hintText: '请输入校园一信通密码',
+                                      hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),
+                                      enabledBorder: OutlineInputBorder(
+                                        // borderRadius: BorderRadius.all(
+                                        //     Radius.circular(100)
+                                        // )
+                                      ),
+                                      suffixIcon: IconButton(
+                                        onPressed: () {
+                                          seeNo_Off.value =
+                                          !seeNo_Off.value;
+                                        },
+                                        icon: _seelist[
+                                        seeNo_Off.value ? 0 : 1],color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
+                                      focusedBorder: OutlineInputBorder(
+                                        // borderRadius: BorderRadius.all(
+                                        //     Radius.circular(100)
+                                        // )
+                                      ),
+                                    ),
+                                    /*onChanged: (password){
                     _password = password;
                   },*/
-                                      )),
+                                  )),
                                 ),
                               ],
                             ),
@@ -352,14 +366,17 @@ class CardMessageSetViewLogic extends GetxController {
                             width: MediaQuery.of(Get.context!).size.width,
                             height: 45,
                             child: ElevatedButton(
-                              child: Text('校园一信通绑定'),
+                              style: ButtonStyle(
+                                  backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['foregroundColor'] as List ))
+                              ),
+                              child: Text('校园一信通绑定',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
                               onPressed: () async {
                                 //检测输入的内容是否为空
                                 if (inputAccountController.text.isEmpty ||
                                     inputPasswordController.text.isEmpty) {
                                   Get.snackbar("提示", "输入的内容不能为空",
                                       duration:
-                                          const Duration(milliseconds: 1500));
+                                      const Duration(milliseconds: 1500));
                                   return;
                                 }
 
@@ -383,7 +400,7 @@ class CardMessageSetViewLogic extends GetxController {
           ),
         ],
       ),
-    );
+    ));
   }
 
   @override

@@ -23,6 +23,7 @@ import 'package:nnlg/dao/WeekDayForm.dart';
 import 'package:nnlg/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
 import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/utils/ShareDateUtil.dart';
 import 'package:nnlg/utils/ToastUtil.dart';
 import 'package:nnlg/view/module/ClassScheduleWidget.dart';
@@ -36,6 +37,7 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../dao/CustomThemeData.dart';
 import 'state.dart';
 
 class MainCourseViewLogic extends GetxController
@@ -226,11 +228,12 @@ class MainCourseViewLogic extends GetxController
               child: Center(
                 child: Container(
                   decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 247, 242, 249),
+                      // color: Color.fromARGB(255, 247, 242, 249),
+                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                            color: Colors.black45,
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['shadowColor'] as List),
                             blurRadius: 10,
                             offset: Offset(1, 1))
                       ]),
@@ -268,7 +271,7 @@ class MainCourseViewLogic extends GetxController
                                             Text(
                                               '更新时间：${timeForm}',
                                               style: TextStyle(
-                                                  color: Colors.black,
+                                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                                                   fontSize: 12),
                                             ),
                                             Visibility(
@@ -287,12 +290,12 @@ class MainCourseViewLogic extends GetxController
                                         Text(
                                             '课表UID值：${scheduleList[index].uid}',
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                                                 fontSize: 8)),
                                         Text(
                                             '课表MD5值：${scheduleList[index].md5}',
                                             style: TextStyle(
-                                                color: Colors.black,
+                                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                                                 fontSize: 8))
                                       ],
                                     ),

@@ -30,13 +30,16 @@ class ChitChatViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     state.context = context;
 
-    return Scaffold(
+    return Obx(() => Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
       appBar: AppBar(
         // backgroundColor: Colors.white,
+        iconTheme: IconThemeData(
+          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['defaultIconColor'] as List )
+        ),
         backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
         title: Text(
           '聊天室',
           style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
@@ -82,7 +85,7 @@ class ChitChatViewPage extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 // color: Colors.white,
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
                 boxShadow: [
                   BoxShadow(
                     color: Color(0x14000000),
@@ -247,7 +250,7 @@ class ChitChatViewPage extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   /**
@@ -331,12 +334,12 @@ class ChitChatViewPage extends StatelessWidget {
                                 ? Text(
                               '软件作者',
                               style: TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                  fontSize: 10, color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                             )
                                 : Text(
                               'AI',
                               style: TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                  fontSize: 10, color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                             ),
                           ),
                         ),
@@ -356,26 +359,29 @@ class ChitChatViewPage extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                             // color: Colors.black54,
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         // child: Padding(
                         //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
                         //   child: SelectableText('${messageJson['text']}'),
                         // ),
                         child: messageJson['type'] == "markdown"
-                            ? MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}')
+                            ? MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}',config: MarkdownConfig(configs: [
+                          PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List ))),
+                        ]),)
                             : messageJson['type'] == "txt"
                             ? Padding(
                           padding:
                           EdgeInsets.fromLTRB(10, 15, 10, 10),
                           child: SelectableText(
-                              '${messageJson['text']}'),
+                              '${messageJson['text']}',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
                         )
                             : Padding(
                           padding:
                           EdgeInsets.fromLTRB(10, 15, 10, 10),
                           child: SelectableText(
                             '消息类型错误',
+                            style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                           ),
                         )),
                   )
@@ -451,26 +457,28 @@ class ChitChatViewPage extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                             // color: Colors.black54,
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['forceColor'] as List ),
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
                             borderRadius: BorderRadius.all(Radius.circular(5))),
                         // child: Padding(
                         //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
                         //   child: SelectableText('${messageJson['text']}'),
                         // ),
                         child: messageJson['type'] == "markdown"
-                            ? MarkdownWidget(padding: EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}')
+                            ? MarkdownWidget(padding: EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}',config: MarkdownConfig(configs: [
+                              PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List ))),
+                        ]),)
                             : messageJson['type'] == "txt"
                             ? Padding(
                           padding:
                           EdgeInsets.fromLTRB(10, 15, 10, 10),
                           child: SelectableText(
-                              '${messageJson['text']}'),
+                              '${messageJson['text']}',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
                         )
                             : Padding(
                           padding:
                           EdgeInsets.fromLTRB(10, 15, 10, 10),
                           child: SelectableText(
-                            '消息类型错误',
+                            '消息类型错误',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
                           ),
                         )),
                   )
@@ -523,13 +531,13 @@ class ChitChatViewPage extends StatelessWidget {
           child: Container(
             constraints: BoxConstraints(minWidth: 100, minHeight: 30),
             decoration: BoxDecoration(
-                color: Colors.black26,
+                color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
                 borderRadius: BorderRadius.all(Radius.circular(10))),
             child: Padding(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text("${messageJson['text']}")],
+                children: [Text("${messageJson['text']}",style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),)],
               ),
             ),
           ),

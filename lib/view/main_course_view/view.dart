@@ -28,7 +28,7 @@ class MainCourseViewPage extends StatelessWidget {
     return ShowCaseWidget(
       builder: (showCaseContext){
         logic.showCaseContext = showCaseContext;
-        return Stack(
+        return Obx(() => Stack(
           children: [
             Container(
               width: MediaQuery.of(context).size.width,
@@ -103,14 +103,14 @@ class MainCourseViewPage extends StatelessWidget {
                         Icon(
                           Icons.settings,
                           // color: Colors.black,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                           size: 20,
                         ),
                         Text(
                           '课表设置',
                           style: TextStyle(fontSize: 8,
                               // color: Colors.black
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
                           ),
                         )
                       ],
@@ -211,7 +211,7 @@ class MainCourseViewPage extends StatelessWidget {
                             Icons.cached_sharp,
                             color: state.courseRefreshStatus.value == 1
                                 ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
-                                : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
+                                : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                             size: 20,
                           ),
                         ),
@@ -254,7 +254,7 @@ class MainCourseViewPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.update,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                           size: 20,
                         ),
                         Text(
@@ -269,6 +269,7 @@ class MainCourseViewPage extends StatelessWidget {
                     },
                   )),
                   PopupMenuButton(
+                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
                     position: PopupMenuPosition.under,
                     icon: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +277,7 @@ class MainCourseViewPage extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.menu,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['iconColor'] as List),
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                           size: 20,
                         ),
                         Text(
@@ -294,7 +295,7 @@ class MainCourseViewPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.face_retouching_natural,
-                                color: Colors.black,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                                 size: 20,
                               ),
                               Padding(
@@ -316,7 +317,7 @@ class MainCourseViewPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.build,
-                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                                 size: 20,
                               ),
                               Padding(
@@ -338,7 +339,7 @@ class MainCourseViewPage extends StatelessWidget {
                             children: [
                               Icon(
                                 Icons.update,
-                                color: Colors.black,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
                                 size: 20,
                               ),
                               Padding(
@@ -460,7 +461,7 @@ class MainCourseViewPage extends StatelessWidget {
               ),
             ),
           ],
-        );
+        ));
       },
     );
   }

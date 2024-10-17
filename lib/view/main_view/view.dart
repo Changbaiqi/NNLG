@@ -55,7 +55,7 @@ class MainViewPage extends StatelessWidget {
       floatingActionButton: Obx(() =>
           FloatingActionButton(
             child: Icon(Icons.calendar_month,color: Colors.black,),
-            backgroundColor: state.index.value == 2 ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectColor']as List): CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectColor']as List),
+            backgroundColor: state.index.value == 2 ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectScheduleColor']as List): CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectScheduleColor']as List),
             onPressed: () {
               state.pageController.value.animateToPage(
                   2, duration: Duration(milliseconds: 500),
@@ -75,7 +75,7 @@ class MainViewPage extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                         // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableBackground']!['color'] as List),
-                        color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['backgroundColor'] as List),
+                        color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['shadowColor'] as List),
                         blurRadius: 100,
                         spreadRadius: 1,
                         offset: Offset(0, 40))

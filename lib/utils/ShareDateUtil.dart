@@ -1,10 +1,12 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:nnlg/dao/AccountData.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
 import 'package:nnlg/dao/AppUpdateData.dart';
 import 'package:nnlg/dao/CourseData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
 import 'package:nnlg/dao/LoginData.dart';
 import 'package:nnlg/dao/NoticeData.dart';
 import 'package:nnlg/dao/XiaoBeiData.dart';
@@ -94,6 +96,10 @@ class ShareDateUtil{
     //初始化极速启动
     await getTopSpeedStart();
 
+    //初始化主题
+    await getThemeUid();
+    await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
+
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
 
@@ -127,6 +133,7 @@ class ShareDateUtil{
 
     //关闭极速启动
     await setTopSpeedStart(false);
+
     //清空VIP账号信息数据
     XiaoBeiData.xiaobeiAccount='';
     XiaoBeiData.xiaobeiPassword='';
@@ -1057,5 +1064,20 @@ class ShareDateUtil{
     return testList??<String>[];
   }
 
+  //设置主题
+  Future<void> setThemeUid(String themeUid) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectThemeUid', themeUid).then((c){
+      CustomThemeData.selectThemeUid.value = themeUid??"default:whiteTheme";
+    });
+  }
+
+  //获取主题
+  Future<String> getThemeUid() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? themeUid = await prefs.getString('selectThemeUid');
+    CustomThemeData.selectThemeUid.value=themeUid??"default:whiteTheme";
+    return themeUid??"default:whiteTheme";
+  }
 
 }

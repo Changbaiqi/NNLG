@@ -78,7 +78,7 @@ class TrainPlanSemesterViewPage extends StatelessWidget {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
             // color: Colors.white,
-          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
+          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['itemBackgroundColor'] as List),
             // color: Color.fromARGB(255, colorR, colorG, colorB),
             borderRadius: BorderRadius.all(Radius.circular(15)),
             boxShadow: [

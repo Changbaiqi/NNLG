@@ -7,6 +7,8 @@
  */
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 
 class selectCourseTimeSheet{
   final _context;
@@ -49,7 +51,7 @@ class selectCourseTimeSheet{
     List<Widget> hoursList = [];
 
     for(int i = 0 ; i < 24 ; ++i){
-      hoursList.add(Text('${i.toString().padLeft(2,'0')}'));
+      hoursList.add(Text('${i.toString().padLeft(2,'0')}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),));
     }
 
     return hoursList;
@@ -59,7 +61,7 @@ class selectCourseTimeSheet{
     List<Widget> hoursList = [];
 
     for(int i = 0 ; i < 60 ; ++i){
-      hoursList.add(Text('${i.toString().padLeft(2,'0')}'));
+      hoursList.add(Text('${i.toString().padLeft(2,'0')}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),));
     }
 
     return hoursList;
@@ -78,7 +80,7 @@ class selectCourseTimeSheet{
 
           Column(
             children: [
-              Center(child: Text('上课时间'),),
+              Center(child: Text('上课时间',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),),
               Expanded(
                   flex: 1,
                   child: Row(
@@ -104,7 +106,7 @@ class selectCourseTimeSheet{
                           )),
                       Container(
                           width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时'),)),
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
                       Container(
                           width:60,
                           child: Center(child: ListWheelScrollView(
@@ -126,7 +128,7 @@ class selectCourseTimeSheet{
                           ),)),
                       Container(
                           width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分'),)),
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
                     ],
                   ))
 
@@ -139,7 +141,7 @@ class selectCourseTimeSheet{
           Column(
 
             children: [
-              Center(child: Text('下课时间'),),
+              Center(child: Text('下课时间',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),),
               Expanded(
                   flex: 1,
                   child: Row(
@@ -167,7 +169,7 @@ class selectCourseTimeSheet{
                           )),
                       Container(
                           width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时'),)),
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
                       Container(
                           width:60,
                           child: Center(child: ListWheelScrollView(
@@ -189,7 +191,7 @@ class selectCourseTimeSheet{
                           ),)),
                       Container(
                           width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分'),))
+                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),))
 
 
                     ],
@@ -217,12 +219,16 @@ class selectCourseTimeSheet{
   Widget build(){
     return Container(
       height: 400,
+      decoration: BoxDecoration(
+        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List )
+      ),
       child: Column(
         children: [
           Container(
             height: 50,
             decoration: BoxDecoration(
-                color: Color.fromARGB(255, 241, 241, 241),
+                // color: Color.fromARGB(255, 241, 241, 241),
+              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List ),
                 boxShadow: [
                   BoxShadow(
                       color: Colors.black54,blurRadius: 10,offset: Offset(1,1)
@@ -233,10 +239,10 @@ class selectCourseTimeSheet{
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 //上一页
-                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: Colors.black54,),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
-                Obx(() => Text('第${_pageIndex.value}小节')),
+                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['defaultIconColor'] as List ),),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                Obx(() => Text('第${_pageIndex.value}小节',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
                 //下一页
-                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: Colors.black54,),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
+                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['defaultIconColor'] as List ),),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
               ],
             ),
           ),

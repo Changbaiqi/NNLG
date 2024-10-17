@@ -33,7 +33,8 @@ class MainUserViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['color'] as List ),
+
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
       body: ShowCaseWidget(
         builder: (showCaseContext){
           logic.showCaseContext = showCaseContext;
@@ -45,7 +46,7 @@ class MainUserViewPage extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
                     child: Card(
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['forceColor'] as List ),
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                       child: Container(
                         // height: 470,
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -180,7 +181,7 @@ class MainUserViewPage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Visibility(visible: AccountData.isIdent.value,child: Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                                       child: Container(
                                         height: 40,
                                         width:
@@ -201,7 +202,7 @@ class MainUserViewPage extends StatelessWidget {
                                       ),
                                     )),
                                     Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                                       child: Container(
                                         height: 40,
                                         width: MediaQuery.of(context).size.width,
@@ -214,7 +215,7 @@ class MainUserViewPage extends StatelessWidget {
                                       ),
                                     ),
                                     Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                                       child: Container(
                                         height: 40,
                                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -243,7 +244,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -282,7 +283,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -320,7 +321,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -371,7 +372,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -412,7 +413,7 @@ class MainUserViewPage extends StatelessWidget {
                             height: 60,
                             width: MediaQuery.of(context).size.width,
                             child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Row(
@@ -445,7 +446,7 @@ class MainUserViewPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ),visible: false,)
+                        ),visible: true,)
                       ],
                     ),
                   )

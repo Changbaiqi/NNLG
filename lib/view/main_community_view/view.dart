@@ -17,14 +17,14 @@ class MainCommunityViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logic.context = context;
-    return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['color'] as List ),
+    return Obx(() => Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['backgroundColor'] as List ),
       body: ListView(
         children: [
           //头部显示--------------------
           Container(
             decoration: BoxDecoration(
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['backgroundColor'] as List ),
                 borderRadius: BorderRadius.all(Radius.circular(20)),
                 boxShadow: [
                   BoxShadow(
@@ -32,7 +32,7 @@ class MainCommunityViewPage extends StatelessWidget {
                       blurRadius: 14.0,
                       spreadRadius: 0,
                       // color: Color(0xFFdfdfdf)
-                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
+                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['foregroundColor'] as List )
                   )
                 ]),
             height: 100,
@@ -48,10 +48,10 @@ class MainCommunityViewPage extends StatelessWidget {
                         children: [
                           Text('在线人数',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
                           Obx(() => AnimatedFlipCounter(
-                                value:
-                                    ContextDate.onLineTotalCount.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
-                              ))
+                            value:
+                            ContextDate.onLineTotalCount.value.toInt(),
+                            textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
+                          ))
                         ],
                       ),
                       Column(
@@ -59,9 +59,9 @@ class MainCommunityViewPage extends StatelessWidget {
                         children: [
                           Text('软件点击量',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
                           Obx(() => AnimatedFlipCounter(
-                                value: state.onClickTotal.value.toInt(),
-                                textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
-                              ))
+                            value: state.onClickTotal.value.toInt(),
+                            textStyle: TextStyle(fontSize: 30,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List ),),
+                          ))
                         ],
                       )
                     ],
@@ -75,7 +75,7 @@ class MainCommunityViewPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['backgroundColor'] as List ),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
@@ -83,7 +83,7 @@ class MainCommunityViewPage extends StatelessWidget {
                         blurRadius: 14.0,
                         spreadRadius: 0,
                         // color: Color(0xFFdfdfdf)
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['foregroundColor'] as List )
                     )
                   ]),
               // height: 170,
@@ -94,7 +94,7 @@ class MainCommunityViewPage extends StatelessWidget {
                 children: [
                   InkWell(
                     borderRadius:
-                        BorderRadius.only(topLeft: Radius.circular(20)),
+                    BorderRadius.only(topLeft: Radius.circular(20)),
                     child: logic.boxChildLottie(
                         'assets/images/chat_room_lottie.json', '校园聊一聊'),
                     // child: logic.boxChildSvg("assets/images/lyl.svg", '校园聊一聊'),
@@ -113,7 +113,7 @@ class MainCommunityViewPage extends StatelessWidget {
                   ),
                   InkWell(
                     child:
-                        logic.boxChildSvg('assets/images/dorm.svg', '宿舍电费预警'),
+                    logic.boxChildSvg('assets/images/dorm.svg', '宿舍电费预警'),
                     onTap: () async {
                       showDialog(
                           context: context,
@@ -126,7 +126,7 @@ class MainCommunityViewPage extends StatelessWidget {
                   ),
                   InkWell(
                     borderRadius:
-                        BorderRadius.only(topRight: Radius.circular(20)),
+                    BorderRadius.only(topRight: Radius.circular(20)),
                     child: logic.boxChildSvg(
                         'assets/images/train_plan.svg', '培养计划'),
                     onTap: () {
@@ -135,7 +135,7 @@ class MainCommunityViewPage extends StatelessWidget {
                   ),
                   InkWell(
                     borderRadius:
-                        BorderRadius.only(bottomLeft: Radius.circular(20)),
+                    BorderRadius.only(bottomLeft: Radius.circular(20)),
                     child: logic.boxChildLottie(
                         'assets/images/score_search_lottie.json', '成绩查询'),
                     // child: logic.boxChildSvg(
@@ -168,8 +168,8 @@ class MainCommunityViewPage extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
             child: Container(
               decoration: BoxDecoration(
-                  // color: Colors.white,
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List ),
+                // color: Colors.white,
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['backgroundColor'] as List ),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                   boxShadow: [
                     BoxShadow(
@@ -177,7 +177,7 @@ class MainCommunityViewPage extends StatelessWidget {
                         blurRadius: 14.0,
                         spreadRadius: 0,
                         // color: Color(0xFFdfdfdf)
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['forceColor'] as List )
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['foregroundColor'] as List )
                     )
                   ]),
               // height: 260,
@@ -213,6 +213,6 @@ class MainCommunityViewPage extends StatelessWidget {
           )
         ],
       ),
-    );
+    ));
   }
 }

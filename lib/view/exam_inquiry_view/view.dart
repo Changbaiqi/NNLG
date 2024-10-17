@@ -27,22 +27,25 @@ class ExamInquiryViewPage extends StatelessWidget {
       backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
       appBar: AppBar(
         // foregroundColor: Colors.black,
-
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['defaultIconColor'] as List )
+        ),
         foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['foregroundColor'] as List ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('考试安排',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),),
             Obx(() => DropdownButton<String>(
+              dropdownColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
                 value: state.selectTime.value,
-
+                style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),
                 items: state.searList.value
                     .map((e) => DropdownMenuItem(
                     value: e,
 
                     child: Container(
                       alignment: Alignment.centerLeft,
-                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['foregroundColor'] as List )),),
+                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),),
                     )))
                     .toList(),
                 onChanged: (value) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:nnlg/dao/AppInfoData.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/view/start_view/binding.dart';
 
 import 'logic.dart';

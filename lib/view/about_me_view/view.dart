@@ -18,9 +18,12 @@ class AboutMeViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
       backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
       appBar: AppBar(
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['defaultIconColor'] as List )
+        ),
         backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
         foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List ),
         title: Text('关于软件和作者',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['textColor'] as List )),),
@@ -35,7 +38,7 @@ class AboutMeViewPage extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
                   child: Container(
                     decoration: BoxDecoration(
-                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List ),
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
@@ -43,7 +46,7 @@ class AboutMeViewPage extends StatelessWidget {
                               blurRadius: 14.0,
                               spreadRadius: 0,
                               // color: Color(0xFFdfdfdf)
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['foregroundColor'] as List )
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['shadowColor'] as List )
                           )
                         ]),
                     child: Padding(
@@ -54,7 +57,10 @@ class AboutMeViewPage extends StatelessWidget {
                           children: [
                             // Text(
                             //     '软件作者为本校计算机系(21级)学生，软件维护需要成本。目前用爱发电。如果软件有什么bug或者啥的可以在“校园聊一聊”功能里面提案或联系作者QQ或者发送邮箱：2084069833。因为目前软件源码没人继承维护，所以等软件作者毕业后或许将不再维护。服务器一旦停止运行有些功能将会不能使用（课表和打水功能等核心功能还能使用，这个不用担心）。'),
-                            Obx(() => MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: state.aboutMeText.value))
+                            Obx(() => MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: state.aboutMeText.value,config: MarkdownConfig(configs: [
+                              PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['textColor'] as List ))),
+
+                            ]),))
                             // MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: '''### 关于软件''')
                           ],
                         ),
@@ -164,7 +170,7 @@ class AboutMeViewPage extends StatelessWidget {
           ],
         ),//软件申明信息
       ),
-    );
+    ));
   }
 
   /// 吊起QQ

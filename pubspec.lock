@@ -556,10 +556,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluwx
-      sha256: "48c4ce505cd7a243f2ebce0f4e0ec94bfbd637a6d7e73d975ac3e9da5772f15a"
+      sha256: "2abd0c3c817b4ac6e275cec3df21547dd0a7d32acd451ce8bbf8af39c63acad7"
       url: "https://mirrors.tuna.tsinghua.edu.cn/dart-pub/"
     source: hosted
-    version: "4.5.6"
+    version: "4.6.0"
   frontend_server_client:
     dependency: transitive
     description:

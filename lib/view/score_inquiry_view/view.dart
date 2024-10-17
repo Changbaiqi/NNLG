@@ -28,6 +28,9 @@ class ScoreInquiryViewPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 1,
         foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['foregroundColor'] as List),
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['defaultIconColor'] as List )
+        ),
         // backgroundColor: Colors.white,
         backgroundColor: Colors.transparent,
         title: Row(
@@ -39,6 +42,7 @@ class ScoreInquiryViewPage extends StatelessWidget {
             ),),
             Obx(() => DropdownButton<String>(
                 value: state.selectTime.value,
+                dropdownColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['backgroundColor'] as List ),
                 items: state.searList.value
                     .map((e) => DropdownMenuItem(
                     value: e,

@@ -94,8 +94,8 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
    * [param] null
    * [return]
    */
-  initShareDate() {
-    ShareDateUtil().initLoading().then((value) async {
+  initShareDate() async{
+    await ShareDateUtil().initLoading().then((value) async {
       //print('${CourseData.nowWeek}');
 
 
@@ -156,7 +156,7 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     initShareDate();
     initAnimation();
     toClick();

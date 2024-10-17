@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 
 import 'logic.dart';
 
@@ -16,6 +18,9 @@ class AuthenticationStandardsViewPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['defaultIconColor'] as List )
+        ),
         title: Text(
           '认证说明',
           style: TextStyle(color: Colors.black),

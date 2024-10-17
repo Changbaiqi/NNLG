@@ -244,7 +244,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       padding: EdgeInsets.all(4),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['foregroundColor'] as List),
+                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['leftTopShowColor'] as List),
                             borderRadius: BorderRadius.circular(10)),
                         child: Center(
                           child: Obx(() => Text(
@@ -267,14 +267,14 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                             decoration: BoxDecoration(
                                 color: DateTime.now().month == e.month &&
                                         DateTime.now().day == e.day
-                                    ? Color.fromARGB(30, 59, 52, 86)
-                                    : Colors.transparent,
+                                    ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBackgroundColor']as List )
+                                    : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBackgroundColor'] as List ),
                                 borderRadius: BorderRadius.circular(8),
                                 border: DateTime.now().month == e.month &&
                                         DateTime.now().day == e.day
                                     ? Border.all(
-                                        color: Color.fromARGB(130, 59, 52, 86))
-                                    : Border.all(color: Colors.transparent)),
+                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBorderColor']as List ))
+                                    : Border.all(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBorderColor']as List ))),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -513,20 +513,18 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       borderRadius: BorderRadius.circular(8),
                       color: isColor.value
                           ? color
-                          : Color.fromARGB(
-                          (columTimeList[element['columStart'] - 1].month ==
-                              DateTime.now().month) &&
-                              (columTimeList[element['columStart'] - 1]
-                                  .day ==
-                                  DateTime.now().day)
-                              ? 130
-                              : 30,
-                          59,
-                          52,
-                          86),
+                          : ((columTimeList[element['columStart'] - 1].month ==
+                          DateTime.now().month) &&
+                          (columTimeList[element['columStart'] - 1]
+                              .day ==
+                              DateTime.now().day)?CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['backgroundColor'] as List ):CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['backgroundColor'] as List )),
                       //设置四周边框
-                      border: new Border.all(
-                          width: 1, color: Color.fromARGB(80, 59, 52, 86)),
+                      border: (columTimeList[element['columStart'] - 1].month ==
+                          DateTime.now().month) &&
+                          (columTimeList[element['columStart'] - 1]
+                              .day ==
+                              DateTime.now().day)? Border.all(
+                          width: 1, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['borderColor']as List )):Border.all(width: 1,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['borderColor']as List )),
                     ),
                     child: RichText(
                       text: TextSpan(

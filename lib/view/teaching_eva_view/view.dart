@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:nnlg/dao/CustomThemeData.dart';
+import 'package:nnlg/utils/CustomerThemeUtil.dart';
 import 'package:nnlg/view/router/Routes.dart';
 
 import 'logic.dart';
@@ -22,16 +24,21 @@ class TeachingEvaViewPage extends StatelessWidget {
     // var childAspectRatio = itemWidth / itemHeight;
 
     return Scaffold(
+      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['backgroundColor'] as List),
       appBar: AppBar(
         elevation: 1,
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
+        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['foregroundColor'] as List),
+        // backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(
+            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['defaultIconColor'] as List )
+        ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               '在线评教',
-            )
+            style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List),),)
           ],
         ),
       ),
@@ -49,7 +56,7 @@ class TeachingEvaViewPage extends StatelessWidget {
                 itemCount: state.searList.value.length,
                 itemBuilder: (cont,index)=>showchildElement(state.searList.value[index]));
           default:
-            return Center(child: Text('错误'),);
+            return Center(child: Text('错误',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),),);
         }
       }),
     );
@@ -92,12 +99,12 @@ class TeachingEvaViewPage extends StatelessWidget {
               height: 25,
               width: 25,
               decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['itemBackgroundColor'] as List),
                   borderRadius: BorderRadius.all(Radius.circular(500))),
               child: Center(
                 child: Text(
                   '${json["number"]}',
-                  style: TextStyle(fontSize: 18, color: Colors.black87),
+                  style: TextStyle(fontSize: 18, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
               ),
             ),
@@ -111,13 +118,13 @@ class TeachingEvaViewPage extends StatelessWidget {
               children: [
                 Text(
                   '学年学期：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${json["schoolYear"]}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )
@@ -133,13 +140,13 @@ class TeachingEvaViewPage extends StatelessWidget {
               children: [
                 Text(
                   '评价分类：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${json["evalClass"]}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )
@@ -155,13 +162,13 @@ class TeachingEvaViewPage extends StatelessWidget {
               children: [
                 Text(
                   '评价批次：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${json["evalBatch"]}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )
@@ -177,13 +184,13 @@ class TeachingEvaViewPage extends StatelessWidget {
               children: [
                 Text(
                   '开始时间：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${json["evalStartTime"]}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )
@@ -199,13 +206,13 @@ class TeachingEvaViewPage extends StatelessWidget {
               children: [
                 Text(
                   '结束时间：',
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                 ),
                 Container(
                   width: 100,
                   child: Text(
                     '${json["evalEndTime"]}',
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['teaching_eva_view']!['textColor'] as List)),
                     maxLines: 2,
                   ),
                 )

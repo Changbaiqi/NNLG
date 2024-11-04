@@ -446,7 +446,7 @@ class MainUserViewPage extends StatelessWidget {
                               ),
                             ),
                           ),
-                        ),visible: true,)
+                        ),visible: false,)
                       ],
                     ),
                   )

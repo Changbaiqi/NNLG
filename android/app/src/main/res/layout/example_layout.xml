@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="180dp"
     android:layout_margin="8dp"
     android:background="@drawable/widget_background"
     android:orientation="vertical"
@@ -12,29 +12,79 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#000000"
+                android:text="第八周" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="#8FE1E1E1"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:text="高等数学（一）" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="#8FE1E1E1"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#000000"
+                    android:text="高等数学（二）" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
-<!--    <TextView-->
-<!--        android:id="@+id/widget_title"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="36sp"-->
-<!--        android:textStyle="bold"-->
-<!--        tools:text="Title" />-->
 
-<!--    <TextView-->
-<!--        android:id="@+id/widget_message"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:textSize="18sp"-->
-<!--        tools:text="Message" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/widget_title"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textSize="36sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        tools:text="Title" />-->
 
-<!--    <ImageView-->
-<!--        android:id="@+id/widget_img"-->
-<!--        android:layout_width="64dp"-->
-<!--        android:layout_height="64dp"-->
-<!--        android:visibility="gone" />-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/widget_message"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:textSize="18sp"-->
+    <!--        tools:text="Message" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/widget_img"-->
+    <!--        android:layout_width="64dp"-->
+    <!--        android:layout_height="64dp"-->
+    <!--        android:visibility="gone" />-->
 </LinearLayout>

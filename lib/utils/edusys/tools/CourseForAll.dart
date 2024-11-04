@@ -24,7 +24,7 @@ class CourseForAll {
     // Matcher matcher = pattern.matcher(courseHTML);
     String? tableString = null;
     // while (matcher.find()) {
-    for(Match m in match){
+    for (Match m in match) {
       String group = m.group(1).toString();
       tableString = m.group(1).toString();
     }
@@ -35,7 +35,7 @@ class CourseForAll {
     // Pattern trPattern = Pattern.compile("<tr>([\\s\\S]*?)(</tr>)");
     // Matcher trMatcher = trPattern.matcher(tableString);
     List<String> trList = [];
-    for(Match m in reMatch){
+    for (Match m in reMatch) {
       String group = m.group(1).toString();
       trList.add(group);
     }
@@ -73,7 +73,8 @@ class CourseForAll {
 
     //备注信息截取
 
-    RegExp remarkPt = RegExp(r'<th width=\"[^\"]*\" height=\"[^\"]*\" align=\"[^\"]*\">[^<]*</th> <td colspan=\"[^\"]*\" align=\"[^\"]*\">([^<]*)</td>');
+    RegExp remarkPt = RegExp(
+        r'<th width=\"[^\"]*\" height=\"[^\"]*\" align=\"[^\"]*\">[^<]*</th> <td colspan=\"[^\"]*\" align=\"[^\"]*\">([^<]*)</td>');
     Match? remarkMatcher = remarkPt.firstMatch(courseHTML);
     if (remarkMatcher != null) {
       remark = remarkMatcher.group(1);
@@ -149,12 +150,13 @@ class CourseForAll {
 
     //匹配周和节所在周列表
     String? courseWeek = courseForm.courseWeek;
-    RegExp weekListPattern = RegExp(r"([^(]*)\([^(]*\)\[([^节]*)节\]");
+    RegExp weekListPattern = RegExp(r"([^(]*)\(([^)]*)\)\[([^节]*)节\]");
     Match? weekListMatcher = weekListPattern.firstMatch(courseWeek!);
     if (weekListMatcher != null) {
       //匹配周list
       List<int> weekList = [];
-      String weeks = weekListMatcher.group(1).toString();
+      String weeks = weekListMatcher.group(1).toString(); //周字符串
+      String model = weekListMatcher.group(2).toString(); //匹配模式，是全部还是单周还是双周
       List<String> weeksSplit = weeks.split(",");
       for (int i = 0; i < weeksSplit.length; i++) {
         //有-
@@ -162,19 +164,31 @@ class CourseForAll {
           int start = int.parse(weeksSplit[i].split("-")[0]);
           int end = int.parse(weeksSplit[i].split("-")[1]);
           for (int j = start; j <= end; ++j) {
-            weekList.add(j);
+            if (model == "全部") {
+              weekList.add(j);
+            } else if (model == "单周" && j % 2 != 0) {
+              weekList.add(j);
+            } else if (model == "双周" && j % 2 == 0) {
+              weekList.add(j);
+            }
           }
         } else {
           //无-
           int week = int.parse(weeksSplit[i]);
-          weekList.add(week);
+          if (model == "全部") {
+            weekList.add(week);
+          } else if (model == "单周" && week % 2 != 0) {
+            weekList.add(week);
+          } else if (model == "双周" && week % 2 == 0) {
+            weekList.add(week);
+          }
         }
         courseForm.courseWeekList = weekList;
       }
 
       //匹配节list
       List<int> selectionList = [];
-      String sections = weekListMatcher.group(2).toString();
+      String sections = weekListMatcher.group(3).toString();
       List<String> selectionsSplit = sections.split(",");
       for (int i = 0; i < selectionsSplit.length; i++) {
         //有-
@@ -207,7 +221,7 @@ class CourseForAll {
     // ObjectMapper objectMapper = new ObjectMapper();
     // HashMap<String,Object> result = new HashMap<>();
     Map<String, dynamic> result = {};
-    List<List<List<List<Map<String,dynamic>?>>>> list = [];
+    List<List<List<List<Map<String, dynamic>?>>>> list = [];
     for (int i = 0; i < minWeek; i++) {
       list.add([]);
       for (int j = 0; j < 12; ++j) {
@@ -218,21 +232,22 @@ class CourseForAll {
       }
     }
 
-
-    Set<String> repeat = Set();//去重，防止重复添加
+    Set<String> repeat = Set(); //去重，防止重复添加
     for (int i = 0; i < courFormList.length; i++) {
       //第几行
       for (int j = 0; j < courFormList[i].length; ++j) {
         //第几列
         for (int z = 0; z < courFormList[i][j].length; ++z) {
           CourseForm? courseForm = courFormList[i][j][z];
-          if (courseForm == null || repeat.contains(jsonEncode(courseForm.toJsonMap())+"$j")) continue;
+          if (courseForm == null ||
+              repeat.contains(jsonEncode(courseForm.toJsonMap()) + "$j"))
+            continue;
           for (int week in courseForm.courseWeekList!) {
             for (int selection in courseForm.courseSectionList!) {
               list[week - 1][selection - 1][j].add(courseForm.toJsonMap());
             }
           }
-          repeat.add(jsonEncode(courseForm.toJsonMap())+"$j");
+          repeat.add(jsonEncode(courseForm.toJsonMap()) + "$j");
         }
       }
     }

@@ -14,14 +14,14 @@ if (flutterRoot == null) {
 }
 
 
-def flutterVersionCode= '29'
+def flutterVersionCode= '30'
 //def flutterVersionCode = '9999999'
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 //if (flutterVersionCode == null) {
 //    flutterVersionCode = '1'
 //}
 
-def flutterVersionName = '3.5.7-Beta.1·亚托莉'
+def flutterVersionName = '3.5.8·亚托莉'
 //def flutterVersionName = localProperties.getProperty('flutter.versionName')
 //if (flutterVersionName == null) {
 //    //flutterVersionName = '1.0'
@@ -85,7 +85,8 @@ dependencies{
     implementation('org.jetbrains.kotlin:kotlin-stdlib')
     implementation ('com.eclipsesource.j2v8:j2v8:6.2.0@aar')
     implementation('com.amap.api:3dmap:8.1.0')
-//    implementation('androidx.glance:glance-appwidget:1.1.0')
+    implementation('androidx.glance:glance-appwidget:LATEST-VERSION')
+
 }
 
 

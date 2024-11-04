@@ -87,16 +87,29 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-
-       <receiver android:name="HomeWidgetExampleProvider"
-           android:exported="true">
+<!--       桌面课表组件-->
+       <receiver android:name=".homewidget.HomeWidgetExampleProvider"
+           android:exported="true"
+           android:label="桌面课表">
+           <meta-data
+               android:name="android.appwidget.provider"
+               android:resource="@xml/home_widget_example"/>
            <intent-filter>
                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+               <action android:name="android.appwidget.action.APPWIDGET_ENABLE" />
+               <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+               <action android:name="android.appwidget.action.APPWIDGET_OPTIONS_CHANGED" />
            </intent-filter>
-           <meta-data android:name="android.appwidget.provider"
-               android:resource="@xml/home_widget_example" />
        </receiver>
+
+<!--       <receiver android:name=".homewidget.HomeWidgetExampleProvider"-->
+<!--           android:exported="true">-->
+<!--           <intent-filter>-->
+<!--               <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
+<!--           </intent-filter>-->
+<!--           <meta-data android:name="android.appwidget.provider"-->
+<!--               android:resource="@xml/home_widget_example" />-->
+<!--       </receiver>-->
 
        <!-- Used for Background Work -->
        <receiver android:name="es.antonborri.home_widget.HomeWidgetBackgroundReceiver"

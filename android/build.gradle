@@ -1,44 +1,44 @@
+
 buildscript {
-    ext.kotlin_version = '1.9.20'
     repositories {
         google()
         mavenCentral()
-//        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-//        maven{ url 'https://maven.aliyun.com/repository/google'}
-//        maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
-//        maven{ url 'https://maven.aliyun.com/repository/public'}
-//        maven{ url 'https://maven.aliyun.com/repository/jcenter'}
-
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-//        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
+        classpath 'com.android.tools:desugar_jdk_libs:2.0.3'  // 添加 desugar_jdk_libs 库
     }
 }
-
 allprojects {
     repositories {
         google()
         mavenCentral()
-//        maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
-//        maven{ url 'https://maven.aliyun.com/repository/google'}
-//        maven{ url 'https://maven.aliyun.com/repository/gradle-plugin'}
-//        maven{ url 'https://maven.aliyun.com/repository/public'}
-//        maven{ url 'https://maven.aliyun.com/repository/jcenter'}
-
-
+//        maven { url 'https://maven.aliyun.com/repository/google' }
+//        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+//        maven { url 'https://maven.aliyun.com/repository/public' }
     }
-
 }
-
-rootProject.buildDir = '../build'
+subprojects {
+    //新版本gradle需要加namespace否则失败
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+            println "project: ${project.name} Namespace get: ${project.android.namespace}"
+            def packageName = project.android.namespace ?: project.android.defaultConfig.applicationId ?: project.android.sourceSets.main.manifest.srcFile.text.find(/package="([^"]*)"/) ?: project.group
+            project.android.namespace = packageName
+            println "Namespace set to: ${packageName} for project: ${project.name}"
+            project.android {
+                compileSdkVersion 34
+                buildToolsVersion "34.0.0"
+            }
+        }
+    }
+}
+rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {

@@ -41,20 +41,21 @@ dependencies:
   audioplayers: ^5.2.1 #播放音频
 
   shared_preferences: ^2.0.15 #用来存储配置文件用的
-  fluttertoast: ^8.0.9 #Toast提示使用
+  fluttertoast: ^8.2.10 #Toast提示使用
   flutter_update_dialog: ^2.0.0 #弹窗提示插件，一般用来整更新弹窗
   #扫描二维码
-  scan: ^1.6.0
-  qr_code_scanner: ^1.0.1
+#  scan: ^1.6.0
+#  qr_code_scanner: ^1.0.1
   flutter_hms_scan_kit: ^1.1.2 #华为的扫码
   qr_flutter: ^4.1.0 #二维码生成
   path_provider: ^2.0.11 #获取文件目录使用
-  image_gallery_saver: ^1.7.1 #保存图片使用
+  image_gallery_saver: ^2.0.3 #保存图片使用
   image_picker: ^0.8.6 #本地图片选择
-  amap_flutter_map: ^3.0.0 #高德地图
-  amap_flutter_location: ^3.0.0 #高德定位
+#  amap_flutter_map: ^3.0.0 #高德地图
+  amap_map: ^1.0.12
+#  amap_flutter_location: ^3.0.0 #高德定位
   flutter_pickers: ^2.1.8
-  flutter_svg: ^0.22.0 #用于加载svg图标
+  flutter_svg: ^2.0.17 #用于加载svg图标
 
   web_socket_channel: ^2.2.0 #用于发送WebSocket
 
@@ -63,7 +64,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1 #列表子控件加载动画
   url_launcher: ^6.2.4 #用于跳转浏览器
   package_info_plus: ^4.0.2 #用于获取APP版本等相关信息
-  home_widget: ^0.5.0 #桌面小组件
+#  home_widget: ^0.5.0 #桌面小组件
   lottie: ^1.2.1 #lottie动画依赖
   flutter_markdown: ^0.6.18+3 # markdown
   markdown_widget: ^2.3.2+3 #markdown
@@ -76,7 +77,7 @@ dependencies:
   sensors_plus: ^4.0.2 #摇一摇
   tencent_kit: ^6.0.1 #QQ分享
   share_plus: ^7.2.2 #分享
-  permission_handler: ^8.1.6 #权限管理
+  permission_handler: ^11.3.1 #权限管理
 #  syncfusion_flutter_calendar: ^25.1.38 #calendar课表展示表格
   flutter_screenutil: ^5.9.3  #用于字体大小适配
   crypto: ^3.0.3 #计算加密

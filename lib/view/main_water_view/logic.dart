@@ -22,7 +22,6 @@ import 'package:wifi_hunter/wifi_hunter.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
 
 import 'state.dart';
-import 'package:amap_flutter_location/amap_flutter_location.dart';
 class MainWaterViewLogic extends GetxController {
   final MainWaterViewState state = MainWaterViewState();
   BuildContext? context=null;

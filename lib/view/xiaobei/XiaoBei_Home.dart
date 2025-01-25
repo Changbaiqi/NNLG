@@ -3,7 +3,7 @@ import 'package:nnlg/utils/XiaoBeiHomeUtil.dart';
 import 'package:nnlg/view/module/setXiaoBeiPlayTImeSheet.dart';
 
 import '../../utils/ToastUtil.dart';
-import '../module/SelectLocation.dart';
+// import '../module/SelectLocation.dart';
 
 
 class XiaoBei_Home extends StatefulWidget {
@@ -457,10 +457,10 @@ class _XiaoBei_Home_Card_3State extends State<XiaoBei_Home_Card_3> {
   }
 
   setPlayCardLocation() async {
-
-    List reslut = await Navigator.push(context, MaterialPageRoute(builder: (context){
-      return SelectLocation();
-    }));
+    List reslut = [];
+    // List reslut = await Navigator.push(context, MaterialPageRoute(builder: (context){
+    //   return SelectLocation();
+    // }));
     print('${reslut.toString()}');
 
     if(reslut!=null){

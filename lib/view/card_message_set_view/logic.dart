@@ -59,6 +59,26 @@ class CardMessageSetViewLogic extends GetxController {
         '19栋': [],
         '20栋': [],
         '21栋': [],
+        '1号楼': [],
+        '2号楼': [],
+        '3号楼': [],
+        '4号楼': [],
+        '5号楼': [],
+        '6号楼': [],
+        '7号楼': [],
+        '8号楼': [],
+        '9号楼': [],
+        '10号楼': [],
+        '11号楼': [],
+        '12号楼':[],
+        '14号楼': [],
+        '16号楼': [],
+        '致远楼一单元': [],
+        '致远楼二单元': [],
+        '德馨楼一单元': [],
+        '德馨楼二单元': [],
+        '博雅楼一单元': [],
+        '博雅楼二单元': [],
       }
     };
     for (int x = 1; x <= 6; ++x) {
@@ -137,6 +157,52 @@ class CardMessageSetViewLogic extends GetxController {
         multiData['南宁']?['19栋']?.add('${x * 100 + y}');
       }
     }
+
+    //1，3号楼
+    for (int x = 1; x <= 10; ++x) {
+      for (int y = 1; y <= 48; ++y) {
+        multiData['南宁']?['1号楼']?.add('${x*100 + y}');
+        multiData['南宁']?['3号楼']?.add('${x*100 + y}');
+      }
+    }
+    //2号楼
+    for (int x = 1; x <= 10; ++x) {
+      for (int y = 1; y <= 48; ++y) {
+        multiData['南宁']?['2号楼']?.add('${x*100 + y}');
+      }
+    }
+    for (int y = 1; y <= 48; ++y) {
+      multiData['南宁']?['2号楼']?.add('${1100 + y}');
+    }
+
+    //4、5、9号楼
+    for (int x = 1; x <= 6; ++x) {
+      for (int y = 1; y <= 24; ++y) {
+        multiData['南宁']?['4号楼']?.add('${x * 100 + y}');
+        multiData['南宁']?['5号楼']?.add('${x * 100 + y}');
+      }
+    }
+    //6号楼
+    for (int x = 1; x <= 8; ++x) {
+      for (int y = 1; y <= 36; ++y) {
+        multiData['南宁']?['6号楼']?.add('${x * 100 + y}');
+      }
+    }
+
+    //7号楼
+    for (int x = 1; x <= 10; ++x) {
+      for (int y = 1; y <= 60; ++y) {
+        multiData['南宁']?['7号楼']?.add('${x * 100 + y}');
+      }
+    }
+
+    //8号楼
+    for (int x = 1; x <= 6; ++x) {
+      for (int y = 1; y <= 48; ++y) {
+        multiData['南宁']?['6号楼']?.add('${x * 100 + y}');
+      }
+    }
+
 
     Pickers.showMultiLinkPicker(Get.context!,
 

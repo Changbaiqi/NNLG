@@ -1,76 +1,17 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.cbq.nnlg">
-
-
-
-    <!--    互联网访问-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-
-    <!-- 摄像头访问权限，主要用于扫二维码 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION"/>
-
-<!--    位置信息权限-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-
-    <queries>
-        <intent>
-            <action android:name="android.intent.action.VIEW"/>
-            <data android:scheme="https"/>
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.DIAL"/>
-            <data android:scheme="tel"/>
-        </intent>
-        <intent>
-            <action android:name="android.intent.action.SEND"/>
-            <data android:mimeType="*/*"/>
-        </intent>
-    </queries>
-
-   <application
-        android:label="南理校园助手"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application
+        android:label="恰啰校园"
         android:name="${applicationName}"
-        android:icon="@mipmap/nnlg">
-
-       <meta-data
-           android:name="com.amap.api.v2.apikey"
-           android:value="6ea84eb05b5a87104808fca89dff0f56" />
-
-       <meta-data
-           tools:node="replace"
-           android:name="huawei_module_scankit_sdk_version"
-           android:value="scanplus:2.1.0.300" />
-
-       <meta-data
-           tools:node="replace"
-           android:name="huawei_module_scankit_local"
-           android:value="20100300" />
-
-
-
-       <activity
+        android:icon="@mipmap/ic_launcher">
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:taskAffinity=""
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:networkSecurityConfig="@xml/network_security_config">
+            android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -79,54 +20,26 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-           <meta-data
-               android:name="android.app.shortcuts"
-               android:resource="@xml/shortcuts"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-<!--       桌面课表组件-->
-       <receiver android:name=".homewidget.HomeWidgetExampleProvider"
-           android:exported="true"
-           android:label="桌面课表">
-           <meta-data
-               android:name="android.appwidget.provider"
-               android:resource="@xml/home_widget_example"/>
-           <intent-filter>
-               <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-               <action android:name="android.appwidget.action.APPWIDGET_ENABLE" />
-               <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-               <action android:name="android.appwidget.action.APPWIDGET_OPTIONS_CHANGED" />
-           </intent-filter>
-       </receiver>
-
-<!--       <receiver android:name=".homewidget.HomeWidgetExampleProvider"-->
-<!--           android:exported="true">-->
-<!--           <intent-filter>-->
-<!--               <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />-->
-<!--           </intent-filter>-->
-<!--           <meta-data android:name="android.appwidget.provider"-->
-<!--               android:resource="@xml/home_widget_example" />-->
-<!--       </receiver>-->
-
-       <!-- Used for Background Work -->
-       <receiver android:name="es.antonborri.home_widget.HomeWidgetBackgroundReceiver"
-           android:exported="true">
-           <intent-filter>
-               <action android:name="es.antonborri.home_widget.action.BACKGROUND" />
-           </intent-filter>
-       </receiver>
-       <service android:name="es.antonborri.home_widget.HomeWidgetBackgroundService"
-           android:permission="android.permission.BIND_JOB_SERVICE" android:exported="true"/>
-
-
-
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
 </manifest>

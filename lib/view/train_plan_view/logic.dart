@@ -1,9 +1,9 @@
 import 'dart:collection';
 
 import 'package:get/get.dart';
-import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
-import 'package:nnlg/utils/edusys/tools/TrainPlan.dart';
-import 'package:nnlg/web/TrainPlanWeb.dart';
+import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
+import 'package:callo/utils/edusys/tools/TrainPlan.dart';
+import 'package:callo/web/TrainPlanWeb.dart';
 
 import 'state.dart';
 

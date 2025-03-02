@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 // import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:nnlg/dao/AppInfoData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/dao/NoticeData.dart';
-import 'package:nnlg/utils/AppUpdateUtil.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:callo/dao/AppInfoData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/dao/NoticeData.dart';
+import 'package:callo/utils/AppUpdateUtil.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils/NoticeUtils.dart';

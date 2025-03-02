@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/manage/ManageXiaoBei_Main.dart';
+import 'package:callo/view/manage/ManageXiaoBei_Main.dart';
 
 class VIPManage_Main extends StatefulWidget {
   const VIPManage_Main({Key? key}) : super(key: key);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/xiaobei/XiaoBei_Home.dart';
-import 'package:nnlg/view/xiaobei/XiaoBei_User.dart';
+import 'package:callo/view/xiaobei/XiaoBei_Home.dart';
+import 'package:callo/view/xiaobei/XiaoBei_User.dart';
 
 class XiaoBei_Main extends StatefulWidget {
   const XiaoBei_Main({Key? key}) : super(key: key);

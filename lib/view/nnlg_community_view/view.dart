@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/view/nnlg_community_view/CustomFloatingActionButtonLocation.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/view/nnlg_community_view/CustomFloatingActionButtonLocation.dart';
 
 import 'logic.dart';
 

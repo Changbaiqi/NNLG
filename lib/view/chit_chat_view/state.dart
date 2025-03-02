@@ -2,7 +2,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/utils/ChitchatUtil.dart';
+import 'package:callo/utils/ChitchatUtil.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ChitChatViewState {

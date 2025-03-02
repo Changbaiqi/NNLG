@@ -1,4 +1,4 @@
-import 'package:nnlg/utils/edusys/entity/CourseForm.dart';
+import 'package:callo/utils/edusys/entity/CourseForm.dart';
 
 
 class CourseNew{

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/XiaoBei_qingjia.dart';
+import 'package:callo/view/XiaoBei_qingjia.dart';
 
 class XiaoBeiLeave extends StatefulWidget {
   const XiaoBeiLeave({Key? key}) : super(key: key);

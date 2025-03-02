@@ -4,8 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/WaterData.dart';
-import 'package:nnlg/view/module/ClassScheduleWidget.dart';
+import 'package:callo/dao/WaterData.dart';
+import 'package:callo/view/module/ClassScheduleWidget.dart';
 
 import 'logic.dart';
 

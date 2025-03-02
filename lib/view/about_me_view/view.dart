@@ -3,9 +3,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 // import 'package:home_widget/home_widget.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:nnlg/utils/CusBehavior.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/FileUtils.dart';
+import 'package:callo/utils/CusBehavior.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/FileUtils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../dao/CustomThemeData.dart';
@@ -32,8 +32,40 @@ class AboutMeViewPage extends StatelessWidget {
       body: Container(
         child: ListView(
           children: [
+            
             Column(
               children: [
+                //声明
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 30, 20, 0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['backgroundColor'] as List ),
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        boxShadow: [
+                          BoxShadow(
+                              offset: Offset(0.0, 7.0),
+                              blurRadius: 14.0,
+                              spreadRadius: 0,
+                              // color: Color(0xFFdfdfdf)
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['about_me_view']!['shadowColor'] as List )
+                          )
+                        ]),
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(10, 20, 10, 20),
+                      child: ScrollConfiguration(
+                        behavior: CusBehavior(),
+                        child: Column(
+                          children: [
+                            ClipOval(child: Image.asset('assets/images/ic_launcher.png',width: 70,fit: BoxFit.cover,),),
+                            Text('当前版本：v3.5.9·亚托莉')
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 //声明
                 Padding(
                   padding: EdgeInsets.fromLTRB(20, 30, 20, 0),

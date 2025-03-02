@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/dao/LoginData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/dao/LoginData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../dao/CourseData.dart';

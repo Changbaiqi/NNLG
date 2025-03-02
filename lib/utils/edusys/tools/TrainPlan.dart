@@ -5,7 +5,7 @@
  *
  * @Description TODO
  */
-import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
+import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
 
 class TrainPlan{
   String? _trainPlanHTML;

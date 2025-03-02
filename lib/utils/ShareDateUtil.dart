@@ -2,15 +2,15 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/dao/AppInfoData.dart';
-import 'package:nnlg/dao/AppUpdateData.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/dao/LoginData.dart';
-import 'package:nnlg/dao/NoticeData.dart';
-import 'package:nnlg/dao/XiaoBeiData.dart';
-import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:callo/dao/AccountData.dart';
+import 'package:callo/dao/AppInfoData.dart';
+import 'package:callo/dao/AppUpdateData.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/dao/LoginData.dart';
+import 'package:callo/dao/NoticeData.dart';
+import 'package:callo/dao/XiaoBeiData.dart';
+import 'package:callo/utils/CourseUtil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dao/ContextData.dart';

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:nnlg/dao/entity/ClassNewScheduleEntity.dart';
-import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
+import 'package:callo/dao/entity/ClassNewScheduleEntity.dart';
+import 'package:callo/dao/entity/ClassScheduleEntity.dart';
 
 class CourseData{
 

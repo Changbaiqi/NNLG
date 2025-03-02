@@ -3,8 +3,8 @@ import 'dart:collection';
 import 'dart:developer';
 
 import 'package:date_format/date_format.dart';
-import 'package:nnlg/utils/edusys/entity/EvalInform.dart';
-import 'package:nnlg/utils/edusys/entity/TeachingEvaForm.dart';
+import 'package:callo/utils/edusys/entity/EvalInform.dart';
+import 'package:callo/utils/edusys/entity/TeachingEvaForm.dart';
 
 class TeachingEva{
   String? _teachingEvaluationHTML;

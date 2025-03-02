@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hms_scan_kit/flutter_hms_scan_kit.dart';
 import 'package:flutter_hms_scan_kit/scan_result.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:callo/utils/ToastUtil.dart';
 
 
 class ScanKit_Water extends StatefulWidget {

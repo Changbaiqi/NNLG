@@ -2,8 +2,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/dao/WeekDayForm.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/dao/WeekDayForm.dart';
 
 /*
  * [author] 长白崎

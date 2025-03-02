@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gbk_codec/gbk_codec.dart';
-import 'package:nnlg/dao/LoginData.dart';
-import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
+import 'package:callo/dao/LoginData.dart';
+import 'package:callo/utils/edusys/tools/EncryEncode.dart';
 
 import '../dao/ContextData.dart';
 

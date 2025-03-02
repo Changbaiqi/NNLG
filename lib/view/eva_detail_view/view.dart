@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/view/router/Routes.dart';
 
 import 'logic.dart';
 

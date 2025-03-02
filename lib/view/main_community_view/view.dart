@@ -1,10 +1,10 @@
 import 'package:animated_flip_counter/animated_flip_counter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/view/module/showBindPowerDialog.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/view/module/showBindPowerDialog.dart';
+import 'package:callo/view/router/Routes.dart';
 
 import '../../utils/CustomerThemeUtil.dart';
 import 'logic.dart';

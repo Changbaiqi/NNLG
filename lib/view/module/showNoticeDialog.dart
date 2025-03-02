@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 import 'package:markdown_widget/widget/markdown.dart';
 
 // import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:nnlg/dao/NoticeData.dart';
-import 'package:nnlg/utils/ShareDateUtil.dart';
+import 'package:callo/dao/NoticeData.dart';
+import 'package:callo/utils/ShareDateUtil.dart';
 
 import '../../utils/NoticeUtils.dart';
 import '../../utils/ToastUtil.dart';

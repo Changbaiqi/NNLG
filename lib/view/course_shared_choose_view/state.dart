@@ -2,8 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
-import 'package:nnlg/web/ShareCourseWeb.dart';
+import 'package:callo/entity/model/ShareCourseAccountModel.dart';
+import 'package:callo/web/ShareCourseWeb.dart';
 
 class CourseSharedChooseViewState {
 

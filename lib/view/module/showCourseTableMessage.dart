@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/ToastUtil.dart';
 
 
 class showCourseTableMessage {

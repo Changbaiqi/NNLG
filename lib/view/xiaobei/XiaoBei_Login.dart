@@ -1,8 +1,8 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:nnlg/utils/ToastUtil.dart';
-import 'package:nnlg/utils/XiaoBeiLoginUtil.dart';
+import 'package:callo/utils/ToastUtil.dart';
+import 'package:callo/utils/XiaoBeiLoginUtil.dart';
 
 
 class XiaoBei_Login{

@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/utils/CourseUtil.dart';
+import 'package:callo/utils/CourseUtil.dart';
 import 'package:wifi_hunter/wifi_hunter.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
 

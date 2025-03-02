@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/utils/edusys/entity/EvalInform.dart';
-import 'package:nnlg/utils/edusys/entity/TeachingEvaForm.dart';
-import 'package:nnlg/utils/edusys/tools/TeachingEva.dart';
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/utils/edusys/entity/EvalInform.dart';
+import 'package:callo/utils/edusys/entity/TeachingEvaForm.dart';
+import 'package:callo/utils/edusys/tools/TeachingEva.dart';
 
 import 'LoginUtil.dart';
 

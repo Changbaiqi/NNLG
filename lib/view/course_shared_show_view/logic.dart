@@ -3,10 +3,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/dao/WeekDayForm.dart';
-import 'package:nnlg/utils/CourseUtil.dart';
-import 'package:nnlg/view/module/showCourseTableMessage.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/dao/WeekDayForm.dart';
+import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/view/module/showCourseTableMessage.dart';
 
 import 'state.dart';
 

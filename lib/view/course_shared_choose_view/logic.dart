@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/entity/model/ShareCourseAccountModel.dart';
+import 'package:callo/view/router/Routes.dart';
 
 import 'state.dart';
 

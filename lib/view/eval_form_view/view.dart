@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/utils/TeachingEvaUtil.dart';
+import 'package:callo/utils/TeachingEvaUtil.dart';
 
 import 'logic.dart';
 

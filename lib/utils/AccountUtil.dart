@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/utils/edusys/tools/AccountInfo.dart';
+import 'package:callo/dao/AccountData.dart';
+import 'package:callo/utils/edusys/tools/AccountInfo.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 

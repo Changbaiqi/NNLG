@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:nnlg/utils/VIPFunListUtil.dart';
-import 'package:nnlg/view/manage/VIPManage_Main.dart';
-import 'package:nnlg/view/xiaobei/XiaoBei_Main.dart';
+import 'package:callo/utils/VIPFunListUtil.dart';
+import 'package:callo/view/manage/VIPManage_Main.dart';
+import 'package:callo/view/xiaobei/XiaoBei_Main.dart';
 
 
 class VIPFunList extends StatefulWidget {

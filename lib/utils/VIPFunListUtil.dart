@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:nnlg/dao/ContextData.dart';
+import 'package:callo/dao/ContextData.dart';
 
 
 class VIPFunListUtil {

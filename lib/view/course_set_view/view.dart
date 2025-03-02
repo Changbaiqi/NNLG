@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CourseUtil.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/ShareDateUtil.dart';
-import 'package:nnlg/view/module/selectBeginCourseTimeSheet.dart';
-import 'package:nnlg/view/module/selectCourseTimeSheet.dart';
-import 'package:nnlg/view/module/selectDateSheet.dart';
-import 'package:nnlg/view/module/selectNowCourseListSheet.dart';
-import 'package:nnlg/view/module/showCourseNumSheet.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/ShareDateUtil.dart';
+import 'package:callo/view/module/selectBeginCourseTimeSheet.dart';
+import 'package:callo/view/module/selectCourseTimeSheet.dart';
+import 'package:callo/view/module/selectDateSheet.dart';
+import 'package:callo/view/module/selectNowCourseListSheet.dart';
+import 'package:callo/view/module/showCourseNumSheet.dart';
 
 import 'logic.dart';
 

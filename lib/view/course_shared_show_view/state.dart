@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/web/ShareCourseWeb.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/web/ShareCourseWeb.dart';
 
 class CourseSharedShowViewState {
   final accountData = (LinkedHashMap<String,dynamic>()).obs;

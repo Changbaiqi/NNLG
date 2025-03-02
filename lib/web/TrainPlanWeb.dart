@@ -9,10 +9,10 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/utils/LoginUtil.dart';
-import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
-import 'package:nnlg/utils/edusys/tools/TrainPlan.dart';
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/utils/LoginUtil.dart';
+import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
+import 'package:callo/utils/edusys/tools/TrainPlan.dart';
 
 class TrainPlanWeb{
 

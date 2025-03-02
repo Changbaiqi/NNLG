@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/view/router/Routes.dart';
 
 import 'logic.dart';
 

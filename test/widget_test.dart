@@ -10,12 +10,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
-import 'package:nnlg/dao/ClassScheduleDao.dart';
-import 'package:nnlg/dao/ClassScheduleDatabase.dart';
+import 'package:callo/dao/ClassScheduleDao.dart';
+import 'package:callo/dao/ClassScheduleDatabase.dart';
 
-import 'package:nnlg/main.dart';
-// import 'package:nnlg/utils/edusys/Account.dart';
-// import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
+import 'package:callo/main.dart';
+// import 'package:callo/utils/edusys/Account.dart';
+// import 'package:callo/utils/edusys/tools/EncryEncode.dart';
 
 void main() async{
   // final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db').build();

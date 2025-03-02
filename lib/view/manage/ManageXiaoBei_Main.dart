@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/view/manage/ManageXiaoBeiUserOperation.dart';
+import 'package:callo/view/manage/ManageXiaoBeiUserOperation.dart';
 
 import '../../utils/ToastUtil.dart';
 

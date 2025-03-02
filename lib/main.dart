@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:nnlg/dao/ClassNewScheduleDao.dart';
-import 'package:nnlg/dao/ClassScheduleDatabase.dart';
-import 'package:nnlg/view/router/AppPages.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/dao/ClassNewScheduleDao.dart';
+import 'package:callo/dao/ClassScheduleDatabase.dart';
+import 'package:callo/view/router/AppPages.dart';
+import 'package:callo/view/router/Routes.dart';
 
 import 'dao/ClassScheduleDao.dart';
 

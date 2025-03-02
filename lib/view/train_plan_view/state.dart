@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:get/get.dart';
-import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
+import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
 
 class TrainPlanViewState {
 

@@ -3,10 +3,10 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/web/ShareCourseWeb.dart';
+import 'package:callo/dao/AccountData.dart';
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/web/ShareCourseWeb.dart';
 
 class CourseSharedViewState {
 

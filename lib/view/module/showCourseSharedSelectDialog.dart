@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/view/Course_SharedView.dart';
-import 'package:nnlg/view/router/Routes.dart';
+import 'package:callo/view/Course_SharedView.dart';
+import 'package:callo/view/router/Routes.dart';
 
 
 

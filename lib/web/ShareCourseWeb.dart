@@ -9,9 +9,9 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:nnlg/dao/ContextData.dart';
-import 'package:nnlg/entity/model/ShareCourseAccountModel.dart' as ShareCourseAccountModel;
-import 'package:nnlg/entity/model/ShareCourseDataModel.dart' as ShareCourseDataModel;
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/entity/model/ShareCourseAccountModel.dart' as ShareCourseAccountModel;
+import 'package:callo/entity/model/ShareCourseDataModel.dart' as ShareCourseDataModel;
 
 class ShareCourseWeb{
 

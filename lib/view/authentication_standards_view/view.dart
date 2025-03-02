@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
 
 import 'logic.dart';
 

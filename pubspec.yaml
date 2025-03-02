@@ -1,5 +1,5 @@
-name: nnlg
-description: NNLG
+name: callo
+description: ciallo校园助手
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -37,6 +37,7 @@ dependencies:
 
   #flutter_pickers: ^2.1.9
   dio: ^5.4.3+1 #网络请求
+  html: ^0.15.5
   get: ^4.6.5
   audioplayers: ^5.2.1 #播放音频
 
@@ -123,6 +124,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/ic_launcher.png
     - assets/images/NNLG.png
     - assets/images/2.0x/NNLG.png
     - assets/images/3.0x/NNLG.png
@@ -204,6 +206,10 @@ flutter:
     - assets/images/2.0x/lyl.svg
     - assets/images/3.0x/lyl.svg
     - assets/images/4.0x/lyl.svg
+    - assets/images/school/nanningligongxueyuan.png
+    - assets/images/school/guilinligongdaxue.png
+    - assets/images/school/guilindianzikejidaxue.png
+    - assets/images/school/guangxishifandaxue.png
     - assets/images/loading.json
     - assets/images/searchLoadingLottie.json
     - assets/images/shareLoadingLottie.json

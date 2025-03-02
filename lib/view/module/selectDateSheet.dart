@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nnlg/dao/CourseData.dart';
+import 'package:callo/dao/CourseData.dart';
 
 
 /*

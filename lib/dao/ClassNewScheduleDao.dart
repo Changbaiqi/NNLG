@@ -6,7 +6,7 @@
  * @Description TODO
  */
 import 'package:floor/floor.dart';
-import 'package:nnlg/dao/entity/ClassScheduleEntity.dart';
+import 'package:callo/dao/entity/ClassScheduleEntity.dart';
 
 import 'entity/ClassNewScheduleEntity.dart';
 

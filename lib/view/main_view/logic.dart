@@ -1,10 +1,10 @@
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/dao/AppUpdateData.dart';
-import 'package:nnlg/utils/AccountUtil.dart';
-import 'package:nnlg/view/module/showNoticeDialog.dart';
-import 'package:nnlg/view/module/showUpdateDialog.dart';
+import 'package:callo/dao/AccountData.dart';
+import 'package:callo/dao/AppUpdateData.dart';
+import 'package:callo/utils/AccountUtil.dart';
+import 'package:callo/view/module/showNoticeDialog.dart';
+import 'package:callo/view/module/showUpdateDialog.dart';
 import 'state.dart';
 
 class MainViewLogic extends GetxController {

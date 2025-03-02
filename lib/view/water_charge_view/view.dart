@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/WaterData.dart';
+import 'package:callo/dao/WaterData.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 

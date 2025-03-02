@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:nnlg/utils/edusys/tools/AccountInfo.dart';
-import 'package:nnlg/utils/edusys/tools/CourseNew.dart';
-import 'package:nnlg/utils/edusys/tools/EncryEncode.dart';
+import 'package:callo/utils/edusys/tools/AccountInfo.dart';
+import 'package:callo/utils/edusys/tools/CourseNew.dart';
+import 'package:callo/utils/edusys/tools/EncryEncode.dart';
 
 class Account {
   String? _account;

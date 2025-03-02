@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:nnlg/utils/TeachingEvaUtil.dart';
-import 'package:nnlg/utils/edusys/entity/EvalInform.dart';
+import 'package:callo/utils/TeachingEvaUtil.dart';
+import 'package:callo/utils/edusys/entity/EvalInform.dart';
 
 import 'state.dart';
 

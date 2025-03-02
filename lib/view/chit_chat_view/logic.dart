@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/AccountData.dart';
-import 'package:nnlg/utils/ChitchatUtil.dart';
+import 'package:callo/dao/AccountData.dart';
+import 'package:callo/utils/ChitchatUtil.dart';
 
 import 'state.dart';
 

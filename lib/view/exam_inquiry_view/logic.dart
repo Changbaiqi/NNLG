@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:nnlg/utils/ExamInquiryUtil.dart';
+import 'package:callo/utils/ExamInquiryUtil.dart';
 
 import 'state.dart';
 

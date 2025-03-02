@@ -2,12 +2,12 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/view/main_community_view/view.dart';
-import 'package:nnlg/view/main_course_view/view.dart';
-import 'package:nnlg/view/main_user_view/view.dart';
-import 'package:nnlg/view/main_water_view/view.dart';
-import 'package:nnlg/view/nnlg_community_view/view.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/view/main_community_view/view.dart';
+import 'package:callo/view/main_course_view/view.dart';
+import 'package:callo/view/main_user_view/view.dart';
+import 'package:callo/view/main_water_view/view.dart';
+import 'package:callo/view/nnlg_community_view/view.dart';
 
 import '../../dao/CustomThemeData.dart';
 import 'logic.dart';

@@ -1,8 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CourseData.dart';
-import 'package:nnlg/utils/HexColor.dart';
+import 'package:callo/dao/CourseData.dart';
+import 'package:callo/utils/HexColor.dart';
 
 class MainCourseViewState {
   final  viewPageVar=(null as Widget?).obs;

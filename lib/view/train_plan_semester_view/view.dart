@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
-import 'package:nnlg/dao/CustomThemeData.dart';
-import 'package:nnlg/utils/CustomerThemeUtil.dart';
-import 'package:nnlg/utils/edusys/entity/TrainPlanInForm.dart';
+import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
 
 import 'logic.dart';
 

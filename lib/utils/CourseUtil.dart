@@ -120,7 +120,7 @@ class CourseUtil{
     }
     //debugPrint(response.toString());
     String newTest = await CourseForAll(utf8.decode(response.data)).getAllSemesterJson(weekSum);
-    log(newTest);
+    // log(newTest);
     // resWeekCourseList = jsonDecode(newTest);
     return newTest;
   }

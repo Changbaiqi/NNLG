@@ -21,6 +21,7 @@ class Routes{
   static const ScoreInquiry='/ScoreInquiry';
   static const ExamInquiry='/examInquiry';
   static const WaterCharge='/waterCharge';
+  static const WaterHelp = '/waterHelp';
   static const TeachingEva='/teachingEva';
   static const TeachingEvaDetails='/teachingEva/details';
   static const EvalForm = '/teachingEva/details/evalForm';

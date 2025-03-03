@@ -1,4 +1,6 @@
 
+import 'package:callo/view/water_help_view/binding.dart';
+import 'package:callo/view/water_help_view/view.dart';
 import 'package:get/get.dart';
 import 'package:callo/view/about_me_view/binding.dart';
 import 'package:callo/view/about_me_view/view.dart';
@@ -87,5 +89,6 @@ abstract class AppPages{
     GetPage(name: Routes.AccountSafe, page: ()=>AccountSafeViewPage(),binding: AccountSafeViewBinding()), //账号安全与隐私
     GetPage(name: Routes.SoftwareDevelopmentTestView, page: ()=>SoftwareDevelopmentTestViewPage(),binding:  SoftwareDevelopmentTestViewBinding()), //用于测试的页面
     GetPage(name: Routes.CardMessageSet, page: ()=>CardMessageSetViewPage(),binding:  CardMessageSetViewBinding()), //卡片设置
+    GetPage(name: Routes.WaterHelp, page: ()=>WaterHelpViewPage(),binding:  WaterHelpViewBinding()), //打水教程
   ];
 }

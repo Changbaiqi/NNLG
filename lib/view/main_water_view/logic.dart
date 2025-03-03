@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:callo/view/router/Routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -118,7 +119,8 @@ class MainWaterViewLogic extends GetxController {
                   width: MediaQuery.of(context!).size.width,
                   child: MaterialButton(
                     onPressed: (){
-
+                      Navigator.pop(builder!);
+                      Get.toNamed(Routes.WaterHelp);
                     },
                     child: Text('教程'),
                     color: Colors.blue,

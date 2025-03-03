@@ -45,7 +45,8 @@ class MainCourseViewPage extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height,
                       child: Image.network(
-                        'https://t.mwm.moe/fj/',
+                        // 'https://t.mwm.moe/fj/',
+                        'https://imgapi.xl0408.top/index.php',
                         fit: BoxFit.cover,
                       ),
                     ),

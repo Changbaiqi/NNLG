@@ -59,7 +59,7 @@ class AboutMeViewPage extends StatelessWidget {
                         child: Column(
                           children: [
                             ClipOval(child: Image.asset('assets/images/ic_launcher.png',width: 70,fit: BoxFit.cover,),),
-                            Text('当前版本：v3.5.9·亚托莉')
+                            Text('当前版本：v3.6.0·亚托莉')
                           ],
                         ),
                       ),

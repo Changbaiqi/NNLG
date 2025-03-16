@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:easy_loading_button/easy_loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/ContextData.dart';
@@ -95,103 +96,143 @@ class LoginViewPage extends StatelessWidget {
             ),
           ),
           Center(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
-              child: Container(
-                height: 40,
-                width: MediaQuery.of(context).size.width,
-                child: ElevatedButton(
-                  child: Text('登录'),
-                  style: ButtonStyle(
-                      shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20)))
-                      )
-                  ),
-                  onPressed: (){
+            child: Padding(padding: EdgeInsets.fromLTRB(50, 10, 50, 0),
+            child: EasyButton(
+              type: EasyButtonType.elevated,
 
-                    if(state.inputAccountController.value.text.isEmpty || state.inputAccountController.value.text.isEmpty){
-                      // ToastUtil.show('请输入正确的账号或密码！');
-
-                      return;
-                    }
-                    try{
-
-
-
-                      LoginUtil.turnSubmit(state.inputAccountController.value.text.toString(),state.inputPasswordController.value.text).then((value){
-                        //debugPrint(value);
-
-                        //记住账号密码
-                        LoginUtil().LoginPost(value).then((value){
-                          if(value['code']==200){
-                            // ToastUtil.show('登录成功');
-                            ContextDate.ContextCookie = value['session']; //设置session
-                            Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
-                            if(LoginData.rememberAccountAndPassword.value) {
-                              ShareDateUtil().setLoginAccount(state.inputAccountController.value.text);
-                              ShareDateUtil().setLoginPassword(state.inputPasswordController.value.text);
-                            }
-
-                            //用于获取账户信息并且存储到本地
-                            AccountUtil().getAccountPersonalInformation().then((value) async {
-                              print('${jsonDecode(value)['id']}');
-
-                              await Future.wait([
-                                ShareDateUtil().setAccountStudentID(jsonDecode(value)['id']),
-                                ShareDateUtil().setAccountStudentName(jsonDecode(value)['name']),
-                                ShareDateUtil().setAccountStudentMajor(jsonDecode(value)['major'])
-                              ]).then((value){
-                                //以上数据获取完后外部调用刷新界面
-
-                              });
-                              //课程学期列表获取
-                              await CourseUtil().getSemesterCourseList().then((value){
-                                //print('${CourseData.semesterCourseList[0]}');
-                                //print('${value[0]}');
-                                //如果以及寄存了课表的日期那么久直接返回
-                                if(CourseData.nowCourseList.value!=null && CourseData.nowCourseList.value!="")
-                                  return;
-
-                                ShareDateUtil().setNowCourseList(value[0]);
-                              });
-
-                              //这个使用服务器功能的登录
-                              await MainUserUtil()
-                                  .vipLogin('${LoginData.account}',
-                                  '${LoginData.password}')
-                                  .then((value) {
-                                if (value["code"] == 400) {
-                                  ToastUtil.show('${value["msg"]}');
-                                  return;
-                                }
-
-                                if (value["code"] == 200) {
-                                  ContextDate.ContextVIPTken = value["token"];
-                                  ShareDateUtil().setIsIdent(value["data"]["user"]["isIdent"]==1); //设置是否有认证
-                                  ShareDateUtil().setIdentMainColor(value["data"]["user"]["identMainColor"]); //设置主认证颜色
-                                  log("认证颜色：${value["data"]["user"]["identMainColor"]}");
-                                  ShareDateUtil().setIdentMainTag(value["data"]["user"]["identMainTag"]); //设置主认证标签
-                                }
-                              });
-
-                              Get.offNamed(Routes.Main);
-                            });
-
-                          }else{
-                            // ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
-                            Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
-                          }
-                        });
-
-                      });
-                    }catch(e){
-                      print(e);
-                    }
-
-                  },
+              // Content inside the button when the button state is idle.
+              idleStateWidget: const Text(
+                '登录',
+                style: TextStyle(
+                  color: Colors.white,
                 ),
               ),
-            ),
+
+              // Content inside of the button when the button state is loading.
+              loadingStateWidget: const CircularProgressIndicator(
+                strokeWidth: 3.0,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.white,
+                ),
+              ),
+
+              // Whether or not to animate the width of the button. Default is `true`.
+              // If this is set to `false`, you might want to set the `useEqualLoadingStateWidgetDimension` parameter to `true`.
+              useWidthAnimation: true,
+
+              // Whether or not to force the `loadingStateWidget` to have equal dimension. Default is `true`.
+              // This is useful when you are using `CircularProgressIndicator` as the `loadingStateWidget`.
+              // This parameter might also be useful when you set the `useWidthAnimation` parameter to `true` combined with `CircularProgressIndicator` as the value for `loadingStateWidget`.
+              useEqualLoadingStateWidgetDimension: true,
+
+              // If you want a fullwidth size, set this to double.infinity
+              width: double.infinity,
+
+              height: 40.0,
+              borderRadius: 20.0,
+
+              // The elevation of the button.
+              // This will only be applied when the type parameter value is EasyButtonType.elevated
+              elevation: 0.0,
+
+              // The gap between button and it's content.
+              // This will be ignored when the `type` parameter value is set to `EasyButtonType.text`
+              contentGap: 6.0,
+
+              // Color for the button.
+              // For [EasyButtonType.elevated]: This will be the background color.
+              // For [EasyButtonType.outlined]: This will be the border color.
+              // For [EasyButtonType.text]: This will be the text color.
+              buttonColor: Colors.indigoAccent,
+
+              onPressed: () async {
+
+                if(state.inputAccountController.value.text.isEmpty || state.inputAccountController.value.text.isEmpty){
+                  // ToastUtil.show('请输入正确的账号或密码！');
+                  return;
+                }
+                try{
+                 await LoginUtil.turnSubmit(state.inputAccountController.value.text.toString(),state.inputPasswordController.value.text).then((value)async{
+                    //debugPrint(value);
+
+                    //记住账号密码
+                    await LoginUtil().LoginPost(value).then((value) async {
+                      if(value['code']==200){
+                        // ToastUtil.show('登录成功');
+                        ContextDate.ContextCookie = value['session']; //设置session
+                        if(LoginData.rememberAccountAndPassword.value) {
+                          ShareDateUtil().setLoginAccount(state.inputAccountController.value.text);
+                          ShareDateUtil().setLoginPassword(state.inputPasswordController.value.text);
+                        }
+
+                        //用于获取账户信息并且存储到本地
+                        await AccountUtil().getAccountPersonalInformation().then((value) async {
+                          print('${jsonDecode(value)['id']}');
+
+                          await Future.wait([
+                            ShareDateUtil().setAccountStudentID(jsonDecode(value)['id']),
+                            ShareDateUtil().setAccountStudentName(jsonDecode(value)['name']),
+                            ShareDateUtil().setAccountStudentMajor(jsonDecode(value)['major'])
+                          ]).then((value){
+                            //以上数据获取完后外部调用刷新界面
+
+                          });
+                          //课程学期列表获取
+                          await CourseUtil().getSemesterCourseList().then((value){
+                            //print('${CourseData.semesterCourseList[0]}');
+                            //print('${value[0]}');
+                            //如果以及寄存了课表的日期那么久直接返回
+                            if(CourseData.nowCourseList.value!=null && CourseData.nowCourseList.value!="")
+                              return;
+
+                            ShareDateUtil().setNowCourseList(value[0]);
+                          });
+
+                          //这个使用服务器功能的登录
+                          try {
+                            await MainUserUtil()
+                                .vipLogin('${LoginData.account}',
+                                '${LoginData.password}')
+                                .then((value) {
+                              if (value["code"] == 400) {
+                                ToastUtil.show('${value["msg"]}');
+                                return;
+                              }
+
+                              if (value["code"] == 200) {
+                                ContextDate.ContextVIPTken = value["token"];
+                                ShareDateUtil().setIsIdent(
+                                    value["data"]["user"]["isIdent"] ==
+                                        1); //设置是否有认证
+                                ShareDateUtil().setIdentMainColor(
+                                    value["data"]["user"]["identMainColor"]); //设置主认证颜色
+                                log(
+                                    "认证颜色：${value["data"]["user"]["identMainColor"]}");
+                                ShareDateUtil().setIdentMainTag(
+                                    value["data"]["user"]["identMainTag"]); //设置主认证标签
+                              }
+                            });
+                          }catch(e,s){
+                            print('_printException $e; $s');
+                          }
+
+                          Get.offNamed(Routes.Main);
+                        });
+                        Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
+                      }else{
+                        // ToastUtil.show('登录失败，请检查一下账号或密码是否正确');
+                        Get.snackbar("登录提示", "${value['msg']}",duration: Duration(milliseconds: 1500),);
+                      }
+
+                    });
+
+                  });
+                }catch(e){
+                  print(e);
+                }
+
+              },
+            ),),
           ),
           Center(
             child: Padding(

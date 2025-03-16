@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
@@ -49,7 +51,7 @@ class LoginViewLogic extends GetxController {
 
   @override
   void onInit() {
-    selectData.value=['桂林理工大学'];
+    selectData.value = ['桂林理工大学'];
     if(LoginData.rememberAccountAndPassword.value){
       state.inputAccountController.value.text = LoginData.account;
       state.inputPasswordController.value.text = LoginData.password;

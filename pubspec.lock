@@ -318,6 +318,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.0"
+  easy_loading_button:
+    dependency: "direct main"
+    description:
+      name: easy_loading_button
+      sha256: "8620b2b03ade420644ba27640678b6fda4a9be6e54cccd4cb1f6c258cd7de0ea"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.3.2"
   fading_edge_scrollview:
     dependency: transitive
     description:

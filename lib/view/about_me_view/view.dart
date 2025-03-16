@@ -1,3 +1,4 @@
+import 'package:callo/dao/AppInfoData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -59,7 +60,7 @@ class AboutMeViewPage extends StatelessWidget {
                         child: Column(
                           children: [
                             ClipOval(child: Image.asset('assets/images/ic_launcher.png',width: 70,fit: BoxFit.cover,),),
-                            Text('当前版本：v3.6.0·亚托莉')
+                            Text('当前版本：'+"${AppInfoData.version.value}(${AppInfoData.versionNumber.value})")
                           ],
                         ),
                       ),

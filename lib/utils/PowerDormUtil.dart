@@ -134,21 +134,25 @@ class PowerDormUtil {
         roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
         powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
         loudong_id="4320";
+        room="15-1#${room}";
       }
       if(loudong_id=="15-2栋"||loudong_id=="15-2"){
         roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
         powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
         loudong_id="4523";
+        room="15-2#${room}";
       }
       if(loudong_id=="13-1栋"||loudong_id=="13-1"){
         roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
         powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
         loudong_id="4722";
+        room="13-1#${room}";
       }
       if(loudong_id=="13-2栋"||loudong_id=="13-2"){
         roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
         powerUrl = "http://202.103.236.36:10002/v1/cgElec/elec/query";
-    loudong_id="5158";
+        loudong_id="5158";
+        room="13-2#${room}";
       }
       if(loudong_id=="17栋"||loudong_id=="17"){
         roomUrl = "http://202.103.236.36:10002/v1/cgElec/room/query";
@@ -187,6 +191,7 @@ class PowerDormUtil {
         roomUrl = "http://202.103.236.36:10001/v1/cgElec/room/query";
         powerUrl = "http://202.103.236.36:10001/v1/cgElec/elec/query";
         loudong_id="B19";
+        room = "14-${room}";
       }
       if(loudong_id=="16号楼"||loudong_id=="B16"){
         roomUrl = "http://202.103.236.36:10001/v1/cgElec/room/query";

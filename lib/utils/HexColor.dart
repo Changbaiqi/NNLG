@@ -9,6 +9,7 @@ import 'dart:ui';
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
+    if(hexColor=="") return int.parse("263238",radix: 16);
     hexColor = hexColor.toUpperCase().replaceAll("#", "");
     if (hexColor.length == 6) {
       hexColor = "FF" + hexColor;

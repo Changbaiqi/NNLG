@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class EncryEncode{
   static String keyStr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 
@@ -24,11 +26,13 @@ class EncryEncode{
       else if(chr3==null)
         enc4=64;
 
-      output = output+keyStr[enc1]+keyStr[enc2]+keyStr[enc3]+keyStr[enc4];
+      output = output+ ((enc1>keyStr.length-1)?'':keyStr[enc1])+ ((enc2>keyStr.length-1)?'':keyStr[enc2])+((enc3>keyStr.length-1)?'':keyStr[enc3])+((enc4>keyStr.length-1)?'':keyStr[enc4]);
       chr1=chr2=chr3=null;
       enc1=enc2=enc3=enc4=null;
     }while(i<input.length);
 
     return output;
   }
+
+
 }

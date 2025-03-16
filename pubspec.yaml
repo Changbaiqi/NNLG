@@ -65,7 +65,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1 #列表子控件加载动画
   url_launcher: ^6.2.4 #用于跳转浏览器
   package_info_plus: ^4.0.2 #用于获取APP版本等相关信息
-#  home_widget: ^0.5.0 #桌面小组件
+#  home_widget: ^0.7.0+1 #桌面小组件
   lottie: ^1.2.1 #lottie动画依赖
   flutter_markdown: ^0.6.18+3 # markdown
   markdown_widget: ^2.3.2+3 #markdown
@@ -73,6 +73,7 @@ dependencies:
   animated_flip_counter: ^0.2.6
   shake_animation_widget: ^3.0.4 #抖动动画
 #  sqlite3: ^2.4.3 #Sqlife框架
+  easy_loading_button: ^0.3.2 #附带加载的按钮
   sqflite: ^2.3.3+1
   fluwx: ^4.4.10 #微信支付
   sensors_plus: ^4.0.2 #摇一摇

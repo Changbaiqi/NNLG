@@ -16,7 +16,7 @@ class EvalFormViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(Get.arguments['courseName']),
+          title: Text(Get.arguments['courseName'],style: TextStyle(color: Colors.black),),
         ),
         body: Obx(() => state.formJsonData.value != null
             ? Column(
@@ -36,7 +36,7 @@ class EvalFormViewPage extends StatelessWidget {
                                   Text(
                                     state.formJsonData.value!['classList']
                                         [index]['className'],
-                                    style: TextStyle(fontSize: 18),
+                                    style: TextStyle(fontSize: 18,color: Colors.black),
                                   ),
                                   Text(
                                     '（${state.formJsonData.value!['classList'][index]['rate']}）',
@@ -52,7 +52,7 @@ class EvalFormViewPage extends StatelessWidget {
                                             as List)
                                         .map((problemE) => Column(
                                               children: [
-                                                Text(problemE['title']),
+                                                Text(problemE['title'],style: TextStyle(color: Colors.black),),
                                                 Wrap(
                                                   children:
                                                       (problemE['selectList']
@@ -70,7 +70,7 @@ class EvalFormViewPage extends StatelessWidget {
                                                                               .center,
                                                                       children: [
                                                                         Text(selectE[
-                                                                            'text']),
+                                                                            'text'],style: TextStyle(color: Colors.black),),
                                                                         Checkbox(
                                                                             value:
                                                                                 selectE['checked'],
@@ -126,7 +126,7 @@ class EvalFormViewPage extends StatelessWidget {
                                 );
                               }
                             },
-                            child: Text('提交')),
+                            child: Text('提交',style: TextStyle(color: Colors.black),)),
                         flex: 1,
                       ),
                       Expanded(
@@ -149,7 +149,7 @@ class EvalFormViewPage extends StatelessWidget {
                                 );
                               }
                             },
-                            child: Text('保存')),
+                            child: Text('保存',style: TextStyle(color: Colors.black),)),
                         flex: 1,
                       ),
                     ],

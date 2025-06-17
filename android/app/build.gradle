@@ -58,6 +58,8 @@ android {
             storePassword localProperties.getProperty('storePassword')
             keyAlias localProperties.getProperty('keyAlias')
             keyPassword localProperties.getProperty('keyPassword')
+            v1SigningEnabled true
+            v2SigningEnabled true
         }
     }
     buildTypes {

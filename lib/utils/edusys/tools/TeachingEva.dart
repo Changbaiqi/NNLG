@@ -14,7 +14,7 @@ class TeachingEva{
    * 获取评教列表
    */
   List<TeachingEvaForm> getTeachingEvaList(){
-    RegExp regExp1 = RegExp(r'<tr>[^<]+<td>[\D]*([\d]+)[\D]*</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td[^>]+>[^<]+<!--[^\[]+\[<a href="[^"]+" title="点击进入评价">学生网上评教</a>\][^-]+-->[^<]+<a href="([^"]+)" title="点击进入评价">进入评价</a>[^<]+</td>[^<]+</tr>');
+    RegExp regExp1 = RegExp(r'<tr>[^<]+<td>[\D]*([\d]+)[\D]*</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td>([^<]+)</td>[^<]+<td[^>]+>[^<]+<!--[^\[]+\[<a href="[^"]+" title="点击进入评价">学生网上评教</a>\][^\[]+\[<a href="[^"]+" title="点击进入评价">教学督导评价</a>\][^-]+-->[^<]+<a href="([^"]+)" title="点击进入评价">进入评价</a>[^<]+</td>[^<]+</tr>');
     Iterable<Match> match1 = regExp1.allMatches(_teachingEvaluationHTML!);
 
     List<TeachingEvaForm> evalForms = [];

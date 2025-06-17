@@ -231,115 +231,118 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
 
     return RepaintBoundary(
       key: _weekViewKey,
-      child: Column(
-        children: [
-          Container(
-            height: 50,
-            child: Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['leftTopShowColor'] as List),
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                          child: Obx(() => Text(
-                                '${isMin.value ? '小' : '大'}节\n显示',
-                                style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                              )),
+      child: MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: Column(
+          children: [
+            Container(
+              height: 50,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['leftTopShowColor'] as List),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Center(
+                            child: Obx(() => Text(
+                              '${isMin.value ? '小' : '大'}节\n显示',
+                              style: TextStyle(fontSize: 10,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                            )),
+                          ),
                         ),
                       ),
+                      onTap: () {
+                        ShareDateUtil().setIsMinForSchedule(!isMin.value);
+                      },
                     ),
-                    onTap: () {
-                      ShareDateUtil().setIsMinForSchedule(!isMin.value);
-                    },
                   ),
-                ),
-                ...columTimeList
-                    .map((e) => Expanded(
-                            child: Padding(
-                          padding: EdgeInsets.all(4),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: DateTime.now().month == e.month &&
-                                        DateTime.now().day == e.day
-                                    ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBackgroundColor']as List )
-                                    : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBackgroundColor'] as List ),
-                                borderRadius: BorderRadius.circular(8),
-                                border: DateTime.now().month == e.month &&
-                                        DateTime.now().day == e.day
-                                    ? Border.all(
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBorderColor']as List ))
-                                    : Border.all(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBorderColor']as List ))),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  '周${weekToChar[e.weekday - 1]}',
-                                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                                ),
-                                Text(
-                                  '${e.month}/${e.day}',
-                                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                                )
-                              ],
-                            ),
+                  ...columTimeList
+                      .map((e) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: DateTime.now().month == e.month &&
+                                  DateTime.now().day == e.day
+                                  ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBackgroundColor']as List )
+                                  : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBackgroundColor'] as List ),
+                              borderRadius: BorderRadius.circular(8),
+                              border: DateTime.now().month == e.month &&
+                                  DateTime.now().day == e.day
+                                  ? Border.all(
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBorderColor']as List ))
+                                  : Border.all(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBorderColor']as List ))),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '周${weekToChar[e.weekday - 1]}',
+                                style: TextStyle(fontSize: 14,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                              ),
+                              Text(
+                                '${e.month}/${e.day}',
+                                style: TextStyle(fontSize: 11,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                              )
+                            ],
                           ),
-                        )))
-                    .toList()
-              ],
+                        ),
+                      )))
+                      .toList()
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    Container(
-                      // decoration: BoxDecoration(color: Colors.amber),
-                      height: 900,
-                      child: Obx(() => RepaintBoundary(
-                            key: _tableViewKey,
-                            child: Stack(
-                              children: [
-                                _backgroundLine(
+            Expanded(
+              child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: [
+                      Container(
+                        // decoration: BoxDecoration(color: Colors.amber),
+                        height: 900,
+                        child: Obx(() => RepaintBoundary(
+                          key: _tableViewKey,
+                          child: Stack(
+                            children: [
+                              _backgroundLine(
+                                  noonSwitch: isNoon.value,
+                                  isMin: isMin.value),
+                              InkWell(
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                child: _timeBackground(
                                     noonSwitch: isNoon.value,
                                     isMin: isMin.value),
-                                InkWell(
-                                  highlightColor: Colors.transparent,
-                                  splashColor: Colors.transparent,
-                                  child: _timeBackground(
-                                      noonSwitch: isNoon.value,
-                                      isMin: isMin.value),
-                                  onTap: () {
-                                    ShareDateUtil()
-                                        .setIsMinForSchedule(!isMin.value);
-                                    // columTimeList.reactive;
+                                onTap: () {
+                                  ShareDateUtil()
+                                      .setIsMinForSchedule(!isMin.value);
+                                  // columTimeList.reactive;
 
-                                  },
-                                  onLongPress: () async {
-                                    // await capturePngFilePath(_tableViewKey,_weekViewKey);
-                                    await capturePngFilePath(
-                                        _weekViewKey, _weekViewKey);
-                                  },
-                                ),
-                                drawTable(tableJson),
-                              ],
-                            ),
-                          )),
-                    )
-                  ],
-                )),
-            flex: 1,
-          )
-        ],
+                                },
+                                onLongPress: () async {
+                                  // await capturePngFilePath(_tableViewKey,_weekViewKey);
+                                  await capturePngFilePath(
+                                      _weekViewKey, _weekViewKey);
+                                },
+                              ),
+                              drawTable(tableJson),
+                            ],
+                          ),
+                        )),
+                      )
+                    ],
+                  )),
+              flex: 1,
+            )
+          ],
+        )
       ),
     );
   }

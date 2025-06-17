@@ -30,6 +30,7 @@ class EvaDetailViewPage extends StatelessWidget {
           children: [
             Text(
               '在线评教',
+              style: TextStyle(color: Colors.black),
             )
           ],
         ),
@@ -48,7 +49,7 @@ class EvaDetailViewPage extends StatelessWidget {
                 itemCount: state.searList.value.length,
                 itemBuilder: (cont,index)=>showchildElement(state.searList.value[index]));
           default:
-            return Center(child: Text('错误'),);
+            return Center(child: Text('错误',style: TextStyle(color: Colors.black),),);
         }
       }),
     );
@@ -100,13 +101,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '课程名称：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["courseName"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -122,13 +123,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '课程编号：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["courseNumber"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -144,13 +145,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '授课教师：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["teacher"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -166,13 +167,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '评教类别：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["evalType"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -188,13 +189,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '总评分：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["overallScore"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -210,13 +211,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '是否已评：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["isRated"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )
@@ -232,13 +233,13 @@ class EvaDetailViewPage extends StatelessWidget {
                 children: [
                   Text(
                     '是否提交：',
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 15,color: Colors.black),
                   ),
                   Container(
                     width: 100,
                     child: Text(
                       '${json["isSubmit"]}',
-                      style: TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12,color: Colors.black),
                       maxLines: 2,
                     ),
                   )

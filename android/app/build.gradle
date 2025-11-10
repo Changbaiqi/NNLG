@@ -64,7 +64,7 @@ android {
     }
     buildTypes {
         debug {
-            //如果模拟器不能正常运行那么接触这段注释
+            //如果模拟器不能正常运行那么解除这段注释
 //            ndk {
 //                // The line below only builds arm64-v8a
 //                abiFilters  'arm64-v8a','x86_64' // This breaks running the app in the emulator
@@ -84,6 +84,7 @@ android {
         }
     }
     // 保留或调整 splits 配置（用于 ABI 拆分）
+    // flutter build apk --split-per-abi打包
     splits {
         // 基于不同的abi架构配置不同的apk
         abi {

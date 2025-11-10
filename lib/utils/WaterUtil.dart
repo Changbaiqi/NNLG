@@ -17,12 +17,15 @@ class WaterUtil{
     //old http://wx.happy-ti.com/wxpay/scanqrcode/v0.html?openid=微信OPENID&deviceid=设备ID&app=WECHAT&token=&ch=
     //new http://weixin.happy-ti.com/weixinpay/redirectQrcodemini.html?deviceId=设备ID&version=v1&openid=微信openid&ch=&date=20210512
     //old RegExp regExp =RegExp(r'http://wx\.happy-ti\.com/wxpay/scanqrcode/v0\.html\?openid=([^&]+)&deviceid=(\d+)&app=WECHAT&token=&ch=');
-    RegExp regExp =new RegExp(r'http://weixin\.happy-ti\.com/weixinpay/redirectQrcodemini\.html\?deviceId=(\d+)&version=[^&]+&openid=([^&]+)');
+    // RegExp regExp =new RegExp(r'http://weixin\.happy-ti\.com/weixinpay/redirectQrcodemini\.html\?deviceId=(\d+)&version=[^&]+&openid=([^&]+)');
+    RegExp regExp =new RegExp(r'http://wx\.happy-ti\.com/wxpay/scanqrcode/v0\.html\?openid=([^&]+)&deviceid=(\d+)&app=WECHAT&token=&ch=');
     bool check = regExp.hasMatch(url);
     if(check) {
       var result = regExp.firstMatch(url);
-      String waterAccount = result?.group(2)??""; //openid
-      String shop = result?.group(1)??"";
+      // String waterAccount = result?.group(2)??""; //openid
+      String waterAccount = result?.group(1)??""; //openid
+      // String shop = result?.group(1)??""; //deviceId
+      String shop = result?.group(2)??""; //deviceId
       String saler = "";
       String cardNum = "";
       String userId = ""; //或者说owner参数

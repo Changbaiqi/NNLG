@@ -1,3 +1,5 @@
+import 'package:callo/dao/ContextData.dart';
+import 'package:callo/view/router/Routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
@@ -66,7 +68,7 @@ class StartViewPage extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 200),
                 child: Container(
-                  height: 30,
+                  height: 50,
                   child: Column(
                     children: [
                       Obx(() => Opacity(
@@ -77,6 +79,9 @@ class StartViewPage extends StatelessWidget {
                                   fontSize: 13, color: Colors.black54),
                             ),
                           )),
+                      ElevatedButton(onPressed: (){
+                          Get.offNamed(Routes.Main);
+                      }, child: Text('点击此处跳过同步直接进入'))
                     ],
                   ),
                 ),

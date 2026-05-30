@@ -114,12 +114,14 @@ class CourseUtil{
     }
 
     //判断是否有(全部)课程列表选项，如果没有，采用方案二
-    // log(utf8.decode(response.data));
+    String turnStr=utf8.decode(response.data);
+    log(turnStr);
     if(!utf8.decode(response.data).contains('(全部)</option>')){
+      log(await getAllCourseSemesterListTwoPlain(semester,weekSum));
       return await getAllCourseSemesterListTwoPlain(semester,weekSum);
     }
     //debugPrint(response.toString());
-    String newTest = await CourseForAll(utf8.decode(response.data)).getAllSemesterJson(weekSum);
+    String newTest = await CourseForAll(turnStr).getAllSemesterJson(weekSum);
     // log(newTest);
     // resWeekCourseList = jsonDecode(newTest);
     return newTest;

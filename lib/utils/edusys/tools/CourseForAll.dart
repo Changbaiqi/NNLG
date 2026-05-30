@@ -222,11 +222,11 @@ class CourseForAll {
     // HashMap<String,Object> result = new HashMap<>();
     Map<String, dynamic> result = {};
     List<List<List<List<Map<String, dynamic>?>>>> list = [];
-    for (int i = 0; i < minWeek; i++) {
+    for (int i = 0; i < minWeek; i++) { //第几周
       list.add([]);
-      for (int j = 0; j < 12; ++j) {
+      for (int j = 0; j < 12; ++j) {//第几行
         list[i].add([]);
-        for (int z = 0; z < 7; ++z) {
+        for (int z = 0; z < 7; ++z) {//第几列，也就是星期几
           list[i][j].add([]);
         }
       }
@@ -240,10 +240,10 @@ class CourseForAll {
         for (int z = 0; z < courFormList[i][j].length; ++z) {
           CourseForm? courseForm = courFormList[i][j][z];
           if (courseForm == null ||
-              repeat.contains(jsonEncode(courseForm.toJsonMap()) + "$j"))
-            continue;
+              repeat.contains(jsonEncode(courseForm.toJsonMap()) + "$j")) continue;
           for (int week in courseForm.courseWeekList!) {
             for (int selection in courseForm.courseSectionList!) {
+              if(list[week-1].length<selection) continue; //跳过离谱的节数课程
               list[week - 1][selection - 1][j].add(courseForm.toJsonMap());
             }
           }

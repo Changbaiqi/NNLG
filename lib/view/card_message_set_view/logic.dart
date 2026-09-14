@@ -46,7 +46,7 @@ class CardMessageSetViewLogic extends GetxController {
           textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
             headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
         ),
-        columeNum: 3, onConfirm: (p, covariant) async {
+        columnNum: 3, onConfirm: (p, covariant) async {
       selectData.value = p;
       ShareDateUtil().setDormCampus(selectData[0]);
       ShareDateUtil().setDormLoudongId(selectData[1]);

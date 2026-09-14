@@ -41,7 +41,7 @@ class LoginViewLogic extends GetxController {
             textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
             headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
         ),
-        columeNum: 1, onConfirm: (p, covariant) async {
+        columnNum: 1, onConfirm: (p, covariant) async {
           selectData.value = p;
 
           print(covariant);

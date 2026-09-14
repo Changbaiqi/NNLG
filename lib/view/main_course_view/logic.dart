@@ -14,7 +14,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/ClassNewScheduleDao.dart';
 import 'package:callo/dao/ClassScheduleDao.dart';
@@ -577,7 +577,7 @@ class MainCourseViewLogic extends GetxController
       if (Platform.isIOS) {
         if (status.isGranted) {
           Uint8List images = byteData!.buffer.asUint8List();
-          final result = await ImageGallerySaver.saveImage(images,
+          final result = await ImageGallerySaverPlus.saveImage(images,
               quality: 60, name: "hello");
           File saveFile = new File(result.replaceAll("file://", ""));
           await TencentKitPlatform.instance.shareImage(
@@ -592,7 +592,7 @@ class MainCourseViewLogic extends GetxController
         if (status.isGranted) {
           print("Android已授权");
           Uint8List images = byteData!.buffer.asUint8List();
-          final result = await ImageGallerySaver.saveImage(images,
+          final result = await ImageGallerySaverPlus.saveImage(images,
               quality: 60, isReturnImagePathOfIOS: true);
           // print(result);
           if (result != null) {

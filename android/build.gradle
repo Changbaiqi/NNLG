@@ -23,12 +23,22 @@ subprojects {
     afterEvaluate { project ->
         if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
             println "project: ${project.name} Namespace get: ${project.android.namespace}"
-            def packageName = project.android.namespace ?: project.android.defaultConfig.applicationId ?: project.android.sourceSets.main.manifest.srcFile.text.find(/package="([^"]*)"/) ?: project.group
+            def packageName = project.android.namespace ?: project.android.defaultConfig.applicationId
+            if (packageName == null) {
+                def manifestFile = project.android.sourceSets.main.manifest.srcFile
+                if (manifestFile != null && manifestFile.exists()) {
+                    def matcher = manifestFile.text =~ /package="([^"]+)"/
+                    if (matcher.find()) {
+                        packageName = matcher.group(1)
+                    }
+                }
+            }
+            packageName = packageName ?: project.group
             project.android.namespace = packageName
             println "Namespace set to: ${packageName} for project: ${project.name}"
             project.android {
-                compileSdkVersion 34
-                buildToolsVersion "34.0.0"
+                compileSdkVersion 36
+                buildToolsVersion "36.0.0"
             }
         }
     }

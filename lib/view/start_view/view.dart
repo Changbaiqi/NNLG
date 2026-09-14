@@ -68,8 +68,8 @@ class StartViewPage extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 200),
                 child: Container(
-                  height: 50,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Obx(() => Opacity(
                             opacity: logic.tipsOp.value!.value,

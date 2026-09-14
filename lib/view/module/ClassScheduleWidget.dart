@@ -122,17 +122,29 @@ class ClassScheduleWidget extends StatefulWidget {
 
 class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
     with SingleTickerProviderStateMixin {
-  final tableJson; //课程信息的json
-  final isNoon;
+  dynamic tableJson; //课程信息的json
+  dynamic isNoon;
   final noonWidgetHeight = 23.0; //午休控件高度
-  final isMin; //是否小节显示
-  final isColor; //是否彩色显示
+  dynamic isMin; //是否小节显示
+  dynamic isColor; //是否彩色显示
   final List<List<dynamic>> isOccupy = []; //用于标记哪些格子是用过的
   /// 动画类
   late Animation<double> animation;
 
   /// 动画控制器
   late AnimationController animationController;
+
+  //同步新数据（修复同步课表后当前页不刷新的问题）
+  @override
+  void didUpdateWidget(covariant ClassScheduleWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    tableJson = widget.tableJson;
+    isNoon = widget.isNoon;
+    isMin = widget.isMin;
+    isColor = widget.isColor;
+    rowTimeList = widget.rowTimeList;
+    columTimeList = List<DateTime>.from(widget.columTimeList);
+  }
 
   //默认课表时间
   List<dynamic> rowTimeList = [
@@ -216,7 +228,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
 
   @override
   Widget build(BuildContext context) {
-    //用于构建标记格子数组
+    //用于构建标记格子数组（每次重建前清空，避免无限增长与脏标记）
+    isOccupy.clear();
     for (int i = 0; i < 12; ++i)
       isOccupy.add([
         {"state": false, "table": {}},
@@ -261,39 +274,60 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       },
                     ),
                   ),
-                  ...columTimeList
-                      .map((e) => Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(4),
-                        child: Container(
-                          decoration: BoxDecoration(
-                              color: DateTime.now().month == e.month &&
-                                  DateTime.now().day == e.day
-                                  ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBackgroundColor']as List )
-                                  : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBackgroundColor'] as List ),
-                              borderRadius: BorderRadius.circular(8),
-                              border: DateTime.now().month == e.month &&
-                                  DateTime.now().day == e.day
-                                  ? Border.all(
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBorderColor']as List ))
-                                  : Border.all(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBorderColor']as List ))),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                '周${weekToChar[e.weekday - 1]}',
-                                style: TextStyle(fontSize: 14,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                              ),
-                              Text(
-                                '${e.month}/${e.day}',
-                                style: TextStyle(fontSize: 11,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                              )
-                            ],
-                          ),
+                  ...columTimeList.map((e) {
+                    final bool isToday = DateTime.now().month == e.month &&
+                        DateTime.now().day == e.day;
+                    final Color todayBg = CustomerThemeUtil.setColor(
+                        CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBackgroundColor'] as List);
+                    final Color todayBorder = CustomerThemeUtil.setColor(
+                        CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['weekBorderColor'] as List);
+                    final Color normalBg = CustomerThemeUtil.setColor(
+                        CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBackgroundColor'] as List);
+                    final Color normalBorder = CustomerThemeUtil.setColor(
+                        CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['weekBorderColor'] as List);
+                    return Expanded(
+                        child: Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: isToday ? null : normalBg,
+                            gradient: isToday
+                                ? LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      todayBg,
+                                      todayBg.withValues(alpha: 0.55)
+                                    ],
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(color: isToday ? todayBorder : normalBorder)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '周${weekToChar[e.weekday - 1]}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: isToday
+                                      ? FontWeight.w700
+                                      : FontWeight.w400,
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                            ),
+                            Text(
+                              '${e.month}/${e.day}',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                            )
+                          ],
                         ),
-                      )))
-                      .toList()
+                      ),
+                    ));
+                  }).toList()
                 ],
               ),
             ),
@@ -395,37 +429,40 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
     if (Platform.isIOS) {
       var status = await Permission.photos.status;
       if (status.isDenied) {
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.photos,
-        ].request();
-        // saveImage(globalKey);
+        var result = await [Permission.photos].request();
+        status = result[Permission.photos] ?? status;
       }
       return status.isGranted;
     } else {
+      //Android 10 及以上通过 MediaStore 保存，无需存储权限，直接放行避免死循环
       var status = await Permission.storage.status;
+      if (status.isGranted) return true;
       if (status.isDenied) {
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.storage,
-        ].request();
+        var result = await [Permission.storage].request();
+        status = result[Permission.storage] ?? status;
       }
-      return status.isGranted;
+      return true;
     }
   }
 
   //保存到相册
   void savePhoto() async {
-    RenderRepaintBoundary? boundary = _weekViewKey.currentContext!
-        .findRenderObject() as RenderRepaintBoundary?;
+    try {
+      final context = _weekViewKey.currentContext;
+      if (context == null) return;
+      RenderRepaintBoundary? boundary =
+          context.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
 
-    double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
-    var image = await boundary!.toImage(pixelRatio: dpr);
-    // 将image转化成byte
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    //获取保存相册权限，如果没有，则申请改权限
-    bool permition = await getPormiation();
-
-    var status = await Permission.photos.status;
-    if (permition) {
+      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+      var image = await boundary.toImage(pixelRatio: dpr);
+      // 将image转化成byte
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      //获取保存相册权限，如果没有，则申请该权限
+      bool permition = await getPormiation();
+      if (!permition) return; //权限被拒绝时直接返回，避免无限递归
+      var status = await Permission.photos.status;
       if (Platform.isIOS) {
         if (status.isGranted) {
           Uint8List images = byteData!.buffer.asUint8List();
@@ -440,31 +477,30 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
           print("IOS拒绝");
         }
       } else {
-        //安卓
-        if (status.isGranted) {
-          print("Android已授权");
-          Uint8List images = byteData!.buffer.asUint8List();
-          final result = await ImageGallerySaverPlus.saveImage(images,
-              quality: 60, isReturnImagePathOfIOS: true);
-          // print(result);
-          if (result != null) {
-            print(result['filePath']);
-            // EasyLoading.showToast("保存成功");
-            File saveFile =
-                new File(result['filePath'].replaceAll("content://", ""));
-            await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
-                text: '南理校园助手');
-          } else {
-            print('error');
-            // toast("保存失败");
-          }
+        //安卓：getPormiation 已放行，直接保存（Android 10+ 走 MediaStore）
+        Uint8List images = byteData!.buffer.asUint8List();
+        final result = await ImageGallerySaverPlus.saveImage(images,
+            quality: 60, isReturnImagePathOfIOS: true);
+        // print(result);
+        if (result != null) {
+          print(result['filePath']);
+          // EasyLoading.showToast("保存成功");
+          File saveFile =
+              new File(result['filePath'].replaceAll("content://", ""));
+          await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
+              text: '南理校园助手');
+        } else {
+          print('error');
+          // toast("保存失败");
         }
       }
-    } else {
-      //重新请求--第一次请求权限时，保存方法不会走，需要重新调一次
-      savePhoto();
+    } catch (e) {
+      print(e);
     }
   }
+
+  //动画进度（由 animationController 驱动）
+  final _animTick = 0.0.obs;
 
   /**
    * [title]
@@ -474,9 +510,6 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
    * [param] null
    * [return]
    */
-  final _opacityTween = Tween<double>(begin: 0.1, end: 1.0).obs;
-  final _sizeTween = Tween<double>(begin: 0.3, end: 0.0).obs;
-
   Widget drawTable(tableJson) {
     // if(tableJson==null) return Stack();
     // log(jsonEncode(tableJson));
@@ -500,9 +533,18 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
       var blue = colorInt & 0xFF;
       // 创建Color对象
       var color = Color.fromARGB(60, red, green, blue);
+      final int order = list.length;
       list.add(Positioned(
-        child: Obx(() => Transform(
+        child: Obx(() {
+          final double t = _animTick.value;
+          //错峰入场：淡入 + 轻微上移
+          final double stagger =
+              ((t * 1.8) - order * 0.05).clamp(0.0, 1.0).toDouble();
+          final double eased = Curves.easeOutCubic.transform(stagger);
+          return Transform.translate(
+          offset: Offset(0, (1 - eased) * 14),
           child: Opacity(
+            opacity: 0.15 + 0.85 * eased,
             child: InkWell(
               child: Container(
                 height: 70.0 * (element["rowEnd"] - element["rowStart"] + 1),
@@ -528,29 +570,43 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                               .day ==
                               DateTime.now().day)? Border.all(
                           width: 1, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['borderColor']as List )):Border.all(width: 1,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['borderColor']as List )),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.06),
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
-                    child: RichText(
-                      text: TextSpan(
-                        text: (element["title"].length>11?'${element["title"].substring(0,11)}...':'${element["title"]}'),
-                        children:
-                          element['data'].length ==1?
-                          [TextSpan(
-                            text: '${element['data'][0]['courseClassRoom']}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.deepOrange
-                            )
-                          )]:[],
+                    child: Text.rich(
+                      TextSpan(
+                        text: '${element["title"]}',
+                        children: element['data'].length == 1
+                            ? [
+                                TextSpan(
+                                  text:
+                                      '\n${element['data'][0]['courseClassRoom']}',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.deepOrange,
+                                  ),
+                                )
+                              ]
+                            : [],
                         style: TextStyle(
-                            fontSize: 11,
-                            // color: Color.fromARGB(
-                            //     element['style']['textColor'][0],
-                            //     element['style']['textColor'][1],
-                            //     element['style']['textColor'][2],
-                            //     element['style']['textColor'][3])
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
+                          fontSize: 11,
+                          height: 1.15,
+                          fontWeight: FontWeight.w600,
+                          // color: Color.fromARGB(
+                          //     element['style']['textColor'][0],
+                          //     element['style']['textColor'][1],
+                          //     element['style']['textColor'][2],
+                          //     element['style']['textColor'][3])
+                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                         ),
                       ),
+                      maxLines: 4,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -582,12 +638,9 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 );
               },
             ),
-            opacity: _opacityTween.value.evaluate(animation),
           ),
-          alignment: Alignment.center,
-          transform:
-          Matrix4.rotationX(pi * _sizeTween.value.evaluate(animation)),
-        )),
+        );
+        }),
         left: Get.context!.width / 8 * element["columStart"],
         top: 70.0 * (element["rowStart"] - 1) +
             (isNoon.value && element["rowStart"] >= 5 ? noonWidgetHeight : 0),
@@ -1174,8 +1227,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
     animation =
         CurvedAnimation(parent: animationController, curve: Curves.linear)
           ..addListener(() {
-            _opacityTween.refresh();
-            _sizeTween.refresh();
+            _animTick.value = animationController.value;
           });
     animationController.forward();
   }

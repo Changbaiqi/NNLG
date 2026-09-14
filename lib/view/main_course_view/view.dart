@@ -48,6 +48,18 @@ class MainCourseViewPage extends StatelessWidget {
                         // 'https://t.mwm.moe/fj/',
                         'https://imgapi.xl0408.top/index.php',
                         fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                        cacheWidth: _bgCacheWidth(context),
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                        frameBuilder: (context, child, frame, wasSync) {
+                          if (wasSync) return child;
+                          return AnimatedOpacity(
+                            opacity: frame == null ? 0 : 1,
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.easeOut,
+                            child: child,
+                          );
+                        },
                       ),
                     ),
                     opacity: CourseData.isPictureBackground.value &&
@@ -63,6 +75,9 @@ class MainCourseViewPage extends StatelessWidget {
                           ? Image.network(
                         CourseData.courseBackgroundInputUrl.value,
                         fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                        cacheWidth: _bgCacheWidth(context),
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                       )
                           : Container(),
                     ),
@@ -79,6 +94,9 @@ class MainCourseViewPage extends StatelessWidget {
                           ? Image.file(
                         File(CourseData.courseBackgroundFilePath.value),
                         fit: BoxFit.cover,
+                        gaplessPlayback: true,
+                        cacheWidth: _bgCacheWidth(context),
+                        errorBuilder: (_, __, ___) => const SizedBox.shrink(),
                       )
                           : Container(),
                     ),
@@ -97,24 +115,11 @@ class MainCourseViewPage extends StatelessWidget {
                   key: logic.showCase_1,
                   description: '在这里进行课表的相关设置哦。\n1、调整每日上课时间\n2、调整不同学期课表\n3、调整开学日期使其课表能对上日程\n4、设置课表背景图片等',
                   child: IconButton(
-                    icon: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.settings,
-                          // color: Colors.black,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
-                          size: 20,
-                        ),
-                        Text(
-                          '课表设置',
-                          style: TextStyle(fontSize: 8,
-                              // color: Colors.black
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)
-                          ),
-                        )
-                      ],
+                    icon: _CourseIconTextAction(
+                      icon: Icons.settings,
+                      label: '课表设置',
+                      iconColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
+                      labelColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                     ),
                     onPressed: () {
                       Get.toNamed(Routes.CourseSet);
@@ -125,7 +130,9 @@ class MainCourseViewPage extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 automaticallyImplyLeading: false,
                 elevation: 1,
-                title: Column(
+                title: MediaQuery.withClampedTextScaling(
+                  maxScaleFactor: 1.3,
+                  child: Column(
                   children: [
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,6 +153,10 @@ class MainCourseViewPage extends StatelessWidget {
                                           '第 ${state.nowIndex.value} 周',
                                           style: TextStyle(
                                               fontSize: 20,
+                                              fontWeight: state.nowIndex.value ==
+                                                      CourseData.nowWeek.value
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
                                               color: state.nowIndex.value ==
                                                   CourseData.nowWeek.value
                                                   ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nowWeekColor'] as List)
@@ -199,34 +210,22 @@ class MainCourseViewPage extends StatelessWidget {
                         ]),
                   ],
                 ),
+                ),
                 actions: [
                   IconButton(
-                    icon: Obx(() => Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        RotationTransition(
-                          turns: Tween(begin: 0.0, end: 1.0)
-                              .animate(logic.animationController!),
-                          child: Icon(
-                            Icons.cached_sharp,
-                            color: state.courseRefreshStatus.value == 1
-                                ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
-                                : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
-                            size: 20,
-                          ),
-                        ),
-                        Text(
-                          state.courseRefreshStatus.value == 1
-                              ? '课表同步中'
-                              : '课表同步',
-                          style: TextStyle(
-                              fontSize: 8,
-                              color: state.courseRefreshStatus.value == 1
-                                  ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
-                                  : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                        )
-                      ],
+                    icon: Obx(() => _CourseIconTextAction(
+                      icon: Icons.cached_sharp,
+                      label: state.courseRefreshStatus.value == 1
+                          ? '课表同步中'
+                          : '课表同步',
+                      iconColor: state.courseRefreshStatus.value == 1
+                          ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
+                          : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
+                      labelColor: state.courseRefreshStatus.value == 1
+                          ? CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['synIconColor'] as List)
+                          : CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
+                      iconRotation: Tween(begin: 0.0, end: 1.0)
+                          .animate(logic.animationController!),
                     )),
                     onPressed: () async {
                       if (state.courseRefreshStatus.value == 1) return; //防止重叠触发
@@ -249,20 +248,11 @@ class MainCourseViewPage extends StatelessWidget {
                     },
                   ),
                   Showcase(key: logic.showCase_2, description: "这里可以查看课表与教务系统的同步历史，并且还可以选择回溯到指定同步时间课表查看", child: IconButton(
-                    icon: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.update,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
-                          size: 20,
-                        ),
-                        Text(
-                          '同步历史',
-                          style: TextStyle(fontSize: 8, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                        )
-                      ],
+                    icon: _CourseIconTextAction(
+                      icon: Icons.update,
+                      label: '同步历史',
+                      iconColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
+                      labelColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                     ),
                     onPressed: () async {
                       logic.showClassScheduleHistory(
@@ -272,20 +262,11 @@ class MainCourseViewPage extends StatelessWidget {
                   PopupMenuButton(
                     color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
                     position: PopupMenuPosition.under,
-                    icon: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.menu,
-                          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
-                          size: 20,
-                        ),
-                        Text(
-                          '更多',
-                          style: TextStyle(fontSize: 8, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
-                        )
-                      ],
+                    icon: _CourseIconTextAction(
+                      icon: Icons.menu,
+                      label: '更多',
+                      iconColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
+                      labelColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                     ),
                     itemBuilder: (BuildContext context) {
                       return [
@@ -399,7 +380,13 @@ class MainCourseViewPage extends StatelessWidget {
                 ],
               ),
               body: Obx(
-                    () => RepaintBoundary(
+                    () {
+                  logic.trackCourseViewDeps();
+                  final Map courseJson =
+                      (CourseData.weekCourseJson.value as Map?) ?? {};
+                  final courses = courseJson["courses"];
+                  logic.syncRemark(courseJson);
+                  return RepaintBoundary(
                     key: logic.courseWidgetKey,
                     child: Column(
                       children: [
@@ -429,41 +416,115 @@ class MainCourseViewPage extends StatelessWidget {
                           visible: logic.remark.value != "",
                         )),
                         Expanded(
-                          child: PageView(
-                            onPageChanged: (int index) {
-                              state.nowIndex.value = index;
-                              state.nowIndex.value += 1;
-                              // print('当前页面时$index');
-                            },
-                            reverse: false,
-                            scrollDirection: Axis.horizontal,
-                            controller: logic.pageController.value,
-                            children:
-                            CourseData.weekCourseJson.value["courses"] != null
-                                ? logic.pullAllCourseSchedule(CourseData.weekCourseJson): [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Lottie.asset('assets/images/shareLoadingLottie.json',
-                                      height: 100, width: 200),
-                                  Text("课表加载中......",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),
-                                  ConstrainedBox(constraints: BoxConstraints(
-                                    maxWidth: 250,
-                                  ),child: Text('tips:若长时间未加载，可尝试在左上角课表设置中重新选择一下“学期课表”',maxLines: 5,softWrap: true,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),)
-                                ],
-                              )
-                            ],
-                          ),
+                          child: courses is List && courses.isNotEmpty
+                              ? PageView.builder(
+                                  onPageChanged: (int index) {
+                                    state.nowIndex.value = index;
+                                    state.nowIndex.value += 1;
+                                    // print('当前页面时$index');
+                                  },
+                                  reverse: false,
+                                  scrollDirection: Axis.horizontal,
+                                  controller: logic.pageController.value,
+                                  itemCount: courses.length,
+                                  itemBuilder: (context, index) =>
+                                      logic.buildWeekPage(index),
+                                )
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                        'assets/images/shareLoadingLottie.json',
+                                        height: 100,
+                                        width: 200),
+                                    Text(
+                                      "课表加载中......",
+                                      style: TextStyle(
+                                          color: CustomerThemeUtil.setColor(CustomThemeData
+                                              .nowThemeData
+                                              .value['main_course_view']!['textColor'] as List)),
+                                    ),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 250,
+                                      ),
+                                      child: Text(
+                                        'tips:若长时间未加载，可尝试在左上角课表设置中重新选择一下“学期课表”',
+                                        maxLines: 5,
+                                        softWrap: true,
+                                        style: TextStyle(
+                                            color: CustomerThemeUtil.setColor(CustomThemeData
+                                                .nowThemeData
+                                                .value['main_course_view']!['textColor'] as List)),
+                                      ),
+                                    )
+                                  ],
+                                ),
                           flex: 1,
                         )
                       ],
-                    )),
+                    ),
+                  );
+                },
               ),
             ),
           ],
         ));
       },
+    );
+  }
+}
+
+//背景图按屏幕宽度降采样解码，降低内存占用
+int _bgCacheWidth(BuildContext context) {
+  final size = MediaQuery.of(context).size;
+  final dpr = MediaQuery.of(context).devicePixelRatio;
+  return (size.width * dpr).round().clamp(1, 4096).toInt();
+}
+
+/// AppBar 图标+文字按钮：钳制文字缩放并自适应高度，避免系统大字体下竖向溢出
+class _CourseIconTextAction extends StatelessWidget {
+  const _CourseIconTextAction({
+    required this.icon,
+    required this.label,
+    this.iconColor,
+    this.labelColor,
+    this.iconRotation,
+  });
+
+  final IconData icon;
+  final String label;
+  final Color? iconColor;
+  final Color? labelColor;
+  final Animation<double>? iconRotation;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget iconWidget = Icon(icon, color: iconColor, size: 20);
+    if (iconRotation != null) {
+      iconWidget = RotationTransition(turns: iconRotation!, child: iconWidget);
+    }
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.3,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          iconWidget,
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                maxLines: 1,
+                style: TextStyle(fontSize: 8, color: labelColor),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

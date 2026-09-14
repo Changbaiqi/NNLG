@@ -416,49 +416,57 @@ class MainCourseViewLogic extends GetxController
     return result;
   }
 
-  //用来陈列数据列表或者刷新课表视图用
-  List<Widget> pullAllCourseSchedule(Map<dynamic, dynamic> courseJson) {
-    // log(jsonEncode(courseJson));
-    remark.value = courseJson['remark']!;
+  //读取课表显示相关依赖，保证数据/设置变化后 PageView 能及时刷新
+  void trackCourseViewDeps() {
+    CourseData.weekCourseJson.value;
+    CourseData.schoolOpenTime.value;
+    CourseData.courseTime.value;
+    CourseData.isNoonLineSwitch.value;
+    CourseData.isMinForSchedule.value;
+    CourseData.isColorClassSchedule.value;
+  }
+
+  //同步课表备注（仅在变化时写入，避免构建期重复通知）
+  void syncRemark(Map courseJson) {
+    final newRemark = (courseJson['remark'] ?? '').toString();
+    if (remark.value != newRemark) remark.value = newRemark;
+  }
+
+  //按需构建第 i 周课表控件（懒加载，避免一次性构建全部周次）
+  Widget buildWeekPage(int i) {
+    final Map courseJson = CourseData.weekCourseJson.value;
     //开学时间
     DateTime startSchoolTime = DateTime(
         int.parse(CourseData.schoolOpenTime.value.split('/')[0]),
         int.parse(CourseData.schoolOpenTime.value.split('/')[1]),
         int.parse(CourseData.schoolOpenTime.value.split('/')[2]));
     List courses = courseJson["courses"];
-    // log(jsonEncode(courses[4]));
-    List<Widget> scheduleList = [];
-    // log(courses.toString());
-    for (int i = 0; i < courses.length; ++i) {
-      scheduleList.add(ClassScheduleWidget(
-        tableJson: tableAdapter(courses[i]),
-        isNoon: CourseData.isNoonLineSwitch,
-        isMin: CourseData.isMinForSchedule,
-        isColor: CourseData.isColorClassSchedule,
-        rowTimeList: CourseData.courseTime.value
-            .map((element) => {
-                  "start": TimeOfDay(
-                      hour: int.parse(element.split('-')[0].split(':')[0]),
-                      minute: int.parse(element.split('-')[0].split(':')[1])),
-                  "end": TimeOfDay(
-                      hour: int.parse(element.split('-')[1].split(':')[0]),
-                      minute: int.parse(element.split('-')[1].split(':')[1]))
-                })
-            .toList(),
-        // columTimeList: [],
-        columTimeList: [
-          startSchoolTime.add(Duration(days: 7 * i)),
-          startSchoolTime.add(Duration(days: 7 * i + 1)),
-          startSchoolTime.add(Duration(days: 7 * i + 2)),
-          startSchoolTime.add(Duration(days: 7 * i + 3)),
-          startSchoolTime.add(Duration(days: 7 * i + 4)),
-          startSchoolTime.add(Duration(days: 7 * i + 5)),
-          startSchoolTime.add(Duration(days: 7 * i + 6)),
-        ],
-      ));
-    }
-
-    return scheduleList;
+    return ClassScheduleWidget(
+      tableJson: tableAdapter(courses[i]),
+      isNoon: CourseData.isNoonLineSwitch,
+      isMin: CourseData.isMinForSchedule,
+      isColor: CourseData.isColorClassSchedule,
+      rowTimeList: CourseData.courseTime.value
+          .map((element) => {
+                "start": TimeOfDay(
+                    hour: int.parse(element.split('-')[0].split(':')[0]),
+                    minute: int.parse(element.split('-')[0].split(':')[1])),
+                "end": TimeOfDay(
+                    hour: int.parse(element.split('-')[1].split(':')[0]),
+                    minute: int.parse(element.split('-')[1].split(':')[1]))
+              })
+          .toList(),
+      // columTimeList: [],
+      columTimeList: [
+        startSchoolTime.add(Duration(days: 7 * i)),
+        startSchoolTime.add(Duration(days: 7 * i + 1)),
+        startSchoolTime.add(Duration(days: 7 * i + 2)),
+        startSchoolTime.add(Duration(days: 7 * i + 3)),
+        startSchoolTime.add(Duration(days: 7 * i + 4)),
+        startSchoolTime.add(Duration(days: 7 * i + 5)),
+        startSchoolTime.add(Duration(days: 7 * i + 6)),
+      ],
+    );
   }
 
   //测试新课表的数据加载与显示
@@ -543,37 +551,40 @@ class MainCourseViewLogic extends GetxController
     if (Platform.isIOS) {
       var status = await Permission.photos.status;
       if (status.isDenied) {
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.photos,
-        ].request();
-        // saveImage(globalKey);
+        var result = await [Permission.photos].request();
+        status = result[Permission.photos] ?? status;
       }
       return status.isGranted;
     } else {
+      //Android 10 及以上通过 MediaStore 保存，无需存储权限，直接放行避免死循环
       var status = await Permission.storage.status;
+      if (status.isGranted) return true;
       if (status.isDenied) {
-        Map<Permission, PermissionStatus> statuses = await [
-          Permission.storage,
-        ].request();
+        var result = await [Permission.storage].request();
+        status = result[Permission.storage] ?? status;
       }
-      return status.isGranted;
+      return true;
     }
   }
 
   //保存到相册
   void savePhoto() async {
-    RenderRepaintBoundary? boundary = courseWidgetKey.currentContext!
-        .findRenderObject() as RenderRepaintBoundary?;
+    try {
+      final context = courseWidgetKey.currentContext;
+      if (context == null) return;
+      RenderRepaintBoundary? boundary =
+          context.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) return;
 
-    double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
-    var image = await boundary!.toImage(pixelRatio: dpr);
-    // 将image转化成byte
-    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    //获取保存相册权限，如果没有，则申请改权限
-    bool permition = await getPormiation();
-
-    var status = await Permission.photos.status;
-    if (permition) {
+      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
+      var image = await boundary.toImage(pixelRatio: dpr);
+      // 将image转化成byte
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      //获取保存相册权限，如果没有，则申请该权限
+      bool permition = await getPormiation();
+      if (!permition) return; //权限被拒绝时直接返回，避免无限递归
+      var status = await Permission.photos.status;
       if (Platform.isIOS) {
         if (status.isGranted) {
           Uint8List images = byteData!.buffer.asUint8List();
@@ -588,29 +599,25 @@ class MainCourseViewLogic extends GetxController
           print("IOS拒绝");
         }
       } else {
-        //安卓
-        if (status.isGranted) {
-          print("Android已授权");
-          Uint8List images = byteData!.buffer.asUint8List();
-          final result = await ImageGallerySaverPlus.saveImage(images,
-              quality: 60, isReturnImagePathOfIOS: true);
-          // print(result);
-          if (result != null) {
-            print(result['filePath']);
-            // EasyLoading.showToast("保存成功");
-            File saveFile =
-                new File(result['filePath'].replaceAll("content://", ""));
-            await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
-                text: '南理校园助手');
-          } else {
-            print('error');
-            // toast("保存失败");
-          }
+        //安卓：getPormiation 已放行，直接保存（Android 10+ 走 MediaStore）
+        Uint8List images = byteData!.buffer.asUint8List();
+        final result = await ImageGallerySaverPlus.saveImage(images,
+            quality: 60, isReturnImagePathOfIOS: true);
+        // print(result);
+        if (result != null) {
+          print(result['filePath']);
+          // EasyLoading.showToast("保存成功");
+          File saveFile =
+              new File(result['filePath'].replaceAll("content://", ""));
+          await Share.shareXFiles([XFile(saveFile.path + ".jpg")],
+              text: '南理校园助手');
+        } else {
+          print('error');
+          // toast("保存失败");
         }
       }
-    } else {
-      //重新请求--第一次请求权限时，保存方法不会走，需要重新调一次
-      savePhoto();
+    } catch (e) {
+      print(e);
     }
   }
 

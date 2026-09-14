@@ -14,6 +14,9 @@ class CustomThemeData {
   static final selectThemeUid = "".obs;
   static final nowThemeData ={}.obs;
 
+  //记录当前已加载的主题，避免重复强制刷新
+  static String? _loadedThemeUid;
+
   static loadTheme(String themeUid) async {
     String themeType = themeUid.split(":")[0];
     String uid = themeUid.split(":")[1];
@@ -34,7 +37,13 @@ class CustomThemeData {
   static loadLocalTheme(String uid) async {
     var themeJson = jsonDecode(
         await FileUtils.loadJsonFromAssets('assets/theme/${uid}.json'));
+    final bool changed = _loadedThemeUid != uid;
+    _loadedThemeUid = uid;
     CustomThemeData.nowThemeData.value = themeJson;
     CustomThemeData.nowThemeData.refresh();
+    //主题变化后强制刷新整个应用，避免需要切换页面才生效
+    if (changed && Get.key.currentState != null) {
+      await Get.forceAppUpdate();
+    }
   }
 }

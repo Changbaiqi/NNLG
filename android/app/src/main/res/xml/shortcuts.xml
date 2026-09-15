@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutId="add_course_widget"
+        android:shortcutLongLabel="@string/shortcut_course_widget_long"
+        android:shortcutShortLabel="@string/shortcut_course_widget_short">
+        <intent
+            android:action="com.cbq.callocollege.action.ADD_COURSE_WIDGET"
+            android:data="callo://add_course_widget"
+            android:targetClass="com.cbq.callocollege.MainActivity"
+            android:targetPackage="com.cbq.callocollege" />
+    </shortcut>
+</shortcuts>

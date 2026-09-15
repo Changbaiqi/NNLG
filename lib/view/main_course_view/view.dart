@@ -11,6 +11,7 @@ import 'package:callo/utils/CourseUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/view/module/showCourseSharedSelectDialog.dart';
+import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:showcaseview/showcaseview.dart';
 
@@ -335,6 +336,28 @@ class MainCourseViewPage extends StatelessWidget {
                             ],
                           ),
                           value: '课表同步历史',
+                        ),
+                        PopupMenuItem(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.widgets_outlined,
+                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['defaultIconColor'] as List),
+                                size: 20,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                child: Text(
+                                  '桌面课表小组件',
+                                  style:
+                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                                ),
+                              )
+                            ],
+                          ),
+                          value: '桌面课表小组件',
                         )
                       ];
                     },
@@ -372,6 +395,11 @@ class MainCourseViewPage extends StatelessWidget {
                           {
                             logic.showClassScheduleHistory(AccountData.studentID,
                                 CourseData.nowCourseList.value);
+                          }
+                          break;
+                        case '桌面课表小组件':
+                          {
+                            showCourseWidgetDialog();
                           }
                           break;
                       }

@@ -7,6 +7,7 @@ import 'package:callo/dao/ClassNewScheduleDao.dart';
 import 'package:callo/dao/ClassScheduleDatabase.dart';
 import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
+import 'package:callo/view/module/showCourseWidgetDialog.dart';
 
 import 'dao/ClassScheduleDao.dart';
 
@@ -43,6 +44,9 @@ void main() async {
       signalsReady: true);
   getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,
       signalsReady: true);
+
+  //监听长按桌面图标「添加课表小组件」快捷方式
+  initCourseWidgetShortcut();
 
   return runApp(MyApp());
 }

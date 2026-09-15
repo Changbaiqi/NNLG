@@ -11,6 +11,7 @@ import 'package:callo/dao/LoginData.dart';
 import 'package:callo/dao/NoticeData.dart';
 import 'package:callo/dao/XiaoBeiData.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../dao/ContextData.dart';
@@ -130,6 +131,7 @@ class ShareDateUtil{
     await setoldWeekCourseList(<String>[]);
     // await setOldShowClassScheduleUUID(''); 旧课表
     await setShowClassScheduleUUID('');
+    await CourseWidgetUtil.clearCourseWidget();
 
     //关闭极速启动
     await setTopSpeedStart(false);
@@ -358,6 +360,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('schoolOpenDate', '${schoolOpenDate}').then((c){
       CourseData.schoolOpenTime.value = schoolOpenDate;
+      CourseWidgetUtil.updateCourseWidget();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
     //print('设置的Cookie：${ContextDate.token}');
@@ -419,6 +422,7 @@ class ShareDateUtil{
     await prefs.setString('weekCourseJson', weekCourseJson).then((c){
       CourseData.weekCourseJson.value = jsonDecode(weekCourseJson);
       CourseData.weekCourseJson.refresh();
+      CourseWidgetUtil.updateCourseWidget();
     });
   }
 
@@ -519,6 +523,7 @@ class ShareDateUtil{
       CourseData.courseTime.value.clear();
       CourseData.courseTime.value.addAll(courseTimeList);
       CourseData.courseTime.refresh();
+      CourseWidgetUtil.updateCourseWidget();
       return courseTimeList;
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });

@@ -8,6 +8,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:callo/utils/FileUtils.dart';
 
 class CustomThemeData {
@@ -45,5 +46,7 @@ class CustomThemeData {
     if (changed && Get.key.currentState != null) {
       await Get.forceAppUpdate();
     }
+    //主题变化后同步刷新桌面课表小组件配色
+    CourseWidgetUtil.updateCourseWidget();
   }
 }

@@ -65,7 +65,7 @@ dependencies:
   flutter_staggered_animations: ^1.1.1 #列表子控件加载动画
   url_launcher: ^6.2.4 #用于跳转浏览器
   package_info_plus: ^9.0.0 #用于获取APP版本等相关信息
-#  home_widget: ^0.7.0+1 #桌面小组件
+  home_widget: ^0.9.4 #桌面课表小组件
   lottie: ^1.2.1 #lottie动画依赖
   flutter_markdown: ^0.6.18+3 # markdown
   markdown_widget: ^2.3.2+3 #markdown

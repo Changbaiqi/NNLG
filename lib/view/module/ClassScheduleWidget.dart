@@ -54,27 +54,27 @@ class ClassScheduleWidget extends StatefulWidget {
       "end": TimeOfDay(hour: 12, minute: 00)
     },
     {
-      "start": TimeOfDay(hour: 14, minute: 30),
-      "end": TimeOfDay(hour: 15, minute: 15)
+      "start": TimeOfDay(hour: 14, minute: 00),
+      "end": TimeOfDay(hour: 14, minute: 45)
     },
     {
-      "start": TimeOfDay(hour: 15, minute: 20),
-      "end": TimeOfDay(hour: 16, minute: 05)
+      "start": TimeOfDay(hour: 14, minute: 50),
+      "end": TimeOfDay(hour: 15, minute: 35)
     },
     {
-      "start": TimeOfDay(hour: 16, minute: 15),
-      "end": TimeOfDay(hour: 17, minute: 00)
+      "start": TimeOfDay(hour: 15, minute: 45),
+      "end": TimeOfDay(hour: 16, minute: 30)
     },
     {
-      "start": TimeOfDay(hour: 17, minute: 05),
-      "end": TimeOfDay(hour: 17, minute: 50)
+      "start": TimeOfDay(hour: 16, minute: 35),
+      "end": TimeOfDay(hour: 17, minute: 20)
     },
     {
-      "start": TimeOfDay(hour: 18, minute: 20),
-      "end": TimeOfDay(hour: 19, minute: 05)
+      "start": TimeOfDay(hour: 18, minute: 30),
+      "end": TimeOfDay(hour: 19, minute: 15)
     },
     {
-      "start": TimeOfDay(hour: 19, minute: 10),
+      "start": TimeOfDay(hour: 19, minute: 20),
       "end": TimeOfDay(hour: 19, minute: 55)
     },
     {

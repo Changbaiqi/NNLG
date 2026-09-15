@@ -1,0 +1,256 @@
+package com.cbq.callocollege
+
+import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
+import android.view.View
+import android.widget.RemoteViews
+import es.antonborri.home_widget.HomeWidgetLaunchIntent
+import es.antonborri.home_widget.HomeWidgetPlugin
+import es.antonborri.home_widget.HomeWidgetProvider
+import org.json.JSONArray
+import org.json.JSONObject
+
+/**
+ * 桌面课表小组件：展示今日课程
+ * - Android 12+：课程行通过 RemoteCollectionItems 直接随 RemoteViews 下发，任何数据变化都能立即生效
+ * - Android 12 以下：使用 RemoteViewsService（集合部件）+ 主动通知刷新
+ */
+class CourseWidgetProvider : HomeWidgetProvider() {
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetIds: IntArray,
+        widgetData: SharedPreferences,
+    ) {
+        val root = CourseWidgetData.read(widgetData)
+        for (appWidgetId in appWidgetIds) {
+            updateWidget(context, appWidgetManager, appWidgetId, root)
+        }
+    }
+
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle?,
+    ) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        // 尺寸变化时重新布局（紧凑模式/内边距）
+        val root = CourseWidgetData.read(HomeWidgetPlugin.getData(context))
+        updateWidget(context, appWidgetManager, appWidgetId, root)
+    }
+
+    companion object {
+        private const val TAG = "CourseWidget"
+
+        /**
+         * 进程内刷新全部课表小组件（App 内更新课表后调用，比广播更可靠）
+         */
+        fun updateAll(context: Context) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val component = ComponentName(context, CourseWidgetProvider::class.java)
+            val ids = appWidgetManager.getAppWidgetIds(component)
+            Log.i(TAG, "updateAll widgets=${ids.size}")
+            if (ids.isEmpty()) return
+            val root = CourseWidgetData.read(HomeWidgetPlugin.getData(context))
+            Log.i(
+                TAG,
+                "updateAll open=${root?.optString("open")} ans=${root?.optInt("ans")} " +
+                    "v=${root?.optLong("v")} week=${CourseWidgetData.weekLabel(root)} " +
+                    "todayRows=${CourseWidgetData.todayRows(root)?.length() ?: -1}"
+            )
+            for (appWidgetId in ids) {
+                updateWidget(context, appWidgetManager, appWidgetId, root)
+            }
+        }
+
+        private fun updateWidget(
+            context: Context,
+            appWidgetManager: AppWidgetManager,
+            appWidgetId: Int,
+            root: JSONObject?,
+        ) {
+            val views = RemoteViews(context.packageName, R.layout.course_widget_layout)
+            try {
+                bindViews(context, views, root, appWidgetId, appWidgetManager)
+            } catch (e: Exception) {
+                Log.e(TAG, "bindViews failed", e)
+                bindFallback(views)
+            }
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+
+        private fun notifyListChanged(appWidgetManager: AppWidgetManager, ids: IntArray) {
+            try {
+                appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.course_list)
+            } catch (_: Exception) {
+            }
+            // 部分桌面（如 MIUI）对紧接着的刷新不敏感，稍后再补一次
+            Handler(Looper.getMainLooper()).postDelayed({
+                try {
+                    appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.course_list)
+                } catch (_: Exception) {
+                }
+            }, 800)
+        }
+
+        private fun bindViews(
+            context: Context,
+            views: RemoteViews,
+            root: JSONObject?,
+            appWidgetId: Int,
+            appWidgetManager: AppWidgetManager,
+        ) {
+            views.setOnClickPendingIntent(
+                R.id.widget_root,
+                HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java)
+            )
+
+            val textColor = CourseWidgetData.textColor(root)
+            val subColor = CourseWidgetData.subColor(root)
+            val accentColor = CourseWidgetData.accentColor(root)
+            val rows = CourseWidgetData.todayRows(root)
+
+            // 高度很小时进入紧凑模式：隐藏周次行、分隔线并缩小内边距，把空间留给课程列表
+            val minHeight = try {
+                appWidgetManager.getAppWidgetOptions(appWidgetId)
+                    .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
+            } catch (e: Exception) {
+                110
+            }
+            val compact = minHeight < 120
+            val padding =
+                ((if (compact) 10 else 14) * context.resources.displayMetrics.density).toInt()
+            views.setViewPadding(R.id.widget_root, padding, padding, padding, padding)
+
+            views.setInt(
+                R.id.widget_root,
+                "setBackgroundResource",
+                if (CourseWidgetData.isDark(root)) R.drawable.widget_card_bg_dark
+                else R.drawable.widget_card_bg_light
+            )
+            views.setTextColor(R.id.tv_date, textColor)
+            views.setTextColor(R.id.tv_week, subColor)
+            views.setTextColor(R.id.tv_count, accentColor)
+            views.setTextColor(R.id.tv_empty, subColor)
+            views.setInt(
+                R.id.divider,
+                "setBackgroundColor",
+                CourseWidgetData.withAlpha(textColor, 0.08f)
+            )
+            views.setTextViewText(R.id.tv_date, CourseWidgetData.todayTitle())
+            views.setTextViewText(R.id.tv_week, CourseWidgetData.weekLabel(root))
+            views.setViewVisibility(R.id.tv_week, if (compact) View.GONE else View.VISIBLE)
+            views.setViewVisibility(R.id.divider, if (compact) View.GONE else View.VISIBLE)
+
+            if (root == null) {
+                views.setTextViewText(R.id.tv_count, "打开App同步")
+                views.setTextViewText(R.id.tv_empty, "打开「恰啰校园」同步课表后，这里会显示今日课程")
+                showEmpty(views)
+                return
+            }
+            if (rows == null || rows.length() == 0) {
+                views.setTextViewText(R.id.tv_count, "今日无课")
+                views.setTextViewText(R.id.tv_empty, "今天没有课，好好休息~")
+                showEmpty(views)
+                return
+            }
+
+            val usesService = setCourseListAdapter(
+                context, views, rows, appWidgetId,
+                root.optLong("v", 0L), textColor, subColor, accentColor
+            )
+            if (usesService) {
+                notifyListChanged(appWidgetManager, intArrayOf(appWidgetId))
+            }
+
+            views.setTextViewText(R.id.tv_count, "今日 ${rows.length()} 门课")
+            views.setViewVisibility(R.id.tv_empty, View.GONE)
+            views.setViewVisibility(R.id.course_list, View.VISIBLE)
+        }
+
+        /**
+         * 设置课程列表
+         * @return true 表示使用了 RemoteViewsService（需要额外通知刷新）
+         */
+        private fun setCourseListAdapter(
+            context: Context,
+            views: RemoteViews,
+            rows: JSONArray,
+            appWidgetId: Int,
+            version: Long,
+            textColor: Int,
+            subColor: Int,
+            accentColor: Int,
+        ): Boolean {
+            val launchIntent =
+                HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java)
+            if (Build.VERSION.SDK_INT >= 31) {
+                // Android 12+：直接携带课程行，数据变化随 updateAppWidget 立即生效
+                val builder = RemoteViews.RemoteCollectionItems.Builder()
+                    .setHasStableIds(false)
+                for (i in 0 until rows.length()) {
+                    val course = rows.optJSONObject(i) ?: continue
+                    val row = CourseWidgetData.buildRow(
+                        context, course, textColor, subColor, accentColor
+                    )
+                    row.setOnClickPendingIntent(R.id.item_root, launchIntent)
+                    builder.addItem(i.toLong(), row)
+                }
+                views.setRemoteAdapter(R.id.course_list, builder.build())
+                return false
+            }
+            // 旧系统：集合部件 + 通知刷新；data 带版本号，数据变化时会重建适配器
+            views.setPendingIntentTemplate(
+                R.id.course_list,
+                mutableLaunchPendingIntent(context)
+            )
+            val serviceIntent = Intent(context, CourseWidgetService::class.java).apply {
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+                data = Uri.parse("callo://course_widget/$appWidgetId/$version")
+            }
+            views.setRemoteAdapter(appWidgetId, R.id.course_list, serviceIntent)
+            return true
+        }
+
+        private fun showEmpty(views: RemoteViews) {
+            views.setViewVisibility(R.id.course_list, View.GONE)
+            views.setViewVisibility(R.id.tv_empty, View.VISIBLE)
+        }
+
+        private fun bindFallback(views: RemoteViews) {
+            try {
+                views.setTextViewText(R.id.tv_count, "")
+                views.setTextViewText(R.id.tv_empty, "课表加载失败，请打开App重新同步")
+                showEmpty(views)
+            } catch (_: Exception) {
+                // 忽略：极少见情况下 RemoteViews 本身不可用
+            }
+        }
+
+        /**
+         * 列表点击模板：Android 12+ 必须使用可变 PendingIntent，才能与行点击的 fillInIntent 合并
+         */
+        private fun mutableLaunchPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java)
+            var flags = PendingIntent.FLAG_UPDATE_CURRENT
+            flags = if (Build.VERSION.SDK_INT >= 31) {
+                flags or PendingIntent.FLAG_MUTABLE
+            } else {
+                flags or PendingIntent.FLAG_IMMUTABLE
+            }
+            return PendingIntent.getActivity(context, 100, intent, flags)
+        }
+    }
+}

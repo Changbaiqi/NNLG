@@ -20,11 +20,37 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <!-- 长按桌面图标弹出的快捷菜单：添加课表小组件 -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+            <!-- 关闭 Flutter 默认深链路由：快捷方式的 callo:// 数据会被当成路由导致黑屏，
+                 本应用使用 GetX 路由，快捷方式由 home_widget 手动处理 -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- 桌面课表小组件 -->
+        <receiver
+            android:name=".CourseWidgetProvider"
+            android:label="今日课表"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/course_widget_info" />
+        </receiver>
+        <!-- 课表小组件的可滚动课程列表服务 -->
+        <service
+            android:name=".CourseWidgetService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

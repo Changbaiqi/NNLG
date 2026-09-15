@@ -28,6 +28,7 @@ import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/view/module/ClassScheduleWidget.dart';
 import 'package:callo/view/module/showCourseTableMessage.dart';
+import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -700,6 +701,14 @@ class MainCourseViewLogic extends GetxController
 
 
     shakeListen();
+
+    //冷启动场景：从「长按图标 → 添加课表小组件」进入时，课表页就绪后弹出添加引导
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (consumePendingCourseWidgetDialog()) {
+        showCourseWidgetDialog();
+      }
+    });
   }
 
   @override

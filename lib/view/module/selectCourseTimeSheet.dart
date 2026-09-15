@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 class selectCourseTimeSheet{
   final _context;
@@ -70,139 +71,108 @@ class selectCourseTimeSheet{
   //选择时间页面控件组合
   Widget chooseWidget(FixedExtentScrollController startControllerHours,FixedExtentScrollController startControllerMinutes,
       FixedExtentScrollController endControllerHours,FixedExtentScrollController endControllerMinutes ){
-    //
-    return Container(
-      height: 50,
-      width: 150,
+    final Color textColor = GlassTheme.textColor('course_set_view');
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-
-          Column(
-            children: [
-              Center(child: Text('上课时间',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),),
-              Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [
-                      Container(
-                          width:60,
-                          child: ListWheelScrollView(
-                            itemExtent: 60,
-                            useMagnifier: true,
-                            magnification: 1.5,
-                            controller: startControllerHours,
-                            onSelectedItemChanged: (index) {
-
-                              resDataTime[_pageIndex.value*2-2] = DateTime(0,0,0,index,resDataTime[_pageIndex.value*2-2].minute);
-                              // debugPrint('${resDataTime[_pageIndex.value*2-2].hour}');
-
-                            },
-                            physics: FixedExtentScrollPhysics(
-                                parent: BouncingScrollPhysics()
-                            ),
-
-                            children: hourWidget(),
-                          )),
-                      Container(
-                          width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
-                      Container(
-                          width:60,
-                          child: Center(child: ListWheelScrollView(
-                            itemExtent: 60,
-                            useMagnifier: true,
-                            magnification: 1.5,
-                            controller: startControllerMinutes,
-                            onSelectedItemChanged: (index) {
-
-                              resDataTime[_pageIndex.value*2-2] = DateTime(0,0,0,resDataTime[_pageIndex.value*2-2].hour,index);
-                              // debugPrint('${resDataTime[_pageIndex.value*2-2].minute}');
-
-                            },
-                            physics: FixedExtentScrollPhysics(
-                                parent: BouncingScrollPhysics()
-                            ),
-
-                            children: minuteWidget(),
-                          ),)),
-                      Container(
-                          width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
-                    ],
-                  ))
-
-            ],
+          Expanded(
+              child: _timeColumn(
+            label: '上课时间',
+            hourController: startControllerHours,
+            minuteController: startControllerMinutes,
+            onHour: (index) {
+              resDataTime[_pageIndex.value * 2 - 2] = DateTime(
+                  0, 0, 0, index, resDataTime[_pageIndex.value * 2 - 2].minute);
+            },
+            onMinute: (index) {
+              resDataTime[_pageIndex.value * 2 - 2] = DateTime(
+                  0, 0, 0, resDataTime[_pageIndex.value * 2 - 2].hour, index);
+            },
+            textColor: textColor,
+          )),
+          Container(
+            width: 1,
+            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 30),
+            color: textColor.withValues(alpha: .2),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Container(height: MediaQuery.of(_context).size.height/7,width: 1,color: Colors.black45,),Text('至'),Container(height: MediaQuery.of(_context).size.height/7,width: 1,color: Colors.black45)],),
-          ),
-          Column(
-
-            children: [
-              Center(child: Text('下课时间',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),),
-              Expanded(
-                  flex: 1,
-                  child: Row(
-                    children: [
-
-
-                      Container(
-                          width:60,
-                          child: ListWheelScrollView(
-                            itemExtent: 60,
-                            useMagnifier: true,
-                            magnification: 1.5,
-                            controller: endControllerHours,
-                            onSelectedItemChanged: (index) {
-
-                              resDataTime[_pageIndex.value*2-1] = DateTime(0,0,0,index,resDataTime[_pageIndex.value*2-1].minute);
-                              // debugPrint('${resDataTime[_pageIndex.value*2-1].hour}');
-
-                            },
-                            physics: FixedExtentScrollPhysics(
-                                parent: BouncingScrollPhysics()
-                            ),
-
-                            children: hourWidget(),
-                          )),
-                      Container(
-                          width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('时',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),)),
-                      Container(
-                          width:60,
-                          child: Center(child: ListWheelScrollView(
-                            itemExtent: 60,
-                            useMagnifier: true,
-                            magnification: 1.5,
-                            controller: endControllerMinutes,
-                            onSelectedItemChanged: (index) {
-
-                              resDataTime[_pageIndex.value*2-1] = DateTime(0,0,0,resDataTime[_pageIndex.value*2-1].hour,index);
-                              // debugPrint('${resDataTime[_pageIndex.value*2-1].minute}');
-
-                            },
-                            physics: FixedExtentScrollPhysics(
-                                parent: BouncingScrollPhysics()
-                            ),
-
-                            children: minuteWidget(),
-                          ),)),
-                      Container(
-                          width:10,
-                          child: Padding(padding: EdgeInsets.fromLTRB(0, 0, 0,60),child: Text('分',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),))
-
-
-                    ],
-                  ))
-
-            ],
-          )
-
-
+          Expanded(
+              child: _timeColumn(
+            label: '下课时间',
+            hourController: endControllerHours,
+            minuteController: endControllerMinutes,
+            onHour: (index) {
+              resDataTime[_pageIndex.value * 2 - 1] = DateTime(
+                  0, 0, 0, index, resDataTime[_pageIndex.value * 2 - 1].minute);
+            },
+            onMinute: (index) {
+              resDataTime[_pageIndex.value * 2 - 1] = DateTime(
+                  0, 0, 0, resDataTime[_pageIndex.value * 2 - 1].hour, index);
+            },
+            textColor: textColor,
+          )),
         ],
       ),
+    );
+  }
+
+  //单个时间选择列（大节/小节通用）
+  Widget _timeColumn({
+    required String label,
+    required FixedExtentScrollController hourController,
+    required FixedExtentScrollController minuteController,
+    required ValueChanged<int> onHour,
+    required ValueChanged<int> onMinute,
+    required Color textColor,
+  }) {
+    return Column(
+      children: [
+        Text(label,
+            style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w600,
+                color: textColor.withValues(alpha: .8))),
+        const SizedBox(height: 4),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(
+                  child: ListWheelScrollView(
+                itemExtent: 46,
+                useMagnifier: true,
+                magnification: 1.35,
+                controller: hourController,
+                onSelectedItemChanged: onHour,
+                physics: FixedExtentScrollPhysics(
+                    parent: BouncingScrollPhysics()),
+                children: hourWidget(),
+              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Text('时',
+                    style: TextStyle(fontSize: 12, color: textColor)),
+              ),
+              Expanded(
+                  child: ListWheelScrollView(
+                itemExtent: 46,
+                useMagnifier: true,
+                magnification: 1.35,
+                controller: minuteController,
+                onSelectedItemChanged: onMinute,
+                physics: FixedExtentScrollPhysics(
+                    parent: BouncingScrollPhysics()),
+                children: minuteWidget(),
+              )),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Text('分',
+                    style: TextStyle(fontSize: 12, color: textColor)),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -217,35 +187,71 @@ class selectCourseTimeSheet{
 
 
   Widget build(){
-    return Container(
-      height: 400,
-      decoration: BoxDecoration(
-        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List )
-      ),
+    return SizedBox(
+      height: 380,
       child: Column(
         children: [
-          Container(
-            height: 50,
-            decoration: BoxDecoration(
-                // color: Color.fromARGB(255, 241, 241, 241),
-              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List ),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black54,blurRadius: 10,offset: Offset(1,1)
-                  )
-                ]
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                //上一页
-                IconButton(icon: Image.asset('assets/images/start.png',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['defaultIconColor'] as List ),),onPressed: (){ _pageController.previousPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
-                Obx(() => Text('第${_pageIndex.value}小节',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
-                //下一页
-                IconButton(icon: Image.asset('assets/images/end.png',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['defaultIconColor'] as List ),),onPressed: (){   _pageController.nextPage(duration: Duration(milliseconds: 900), curve: Curves.ease); },),
-              ],
-            ),
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 16,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      GlassTheme.accentColor('course_set_view'),
+                      GlassTheme.accentColor('course_set_view')
+                          .withValues(alpha: .5),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '各小节课时间',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: GlassTheme.textColor('course_set_view'),
+                ),
+              ),
+              const Spacer(),
+              Obx(() => Text(
+                    '第 ${_pageIndex.value} 小节',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: GlassTheme.textColor('course_set_view')
+                          .withValues(alpha: .6),
+                    ),
+                  )),
+              IconButton(
+                icon: Image.asset('assets/images/start.png',
+                    height: 20,
+                    width: 20,
+                    color: GlassTheme.textColor('course_set_view')
+                        .withValues(alpha: .7)),
+                onPressed: () {
+                  _pageController.previousPage(
+                      duration: Duration(milliseconds: 900), curve: Curves.ease);
+                },
+              ),
+              IconButton(
+                icon: Image.asset('assets/images/end.png',
+                    height: 20,
+                    width: 20,
+                    color: GlassTheme.textColor('course_set_view')
+                        .withValues(alpha: .7)),
+                onPressed: () {
+                  _pageController.nextPage(
+                      duration: Duration(milliseconds: 900), curve: Curves.ease);
+                },
+              ),
+            ],
           ),
+          const SizedBox(height: 4),
           Expanded(
               flex: 1,
               child: PageView(
@@ -278,40 +284,37 @@ class selectCourseTimeSheet{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
 
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(
+                  Expanded(
+                    child: SizedBox(
+                      height: 46,
+                      child: TextButton(
                         onPressed: () {
                           Navigator.pop(_context);
                         },
-                        child: Text('取消',style: TextStyle(color: Colors.white),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.black45
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-
-                            )
-                        )
-                    ),
-
-                  ),
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
+                        style: TextButton.styleFrom(
+                          backgroundColor:
+                              GlassTheme.textColor('course_set_view')
+                                  .withValues(alpha: .08),
+                          foregroundColor:
+                              GlassTheme.textColor('course_set_view')
+                                  .withValues(alpha: .8),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(23)),
+                        ),
+                        child: const Text('取消', style: TextStyle(fontSize: 15)),
                       ),
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: GradientButton(
+                      text: '确定',
+                      page: 'course_set_view',
+                      height: 46,
                       onPressed: () {
-
                         Navigator.pop(_context, resDataTime);
-
-                      },),
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -327,9 +330,14 @@ class selectCourseTimeSheet{
   static Future show(_context,int _sum,List<String> initTimeString){
 
     return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      barrierColor: Colors.black.withValues(alpha: .35),
+      isScrollControlled: true,
       context: _context,
       builder: (builder){
-        return Container(
+        return GlassCard(
+          page: 'course_set_view',
+          padding: EdgeInsets.fromLTRB(16, 18, 16, 16),
           child: selectCourseTimeSheet(_context,_sum,initTimeString).build(),
         );
       }

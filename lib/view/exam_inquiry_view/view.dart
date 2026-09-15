@@ -1,204 +1,196 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_randomcolor/flutter_randomcolor.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:callo/dao/CustomThemeData.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
-import 'package:sqflite/utils/utils.dart';
+
+import 'package:callo/utils/GlassUI.dart';
 
 import 'logic.dart';
 
+/// 考试安排：毛玻璃 + 渐变风格
 class ExamInquiryViewPage extends StatelessWidget {
   ExamInquiryViewPage({Key? key}) : super(key: key);
 
   final logic = Get.find<ExamInquiryViewLogic>();
   final state = Get.find<ExamInquiryViewLogic>().state;
 
+  static const String _page = 'exam_inquiry_view';
+
   @override
   Widget build(BuildContext context) {
-    var itemWidth = (MediaQuery.of(context).size.width - 30) / 2;
-    var itemHeight = 255.0;
+    var itemWidth = (MediaQuery.of(context).size.width - 42) / 2;
+    var itemHeight = 215.0;
     var childAspectRatio = itemWidth / itemHeight;
 
-    return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
-      appBar: AppBar(
-        // foregroundColor: Colors.black,
-        iconTheme: IconThemeData(
-            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['defaultIconColor'] as List )
+    final Color text = GlassTheme.textColor(_page);
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: text,
+          iconTheme: IconThemeData(color: text),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text('考试安排',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w700, color: text)),
+              Obx(() => GlassDropdown<String>(
+                    page: _page,
+                    items: state.searList.value,
+                    value: state.selectTime.value,
+                    title: '选择学期',
+                    onChanged: (value) {
+                      state.selectTime.value = value;
+                      logic.showScoreList(state.selectTime.value);
+                    },
+                  ))
+            ],
+          ),
         ),
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['foregroundColor'] as List ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('考试安排',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),),
-            Obx(() => DropdownButton<String>(
-              dropdownColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
-                value: state.selectTime.value,
-                style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),
-                items: state.searList.value
-                    .map((e) => DropdownMenuItem(
-                    value: e,
-
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['textColor'] as List )),),
-                    )))
-                    .toList(),
-                onChanged: (value) {
-                  state.selectTime.value = value!;
-                  logic.showScoreList(state.selectTime.value);
-                  // state.mfuture = logic.future();
-                }))
-          ],
-        ),
-        // backgroundColor: Colors.white,
-        backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['exam_inquiry_view']!['backgroundColor'] as List ),
-        elevation: 1,
-      ),
-      body: Obx((){
-        switch(state.showState.value){
-          case 0:
-            return Center(
-                child: Lottie.asset('assets/images/loading.json',
-                    height: 200, width: 200));
-          case 1:
-            return ListView(
-              children: [
-                /*_showScoreWidget,*/ Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.scoreList.length,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: childAspectRatio,
-                        ),
-                        itemBuilder: (context, index) {
-                          return showchildElement(state.scoreList[index]);
-                        },
-                      ),
+        body: Obx(() {
+          switch (state.showState.value) {
+            case 0:
+              return Center(
+                  child: Lottie.asset('assets/images/loading.json',
+                      height: 200, width: 200));
+            case 1:
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.scoreList.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: childAspectRatio,
                     ),
-                    //_showchildElement("json")
-                  ],
-                )
-              ],
-            );
-          default:
-            return Center(child: Text('错误'),);
-        }
-      }),
+                    itemBuilder: (context, index) {
+                      return AnimationConfiguration.staggeredGrid(
+                        position: index,
+                        duration: const Duration(milliseconds: 350),
+                        columnCount: 2,
+                        child: SlideAnimation(
+                          verticalOffset: 50.0,
+                          child: FadeInAnimation(
+                            child: showchildElement(state.scoreList[index]),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            default:
+              return Center(
+                  child: Text('错误', style: TextStyle(color: text)));
+          }
+        }),
+      ),
     );
   }
 
-
-  /**
-   * 单个组件
-   */
-  showchildElement(json){
-    // int colorR = 0;
-    // int colorG = 0;
-    // int colorB = 0;
-    // while(true){
-    //   colorR =Random().nextInt(255);
-    //   colorG =Random().nextInt(255);
-    //   colorB =Random().nextInt(255);
-    //   if((colorR-colorG).abs()>=40 || (colorG-colorB).abs()>=40)
-    //     break;
-    // }
-
-    Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
-    var color = RandomColor.getColor(options);
-    // print(color);
-
-    // log(color);    //print(json);
+  /// 单个考试卡片
+  showchildElement(json) {
     json = jsonDecode(json);
-    //var jsson = jsonDecode('{"name":"cc"}');
-    return Container(
-      height: 220,
-      width: 150,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          // color: Color.fromARGB(255, colorR, colorG, colorB),
-        color: Color.fromARGB(255, color[0], color[1], color[2]),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45,
-                blurRadius: 10,
-                offset: Offset(1, 1)
-            )
-          ]
-      ),
-      child: Stack(
-          children: [
-            Positioned(child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                      color:Colors.white,
-                      borderRadius: BorderRadius.all(Radius.circular(500))
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    return GlassCard(
+      page: _page,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //序号
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [accent, GlassTheme.lighten(accent, .35)],
                   ),
-                  child: Center(
-                    child: Text('${json["number"]}',style: TextStyle(fontSize: 18,color: Colors.black87),),
+                  boxShadow: [
+                    BoxShadow(
+                        color: accent.withValues(alpha: .35),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3))
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    '${json["number"]}',
+                    style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
                   ),
                 ),
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('科目：',style: TextStyle(fontSize: 15),),
-                    Container(
-                      width: Get.width/4.5,
-                      child: Text('${json["courseName"]}',style: TextStyle(fontSize: 12),maxLines: 3,),
-                    )
-                  ],
-                ),),
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('时间：',style: TextStyle(fontSize: 15),),
-                    Container(
-                      width: Get.width/4.5,
-                      child: Text('${json["examTime"].toString().replaceAll(" ", "\n")}',style: TextStyle(fontSize: 12),maxLines: 3,),
-                    )
-                  ],
-                )),
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('考场：',style: TextStyle(fontSize: 15),),
-                    Container(
-                        width: Get.width/4.5,
-                        child: Text('${json["examRoom"]}',style: TextStyle(fontSize: 12,),maxLines: 3,)
-                    )
-                  ],
-                ),),
-              Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Row(
-                  children: [
-                    Text('座位号：',style: TextStyle(fontSize: 15),),
-                    Text('${json["seatNumber"]}',style: TextStyle(fontSize: 12),)
-                  ],
-                ))
-              ],
-            ),top: 10,left: 10,),
-            // Positioned(child: ,top: 90,left: 10,),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  '${json["courseName"]}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 13.5,
+                      height: 1.3,
+                      fontWeight: FontWeight.w700,
+                      color: text),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Divider(color: text.withValues(alpha: .08), height: 1),
+          const SizedBox(height: 4),
+          _field('时间', '${json["examTime"]}'.replaceAll(" ", "\n")),
+          _field('考场', '${json["examRoom"]}'),
+          _field('座位号', '${json["seatNumber"]}'),
+        ],
+      ),
+    );
+  }
 
-          ]
+  /// 字段行：小标签 + 值
+  Widget _field(String label, String value) {
+    final Color text = GlassTheme.textColor(_page);
+    return Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style:
+                  TextStyle(fontSize: 12, color: text.withValues(alpha: .5))),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              value,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 12.5,
+                  height: 1.35,
+                  fontWeight: FontWeight.w600,
+                  color: text),
+            ),
+          ),
+        ],
       ),
     );
   }

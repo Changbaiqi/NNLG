@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/WeekDayForm.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/module/showCourseTableMessage.dart';
 
 import 'state.dart';
@@ -17,7 +18,7 @@ class CourseSharedShowViewLogic extends GetxController {
   Widget loading = Center(
     child: Text(
       'Loading...',
-      style: TextStyle(fontSize: 10),
+      style: TextStyle(fontSize: 10, color: GlassTheme.textColor('main_course_view').withValues(alpha: .6)),
     ),
   );
 
@@ -125,7 +126,7 @@ class CourseSharedShowViewLogic extends GetxController {
         ? Center(
       child: Text(
         '无课',
-        style: TextStyle(fontSize: 12),
+        style: TextStyle(fontSize: 12, color: GlassTheme.textColor('main_course_view').withValues(alpha: .45)),
       ),
     )
         : Container(
@@ -154,7 +155,7 @@ class CourseSharedShowViewLogic extends GetxController {
               style: TextStyle(
                   fontSize: 12,
                   color:
-                  courseJSON.length > 1 ? Colors.red : Colors.black),
+                  courseJSON.length > 1 ? Colors.redAccent : GlassTheme.textColor('main_course_view')),
             ),
             onTap: () {
               //ToastUtil.show('${courseJSON['courseName']}');
@@ -181,14 +182,14 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '${i + 1}',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Center(
                 child: Text(
                   '${CourseData.oldCourseTime.value[i].split("-")[0]}\n至\n${CourseData.oldCourseTime.value[i].split("-")[1]}',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(fontSize: 10, color: GlassTheme.textColor('main_course_view').withValues(alpha: .6)),
                 ),
               ),
             ],
@@ -250,7 +251,7 @@ class CourseSharedShowViewLogic extends GetxController {
     return Column(
       children: [
         Table(
-          border: TableBorder.all(color: Colors.white70),
+          border: TableBorder.all(color: GlassTheme.textColor('main_course_view').withValues(alpha: .18)),
           children: [
             TableRow(children: [
               Text(''),
@@ -268,6 +269,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.weekday)}\n${dateTime.month}/${dateTime.day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -288,6 +292,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 1)).weekday)}\n${dateTime.add(Duration(days: 1)).month}/${dateTime.add(Duration(days: 1)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -308,6 +315,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 2)).weekday)}\n${dateTime.add(Duration(days: 2)).month}/${dateTime.add(Duration(days: 2)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -328,6 +338,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 3)).weekday)}\n${dateTime.add(Duration(days: 3)).month}/${dateTime.add(Duration(days: 3)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -348,6 +361,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 4)).weekday)}\n${dateTime.add(Duration(days: 4)).month}/${dateTime.add(Duration(days: 4)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -368,6 +384,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 5)).weekday)}\n${dateTime.add(Duration(days: 5)).month}/${dateTime.add(Duration(days: 5)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
               Container(
@@ -388,6 +407,9 @@ class CourseSharedShowViewLogic extends GetxController {
                 child: Text(
                   '周${WeekDayForm.Chinese(dateTime.add(Duration(days: 6)).weekday)}\n${dateTime.add(Duration(days: 6)).month}/${dateTime.add(Duration(days: 6)).day}',
                   textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 11,
+                      color: GlassTheme.textColor('main_course_view')),
                 ),
               ),
             ]),
@@ -398,7 +420,9 @@ class CourseSharedShowViewLogic extends GetxController {
           child: ListView(
             children: [
               Table(
-                border: TableBorder.all(color: Colors.black, width: 0.5),
+                border: TableBorder.all(
+                  color: GlassTheme.textColor('main_course_view').withValues(alpha: .18),
+                  width: 0.5),
                 children: forWidgetList(tableWidgetList),
               )
             ],

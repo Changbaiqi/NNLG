@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_pickers/pickers.dart';
-import 'package:flutter_pickers/style/picker_style.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/ContextData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 import 'package:callo/utils/PowerDormUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
+import 'package:callo/view/module/GlassLinkPicker.dart';
 
 import '../../dao/LoginData.dart';
 import '../../utils/MainUserUtil.dart';
@@ -338,17 +337,17 @@ class _showBindPowerDialogMainState extends State<showBindPowerDialogMain> {
    * [param] null
    * [return]
    */
-  List<dynamic> dormPicker()  {
-
-    Pickers.showMultiLinkPicker(context, data: PowerDormUtil.dormList(),selectData: selectData,pickerStyle: PickerStyle(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List),
-      textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
-      headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
-    ), columnNum: 3,onConfirm: (p,covariant) async{
-
-      selectData.value = p ;
+  Future<List<dynamic>> dormPicker() async {
+    final List<String>? result = await showGlassLinkPicker(context,
+        data: PowerDormUtil.dormList(),
+        selectData: selectData.map((e) => '$e').toList(),
+        columnNum: 3,
+        title: '选择宿舍',
+        page: 'showBindPowerDialog');
+    if (result != null && result.length >= 3) {
+      selectData.value = result;
       selectData.refresh();
-    });
+    }
     return selectData;
   }
 

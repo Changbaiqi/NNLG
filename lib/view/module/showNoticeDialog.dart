@@ -1,17 +1,16 @@
-import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:markdown_widget/widget/markdown.dart';
+import 'package:markdown_widget/markdown_widget.dart';
 
-// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:callo/dao/NoticeData.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 
 import '../../utils/NoticeUtils.dart';
 import '../../utils/ToastUtil.dart';
 
+/// 公告弹窗：毛玻璃 + 渐变风格
 class showNoticeDialog extends Dialog {
   var _json;
 
@@ -54,14 +53,14 @@ class _showNoticeDialogMain extends StatefulWidget {
 
   _showNoticeDialogMain(this._json);
 
-  //const _showNoticeDialogMain({Key? key}) : super(key: key);
-
   @override
   State<_showNoticeDialogMain> createState() => _showNoticeDialogMainState();
 }
 
 class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
     with SingleTickerProviderStateMixin {
+  static const String _page = 'main_view';
+
   AnimationController? _animationController;
   Animation<double>? _backgroundAnimation; //背景动画
   Animation<double>? _noticePaddingAnimation; //通知移动动画
@@ -69,124 +68,159 @@ class _showNoticeDialogMainState extends State<_showNoticeDialogMain>
 
   @override
   Widget build(BuildContext context) {
-    return MediaQuery(data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0), child: Scaffold(
-      backgroundColor: Colors.transparent,
-      body: WillPopScope(
-        child: Stack(
-          children: [
-            Align(
-              child: InkWell(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: _backgroundAnimation!.value,
-                      sigmaY: _backgroundAnimation!.value),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
+    final Color text = GlassTheme.textColor(_page);
+    return MediaQuery(
+        data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: WillPopScope(
+            child: Stack(
+              children: [
+                Align(
+                  child: InkWell(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: _backgroundAnimation!.value,
+                          sigmaY: _backgroundAnimation!.value),
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                      ),
+                    ),
+                    onTap: () {
+                      _animationController!
+                          .reverse()
+                          .then((value) => Navigator.pop(context));
+                    },
                   ),
                 ),
-                onTap: () {
-                  _animationController!
-                      .reverse()
-                      .then((value) => Navigator.pop(context));
-                },
-              ),
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                    0, _noticePaddingAnimation!.value, 0, 0),
-                child: Opacity(
-                  opacity: _noticeOpacityAnimation!.value,
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: 340,
-                      maxHeight: 500,
-                    ),
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 247, 242, 249),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black45, blurRadius: 10, offset: Offset(1, 1))
-                        ]),
-                    width: 300,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                          child: Text(
-                            '公告',
-                            style: TextStyle(fontSize: 25),
-                          ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(
+                        0, _noticePaddingAnimation!.value, 0, 0),
+                    child: Opacity(
+                      opacity: _noticeOpacityAnimation!.value,
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          minHeight: 340,
+                          maxHeight: 500,
                         ),
-                        Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                              // child: Markdown(data: widget._json['content'],),
-                              child: MarkdownWidget(
-                                data: widget._json['content'],
-                                shrinkWrap: true,
+                        width: 300,
+                        decoration: BoxDecoration(
+                          color: GlassTheme.pageBackground(_page)
+                              .withValues(alpha: .94),
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(
+                              color: GlassTheme.border(_page), width: 1),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withValues(alpha: .18),
+                                blurRadius: 24,
+                                offset: const Offset(0, 12))
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(20, 18, 20, 0),
+                              child: GlassSectionTitle(
+                                  page: _page, title: '公告'),
+                            ),
+                            Expanded(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(16, 10, 16, 0),
+                                  child: MarkdownWidget(
+                                    data: widget._json['content'],
+                                    shrinkWrap: true,
+                                    config: MarkdownConfig(configs: [
+                                      PConfig(textStyle: TextStyle(color: text)),
+                                    ]),
+                                  ),
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _softButton(
+                                      text: '不再提醒',
+                                      color: text,
+                                      onPressed: () {
+                                        ShareDateUtil()
+                                            .setNoticeId(widget._json['uid']);
+                                        _animationController!.reverse().then(
+                                            (value) => Navigator.pop(context));
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
+                                    child: GradientButton(
+                                      text: '知道了',
+                                      page: _page,
+                                      height: 42,
+                                      onPressed: () {
+                                        _animationController!.reverse().then(
+                                            (value) => Navigator.pop(context));
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: 130,
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.blueGrey)),
-                                    child: Text('不再提醒'),
-                                    onPressed: () {
-                                      ShareDateUtil()
-                                          .setNoticeId(widget._json['uid']);
-                                      // Navigator.pop(context);
-                                      _animationController!
-                                          .reverse()
-                                          .then((value) => Navigator.pop(context));
-                                    }),
-                              ),
-                              Container(
-                                width: 130,
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                        MaterialStateProperty.all(
-                                            Colors.blueGrey)),
-                                    child: Text('取  消'),
-                                    onPressed: () {
-                                      _animationController!
-                                          .reverse()
-                                          .then((value) => Navigator.pop(context));
-                                    }),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
+                            )
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            )
-          ],
+                )
+              ],
+            ),
+            onWillPop: () async {
+              _animationController!
+                  .reverse()
+                  .then((value) => Navigator.pop(context));
+              return false;
+            },
+          ),
+        ));
+  }
+
+  /// 次要按钮：轻描边玻璃样式
+  Widget _softButton({
+    required String text,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      height: 42,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onPressed,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: color.withValues(alpha: .06),
+              border: Border.all(color: color.withValues(alpha: .18)),
+            ),
+            child: Center(
+              child: Text(text,
+                  style: TextStyle(
+                      fontSize: 13.5,
+                      fontWeight: FontWeight.w600,
+                      color: color.withValues(alpha: .85))),
+            ),
+          ),
         ),
-        onWillPop: () async {
-          _animationController!
-              .reverse()
-              .then((value) => Navigator.pop(context));
-          return false;
-        },
       ),
-    ));
+    );
   }
 
   /**

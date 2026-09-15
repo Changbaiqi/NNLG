@@ -6,9 +6,7 @@
  * @Description TODO 单个课表组件，用于渲染单个课表的显示的
  */
 
-import 'dart:ffi';
 import 'dart:io';
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -28,6 +26,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 
 import '../../utils/CustomerThemeUtil.dart';
+import '../../utils/GlassUI.dart';
 
 class ClassScheduleWidget extends StatefulWidget {
   // const ClassScheduleWidget({super.key});
@@ -343,7 +342,16 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                         height: 900,
                         child: Obx(() => RepaintBoundary(
                           key: _tableViewKey,
-                          child: Stack(
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: _tablePanelColor,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(
+                                  color: _tableBorderColor, width: 1),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(18),
+                              child: Stack(
                             children: [
                               _backgroundLine(
                                   noonSwitch: isNoon.value,
@@ -368,6 +376,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                               ),
                               drawTable(tableJson),
                             ],
+                              ),
+                            ),
                           ),
                         )),
                       )
@@ -501,6 +511,17 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
 
   //动画进度（由 animationController 驱动）
   final _animTick = 0.0.obs;
+
+  /// 表格网格线颜色：统一跟随主题（深色主题下不再用纯黑导致看不见）
+  Color get _lineColor => GlassTheme.color('main_course_view', 'courseLineColor',
+      const Color(0xFF9E9E9E)).withValues(alpha: .85);
+
+  /// 课表面板底色/描边（轻微玻璃感，不影响自定义背景图）
+  Color get _tablePanelColor => GlassTheme.pageBackground('main_course_view')
+      .withValues(alpha: GlassTheme.isDark('main_course_view') ? .10 : .16);
+
+  Color get _tableBorderColor =>
+      GlassTheme.border('main_course_view').withValues(alpha: .55);
 
   /**
    * [title]
@@ -824,8 +845,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: _lineColor),
+                right: BorderSide(width: 0.05, color: _lineColor),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][x]["state"] &&
@@ -865,20 +886,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: _lineColor),
+                right: BorderSide(width: 0.05, color: _lineColor),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
               )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -923,20 +944,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: _lineColor),
+                right: BorderSide(width: 0.05, color: _lineColor),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
               )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -981,20 +1002,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 width: Get.context!.width / 8,
                 decoration: BoxDecoration(
                     border: Border(
-                  left: BorderSide(width: 0.05, color: Colors.black),
-                  right: BorderSide(width: 0.05, color: Colors.black),
+                  left: BorderSide(width: 0.05, color: _lineColor),
+                  right: BorderSide(width: 0.05, color: _lineColor),
                   top: BorderSide(
                       width: 0.05,
                       color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                           ? Colors.transparent
-                          : Colors.black),
+                          : _lineColor),
                   bottom: BorderSide(
                       width: 0.05,
                       color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                           ? Colors.transparent
-                          : Colors.black),
+                          : _lineColor),
                 )),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1037,20 +1058,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: _lineColor),
+                right: BorderSide(width: 0.05, color: _lineColor),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
               )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1097,20 +1118,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
               width: Get.context!.width / 8,
               decoration: BoxDecoration(
                   border: Border(
-                left: BorderSide(width: 0.05, color: Colors.black),
-                right: BorderSide(width: 0.05, color: Colors.black),
+                left: BorderSide(width: 0.05, color: _lineColor),
+                right: BorderSide(width: 0.05, color: _lineColor),
                 top: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
                 bottom: BorderSide(
                     width: 0.05,
                     color: (isOccupy[y][0]["state"] &&
                             isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                         ? Colors.transparent
-                        : Colors.black),
+                        : _lineColor),
               )),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -1155,20 +1176,20 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                 width: Get.context!.width / 8,
                 decoration: BoxDecoration(
                     border: Border(
-                  left: BorderSide(width: 0.05, color: Colors.black),
-                  right: BorderSide(width: 0.05, color: Colors.black),
+                  left: BorderSide(width: 0.05, color: _lineColor),
+                  right: BorderSide(width: 0.05, color: _lineColor),
                   top: BorderSide(
                       width: 0.05,
                       color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowStart"] - 1 != y)
                           ? Colors.transparent
-                          : Colors.black),
+                          : _lineColor),
                   bottom: BorderSide(
                       width: 0.05,
                       color: (isOccupy[y][0]["state"] &&
                               isOccupy[y][0]["table"]["rowEnd"] - 1 != y)
                           ? Colors.transparent
-                          : Colors.black),
+                          : _lineColor),
                 )),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

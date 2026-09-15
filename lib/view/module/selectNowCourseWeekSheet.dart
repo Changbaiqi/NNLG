@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 
 class selectNowCourseWeekSheet{
@@ -23,23 +24,30 @@ class selectNowCourseWeekSheet{
       Container(
         height: 100,
         alignment: Alignment.center,
-        child: Text('假期中'),
+        child: Text('假期中',style: TextStyle(fontSize: 17,color: GlassTheme.textColor('course_set_view'))),
     )
     );
     for(int i = 1 ; i <= num ; ++i ){
       Widget choseWidget = Container(
         height: 100,
         alignment: Alignment.center,
-        child: Text('${i}'),
+        child: Text('${i}',style: TextStyle(fontSize: 17,color: GlassTheme.textColor('course_set_view'))),
       );
       weekList.add(choseWidget);
     }
 
 
 
-    return showModalBottomSheet(context: _context, builder: (builder) {
+    return showModalBottomSheet(context: _context,
+        backgroundColor: Colors.transparent,
+        barrierColor: Colors.black.withValues(alpha: .35),
+        isScrollControlled: true, builder: (builder) {
       return Container(
         height: 300,
+        decoration: BoxDecoration(
+          color: GlassTheme.pageBackground('course_set_view'),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(22)),
+        ),
         child: Column(
           children: [
             Container(
@@ -77,7 +85,7 @@ class selectNowCourseWeekSheet{
                           child: Text('取消',style: TextStyle(color: Colors.white),),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  Colors.black45
+                                  const Color(0xFF546E7A)
                               ),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
@@ -90,8 +98,9 @@ class selectNowCourseWeekSheet{
                     Container(
                       height: 50,
                       width: 150,
-                      child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
+                      child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.white),),
                         style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(GlassTheme.accentColor('course_set_view')),
                           shape: MaterialStateProperty.all(
                               RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
                           )

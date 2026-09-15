@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CourseWidgetUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 
 /// 与原生 MainActivity 通信的快捷方式通道
@@ -65,8 +66,6 @@ bool consumePendingCourseWidgetDialog() {
 void showCourseWidgetDialog() {
   final Color textColor = CustomerThemeUtil.setColor(
       CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List);
-  final Color bgColor = CustomerThemeUtil.setColor(
-      CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List);
   final Color accentColor = CustomerThemeUtil.setColor(CustomThemeData
       .nowThemeData
       .value['main_course_view']!['todayCourseItemColor']['borderColor'] as List);
@@ -76,21 +75,12 @@ void showCourseWidgetDialog() {
     barrierColor: Colors.black.withValues(alpha: .35),
     builder: (dialogContext) {
       return Center(
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: 300,
+        child: GlassCard(
+            page: 'main_course_view',
             padding: EdgeInsets.fromLTRB(20, 22, 20, 16),
-            decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withValues(alpha: .12),
-                      blurRadius: 18,
-                      offset: Offset(0, 6))
-                ]),
-            child: Column(
+            child: SizedBox(
+                width: 300,
+                child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -128,13 +118,10 @@ void showCourseWidgetDialog() {
                     ),
                     SizedBox(width: 10),
                     Expanded(
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: accentColor,
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12))),
+                      child: GradientButton(
+                        text: '添加到桌面',
+                        page: 'main_course_view',
+                        height: 44,
                         onPressed: () async {
                           Navigator.pop(dialogContext);
                           await CourseWidgetUtil.updateCourseWidget();
@@ -142,7 +129,6 @@ void showCourseWidgetDialog() {
                               await CourseWidgetUtil.requestAddWidget();
                           _showAddDesktopGuide(pinSupported: supported);
                         },
-                        child: Text('添加到桌面'),
                       ),
                     ),
                   ],
@@ -160,8 +146,6 @@ void showCourseWidgetDialog() {
 void _showAddDesktopGuide({required bool pinSupported}) {
   final Color textColor = CustomerThemeUtil.setColor(
       CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List);
-  final Color bgColor = CustomerThemeUtil.setColor(
-      CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List);
   final Color accentColor = CustomerThemeUtil.setColor(CustomThemeData
       .nowThemeData
       .value['main_course_view']!['todayCourseItemColor']['borderColor'] as List);
@@ -175,21 +159,12 @@ void _showAddDesktopGuide({required bool pinSupported}) {
     barrierColor: Colors.black.withValues(alpha: .35),
     builder: (dialogContext) {
       return Center(
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: 300,
+        child: GlassCard(
+            page: 'main_course_view',
             padding: EdgeInsets.fromLTRB(20, 22, 20, 16),
-            decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withValues(alpha: .12),
-                      blurRadius: 18,
-                      offset: Offset(0, 6))
-                ]),
-            child: Column(
+            child: SizedBox(
+                width: 300,
+                child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -222,15 +197,11 @@ void _showAddDesktopGuide({required bool pinSupported}) {
                 SizedBox(height: 18),
                 SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: accentColor,
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))),
+                  child: GradientButton(
+                    text: '知道了',
+                    page: 'main_course_view',
+                    height: 44,
                     onPressed: () => Navigator.pop(dialogContext),
-                    child: Text('知道了'),
                   ),
                 )
               ],

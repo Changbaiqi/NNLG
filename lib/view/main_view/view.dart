@@ -1,160 +1,213 @@
-import 'dart:collection';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/main_community_view/view.dart';
 import 'package:callo/view/main_course_view/view.dart';
 import 'package:callo/view/main_user_view/view.dart';
 import 'package:callo/view/main_water_view/view.dart';
 import 'package:callo/view/nnlg_community_view/view.dart';
 
-import '../../dao/CustomThemeData.dart';
 import 'logic.dart';
 
+/// 主框架：毛玻璃悬浮底部导航 + 渐变课表按钮
 class MainViewPage extends StatelessWidget {
   MainViewPage({Key? key}) : super(key: key);
   final logic = Get.find<MainViewLogic>();
-  final state = Get
-      .find<MainViewLogic>()
-      .state;
+  final state = Get.find<MainViewLogic>().state;
 
-  List<Widget> _viewList = [
+  final List<Widget> _viewList = [
     MainCommunityViewPage(),
     MainWaterViewPage(),
     MainCourseViewPage(),
     NnlgCommunityViewPage(),
     MainUserViewPage(),
-    // CourseSetViewPage(),
-  ];
-
-  List<BottomNavigationBarItem> _itemList = [
-    BottomNavigationBarItem(icon: Icon(Icons.bakery_dining), label: '社区'),
-    BottomNavigationBarItem(icon: Icon(Icons.water_drop), label: '打水'),
-    BottomNavigationBarItem(icon: Icon(Icons.discord),label: '社区'),
-    BottomNavigationBarItem(icon: Icon(Icons.person), label: '账户'),
-    // BottomNavigationBarItem(icon: Icon(Icons.settings), label: '设置'),
   ];
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-
       body: PageView(
         children: _viewList,
         controller: state.pageController.value,
         onPageChanged: (indexPage) {
           state.index.value = indexPage;
-        },),
+        },
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Obx(() =>
-          FloatingActionButton(
-            child: Icon(Icons.calendar_month,color: Colors.black,),
-            backgroundColor: state.index.value == 2 ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectScheduleColor']as List): CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectScheduleColor']as List),
-            onPressed: () {
-              state.pageController.value.animateToPage(
-                  2, duration: Duration(milliseconds: 500),
-                  curve: Curves.decelerate);
-              state.index.value = 2;
-            },
-          )),
-      bottomNavigationBar: Obx(() =>
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 0, 20, 10),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(500)),
-                  // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableBackground']!['color'] as List, Colors.white),
-                  color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['backgroundColor']as List),
-                  image: (CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['backgroundImage']!=null?DecorationImage(image: AssetImage((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['backgroundImage']),fit: BoxFit.cover):null,
-                  boxShadow: [
-                    BoxShadow(
-                        // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_view/bottomTableBackground']!['color'] as List),
-                        color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['shadowColor'] as List),
-                        blurRadius: 100,
-                        spreadRadius: 1,
-                        offset: Offset(0, 40))
-                  ]),
-              child: BottomAppBar(
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-                height: 70,
-                elevation: 0,
-                color: Colors.transparent,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+      floatingActionButton: _scheduleFab(),
+      bottomNavigationBar: _bottomBar(),
+    );
+  }
+
+  /// 毛玻璃胶囊导航栏
+  Widget _bottomBar() {
+    final bool dark = GlassTheme.isDark('main_view');
+    // 半透明主题色 + 强模糊：保留通透的毛玻璃感，同时前景色按合成色推导保证可读
+    final Color surface = GlassTheme.glassTint('main_view')
+        .withValues(alpha: GlassTheme.glassAlpha('main_view'));
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+          child: Container(
+            height: 68,
+            decoration: BoxDecoration(
+              color: surface,
+              borderRadius: BorderRadius.circular(28),
+              border: Border.all(
+                color: dark
+                    ? Colors.white.withValues(alpha: .16)
+                    : Colors.white.withValues(alpha: .85),
+                width: 1,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: dark ? .36 : .10),
+                  blurRadius: 26,
+                  offset: const Offset(0, 12),
+                )
+              ],
+            ),
+            child: Row(
+              children: [
+                _navItem(0, Icons.explore_rounded, '主页'),
+                _navItem(1, Icons.water_drop_rounded, '打水'),
+                const SizedBox(width: 76),
+                _navItem(3, Icons.forum_rounded, '社区'),
+                _navItem(4, Icons.person_rounded, '我的'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 单个导航项：按表面亮度保证对比度，选中时渐变高亮
+  Widget _navItem(int index, IconData icon, String label) {
+    final Color base = GlassTheme.pageBackground('main_view');
+    final Color surface = GlassTheme.glassSurfaceOn('main_view', base);
+    final Color fg = GlassTheme.onSurface(surface);
+    final Color selectColor = GlassTheme.readableAccent(
+        GlassTheme.bottomNav('selectColor', GlassTokens.accent), surface);
+    final Color nonSelectColor = fg.withValues(alpha: .55);
+    final Color labelColor = fg.withValues(alpha: .78);
+
+    return Expanded(
+      child: Obx(() {
+        final bool selected = state.index.value == index;
+        final Color color = selected ? selectColor : nonSelectColor;
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () => logic.animationJumpToPage(index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  gradient: selected
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            selectColor.withValues(alpha: .26),
+                            selectColor.withValues(alpha: .08),
+                          ],
+                        )
+                      : null,
+                  border: selected
+                      ? Border.all(
+                          color: selectColor.withValues(alpha: .38), width: 1)
+                      : null,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    IconButton(onPressed: () {
-                      logic.animationJumpToPage(0);
-                    },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.bakery_dining, color: state.index.value ==
-                              0
-                              ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectColor']as List)
-                              : CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectColor']as List),),
-                          Text('主页', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['textColor']as List),),),
-                        ],
-                      ),
-                      splashRadius: 27,
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),),
-                    IconButton(onPressed: () {
-                      logic.animationJumpToPage(1);
-                    },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.water_drop, color: state.index.value == 1
-                              ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectColor']as List)
-                              : CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectColor']as List),),
-                          Text('打水', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['textColor']as List)),),
-                        ],
-                      ),
-                      splashRadius: 27,
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),),
-                    Container(
-                      width: 25,
-                      height: 0,
+                    AnimatedScale(
+                      scale: selected ? 1.08 : 1,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.easeOutCubic,
+                      child: Icon(icon, size: 22, color: color),
                     ),
-                    IconButton(onPressed: () {
-                      logic.animationJumpToPage(3);
-                    },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.discord, color: state.index.value == 3
-                              ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectColor']as List)
-                              : CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectColor']as List),),
-                          Text('社区', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['textColor']as List)),),
-                        ],
+                    const SizedBox(height: 2),
+                    Text(
+                      label,
+                      maxLines: 1,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight:
+                            selected ? FontWeight.w700 : FontWeight.w500,
+                        color: selected ? selectColor : labelColor,
                       ),
-                      splashRadius: 27,
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),),
-                    IconButton(onPressed: () {
-                      logic.animationJumpToPage(4);
-                    },
-                      icon: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.person, color: state.index.value == 4
-                              ? CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['selectColor']as List)
-                              : CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['nonSelectColor']as List),),
-                          Text('我的', style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor((CustomThemeData.nowThemeData.value['main_view']!['bottomNavigate']!as LinkedHashMap)['textColor']as List)),),
-                        ],
-                      ),
-                      splashRadius: 27,
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),)
+                    ),
                   ],
                 ),
               ),
             ),
-          )),
+          ),
+        );
+      }),
     );
+  }
+
+  /// 中间课表按钮：渐变 + 柔光
+  Widget _scheduleFab() {
+    final bool dark = GlassTheme.isDark('main_view');
+    final Color base = GlassTheme.pageBackground('main_view');
+    final Color surface = GlassTheme.glassSurfaceOn('main_view', base);
+    final Color selectColor = GlassTheme.readableAccent(
+        GlassTheme.bottomNav('selectScheduleColor', GlassTokens.accent),
+        surface);
+    final Color nonSelectColor = GlassTheme.readableAccent(
+        GlassTheme.bottomNav('nonSelectScheduleColor',
+            dark ? const Color(0xFF3A3A40) : Colors.white),
+        surface);
+    return Obx(() {
+      final bool selected = state.index.value == 2;
+      final Color color = selected ? selectColor : nonSelectColor;
+      final Color iconColor = color.computeLuminance() > .6
+          ? const Color(0xFF1C1B20)
+          : Colors.white;
+      return AnimatedContainer(
+        duration: const Duration(milliseconds: 240),
+        curve: Curves.easeOutCubic,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [color, GlassTheme.lighten(color, .30)],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: .45),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            )
+          ],
+        ),
+        child: FloatingActionButton(
+          onPressed: () => logic.animationJumpToPage(2),
+          backgroundColor: Colors.transparent,
+          shape: const CircleBorder(),
+          elevation: 0,
+          focusElevation: 0,
+          hoverElevation: 0,
+          highlightElevation: 0,
+          child: Icon(Icons.calendar_month_rounded, color: iconColor),
+        ),
+      );
+    });
   }
 }

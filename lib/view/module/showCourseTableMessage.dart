@@ -1,128 +1,178 @@
-import 'dart:convert';
+import 'dart:ui' show ImageFilter;
 
 import 'package:flutter/material.dart';
-import 'package:callo/dao/CustomThemeData.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
-import 'package:callo/utils/ToastUtil.dart';
 
+import 'package:callo/utils/GlassUI.dart';
 
+/// 课表课程详情弹层：毛玻璃 + 渐变风格
 class showCourseTableMessage {
-
-
   dynamic _context;
 
   showCourseTableMessage(context) {
     _context = context;
   }
 
-
-  Future show(courseJSON,DateTime dateTime /*授课日期*/) async{
-
-    //ToastUtil.show(courseJSON.toString());
+  Future show(courseJSON, DateTime dateTime /*授课日期*/) async {
     return showModalBottomSheet(
         context: _context,
         isScrollControlled: true,
-        builder: (builder){
-          return _showCourseTableMessageChild(courseJson: courseJSON, dateTime: dateTime);
+        backgroundColor: Colors.transparent,
+        builder: (builder) {
+          return _showCourseTableMessageChild(
+              courseJson: courseJSON, dateTime: dateTime);
         });
-
-
   }
-
-
-
-
 }
-
 
 class _showCourseTableMessageChild extends StatefulWidget {
   var courseJson;
   DateTime dateTime;
-  _showCourseTableMessageChild({Key? key, required this.courseJson, required this.dateTime}) : super(key: key);
+  _showCourseTableMessageChild(
+      {Key? key, required this.courseJson, required this.dateTime})
+      : super(key: key);
   @override
-  State<_showCourseTableMessageChild> createState() => _showCourseTableMessageChildState();
+  State<_showCourseTableMessageChild> createState() =>
+      _showCourseTableMessageChildState();
 }
 
-class _showCourseTableMessageChildState extends State<_showCourseTableMessageChild> {
-  int _nowIndex =1;
+class _showCourseTableMessageChildState
+    extends State<_showCourseTableMessageChild> {
+  static const String _page = 'main_course_view';
+  int _nowIndex = 1;
   int _sumIndex = 0;
-  List<Widget> list=[];
+  List<Widget> list = [];
   var courseJSON;
-  DateTime dateTime= DateTime.now();
-
+  DateTime dateTime = DateTime.now();
 
   @override
   void initState() {
+    super.initState();
     courseJSON = widget.courseJson;
     dateTime = widget.dateTime;
     _sumIndex = courseJSON.length;
-    for(int i =0 ; i < courseJSON.length; ++i){
+    for (int i = 0; i < courseJSON.length; ++i) {
+      final item = courseJSON[i];
       list.add(ListView(
+        padding: const EdgeInsets.fromLTRB(20, 6, 20, 6),
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('课程：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseName']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课地点：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseClassRoom']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课日期时间：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${dateTime.month}月${dateTime.day}日   ${courseJSON[i]['courseTime']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            child: Row(children: [Text('授课老师：',style: TextStyle(fontSize: 16,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),Text('${courseJSON[i]['courseTeacher']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)],),
-          ),
+          _infoRow('课程', '${item['courseName']}'),
+          _infoRow('授课地点', '${item['courseClassRoom']}'),
+          _infoRow('授课日期时间',
+              '${dateTime.month}月${dateTime.day}日   ${item['courseTime']}'),
+          _infoRow('授课老师', '${item['courseTeacher']}'),
         ],
       ));
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
-        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List)
-      ),
-      height: 300,
-      child: Column(
+  /// 信息行：左标签 + 右值
+  Widget _infoRow(String label, String value) {
+    final Color text = GlassTheme.textColor(_page);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 20,
-            child: Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),child: Text("${_nowIndex}/${_sumIndex}",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),),),
+          SizedBox(
+            width: 78,
+            child: Text(label,
+                style: TextStyle(
+                    fontSize: 13, color: text.withValues(alpha: .55))),
           ),
           Expanded(
-              flex: 1,
-              child: PageView(
+            child: Text(
+              value,
+              style: TextStyle(
+                  fontSize: 14,
+                  height: 1.5,
+                  fontWeight: FontWeight.w600,
+                  color: text),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Color text = GlassTheme.textColor(_page);
+    final Color base = GlassTheme.pageBackground(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    final bool dark = GlassTheme.isDark(_page);
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
+        child: Container(
+          height: 320,
+          decoration: BoxDecoration(
+            color: base.withValues(alpha: dark ? .88 : .92),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
+            border: Border(
+                top: BorderSide(color: GlassTheme.border(_page), width: 1)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              //拖拽提示
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: text.withValues(alpha: .18),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GlassSectionTitle(
+                          page: _page, title: '课程详情'),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: accent.withValues(alpha: .12),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        '$_nowIndex/$_sumIndex',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: accent),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+              Expanded(
+                  child: PageView(
                 children: list,
-                onPageChanged: (int index){
-                  _nowIndex = index+1;
+                onPageChanged: (int index) {
+                  _nowIndex = index + 1;
                   setState(() {});
                 },
                 reverse: false,
               )),
-          Padding(
-            padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
-            child: Container(
-              height: 50,
-              width: MediaQuery.of(context).size.width,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['foregroundColor'] as List))
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 8, 20, 22),
+                child: GradientButton(
+                  text: '确定',
+                  page: _page,
+                  height: 46,
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  }, child: Text('确定',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),)
               ),
-            ),
-          )
-
-
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

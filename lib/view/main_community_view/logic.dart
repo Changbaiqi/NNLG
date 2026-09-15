@@ -7,11 +7,11 @@ import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/AccountUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/JustMessengerUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/edusys/Account.dart';
 import 'package:callo/view/SchoolCardInformSet.dart';
-import 'package:callo/view/module/DashedLind.dart';
 import 'package:callo/view/router/Routes.dart';
 
 import '../../utils/PowerDormUtil.dart';
@@ -286,122 +286,93 @@ class MainCommunityViewLogic extends GetxController {
    * [return]
    */
   bindDormCard() {
-    return Container(
-        // height: ,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        //水卡信息
+        Obx(() => Column(
+              children: AccountData.isLoginJustMessenger.value
+                  ? [
+                      GlassSectionTitle(
+                          page: 'main_community_view', title: '水卡信息'),
+                      const SizedBox(height: 8),
+                      _infoRow(
+                          '卡号', '${AccountData.justMessengerCardCode.value}'),
+                      _infoRow(
+                          '余额', '${AccountData.justMessengerMoney.value}'),
+                    ]
+                  : [],
+            )),
+        //宿舍信息
+        Obx(() => Column(
+              children: AccountData.powerMoney.value != ""
+                  ? [
+                      if (AccountData.isLoginJustMessenger.value)
+                        const SizedBox(height: 14),
+                      GlassSectionTitle(
+                          page: 'main_community_view', title: '宿舍信息'),
+                      const SizedBox(height: 8),
+                      _infoRow('校区', '${AccountData.dormCampus.value}'),
+                      _infoRow(
+                          '绑定宿舍',
+                          '${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}'),
+                      _infoRow('电费余额', '${AccountData.powerMoney.value}￥'),
+                    ]
+                  : [],
+            )),
+        const SizedBox(height: 14),
+        Row(
           children: [
-            //水卡信息
-
-            Obx(() => Column(
-              children:
-              AccountData.isLoginJustMessenger.value?[
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
-                  height: 30,
-                  child: Center(child: Text('水卡信息',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),),
-                ),),
-                DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
-                Container(
-                  height: 10,
-                ),
-               Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child:  Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 children: [
-                   Text('卡号：${AccountData.justMessengerCardCode.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
-                   Text('余额：${AccountData.justMessengerMoney.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),)
-                 ],
-               ),),
-
-              ]:[
-
-              ],
-            )),
-            //宿舍信息
-            Obx(() => Column(
-              children: AccountData.powerMoney.value!=""?[
-                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
-                  height: 30,
-                  child: Center(child: Text('宿舍信息',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),),
-                ),),
-                DashedLind(axis: Axis.horizontal,dashedWidth: 6,count: 30,),
-                Container(
-                  height: 10,
-                ),
-                Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('校区：${AccountData.dormCampus.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),
-                    Text('绑定宿舍：${AccountData.dormLoudongId.value}${AccountData.dormRoom.value}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),)
-                  ],
-                ),),
-                Padding(padding: EdgeInsets.fromLTRB(10, 0, 10, 0),child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Padding(padding: EdgeInsets.fromLTRB(0, 0, 10, 0),child: Text('电费余额：${AccountData.powerMoney.value}￥',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_community_view']!['textColor'] as List )),),)
-                  ],
-                ),),
-              ]:[],
-            )),
-            Row(
-              children: [
-                Expanded(child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.blueGrey,
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(0))
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '刷新数据',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Icon(
-                          Icons.refresh,
-                          size: 20,
-                        )
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    refreshCard();
-                  },
-                ),flex: 1,),
-                Expanded(child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(0),bottomRight: Radius.circular(20))
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '卡片设置',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        Icon(
-                          Icons.settings,
-                          size: 20,
-                        )
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    Get.toNamed(Routes.CardMessageSet);
-                  },
-                ),flex: 1,),
-              ],
-            )
+            Expanded(
+              child: GradientButton(
+                text: '刷新数据',
+                icon: Icons.refresh_rounded,
+                page: 'main_community_view',
+                height: 42,
+                onPressed: refreshCard,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: GradientButton(
+                text: '卡片设置',
+                icon: Icons.settings_rounded,
+                page: 'main_community_view',
+                height: 42,
+                colors: const [Color(0xFF546E7A), Color(0xFF90A4AE)],
+                onPressed: () => Get.toNamed(Routes.CardMessageSet),
+              ),
+            ),
           ],
-        ));
+        ),
+      ],
+    );
   }
 
+  /// 信息行：左标签 + 右值
+  Widget _infoRow(String label, String value) {
+    final Color text = GlassTheme.textColor('main_community_view');
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 13, color: text.withValues(alpha: .55))),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              value.isEmpty ? '——' : value,
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 13.5, fontWeight: FontWeight.w600, color: text),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   void onInit() {
     getOnClickTotal(); //初始化获取点击统计

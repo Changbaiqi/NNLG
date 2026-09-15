@@ -4,455 +4,321 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:showcaseview/showcaseview.dart';
+
 import 'package:callo/dao/AccountData.dart';
-import 'package:callo/dao/AppUpdateData.dart';
 import 'package:callo/dao/ContextData.dart';
-import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/LoginData.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/HexColor.dart';
 import 'package:callo/utils/MainUserUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/utils/UserHeadPortraitUtil.dart';
-import 'package:callo/utils/edusys/Account.dart';
 import 'package:callo/view/VIPFunList.dart';
-import 'package:callo/view/module/selectCourseTimeSheet.dart';
 import 'package:callo/view/module/showUpdateDialog.dart';
 import 'package:callo/view/router/Routes.dart';
-import 'package:showcaseview/showcaseview.dart';
 
-import '../../dao/CustomThemeData.dart';
-import '../../utils/CustomerThemeUtil.dart';
 import 'logic.dart';
 
+/// 我的页面：毛玻璃 + 渐变风格
 class MainUserViewPage extends StatelessWidget {
   MainUserViewPage({Key? key}) : super(key: key);
   final logic = Get.put(MainUserViewLogic());
   final state = Get.find<MainUserViewLogic>().state;
 
+  static const String _page = 'main_user_view';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: ShowCaseWidget(
+          builder: (showCaseContext) {
+            logic.showCaseContext = showCaseContext;
+            return MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 44, 16, 130),
+                  children: [
+                    _profileCard(context),
+                    const SizedBox(height: 18),
+                    GlassSectionTitle(page: _page, title: '设置'),
+                    const SizedBox(height: 10),
+                    _entry(
+                      title: '关于软件和作者',
+                      svg: 'assets/images/about.svg',
+                      onTap: () => Get.toNamed(Routes.AboutMe),
+                    ),
+                    _entry(
+                      title: '设置、账号安全及隐私',
+                      svg: 'assets/images/safe.svg',
+                      onTap: () => Get.toNamed(Routes.AccountSafe),
+                    ),
+                    _entry(
+                      title: '探索新版',
+                      image: 'assets/images/bbgx.png',
+                      onTap: () {
+                        showUpdateDialog.isLastVersion().then((value) {
+                          if (value == true) {
+                            Get.snackbar(
+                              "更新提示",
+                              "已经是最新版啦(～￣▽￣)～ ",
+                              duration: const Duration(milliseconds: 1500),
+                            );
+                          } else {
+                            showUpdateDialog.autoDialog(context, -1);
+                          }
+                        });
+                      },
+                    ),
+                    _entry(
+                      title: '退出登录',
+                      image: 'assets/images/backLogin.png',
+                      danger: true,
+                      onTap: () {
+                        ShareDateUtil().clearAllAccountData();
+                        Get.offNamed(Routes.Login);
+                      },
+                    ),
+                    Visibility(
+                      visible: false,
+                      child: _entry(
+                        title: '软件开发测试',
+                        image: 'assets/images/backLogin.png',
+                        onTap: () =>
+                            Get.toNamed(Routes.SoftwareDevelopmentTestView),
+                      ),
+                    ),
+                  ],
+                ));
+          },
+        ),
+      ),
+    );
+  }
 
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-      body: ShowCaseWidget(
-        builder: (showCaseContext){
-          logic.showCaseContext = showCaseContext;
-          return MediaQuery.removePadding(
-              context: context,
-              removeTop: true,
-              child: ListView(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 40, 10, 0),
-                    child: Card(
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
+  /// 顶部个人信息卡
+  Widget _profileCard(BuildContext context) {
+    final Color text = GlassTheme.textColor(_page);
+    return Obx(() => GlassCard(
+          page: _page,
+          padding: const EdgeInsets.fromLTRB(16, 22, 16, 16),
+          child: Column(
+            children: [
+              GestureDetector(
+                onLongPress: () {
+                  HapticFeedback.vibrate();
+                  MainUserUtil()
+                      .vipLogin('${LoginData.account}', '${LoginData.password}')
+                      .then((value) {
+                    if (value["code"] == 400) {
+                      ToastUtil.show('${value["msg"]}');
+                      return;
+                    }
+                    if (value["code"] == 200) {
+                      ContextDate.ContextVIPTken = value["token"];
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => VIPFunList()));
+                    }
+                  });
+                },
+                onTap: () async {
+                  UserHeadPortraitUtil u = UserHeadPortraitUtil(context);
+                  await u.setHead().then((value) {});
+                },
+                child: Stack(
+                  children: [
+                    Showcase(
+                      key: logic.showCase_1,
+                      description: '点击此处可以替换头像',
                       child: Container(
-                        // height: 470,
-                        padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
-                        width: MediaQuery.of(context).size.width,
-                        child: Column(
-                          children: [
-                            Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/black.webp',
-                                      fit: BoxFit.fill,
-                                      height: 220,
-                                      width: MediaQuery.of(context).size.width,
-                                    ),
-                                    Container(
-                                      height: 1,
-                                      color: Colors.black12,
-                                    )
-                                  ],
-                                ),
-                                Obx(() => Align(
-                                  alignment: Alignment.center,
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 150, 0, 0),
-                                    child: Column(
-                                      children: [
-                                        GestureDetector(
-                                          child: Container(
-                                            height: 130,
-                                            width: 130,
-                                            child: Stack(
-                                              children: [
-                                                Showcase(key: logic.showCase_1, description: '点击此处可以替换头像', child: ClipOval(
-                                                  //child: Image.asset('images/user.jpg',height: 130,width: 130,),
-                                                  child: AccountData
-                                                      .headMode.value ==
-                                                      0
-                                                      ? Image.network(
-                                                      "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
-                                                      height: 130,
-                                                      width: 130,fit: BoxFit.cover
-                                                  )
-                                                      : (AccountData.headMode
-                                                      .value ==
-                                                      1
-                                                      ? Image.network(
-                                                      "https://q1.qlogo.cn/g?b=qq&nk=${AccountData.head_qq.value}&s=640",
-                                                      height: 130,
-                                                      width: 130,
-                                                      errorBuilder:
-                                                          (contex, e,
-                                                          stak) {
-                                                        return Image
-                                                            .network(
-                                                            "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
-                                                            height: 130,
-                                                            width: 130,fit: BoxFit.cover
-                                                        );
-                                                      },fit: BoxFit.cover
-                                                  )
-                                                      : Image.file(
-                                                    File(AccountData
-                                                        .head_filePath
-                                                        .value),
-                                                    height: 130,
-                                                    width: 130,fit: BoxFit.cover,
-                                                  )),
-                                                )),
-                                                Visibility(
-                                                    visible: AccountData
-                                                        .isIdent.value,
-                                                    child: Positioned(
-                                                      child: Icon(
-                                                        Icons.verified,
-                                                        color: HexColor(
-                                                            AccountData
-                                                                .identMainColor
-                                                                .value),
-                                                        size: 35,
-                                                      ),
-                                                      bottom: 0,
-                                                    ))
-                                              ],
-                                            ),
-                                          ),
-                                          onLongPress: () {
-                                            HapticFeedback.vibrate();
-                                            MainUserUtil()
-                                                .vipLogin(
-                                                '${LoginData.account}',
-                                                '${LoginData.password}')
-                                                .then((value) {
-                                              if (value["code"] == 400) {
-                                                ToastUtil.show(
-                                                    '${value["msg"]}');
-                                                return;
-                                              }
-
-                                              if (value["code"] == 200) {
-                                                ContextDate.ContextVIPTken =
-                                                value["token"];
-                                                Navigator.push(context,
-                                                    MaterialPageRoute(
-                                                        builder: (builder) {
-                                                          return VIPFunList();
-                                                        }));
-                                              }
-                                            });
-                                          },
-                                          onTap: () async {
-                                            UserHeadPortraitUtil u =
-                                            UserHeadPortraitUtil(context);
-                                            await u.setHead().then((value) {
-                                            });
-                                          },
-                                        ),
-                                        Text(
-                                          '${AccountData.studentName}',
-                                          style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )),
-                              ],
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Visibility(visible: AccountData.isIdent.value,child: Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                                      child: Container(
-                                        height: 40,
-                                        width:
-                                        MediaQuery.of(context).size.width,
-                                        padding:
-                                        EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.verified,
-                                              color: HexColor(AccountData
-                                                  .identMainColor.value),
-                                              size: 20,
-                                            ),
-                                            Padding(padding: EdgeInsets.fromLTRB(5, 0, 0, 0),child: Text('${AccountData.identMainTag}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),),)
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                                    Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                                      child: Container(
-                                        height: 40,
-                                        width: MediaQuery.of(context).size.width,
-                                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                        child: Row(
-                                          children: [
-                                            Text('学号：${AccountData.studentID}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),)
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Card(
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                                      child: Container(
-                                        height: 40,
-                                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                        width: MediaQuery.of(context).size.width,
-                                        child: Row(
-                                          children: [
-                                            Text('专业方向：${AccountData.studentMajor}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),)
-                                          ],
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ))
-                          ],
+                        padding: const EdgeInsets.all(3),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              GlassTheme.accentColor(_page),
+                              GlassTheme.lighten(
+                                  GlassTheme.accentColor(_page), .45),
+                            ],
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: SizedBox(
+                            width: 96,
+                            height: 96,
+                            child: _avatar(),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    child: Column(
-                      children: [
-                        //课表设置
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '关于软件和作者',
-                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: SvgPicture.asset(
-                                        'assets/images/about.svg',
-                                        width: 30,
-                                        height: 30,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  // print('课表设置');
-                                  Get.toNamed(Routes.AboutMe);
-                                },
-                              ),
-                            ),
+                    Visibility(
+                      visible: AccountData.isIdent.value,
+                      child: Positioned(
+                        right: 2,
+                        bottom: 2,
+                        child: Container(
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.white),
+                          child: Icon(
+                            Icons.verified,
+                            color: HexColor(AccountData.identMainColor.value),
+                            size: 24,
                           ),
                         ),
-                        //账号安全与隐私
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '设置、账号安全及隐私',
-                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: SvgPicture.asset('assets/images/safe.svg',height: 25,width: 25,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List ),),
-                                      // child: Image.asset(
-                                      //   'assets/images/backLogin.png',
-                                      //   width: 25,
-                                      //   height: 25,
-                                      // ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Get.toNamed(Routes.AccountSafe);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        //探索新版
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '探索新版',
-                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: Image.asset(
-                                        'assets/images/bbgx.png',
-                                        width: 29,
-                                        height: 29,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  //print('探索新版本');
-                                  //ToastUtil.show('功能暂未开放');
-                                  //ToastUtil.show('${AppInfoData.buildNumber}');
-                                  //检测是否为最新版
-                                  showUpdateDialog.isLastVersion().then((value) {
-                                    if (value == true)
-                                      Get.snackbar(
-                                        "更新提示",
-                                        "已经是最新版啦(～￣▽￣)～ ",
-                                        duration: Duration(milliseconds: 1500),
-                                      );
-                                    else
-                                      showUpdateDialog.autoDialog(context, -1);
-                                  });
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-                        //退出登录
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '退出登录',
-                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: Image.asset(
-                                        'assets/images/backLogin.png',
-                                        width: 25,
-                                        height: 25,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  //退出登录
-                                  ShareDateUtil().clearAllAccountData();
-                                  Get.offNamed(Routes.Login);
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        //用于软件测试的入口
-                        Visibility(child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Container(
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Card(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['backgroundColor'] as List ),
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        '软件开发测试',
-                                        style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['textColor'] as List )),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                      child: Image.asset(
-                                        'assets/images/backLogin.png',
-                                        width: 25,
-                                        height: 25,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_user_view']!['defaultIconColor'] as List ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  //进入软件测试页面
-                                  Get.toNamed(Routes.SoftwareDevelopmentTestView);
-                                  // selectCourseTimeSheet.show(Get.context!, 12, CourseData.courseTime);
-
-                                },
-                              ),
-                            ),
-                          ),
-                        ),visible: false,)
-                      ],
+                      ),
                     ),
-                  )
-                ],
-              ));
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '${AccountData.studentName}',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: text),
+              ),
+              if (AccountData.isIdent.value) ...[
+                const SizedBox(height: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: HexColor(AccountData.identMainColor.value)
+                        .withValues(alpha: .12),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                        color: HexColor(AccountData.identMainColor.value)
+                            .withValues(alpha: .35)),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.verified,
+                          color: HexColor(AccountData.identMainColor.value),
+                          size: 14),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${AccountData.identMainTag}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                HexColor(AccountData.identMainColor.value)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+              const SizedBox(height: 14),
+              Divider(color: text.withValues(alpha: .08), height: 1),
+              _infoRow('学号', '${AccountData.studentID}'),
+              Divider(color: text.withValues(alpha: .08), height: 1),
+              _infoRow('专业方向', '${AccountData.studentMajor}'),
+            ],
+          ),
+        ));
+  }
+
+  Widget _avatar() {
+    if (AccountData.headMode.value == 0) {
+      return Image.network(
+        "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
+        fit: BoxFit.cover,
+      );
+    }
+    if (AccountData.headMode.value == 1) {
+      return Image.network(
+        "https://q1.qlogo.cn/g?b=qq&nk=${AccountData.head_qq.value}&s=640",
+        fit: BoxFit.cover,
+        errorBuilder: (context, e, stack) {
+          return Image.network(
+            "https://q1.qlogo.cn/g?b=qq&nk=2084069833&s=640",
+            fit: BoxFit.cover,
+          );
         },
+      );
+    }
+    return Image.file(
+      File(AccountData.head_filePath.value),
+      fit: BoxFit.cover,
+      errorBuilder: (context, e, stack) =>
+          const Icon(Icons.person, size: 40, color: Colors.white),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    final Color text = GlassTheme.textColor(_page);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: [
+          Text(label,
+              style: TextStyle(
+                  fontSize: 13, color: text.withValues(alpha: .55))),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              value.isEmpty ? '未设置' : value,
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 14, fontWeight: FontWeight.w600, color: text),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 功能入口
+  Widget _entry({
+    required String title,
+    String? svg,
+    String? image,
+    bool danger = false,
+    required VoidCallback onTap,
+  }) {
+    final Color text = GlassTheme.textColor(_page);
+    final Color titleColor = danger ? const Color(0xFFE53935) : text;
+    final Color iconColor =
+        danger ? const Color(0xFFE53935) : text.withValues(alpha: .72);
+    return GlassCard(
+      page: _page,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      onTap: onTap,
+      child: SizedBox(
+        height: 54,
+        child: Row(
+          children: [
+            if (svg != null)
+              SvgPicture.asset(svg, width: 22, height: 22, color: iconColor)
+            else if (image != null)
+              Image.asset(image, width: 22, height: 22, color: iconColor),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: titleColor),
+              ),
+            ),
+            Icon(Icons.chevron_right_rounded,
+                color: text.withValues(alpha: .30)),
+          ],
+        ),
       ),
     );
   }

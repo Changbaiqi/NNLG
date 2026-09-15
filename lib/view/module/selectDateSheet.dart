@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:callo/dao/CourseData.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 
 /*
@@ -23,10 +24,16 @@ class selectDateSheet {
 
 
     return showModalBottomSheet(
-        context: _context,
+        backgroundColor: Colors.transparent,
+        barrierColor: Colors.black.withValues(alpha: .35),
         isScrollControlled: true,
+        context: _context,
         builder: (builder) {
-          return selectDateSheetMain();
+          return GlassCard(
+            page: 'course_set_view',
+            padding: EdgeInsets.fromLTRB(16, 18, 16, 16),
+            child: selectDateSheetMain(),
+          );
         });
   }
 
@@ -34,7 +41,6 @@ class selectDateSheet {
 
 
 }
-
 
 
 
@@ -68,8 +74,8 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
 
 
 
-
   List<Widget> updateYear(){
+
 
     List<Widget> yearWidget = <Widget>[];
     _year.clear();
@@ -77,7 +83,7 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
       Widget choseWidget = Container(
         height: 100,
         alignment: Alignment.center,
-        child: Text('${i}'),
+        child: Text('${i}',style: TextStyle(fontSize: 17,color: GlassTheme.textColor('course_set_view'))),
       );
       _year.add('${i}');
       yearWidget.add(choseWidget);
@@ -95,7 +101,7 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
       Widget choseWidget = Container(
         height: 100,
         alignment: Alignment.center,
-        child: Text('${i}'),
+        child: Text('${i}',style: TextStyle(fontSize: 17,color: GlassTheme.textColor('course_set_view'))),
       );
       _month.add('${i}');
       monthWidget.add(choseWidget);
@@ -118,7 +124,7 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
       Widget choseWidget = Container(
         height: 100,
         alignment: Alignment.center,
-        child: Text('${i}'),
+        child: Text('${i}',style: TextStyle(fontSize: 17,color: GlassTheme.textColor('course_set_view'))),
       );
       _days.add('${i}');
       daysWidget.add(choseWidget);
@@ -128,15 +134,6 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
 
   }
 
-
-
-
-
-
-
-
-
-
   FixedExtentScrollController yearController = FixedExtentScrollController();
   FixedExtentScrollController monthController = FixedExtentScrollController();
   FixedExtentScrollController dayController = FixedExtentScrollController();
@@ -144,33 +141,65 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
 
   @override
   Widget build(BuildContext context) {
+    final Color textColor = GlassTheme.textColor('course_set_view');
+    return SizedBox(
+      height: 330,
+      child: StatefulBuilder(builder: (_context, state){
 
 
-
-    return Container(
-      height: 300,
-      child: Column(
-        children: [
-          StatefulBuilder(builder: (_context,state){
-
-
-            return Container(
-              height: 200,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                child: Row(
+            return Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      width: 4,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            GlassTheme.accentColor('course_set_view'),
+                            GlassTheme.accentColor('course_set_view')
+                                .withValues(alpha: .5),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '开学时间',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: textColor,
+                      ),
+                    ),
+                    const Spacer(),
+                    Text(
+                      '${_chooseYear}/${_chooseMonth}/${_chooseDay}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: textColor.withValues(alpha: .6),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Expanded(
+                  child: Row(
                   children: [
                     Expanded(
                         flex: 1,
                         child: ListWheelScrollView(
-                          itemExtent: 60,
+                          itemExtent: 46,
                           useMagnifier: true,
-                          magnification: 1.5,
+                          magnification: 1.35,
                           controller: yearController,
                           onSelectedItemChanged: (index) {
                             _chooseYear =index+DateTime.now().year-20;
                             state((){
-                              print('刷新');
                               updateDays();
                             });
                             //setDialogState((){});
@@ -184,14 +213,13 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
                     Expanded(
                         flex: 1,
                         child: ListWheelScrollView(
-                          itemExtent: 60,
+                          itemExtent: 46,
                           useMagnifier: true,
-                          magnification: 1.5,
+                          magnification: 1.35,
                           controller: monthController,
                           onSelectedItemChanged: (index) {
                             _chooseMonth = index+1;
                             state((){
-                              print('刷新');
                               updateDays();
                             });
                           },
@@ -204,15 +232,14 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
                     Expanded(
                         flex: 1,
                         child: ListWheelScrollView(
-                          itemExtent: 60,
+                          itemExtent: 46,
                           useMagnifier: true,
-                          magnification: 1.5,
+                          magnification: 1.35,
                           controller: dayController,
                           onSelectedItemChanged: (index) {
                             _chooseDay = index+1;
 
                             state((){
-                              print('刷新');
                               updateDays();
                             });
 
@@ -227,54 +254,45 @@ class _selectDateSheetMainState extends State<selectDateSheetMain> {
 
                   ],
                 ),
-              ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 46,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: textColor.withValues(alpha: .08),
+                            foregroundColor: textColor.withValues(alpha: .8),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(23)),
+                          ),
+                          child:
+                              const Text('取消', style: TextStyle(fontSize: 15)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: GradientButton(
+                        text: '确定',
+                        page: 'course_set_view',
+                        height: 46,
+                        onPressed: () {
+                          Navigator.pop(context,
+                              '${_chooseYear}/${_chooseMonth}/${_chooseDay}');
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
             );
           }),
-
-          Center(
-            child: Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('取消',style: TextStyle(color: Colors.white),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.black45
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-
-                            )
-                        )
-                    ),
-
-                  ),
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context, '${_chooseYear}/${_chooseMonth}/${_chooseDay}');
-                      },),
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
     );
 
   }

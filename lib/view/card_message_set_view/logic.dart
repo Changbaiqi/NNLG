@@ -8,9 +8,11 @@ import 'package:get/get.dart';
 import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/JustMessengerUtil.dart';
 import 'package:callo/utils/PowerDormUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
+import 'package:callo/view/module/GlassLinkPicker.dart';
 
 import 'state.dart';
 
@@ -36,24 +38,21 @@ class CardMessageSetViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  List<dynamic> dormPicker() {
-    Pickers.showMultiLinkPicker(Get.context!,
-
+  Future<List<dynamic>> dormPicker() async {
+    final List<String>? result = await showGlassLinkPicker(Get.context!,
         data: PowerDormUtil.dormList(),
-        selectData: selectData,
-        pickerStyle: PickerStyle(
-          backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List),
-          textColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['textColor'] as List),
-            headDecoration: BoxDecoration(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['showBindPowerDialog']!['backgroundColor'] as List))
-        ),
-        columnNum: 3, onConfirm: (p, covariant) async {
-      selectData.value = p;
-      ShareDateUtil().setDormCampus(selectData[0]);
-      ShareDateUtil().setDormLoudongId(selectData[1]);
-      ShareDateUtil().setDormRoom(selectData[2]);
+        selectData: selectData.map((e) => '$e').toList(),
+        columnNum: 3,
+        title: '选择宿舍',
+        page: 'card_message_set_view');
+    if (result != null && result.length >= 3) {
+      selectData.value = result;
+      ShareDateUtil().setDormCampus(result[0]);
+      ShareDateUtil().setDormLoudongId(result[1]);
+      ShareDateUtil().setDormRoom(result[2]);
       AccountData.powerMoney.value = await PowerDormUtil()
-          .getDormPower(selectData[0], selectData[1], selectData[2]);
-    });
+          .getDormPower(result[0], result[1], result[2]);
+    }
     return selectData;
   }
 
@@ -133,173 +132,121 @@ class CardMessageSetViewLogic extends GetxController {
   }
 
   noJustMessengerCard() {
+    final Color text = GlassTheme.textColor('card_message_set_view');
+    final Color accent = GlassTheme.accentColor('card_message_set_view');
     List<Widget> _seelist = [
-      Image.asset(
-        'assets/images/close_eye.png',
-        height: 25,
-        width: 25,
-      ),
-      Image.asset(
-        'assets/images/open_eye.png',
-        height: 25,
-        width: 25,
-      )
+      Image.asset('assets/images/close_eye.png',
+          height: 25, width: 25, color: text.withValues(alpha: .6)),
+      Image.asset('assets/images/open_eye.png',
+          height: 25, width: 25, color: text.withValues(alpha: .6)),
     ];
-    BuildContext? showCtxt = null;
-    return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Scaffold(
-      backgroundColor: Color.fromRGBO(0, 0, 0, 0),
-      body: Stack(
-        children: [
-          InkWell(
-            child: Container(
-              width: Get.context!.width,
-              height: Get.context!.height,
-            ),
-            onTap: () {
-              Navigator.pop(showCtxt!);
-            },
-          ),
-          Builder(
-            builder: (ctxt) {
-              showCtxt = ctxt;
-              return Center(
-                child: Container(
-                  height: 210,
-                  width: 300,
-                  decoration: BoxDecoration(
-                    // color: Colors.white,
-                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['backgroundColor'] as List ),
-                      borderRadius: BorderRadius.circular(10)),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: Container(
-                            height: 55,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextField(
-                                    controller: inputAccountController,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )
-                                    ),
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.person,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
-                                      label: Text('账号',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
-                                      hintText: '请输入校园一信通账号/手机号',
-                                      hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),
-                                      enabledBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          child: Container(
-                            height: 55,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Obx(() => TextField(
-                                    controller: inputPasswordController,
-                                    obscureText: seeNo_Off.value,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )
-                                    ),
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.lock,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
-                                      label: Text('密码',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
-                                      hintText: '请输入校园一信通密码',
-                                      hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),
-                                      enabledBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                      suffixIcon: IconButton(
-                                        onPressed: () {
-                                          seeNo_Off.value =
-                                          !seeNo_Off.value;
-                                        },
-                                        icon: _seelist[
-                                        seeNo_Off.value ? 0 : 1],color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['defaultIconColor'] as List ),),
-                                      focusedBorder: OutlineInputBorder(
-                                        // borderRadius: BorderRadius.all(
-                                        //     Radius.circular(100)
-                                        // )
-                                      ),
-                                    ),
-                                    /*onChanged: (password){
-                    _password = password;
-                  },*/
-                                  )),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          child: Container(
-                            width: MediaQuery.of(Get.context!).size.width,
-                            height: 45,
-                            child: ElevatedButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['foregroundColor'] as List ))
-                              ),
-                              child: Text('校园一信通绑定',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['card_message_set_view']!['textColor'] as List )),),
-                              onPressed: () async {
-                                //检测输入的内容是否为空
-                                if (inputAccountController.text.isEmpty ||
-                                    inputPasswordController.text.isEmpty) {
-                                  Get.snackbar("提示", "输入的内容不能为空",
-                                      duration:
-                                      const Duration(milliseconds: 1500));
-                                  return;
-                                }
-
-                                //登录
-                                bool state = await loginJustMessage(
-                                    inputAccountController.text,
-                                    inputPasswordController.text,
-                                    true,
-                                    showCxt: showCtxt);
-                                // _testPicker();
-                              },
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+    return MediaQuery(
+        data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0),
+        child: Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Builder(builder: (ctxt) {
+            return GlassCard(
+              page: 'card_message_set_view',
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GlassSectionTitle(
+                      page: 'card_message_set_view', title: '校园一信通绑定'),
+                  const SizedBox(height: 6),
+                  Text(
+                    '绑定后可查看水卡余额与卡片信息',
+                    style: TextStyle(
+                        fontSize: 12, color: text.withValues(alpha: .55)),
                   ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    ));
+                  const SizedBox(height: 12),
+                  TextField(
+                    controller: inputAccountController,
+                    style: TextStyle(fontSize: 13.5, color: text),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.person_rounded,
+                          color: text.withValues(alpha: .55)),
+                      labelText: '账号',
+                      labelStyle:
+                          TextStyle(color: text.withValues(alpha: .65)),
+                      hintText: '请输入校园一信通账号/手机号',
+                      hintStyle:
+                          TextStyle(color: text.withValues(alpha: .45)),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 12),
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                              color: text.withValues(alpha: .18))),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              BorderSide(color: accent, width: 1.4)),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Obx(() => TextField(
+                        controller: inputPasswordController,
+                        obscureText: seeNo_Off.value,
+                        maxLines: 1,
+                        style: TextStyle(fontSize: 13.5, color: text),
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.lock_rounded,
+                              color: text.withValues(alpha: .55)),
+                          labelText: '密码',
+                          labelStyle: TextStyle(
+                              color: text.withValues(alpha: .65)),
+                          hintText: '请输入校园一信通密码',
+                          hintStyle: TextStyle(
+                              color: text.withValues(alpha: .45)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 12),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              seeNo_Off.value = !seeNo_Off.value;
+                            },
+                            icon: _seelist[seeNo_Off.value ? 0 : 1],
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: text.withValues(alpha: .18))),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: accent, width: 1.4)),
+                        ),
+                      )),
+                  const SizedBox(height: 16),
+                  GradientButton(
+                    text: '绑定',
+                    page: 'card_message_set_view',
+                    height: 44,
+                    onPressed: () async {
+                      //检测输入的内容是否为空
+                      if (inputAccountController.text.isEmpty ||
+                          inputPasswordController.text.isEmpty) {
+                        Get.snackbar("提示", "输入的内容不能为空",
+                            duration: const Duration(milliseconds: 1500));
+                        return;
+                      }
+
+                      //登录
+                      await loginJustMessage(
+                          inputAccountController.text,
+                          inputPasswordController.text,
+                          true,
+                          showCxt: ctxt);
+                    },
+                  ),
+                ],
+              ),
+            );
+          }),
+        ));
   }
 
   @override

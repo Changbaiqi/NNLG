@@ -1,260 +1,193 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_randomcolor/flutter_randomcolor.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/router/Routes.dart';
 
 import 'logic.dart';
 
+/// 评教课程列表：毛玻璃 + 渐变风格
 class EvaDetailViewPage extends StatelessWidget {
   EvaDetailViewPage({Key? key}) : super(key: key);
 
   final logic = Get.find<EvaDetailViewLogic>();
   final state = Get.find<EvaDetailViewLogic>().state;
 
+  static const String _page = 'teaching_eva_view';
+
   @override
   Widget build(BuildContext context) {
-    // var itemWidth = (MediaQuery.of(context).size.width - 30) / 2;
-    // var itemHeight = 255.0;
-    // var childAspectRatio = itemWidth / itemHeight;
-
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 1,
-        foregroundColor: Colors.black,
-        backgroundColor: Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '在线评教',
-              style: TextStyle(color: Colors.black),
-            )
-          ],
+    final Color text = GlassTheme.textColor(_page);
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: text,
+          iconTheme: IconThemeData(color: text),
+          title: Text('待评课程',
+              style: TextStyle(
+                  fontSize: 17, fontWeight: FontWeight.w700, color: text)),
         ),
+        body: Obx(() {
+          switch (state.showState.value) {
+            case 0:
+              return Center(
+                  child: Lottie.asset('assets/images/loading.json',
+                      height: 200, width: 200));
+            case 1:
+              return ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 120),
+                  itemCount: state.searList.value.length,
+                  itemBuilder: (cont, index) =>
+                      AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 350),
+                        child: SlideAnimation(
+                          verticalOffset: 50.0,
+                          child: FadeInAnimation(
+                            child: showchildElement(
+                                state.searList.value[index]),
+                          ),
+                        ),
+                      ));
+            default:
+              return Center(
+                  child: Text('错误', style: TextStyle(color: text)));
+          }
+        }),
       ),
-      // body: ListView(
-      //   children: [_showScoreWidget],
-      // ),
-      body: Obx((){
-        switch(state.showState.value){
-          case 0:
-            return Center(
-                child: Lottie.asset('assets/images/loading.json',
-                    height: 200, width: 200));
-          case 1:
-            return ListView.builder(
-                itemCount: state.searList.value.length,
-                itemBuilder: (cont,index)=>showchildElement(state.searList.value[index]));
-          default:
-            return Center(child: Text('错误',style: TextStyle(color: Colors.black),),);
-        }
-      }),
     );
   }
 
-  /**
-   * 单个组件
-   */
+  /// 单个课程卡片
   showchildElement(json) {
-    Options options =Options(format: Format.rgbArray,count: 1,luminosity: Luminosity.light);
-    var color = RandomColor.getColor(options);
-    //print(json);
-    //var jsson = jsonDecode('{"name":"cc"}');
-    return Padding(padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-      child: InkWell(
-        child: Container(
-          height: 150,
-          width: 150,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              color: Color.fromARGB(255, color[0], color[1], color[2]),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black45, blurRadius: 10, offset: Offset(1, 1))
-              ]),
-          child: Stack(children: [
-            Positioned(
-              child: Container(
-                height: 25,
-                width: 25,
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    final bool done = '${json["isSubmit"]}'.trim() == '是';
+    return GlassCard(
+      page: _page,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      padding: const EdgeInsets.fromLTRB(14, 12, 12, 10),
+      onTap: () => Get.toNamed(Routes.EvalForm, arguments: json),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              //序号
+              Container(
+                width: 26,
+                height: 26,
                 decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(500))),
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [accent, GlassTheme.lighten(accent, .35)],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: accent.withValues(alpha: .35),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3))
+                  ],
+                ),
                 child: Center(
                   child: Text(
                     '${json["number"]}',
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
                   ),
                 ),
               ),
-              left: 10,
-              top: 10,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '课程名称：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["courseName"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  '${json["courseName"]}',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: text),
+                ),
               ),
-              top: 10,
-              left: 50,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '课程编号：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["courseNumber"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
+              //评教状态
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: (done ? const Color(0xFF2E7D32) : accent)
+                      .withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                      color: (done ? const Color(0xFF2E7D32) : accent)
+                          .withValues(alpha: .30)),
+                ),
+                child: Text(
+                  done ? '已提交' : '未提交',
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: done ? const Color(0xFF2E7D32) : accent),
+                ),
               ),
-              top: 45,
-              left: 10,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '授课教师：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["teacher"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
-              ),
-              top: 45,
-              left: 185,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '评教类别：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["evalType"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
-              ),
-              top: 70,
-              left: 10,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '总评分：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["overallScore"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
-              ),
-              top: 70,
-              left: 185,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '是否已评：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["isRated"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
-              ),
-              top: 95,
-              left: 10,
-            ),
-            Positioned(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '是否提交：',
-                    style: TextStyle(fontSize: 15,color: Colors.black),
-                  ),
-                  Container(
-                    width: 100,
-                    child: Text(
-                      '${json["isSubmit"]}',
-                      style: TextStyle(fontSize: 12,color: Colors.black),
-                      maxLines: 2,
-                    ),
-                  )
-                ],
-              ),
-              top: 95,
-              left: 185,
-            ),
-          ]),
-        ),
-        onTap: (){
+            ],
+          ),
+          const SizedBox(height: 8),
+          Divider(color: text.withValues(alpha: .08), height: 1),
+          const SizedBox(height: 6),
+          _row2('课程编号', '${json["courseNumber"]}', '授课教师',
+              '${json["teacher"]}'),
+          _row2('评教类别', '${json["evalType"]}', '总评分',
+              '${json["overallScore"]}'),
+          _row2('是否已评', '${json["isRated"]}', '是否提交',
+              '${json["isSubmit"]}'),
+        ],
+      ),
+    );
+  }
 
-          Get.toNamed(Routes.EvalForm,arguments: json);
-          // Get.snackbar("提示", "功能还未完善，敬请期待",duration: Duration(milliseconds: 1500),);
-        },
-      ),);
+  /// 两列键值行
+  Widget _row2(String l1, String v1, String l2, String v2) {
+    final Color text = GlassTheme.textColor(_page);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: _kv(l1, v1, text)),
+          Expanded(child: _kv(l2, v2, text)),
+        ],
+      ),
+    );
+  }
+
+  Widget _kv(String label, String value, Color text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style:
+                TextStyle(fontSize: 12, color: text.withValues(alpha: .5))),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 12.5, fontWeight: FontWeight.w600, color: text),
+          ),
+        ),
+      ],
+    );
   }
 }

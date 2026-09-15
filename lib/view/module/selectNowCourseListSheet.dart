@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:callo/dao/CourseData.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 /*
  * [author] 长白崎
@@ -19,9 +20,16 @@ class selectNowCourseListSheet{
   Future show(){
 
     return showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        barrierColor: Colors.black.withValues(alpha: .35),
+        isScrollControlled: true,
         context: _context,
         builder: (builder){
-          return selectNowCourseListSheetMain();
+          return GlassCard(
+            page: 'course_set_view',
+            padding: EdgeInsets.fromLTRB(16, 18, 16, 16),
+            child: selectNowCourseListSheetMain(),
+          );
         });
   }
 
@@ -46,7 +54,11 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
   void loadingWidgetList(){
 
     for(int i =0 ; i < CourseData.semesterCourseList.length ; ++i){
-      _widgetList.add(Text("${CourseData.semesterCourseList[i]}"));
+      _widgetList.add(Text("${CourseData.semesterCourseList[i]}",
+          style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w600,
+              color: GlassTheme.textColor('course_set_view'))));
     }
 
 
@@ -71,70 +83,102 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
   FixedExtentScrollController _chooseController = new FixedExtentScrollController();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 350,
+    final Color textColor = GlassTheme.textColor('course_set_view');
+    return SizedBox(
+      height: 330,
       child: Column(
         children: [
-
-          Expanded(
-              flex: 1,
-              child: Padding(padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: ListWheelScrollView(
-                  itemExtent: 60,
-                  useMagnifier: true,
-                  magnification: 1.5,
-                  controller: _chooseController,
-                  onSelectedItemChanged: (index) {
-
-                    _resNowChoosewidget = index;
-
-                  }, children: _widgetList,),
-              )),
-
-          Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
-            child: Container(
-              height: 50,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('取消',style: TextStyle(color: Colors.white),),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Colors.black45
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-
-                            )
-                        )
-                    ),
-
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 16,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(2),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      GlassTheme.accentColor('course_set_view'),
+                      GlassTheme.accentColor('course_set_view')
+                          .withValues(alpha: .5),
+                    ],
                   ),
-                  Container(
-                    height: 50,
-                    width: 150,
-                    child: ElevatedButton(child: Text('确定',style: TextStyle(color: Colors.black54),),
-                      style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50)))
-                          )
-                      ),
-                      onPressed: () {
-                         Navigator.pop(context, '${CourseData.semesterCourseList[_resNowChoosewidget]}');
-                      },),
-                  ),
-                ],
+                ),
               ),
+              const SizedBox(width: 8),
+              Text(
+                '学期课表',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: textColor,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                CourseData.semesterCourseList.length > _resNowChoosewidget
+                    ? '${CourseData.semesterCourseList[_resNowChoosewidget]}'
+                    : '${CourseData.nowCourseList.value}',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: textColor.withValues(alpha: .6),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Expanded(
+              child: ListWheelScrollView(
+                itemExtent: 46,
+                useMagnifier: true,
+                magnification: 1.35,
+                controller: _chooseController,
+                onSelectedItemChanged: (index) {
+                  setState(() {
+                    _resNowChoosewidget = index;
+                  });
+                }, children: _widgetList,),
             ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: 46,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: textColor.withValues(alpha: .08),
+                      foregroundColor: textColor.withValues(alpha: .8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(23)),
+                    ),
+                    child: const Text('取消', style: TextStyle(fontSize: 15)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: GradientButton(
+                  text: '确定',
+                  page: 'course_set_view',
+                  height: 46,
+                  onPressed: () {
+                    if (CourseData.semesterCourseList.length >
+                        _resNowChoosewidget) {
+                      Navigator.pop(context,
+                          '${CourseData.semesterCourseList[_resNowChoosewidget]}');
+                    } else {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ),
+            ],
           )
-
         ],
 
       ),
@@ -152,6 +196,7 @@ class _selectNowCourseListSheetMainState extends State<selectNowCourseListSheetM
         .addPostFrameCallback((timeStamp) {
           _resNowChoosewidget = getIndex(CourseData.nowCourseList.value);
           _chooseController.animateToItem( _resNowChoosewidget, duration: Duration(milliseconds: 500), curve: Curves.easeInOutQuart);
+          setState(() {});
     });
     
   }

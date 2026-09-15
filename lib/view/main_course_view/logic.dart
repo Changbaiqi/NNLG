@@ -24,10 +24,10 @@ import 'package:callo/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:callo/dao/entity/ClassScheduleEntity.dart';
 import 'package:callo/utils/CourseUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/view/module/ClassScheduleWidget.dart';
-import 'package:callo/view/module/showCourseTableMessage.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -219,121 +219,194 @@ class MainCourseViewLogic extends GetxController
         await GetIt.I<ClassNewScheduleDao>()
             .findAllClassNewScheduleForStudentIdAndSemester(
                 studentID, semester);
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    final Color accent = GlassTheme.accentColor('main_course_view');
     showDialog(
         context: Get.context!,
         barrierDismissible: false,
+        barrierColor: Colors.black.withValues(alpha: .35),
         builder: (builder) {
-          return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: InkWell(
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                      // color: Color.fromARGB(255, 247, 242, 249),
-                    color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['shadowColor'] as List),
-                            blurRadius: 10,
-                            offset: Offset(1, 1))
-                      ]),
-                  height: 300,
-                  width: 260,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ListView.builder(
-                              itemCount: scheduleList.length,
-                              itemBuilder: (BuildContext ctxt, int index) {
-                                String timeForm =
-                                    '${formatDate(scheduleList[index].dateTime!, [
-                                  yyyy,
-                                  '-',
-                                  mm,
-                                  '-',
-                                  dd,
-                                  '  ',
-                                  HH,
-                                  ':',
-                                  mm
-                                ])}';
-                                return InkWell(
-                                  child: Container(
-                                    height: 60,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '更新时间：${timeForm}',
-                                              style: TextStyle(
-                                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
-                                                  fontSize: 12),
+          return MediaQuery(
+              data: MediaQuery.of(Get.context!)
+                  .copyWith(textScaleFactor: 1.0),
+              child: Scaffold(
+                backgroundColor: Colors.transparent,
+                body: InkWell(
+                  onTap: () {
+                    Navigator.pop(builder);
+                    Get.back();
+                  },
+                  child: Center(
+                    child: GlassCard(
+                      page: 'main_course_view',
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                      child: SizedBox(
+                        width: 280,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            GlassSectionTitle(
+                                page: 'main_course_view', title: '课表同步历史'),
+                            const SizedBox(height: 8),
+                            ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 300),
+                              child: scheduleList.isEmpty
+                                  ? Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 30),
+                                      child: Text(
+                                        '暂无同步记录',
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color:
+                                                textColor.withValues(alpha: .6)),
+                                      ),
+                                    )
+                                  : ListView.separated(
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.zero,
+                                      itemCount: scheduleList.length,
+                                      separatorBuilder: (_, __) =>
+                                          const SizedBox(height: 8),
+                                      itemBuilder:
+                                          (BuildContext ctxt, int index) {
+                                        String timeForm =
+                                            '${formatDate(scheduleList[index].dateTime!, [
+                                          yyyy,
+                                          '-',
+                                          mm,
+                                          '-',
+                                          dd,
+                                          '  ',
+                                          HH,
+                                          ':',
+                                          mm
+                                        ])}';
+                                        final bool isCurrent = CourseData
+                                                .showClassScheduleUUID.value ==
+                                            scheduleList[index].uid;
+                                        return InkWell(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          onTap: () {
+                                            showClassScheduleForUUID(
+                                                (scheduleList[index]?.uid)!);
+                                            Navigator.pop(builder);
+                                            Get.snackbar(
+                                              "课表通知",
+                                              "已回溯到 ${timeForm} 的课表",
+                                              duration: const Duration(
+                                                  milliseconds: 1500),
+                                            );
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color: isCurrent
+                                                  ? accent.withValues(alpha: .12)
+                                                  : textColor
+                                                      .withValues(alpha: .05),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                  color: isCurrent
+                                                      ? accent.withValues(
+                                                          alpha: .55)
+                                                      : textColor.withValues(
+                                                          alpha: .12),
+                                                  width: 1),
                                             ),
-                                            Visibility(
-                                              child: Text(
-                                                ' (当前)',
-                                                style: TextStyle(
-                                                    color: Colors.red),
-                                              ),
-                                              visible: CourseData
-                                                  .showClassScheduleUUID
-                                                  .value ==
-                                                  scheduleList[index].uid,
-                                            )
-                                          ],
-                                        ),
-                                        Text(
-                                            '课表UID值：${scheduleList[index].uid}',
-                                            style: TextStyle(
-                                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
-                                                fontSize: 8)),
-                                        Text(
-                                            '课表MD5值：${scheduleList[index].md5}',
-                                            style: TextStyle(
-                                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
-                                                fontSize: 8))
-                                      ],
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    showClassScheduleForUUID(
-                                        (scheduleList[index]?.uid)!);
-                                    Navigator.pop(builder); //退出弹窗
-                                    Get.snackbar(
-                                      "课表通知",
-                                      "已选择${timeForm}历史缓存课表",
-                                      duration: Duration(milliseconds: 1500),
-                                    );
-                                  },
-                                );
-                              }),
-                          flex: 1,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        '同步时间：$timeForm',
+                                                        style: TextStyle(
+                                                            fontSize: 12.5,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: textColor),
+                                                      ),
+                                                    ),
+                                                    if (isCurrent)
+                                                      Container(
+                                                        padding: const EdgeInsets
+                                                            .symmetric(
+                                                            horizontal: 6,
+                                                            vertical: 2),
+                                                        decoration: BoxDecoration(
+                                                          color: accent
+                                                              .withValues(
+                                                                  alpha: .16),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                        child: Text(
+                                                          '当前',
+                                                          style: TextStyle(
+                                                              fontSize: 10,
+                                                              color: accent,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                        ),
+                                                      ),
+                                                  ],
+                                                ),
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                    'UID：${scheduleList[index].uid}',
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: textColor
+                                                            .withValues(
+                                                                alpha: .45))),
+                                                Text(
+                                                    'MD5：${scheduleList[index].md5}',
+                                                    style: TextStyle(
+                                                        fontSize: 10,
+                                                        color: textColor
+                                                            .withValues(
+                                                                alpha: .45))),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                            ),
+                            const SizedBox(height: 12),
+                            SizedBox(
+                              width: double.infinity,
+                              height: 46,
+                              child: TextButton(
+                                onPressed: () {
+                                  Navigator.pop(builder);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor:
+                                      textColor.withValues(alpha: .08),
+                                  foregroundColor:
+                                      textColor.withValues(alpha: .8),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(23)),
+                                ),
+                                child: const Text('取消',
+                                    style: TextStyle(fontSize: 15)),
+                              ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          width: MediaQuery.of(builder).size.width,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Navigator.pop(builder);
-                              },
-                              child: Text('取消')),
-                        )
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              onTap: () {
-                Navigator.pop(builder);
-                Get.back();
-              },
-            ),
-          ));
+              ));
         });
   }
 
@@ -648,38 +721,52 @@ class MainCourseViewLogic extends GetxController
   }
 
   //第几周的快速选择卡
+  //课表周次快速选择卡
   weekChooseWidgetList(_context) {
+    final Color accent = GlassTheme.accentColor('main_course_view');
+    final Color text = GlassTheme.textColor('main_course_view');
     List<Widget> list = [];
     for (int i = 0; i < CourseData.ansWeek.value; ++i) {
-      list.add(Obx(() => InkWell(
-            borderRadius: BorderRadius.circular(10),
-            child: Container(
-              height: 50,
-              width: 50,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: pageController.value.page == i
-                      ? Color.fromARGB(255, 250, 203, 164)
-                      : Color.fromARGB(100, 255, 255, 255)),
-              child: Center(
-                child: Text(
-                  '${i + 1}',
-                  style: TextStyle(
-                      color: pageController.value.page == i
-                          ? Color.fromARGB(255, 253, 103, 103)
-                          : Color.fromARGB(255, 0, 0, 0)),
-                ),
+      list.add(Obx(() {
+        final bool selected = pageController.value.hasClients &&
+            pageController.value.page?.round() == i;
+        return InkWell(
+          borderRadius: BorderRadius.circular(12),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            height: 46,
+            width: 46,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: selected
+                  ? accent.withValues(alpha: .18)
+                  : text.withValues(alpha: .05),
+              border: Border.all(
+                color: selected
+                    ? accent.withValues(alpha: .55)
+                    : Colors.transparent,
+                width: 1.2,
               ),
             ),
-            onTap: () {
-              // pageController.value.jumpToPage(i);
-              pageController.value.animateToPage(i,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.decelerate);
-              pageController.refresh();
-              Navigator.pop(_context);
-            },
-          )));
+            child: Center(
+              child: Text(
+                '${i + 1}',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                    color: selected ? accent : text),
+              ),
+            ),
+          ),
+          onTap: () {
+            pageController.value.animateToPage(i,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.decelerate);
+            pageController.refresh();
+            Navigator.pop(_context);
+          },
+        );
+      }));
     }
     return list;
   }

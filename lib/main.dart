@@ -8,8 +8,24 @@ import 'package:callo/dao/ClassScheduleDatabase.dart';
 import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 import 'dao/ClassScheduleDao.dart';
+
+/// 当前主题的页面底色，用于消除页面切换时的白闪
+/// 注意：黑色主题的 main_view 没有 backgroundColor，需要回退到导航背景色
+Color _themeBackground() => GlassTheme.pageBackground('main_view');
+
+/// 应用主题：转场动画会用 colorScheme.surface 打底，必须跟随主题背景色，
+/// 否则推送页面时会出现白色闪烁
+ThemeData _appTheme() {
+  final Color bg = _themeBackground();
+  final ThemeData base = ThemeData.fallback();
+  return base.copyWith(
+    scaffoldBackgroundColor: bg,
+    colorScheme: base.colorScheme.copyWith(surface: bg),
+  );
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,10 +77,22 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MaterialApp(
-        home: MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-          child: GetMaterialApp(
-              initialRoute: Routes.Start, getPages: AppPages.pages),
+        theme: _appTheme(),
+        home: ColoredBox(
+          color: _themeBackground(),
+          child: MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: GetMaterialApp(
+                initialRoute: Routes.Start,
+                getPages: AppPages.pages,
+                theme: _appTheme(),
+                // 转场/页面切换时窗口底色跟随主题，避免白色闪烁
+                color: _themeBackground(),
+                builder: (context, child) => ColoredBox(
+                      color: _themeBackground(),
+                      child: child ?? const SizedBox.shrink(),
+                    )),
+          ),
         ),
       ),
     );

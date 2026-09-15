@@ -1,250 +1,201 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:callo/dao/CustomThemeData.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
+
+import 'package:callo/utils/GlassUI.dart';
 
 import 'logic.dart';
 
+/// 成绩查询：毛玻璃 + 渐变风格
 class ScoreInquiryViewPage extends StatelessWidget {
   ScoreInquiryViewPage({Key? key}) : super(key: key);
 
   final logic = Get.find<ScoreInquiryViewLogic>();
   final state = Get.find<ScoreInquiryViewLogic>().state;
 
+  static const String _page = 'score_inquiry_view';
+
   @override
   Widget build(BuildContext context) {
-    var itemWidth = (MediaQuery.of(context).size.width - 30) / 2;
-    var itemHeight = 255.0;
+    var itemWidth = (MediaQuery.of(context).size.width - 42) / 2;
+    var itemHeight = 215.0;
     var childAspectRatio = itemWidth / itemHeight;
 
-    return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['backgroundColor'] as List),
-      appBar: AppBar(
-        elevation: 1,
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['foregroundColor'] as List),
-        iconTheme: IconThemeData(
-            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['defaultIconColor'] as List )
-        ),
-        // backgroundColor: Colors.white,
-        backgroundColor: Colors.transparent,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '成绩查询',style: TextStyle(
-              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['textColor'] as List)
-            ),),
-            Obx(() => DropdownButton<String>(
-                value: state.selectTime.value,
-                dropdownColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['backgroundColor'] as List ),
-                items: state.searList.value
-                    .map((e) => DropdownMenuItem(
-                    value: e,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(e,style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['score_inquiry_view']!['textColor'] as List)),),
-                    )))
-                    .toList(),
-                onChanged: (value) {
-                  state.selectTime.value = value!;
-                  logic.showScoreList(state.selectTime.value);
-                  // state.mfuture = logic.future();
-                }))
-          ],
-        ),
-      ),
-      // body: ListView(
-      //   children: [_showScoreWidget],
-      // ),
-      body: Obx(() {
-        switch (state.showState.value) {
-          case 0:
-            return Center(
-                child: Lottie.asset('assets/images/loading.json',
-                    height: 200, width: 200));
-          case 1:
-            return ListView(
-              children: [
-                /*_showScoreWidget,*/ Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: state.scoreList.length,
-                        physics: NeverScrollableScrollPhysics(),
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          mainAxisSpacing: 10,
-                          crossAxisSpacing: 10,
-                          childAspectRatio: childAspectRatio,
-                        ),
-                        itemBuilder: (context, index) {
-                          return AnimationConfiguration.staggeredGrid(
-                              position: index,
-                              duration: Duration(milliseconds: 350),
-                              columnCount: state.scoreList.length,
-                              child: SlideAnimation(
-                                verticalOffset: 50.0,
-                                child: FadeInAnimation(
-                                  child:
-                                  showchildElement(state.scoreList[index]),
-                                ),
-                              ));
-                        },
-                      ),
-                    ),
-                    //_showchildElement("json")
-                  ],
-                )
-              ],
-            );
-          default:
-            return Center(
-              child: Text('错误'),
-            );
-        }
-      }),
-    );
-  }
+    final Color text = GlassTheme.textColor(_page);
 
-  /**
-   * 单个组件
-   */
-  showchildElement(json) {
-    Options options = Options(
-        format: Format.rgbArray, count: 1, luminosity: Luminosity.light);
-    var color = RandomColor.getColor(options);
-    //print(json);
-    json = jsonDecode(json);
-    //var jsson = jsonDecode('{"name":"cc"}');
-    return Container(
-      height: 220,
-      width: 150,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          // color: Color.fromARGB(255, colorR, colorG, colorB),
-          color: Color.fromARGB(255, color[0], color[1], color[2]),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black45, blurRadius: 10, offset: Offset(1, 1))
-          ]),
-      child: Stack(children: [
-        Positioned(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: text,
+          iconTheme: IconThemeData(color: text),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                height: 25,
-                width: 25,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.all(Radius.circular(500))),
-                child: Center(
-                  child: Text(
-                    '${json["number"]}',
-                    style: TextStyle(fontSize: 18, color: Colors.black87),
-                  ),
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        '编号：',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Container(
-                        width: Get.width/4,
-                        child: Text(
-                          '${json["courseNumber"]}',
-                          style: TextStyle(fontSize: 12),
-                          maxLines: 2,
-                        ),
-                      )
-                    ],
-                  )),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '科目：',
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    Container(
-                      width: Get.width/4.0,
-                      child: Text(
-                        '${json["courseName"]}',
-                        style: TextStyle(fontSize: 12),
-                        maxLines: 2,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        '时间：',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Container(
-                        width: Get.width/4.0,
-                        child: Text(
-                          '${json["time"]}',
-                          style: TextStyle(fontSize: 12),
-                          maxLines: 2,
-                        ),
-                      )
-                    ],
-                  )),
-              Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                  child: Row(
-                    children: [
-                      Text(
-                        '成绩：',
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      Container(
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(100)),
-                              color: logic.scoreColors(json['courseScore'])),
-                          child: Center(
-                            child: Text(
-                              '${json["courseScore"]}',
-                              style: TextStyle(fontSize: 30),
-                            ),
-                          ))
-                    ],
+              Text('成绩查询',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w700, color: text)),
+              Obx(() => GlassDropdown<String>(
+                    page: _page,
+                    items: state.searList.value,
+                    value: state.selectTime.value,
+                    title: '选择学期',
+                    onChanged: (value) {
+                      state.selectTime.value = value;
+                      logic.showScoreList(state.selectTime.value);
+                    },
                   ))
             ],
           ),
-          left: 10,
-          top: 10,
         ),
-      ]),
+        body: Obx(() {
+          switch (state.showState.value) {
+            case 0:
+              return Center(
+                  child: Lottie.asset('assets/images/loading.json',
+                      height: 200, width: 200));
+            case 1:
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(16, 6, 16, 120),
+                children: [
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.scoreList.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: childAspectRatio,
+                    ),
+                    itemBuilder: (context, index) {
+                      return AnimationConfiguration.staggeredGrid(
+                          position: index,
+                          duration: const Duration(milliseconds: 350),
+                          columnCount: state.scoreList.length,
+                          child: SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(
+                              child: showchildElement(state.scoreList[index]),
+                            ),
+                          ));
+                    },
+                  ),
+                ],
+              );
+            default:
+              return Center(
+                child: Text('错误', style: TextStyle(color: text)),
+              );
+          }
+        }),
+      ),
+    );
+  }
+
+  /// 单个成绩卡片
+  showchildElement(json) {
+    json = jsonDecode(json);
+    final Color text = GlassTheme.textColor(_page);
+    //分数底色：原白色占位改用主题强调色；文字颜色按底色亮度自动取黑/白，保证可读
+    final Color rawScoreColor = logic.scoreColors(json['courseScore']);
+    final Color badgeColor = rawScoreColor.computeLuminance() > .9
+        ? GlassTheme.accentColor(_page)
+        : rawScoreColor;
+    final Color badgeTextColor = GlassTheme.onSurface(badgeColor);
+    return GlassCard(
+      page: _page,
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              //成绩圆环（按分数着色）
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      badgeColor,
+                      GlassTheme.lighten(badgeColor, .22),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: badgeColor.withValues(alpha: .35),
+                      blurRadius: 12,
+                      offset: const Offset(0, 5),
+                    )
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    '${json["courseScore"]}',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: badgeTextColor),
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: text.withValues(alpha: .06),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '第${json["number"]}条',
+                  style:
+                      TextStyle(fontSize: 11, color: text.withValues(alpha: .6)),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _field('科目', '${json["courseName"]}'),
+          const SizedBox(height: 5),
+          _field('编号', '${json["courseNumber"]}'),
+          const SizedBox(height: 5),
+          _field('时间', '${json["time"]}'),
+        ],
+      ),
+    );
+  }
+
+  /// 字段行：小标签 + 值
+  Widget _field(String label, String value) {
+    final Color text = GlassTheme.textColor(_page);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style:
+                TextStyle(fontSize: 12, color: text.withValues(alpha: .5))),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 12.5, fontWeight: FontWeight.w600, color: text),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,256 +1,223 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:markdown_widget/markdown_widget.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'package:get/get.dart';
-import 'package:callo/dao/CustomThemeData.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:roundcheckbox/roundcheckbox.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 import 'logic.dart';
 
-/*
- * TODO
- * @Author 长白崎
- * @Date 2024/1/30 3:29
- */
+/// 校园聊一聊（聊天室）：毛玻璃 + 渐变风格
 class ChitChatViewPage extends StatelessWidget {
   ChitChatViewPage({Key? key}) : super(key: key);
   final logic = Get.put(ChitChatViewLogic());
-  final state = Get
-      .find<ChitChatViewLogic>()
-      .state;
+  final state = Get.find<ChitChatViewLogic>().state;
+
+  static const String _page = 'chit_chat_view';
 
   @override
   Widget build(BuildContext context) {
     state.context = context;
+    final Color text = GlassTheme.textColor(_page);
 
-    return Obx(() => Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
-      appBar: AppBar(
-        // backgroundColor: Colors.white,
-        iconTheme: IconThemeData(
-          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['defaultIconColor'] as List )
-        ),
-        backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['backgroundColor'] as List ),
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
-        title: Text(
-          '聊天室',
-          style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-        ),
-      ),
-      body: Container(
-        child: Column(
-          children: [
-            //聊天内容
-            Expanded(
-              flex: 1,
-              child: Container(
-                child: Obx(() =>
-                    SmartRefresher(
-                      // enablePullUp: true,
-                      enablePullDown: true,
-                      header: WaterDropHeader(),
-                      onRefresh: () async {
-                        logic.loadHistoryMessage();
-                        state.refreshController.refreshCompleted();
-                      },
-                      controller: state.refreshController,
-                      child: ListView.builder(
-                        controller: state.listScrollController.value,
-                        itemCount: state.msgList.value.length,
-                        padding: EdgeInsets.only(top: 27),
-                        itemBuilder: (context, index) {
-                          return AnimationConfiguration.staggeredList(
-                              position: index,
-                              duration: const Duration(milliseconds: 350),
-                              child: SlideAnimation(
-                                verticalOffset: 50.0,
-                                child: FadeInAnimation(
-                                  child:
-                                  messageChild(state.msgList.value[index]),
-                                ),
-                              ));
+    return Obx(() => GlassBackground(
+          page: _page,
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              foregroundColor: text,
+              iconTheme: IconThemeData(color: text),
+              title: Text('聊天室',
+                  style: TextStyle(
+                      fontSize: 17, fontWeight: FontWeight.w700, color: text)),
+            ),
+            body: Column(
+              children: [
+                //聊天内容
+                Expanded(
+                  flex: 1,
+                  child: Obx(() => SmartRefresher(
+                        enablePullDown: true,
+                        header: const WaterDropHeader(),
+                        onRefresh: () async {
+                          logic.loadHistoryMessage();
+                          state.refreshController.refreshCompleted();
                         },
-                      ),
-                    )),
+                        controller: state.refreshController,
+                        child: ListView.builder(
+                          controller: state.listScrollController.value,
+                          itemCount: state.msgList.value.length,
+                          padding: const EdgeInsets.only(top: 8, bottom: 8),
+                          itemBuilder: (context, index) {
+                            return AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 350),
+                                child: SlideAnimation(
+                                  verticalOffset: 50.0,
+                                  child: FadeInAnimation(
+                                    child: messageChild(
+                                        state.msgList.value[index]),
+                                  ),
+                                ));
+                          },
+                        ),
+                      )),
+                ),
+                //输入区
+                _inputPanel(),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  /// 底部输入区（毛玻璃面板）
+  Widget _inputPanel() {
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    return Container(
+      decoration: BoxDecoration(
+        color: GlassTheme.glassTint(_page)
+            .withValues(alpha: GlassTheme.glassAlpha(_page)),
+        border: Border(
+            top: BorderSide(color: GlassTheme.border(_page), width: 1)),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //功能开关
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 0),
+              child: Row(
+                children: [
+                  Obx(() => _toggleChip(
+                        label: 'Markdown',
+                        checked: state.isMarkdown.value,
+                        onTap: () =>
+                            state.isMarkdown.value = !state.isMarkdown.value,
+                      )),
+                  const SizedBox(width: 8),
+                  Obx(() => _toggleChip(
+                        label: '@AI',
+                        checked: state.isChatGLM.value,
+                        onTap: () =>
+                            state.isChatGLM.value = !state.isChatGLM.value,
+                      )),
+                ],
               ),
             ),
-            Container(
-              decoration: BoxDecoration(
-                // color: Colors.white,
-                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0x14000000),
-                    blurRadius: 10,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.fromLTRB(12, 10, 8, 10),
+                    constraints: const BoxConstraints(
+                      maxHeight: 100.0,
+                      minHeight: 46.0,
+                    ),
+                    decoration: BoxDecoration(
+                        color: text.withValues(alpha: .05),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                            color: text.withValues(alpha: .10), width: 1)),
+                    child: TextField(
+                      controller: state.sendTextEdit,
+                      cursorColor: accent,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        counterText: '',
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.only(
+                            left: 14.0, right: 14.0, top: 12.0, bottom: 12.0),
+                        hintText: "发送消息...",
+                        hintStyle: TextStyle(
+                            color: text.withValues(alpha: .45),
+                            fontSize: 14),
+                      ),
+                      style: TextStyle(color: text, fontSize: 15),
+                    ),
                   ),
-                ],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                        child: InkWell(
-                          child: Row(
-                            children: [
-                              Text('Markdown',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
-                              Obx(
-                                    () =>
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                                      child: RoundCheckBox(
-                                          size: 15,
-                                          checkedWidget: const Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 10,
-                                          ),
-                                          checkedColor: Color(0xFF3C78FF),
-                                          uncheckedColor: Color(0x003C78FF),
-                                          border: Border.all(
-                                            color: state.isMarkdown.value
-                                                ? const Color(0xFF3C78FF)
-                                                : const Color(0xFFD1D1D1),
-                                          ),
-                                          isChecked: state.isMarkdown.value,
-                                          onTap: (value) {
-                                            state.isMarkdown.value =
-                                            !state.isMarkdown.value;
-                                          }),
-                                    ),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            state.isMarkdown.value = !state.isMarkdown.value;
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                        child: InkWell(
-                          child: Row(
-                            children: [
-                              Text(
-                                '@AI',
-                                style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                              ),
-                              Obx(
-                                    () =>
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(3, 0, 0, 0),
-                                      child: RoundCheckBox(
-                                          size: 15,
-                                          checkedWidget: const Icon(
-                                            Icons.check,
-                                            color: Colors.white,
-                                            size: 10,
-                                          ),
-                                          checkedColor: Color(0xFF3C78FF),
-                                          uncheckedColor: Color(0x003C78FF),
-                                          border: Border.all(
-                                            color: state.isChatGLM.value
-                                                ? const Color(0xFF3C78FF)
-                                                : const Color(0xFFD1D1D1),
-                                          ),
-                                          isChecked: state.isChatGLM.value,
-                                          onTap: (value) {
-                                            state.isChatGLM.value =
-                                            !state.isChatGLM.value;
-                                          }),
-                                    ),
-                              )
-                            ],
-                          ),
-                          onTap: () {
-                            state.isChatGLM.value = !state.isChatGLM.value;
-                          },
-                        ),
-                      )
-                    ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: SizedBox(
+                    width: 76,
+                    child: GradientButton(
+                      text: '发送',
+                      page: _page,
+                      height: 42,
+                      onPressed: () {
+                        state.chitchatUtil.send(
+                            '{"code":202,"msg": "${state.sendTextEdit.text}","data":{"type": "${state.isMarkdown.value ? "markdown" : "txt"}","ai": "${state.isChatGLM.value ? "ChatGLM" : null}","msg": "${state.sendTextEdit.text}"}}');
+                        state.chitchatUtil.send(state.sendTextEdit.text);
+                        state.sendTextEdit.text = '';
+                      },
+                    ),
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(15, 10, 0, 10),
-                          constraints: BoxConstraints(
-                            maxHeight: 100.0,
-                            minHeight: 50.0,
-                          ),
-                          decoration: BoxDecoration(
-                              color: Color(0xFFF5F6FF),
-                              borderRadius:
-                              BorderRadius.all(Radius.circular(2))),
-                          child: TextField(
-                            controller: state.sendTextEdit,
-                            cursorColor: Color(0xFF464EB5),
-                            decoration: InputDecoration(
-                              counterText: '',
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.only(
-                                  left: 16.0,
-                                  right: 16.0,
-                                  top: 10.0,
-                                  bottom: 10.0),
-                              hintText: "发送",
-                              hintStyle: TextStyle(
-                                  color: Color(0xFFADB3BA),
-                                  fontSize: 15),
-                            ),
-                            style: TextStyle(
-                                color: Color(0xFF03073C),
-                                fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
-                          alignment: Alignment.center,
-                          height: 70,
-                          child: Text(
-                            '发送',
-                            style: TextStyle(
-                              color: Color(0xFF464EB5),
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          state.chitchatUtil.send(
-                              '{"code":202,"msg": "${state.sendTextEdit
-                                  .text}","data":{"type": "${state.isMarkdown
-                                  .value ? "markdown" : "txt"}","ai": "${state
-                                  .isChatGLM.value
-                                  ? "ChatGLM"
-                                  : null}","msg": "${state.sendTextEdit
-                                  .text}"}}');
-                          state.chitchatUtil.send(state.sendTextEdit.text);
-                          state.sendTextEdit.text = '';
-                        },
-                      ),
-                    ],
-                  )
-                ],
-              ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 开关胶囊
+  Widget _toggleChip({
+    required String label,
+    required bool checked,
+    required VoidCallback onTap,
+  }) {
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    return InkWell(
+      borderRadius: BorderRadius.circular(14),
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 160),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: checked
+              ? accent.withValues(alpha: .16)
+              : text.withValues(alpha: .05),
+          border: Border.all(
+            color: checked
+                ? accent.withValues(alpha: .60)
+                : text.withValues(alpha: .12),
+            width: checked ? 1.3 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              checked
+                  ? Icons.check_circle_rounded
+                  : Icons.radio_button_unchecked_rounded,
+              size: 14,
+              color: checked ? accent : text.withValues(alpha: .45),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              label,
+              style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: checked ? FontWeight.w700 : FontWeight.w500,
+                  color: checked ? accent : text),
             ),
           ],
         ),
       ),
-    ));
+    );
   }
 
   /**
@@ -269,127 +236,136 @@ class ChitChatViewPage extends StatelessWidget {
     }
   }
 
+  /// 消息气泡内容
+  Widget _bubbleContent(messageJson, Color text) {
+    if (messageJson['type'] == "markdown") {
+      return MarkdownWidget(
+        padding: const EdgeInsets.all(10),
+        shrinkWrap: true,
+        data: '${messageJson['text']}',
+        config: MarkdownConfig(configs: [
+          PConfig(textStyle: TextStyle(color: text)),
+        ]),
+      );
+    }
+    if (messageJson['type'] == "txt") {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        child: SelectableText('${messageJson['text']}',
+            style: TextStyle(
+                color: text, fontSize: 14.5, height: 1.4)),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+      child: SelectableText('消息类型错误',
+          style: TextStyle(color: text)),
+    );
+  }
+
+  /// 身份标签（软件作者 / AI）
+  Widget _roleBadge(String userId, Color text, Color accent) {
+    final bool isAuthor = userId == '21060231';
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 6),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+        decoration: BoxDecoration(
+            color: accent.withValues(alpha: .14),
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: accent.withValues(alpha: .30))),
+        child: Text(
+          isAuthor ? '软件作者' : 'AI',
+          style: TextStyle(
+              fontSize: 10, fontWeight: FontWeight.w600, color: accent),
+        ),
+      ),
+    );
+  }
+
   /**
    * 左显示
    */
   Widget tpMessageChild(messageJson) {
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: Container(
-                height: 60,
-                width: 53,
-                child: Stack(
-                  children: [
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/user.jpg',
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
-                    //官方认证图标
-                    Visibility(
-                        visible: (messageJson['userId'] == '21060231' ||
-                            messageJson['userId'] == 'AI'),
-                        child: Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Icon(
-                              Icons.verified,
-                              color: Colors.blueAccent,
-                            )))
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    final bool isOfficial =
+        (messageJson['userId'] == '21060231' || messageJson['userId'] == 'AI');
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 6, 0, 0),
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: Stack(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('${messageJson['userId']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
-                      //标识
-                      Visibility(
-                        visible: (messageJson['userId'] == '21060231' ||
-                            messageJson['userId'] == 'AI'),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            alignment: Alignment.center,
-                            height: 18,
-                            decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: messageJson['userId'] == '21060231'
-                                ? Text(
-                              '软件作者',
-                              style: TextStyle(
-                                  fontSize: 10, color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                            )
-                                : Text(
-                              'AI',
-                              style: TextStyle(
-                                  fontSize: 10, color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/images/user.jpg',
+                      height: 50,
+                      width: 50,
+                    ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Container(
-                        constraints: BoxConstraints(
-                          minHeight: 50,
-                          maxWidth:
-                          MediaQuery
-                              .of(state.context!)
-                              .size
-                              .width / 1.3,
-                        ),
-                        decoration: BoxDecoration(
-                            // color: Colors.black54,
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        // child: Padding(
-                        //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                        //   child: SelectableText('${messageJson['text']}'),
-                        // ),
-                        child: messageJson['type'] == "markdown"
-                            ? MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}',config: MarkdownConfig(configs: [
-                          PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List ))),
-                        ]),)
-                            : messageJson['type'] == "txt"
-                            ? Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(10, 15, 10, 10),
-                          child: SelectableText(
-                              '${messageJson['text']}',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
-                        )
-                            : Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(10, 15, 10, 10),
-                          child: SelectableText(
-                            '消息类型错误',
-                            style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                          ),
-                        )),
-                  )
+                  //官方认证图标
+                  Visibility(
+                      visible: isOfficial,
+                      child: Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: Icon(
+                            Icons.verified,
+                            color: accent,
+                            size: 18,
+                          )))
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 4, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text('${messageJson['userId']}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: text.withValues(alpha: .60))),
+                    if (isOfficial)
+                      _roleBadge('${messageJson['userId']}', text, accent),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                  child: Container(
+                      constraints: BoxConstraints(
+                        minHeight: 44,
+                        maxWidth:
+                            MediaQuery.of(state.context!).size.width / 1.3,
+                      ),
+                      decoration: BoxDecoration(
+                          color: text.withValues(alpha: .06),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(4),
+                            topRight: Radius.circular(14),
+                            bottomLeft: Radius.circular(14),
+                            bottomRight: Radius.circular(14),
+                          ),
+                          border: Border.all(
+                              color: text.withValues(alpha: .08),
+                              width: 1)),
+                      child: _bubbleContent(messageJson, text)),
+                )
+              ],
+            ),
+          )
+        ],
       ),
     );
   }
@@ -398,124 +374,86 @@ class ChitChatViewPage extends StatelessWidget {
    * 右边消息展示
    */
   Widget meMessageChild(messageJson) {
-    print(messageJson);
-    return Container(
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 0, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      //标识
-                      Visibility(
-                        visible: (messageJson['userId'] == '21060231' ||
-                            messageJson['userId'] == 'AI'),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                          child: Container(
-                            padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                            alignment: Alignment.center,
-                            height: 18,
-                            decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: messageJson['userId'] == '21060231'
-                                ? Text(
-                              '软件作者',
-                              style: TextStyle(
-                                  fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                            )
-                                : Text(
-                              'AI',
-                              style: TextStyle(
-                                  fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
-                            ),
-                          ),
-                        ),
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    final bool isOfficial =
+        (messageJson['userId'] == '21060231' || messageJson['userId'] == 'AI');
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 4, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (isOfficial)
+                      _roleBadge('${messageJson['userId']}', text, accent),
+                    Text('${messageJson['userId']}',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: text.withValues(alpha: .60))),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                  child: Container(
+                      constraints: BoxConstraints(
+                        minHeight: 44,
+                        maxWidth:
+                            MediaQuery.of(state.context!).size.width / 1.3,
                       ),
-                      Text('${messageJson['userId']}',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                    child: Container(
-                        constraints: BoxConstraints(
-                          minHeight: 50,
-                          maxWidth:
-                          MediaQuery
-                              .of(state.context!)
-                              .size
-                              .width / 1.3,
-                        ),
-                        decoration: BoxDecoration(
-                            // color: Colors.black54,
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        // child: Padding(
-                        //   padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                        //   child: SelectableText('${messageJson['text']}'),
-                        // ),
-                        child: messageJson['type'] == "markdown"
-                            ? MarkdownWidget(padding: EdgeInsets.all(10),shrinkWrap: true,data: '${messageJson['text']}',config: MarkdownConfig(configs: [
-                              PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List ))),
-                        ]),)
-                            : messageJson['type'] == "txt"
-                            ? Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(10, 15, 10, 10),
-                          child: SelectableText(
-                              '${messageJson['text']}',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),),
-                        )
-                            : Padding(
-                          padding:
-                          EdgeInsets.fromLTRB(10, 15, 10, 10),
-                          child: SelectableText(
-                            '消息类型错误',style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),
+                      decoration: BoxDecoration(
+                          color: accent.withValues(alpha: .14),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(14),
+                            topRight: Radius.circular(4),
+                            bottomLeft: Radius.circular(14),
+                            bottomRight: Radius.circular(14),
                           ),
-                        )),
-                  )
+                          border: Border.all(
+                              color: accent.withValues(alpha: .25),
+                              width: 1)),
+                      child: _bubbleContent(messageJson, text)),
+                )
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(10, 6, 12, 0),
+            child: SizedBox(
+              height: 50,
+              width: 50,
+              child: Stack(
+                children: [
+                  ClipOval(
+                    child: Image.asset(
+                      'assets/images/user.jpg',
+                      height: 50,
+                      width: 50,
+                    ),
+                  ),
+                  //官方认证图标
+                  Visibility(
+                      visible: isOfficial,
+                      child: Positioned(
+                          left: 0,
+                          bottom: 0,
+                          child: Icon(
+                            Icons.verified,
+                            color: accent,
+                            size: 18,
+                          )))
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Container(
-                height: 60,
-                width: 53,
-                child: Stack(
-                  children: [
-                    ClipOval(
-                      child: Image.asset(
-                        'assets/images/user.jpg',
-                        height: 50,
-                        width: 50,
-                      ),
-                    ),
-                    //官方认证图标
-                    Visibility(
-                        visible: (messageJson['userId'] == '21060231' ||
-                            messageJson['userId'] == 'AI'),
-                        child: Positioned(
-                            left: 0,
-                            bottom: 0,
-                            child: Icon(
-                              Icons.verified,
-                              color: Colors.blueAccent,
-                            )))
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -524,28 +462,26 @@ class ChitChatViewPage extends StatelessWidget {
    * 提示消息
    */
   Widget hintMessage(messageJson) {
-    return Container(
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-          child: Container(
-            constraints: BoxConstraints(minWidth: 100, minHeight: 30),
-            decoration: BoxDecoration(
-                color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['foregroundColor'] as List ),
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text("${messageJson['text']}",style: TextStyle(color:  CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List )),)],
-              ),
+    final Color text = GlassTheme.textColor(_page);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 100, minHeight: 30),
+          decoration: BoxDecoration(
+              color: text.withValues(alpha: .06),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: text.withValues(alpha: .10))),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            child: Text(
+              "${messageJson['text']}",
+              style: TextStyle(
+                  fontSize: 12, color: text.withValues(alpha: .65)),
             ),
           ),
         ),
       ),
     );
   }
-
-  final String data='ss';
-  Widget buildMarkdown() => MarkdownWidget(data: 'ss');
 }

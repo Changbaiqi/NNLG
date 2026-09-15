@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/CourseData.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/module/showCourseSharedSelectDialog.dart';
 
 import 'logic.dart';
@@ -14,11 +15,16 @@ class CourseSharedShowViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logic.context = context;
-    return Scaffold(
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    return GlassBackground(
+      page: 'main_course_view',
+      child: Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         // automaticallyImplyLeading: false,
-        elevation: 1,
+        elevation: 0,
+        foregroundColor: textColor,
         title: Column(
           children: [
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -29,7 +35,7 @@ class CourseSharedShowViewPage extends StatelessWidget {
                       'assets/images/start.png',
                       height: 25,
                       width: 25,
-                      color: Colors.black,
+                      color: textColor,
                     ),
                     onPressed: () {
                       logic.updatePreviousPage();
@@ -37,14 +43,17 @@ class CourseSharedShowViewPage extends StatelessWidget {
                   ),
                   Obx(() => Text(
                     '${state.title.value}',
-                    style: TextStyle(color: Colors.black),
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: textColor),
                   )),
                   IconButton(
                     icon: Image.asset(
                       'assets/images/end.png',
                       height: 25,
                       width: 25,
-                      color: Colors.black,
+                      color: textColor,
                     ),
                     onPressed: () {
                       logic.updateNextPage();
@@ -55,19 +64,22 @@ class CourseSharedShowViewPage extends StatelessWidget {
               Obx(() => Container(
                 padding: EdgeInsets.fromLTRB(5, 5,5, 5),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black38,width: 2),
-                  borderRadius: BorderRadius.all(Radius.circular(5))
+                  border: Border.all(color: textColor.withValues(alpha: .2),width: 1),
+                  borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
                 child: DropdownButton<String>(
                   isDense: true,
                     iconSize: 16,
+                    underline: const SizedBox(),
+                    dropdownColor: GlassTheme.pageBackground('main_course_view'),
                     value: state.selectSemester.value,
+                    style: TextStyle(fontSize: 13, color: textColor),
                     items: state.semesterList.value
                         .map((e) => DropdownMenuItem<String>(
                         value: e,
                         child: Container(
                           alignment: Alignment.centerLeft,
-                          child: Text(e,style: TextStyle(fontSize: 15),),
+                          child: Text(e,style: TextStyle(fontSize: 13, color: textColor),),
                         )))
                         .toList(),
                     onChanged: (value) async {
@@ -78,34 +90,6 @@ class CourseSharedShowViewPage extends StatelessWidget {
                       // state.mfuture = logic.future();
                     }),
               ))
-              // IconButton(
-              //   icon: Column(
-              //     children: [
-              //       Icon(
-              //         Icons.cached_sharp,
-              //         color: Colors.black,
-              //         size: 20,
-              //       ),
-              //       Text(
-              //         '课表同步',
-              //         style: TextStyle(fontSize: 8, color: Colors.black),
-              //       )
-              //     ],
-              //   ),
-              //   onPressed: () {
-              //     Get.snackbar(
-              //       "课表通知",
-              //       "正在同步官网课表...",
-              //       duration: Duration(milliseconds: 1500),
-              //     );
-              //     logic.onRefresh().then((value) => Get.snackbar(
-              //       "课表通知",
-              //       "同步完毕",
-              //       duration: Duration(milliseconds: 1500),
-              //     ));
-              //     //ToastUtil.show('敬请期待...');
-              //   },
-              // )
             ]),
           ],
         ),
@@ -125,11 +109,13 @@ class CourseSharedShowViewPage extends StatelessWidget {
               ? logic.refreshAllCourseTable(state.oldWeekCourseList.value)
               : [
             Center(
-              child: Text("课表加载中......"),
+              child: Text("课表加载中......",
+                  style: TextStyle(
+                      fontSize: 13, color: textColor.withValues(alpha: .6))),
             )
           ],
         ),
       )),
-    );
+    ));
   }
 }

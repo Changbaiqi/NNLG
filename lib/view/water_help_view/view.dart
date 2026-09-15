@@ -1,33 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:markdown_widget/config/configs.dart';
 import 'package:markdown_widget/markdown_widget.dart';
-import 'package:markdown_widget/widget/markdown.dart';
 
-import '../../dao/CustomThemeData.dart';
-import '../../utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
+
 import 'logic.dart';
 import 'state.dart';
 
+/// 打水教程：毛玻璃 + 渐变风格
 class WaterHelpViewPage extends StatelessWidget {
   WaterHelpViewPage({Key? key}) : super(key: key);
 
   final WaterHelpViewLogic logic = Get.put(WaterHelpViewLogic());
   final WaterHelpViewState state = Get.find<WaterHelpViewLogic>().state;
 
+  static const String _page = 'main_water_view';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('教程'),
+    final Color text = GlassTheme.textColor(_page);
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: text,
+          iconTheme: IconThemeData(color: text),
+          title: Text('教程',
+              style: TextStyle(
+                  fontSize: 17, fontWeight: FontWeight.w700, color: text)),
+        ),
+        body: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          children: [
+            GlassCard(
+              page: _page,
+              padding: const EdgeInsets.all(6),
+              child: MarkdownWidget(
+                padding: const EdgeInsets.all(10),
+                shrinkWrap: true,
+                data: txt(),
+                config: MarkdownConfig(configs: [
+                  PConfig(textStyle: TextStyle(color: text)),
+                ]),
+              ),
+            ),
+          ],
+        ),
       ),
-      body: MarkdownWidget(padding:EdgeInsets.all(10),shrinkWrap: true,data: txt(),config: MarkdownConfig(configs: [
-        PConfig(textStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['chit_chat_view']!['textColor'] as List ))),
-      ]),),
     );
   }
 
-  txt(){
+  txt() {
     return '''
 ### 一、绑定账号
 * 1、首先需要使用微信随便扫描某个饮水机的二维码；

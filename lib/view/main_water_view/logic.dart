@@ -15,6 +15,7 @@ import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/dao/WaterData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 import 'package:callo/utils/FileUtils.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/LocationInfoUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
@@ -47,107 +48,133 @@ class MainWaterViewLogic extends GetxController {
 
 
   //绑定显示
-  bingShow(){
-
+  bingShow() {
     String _url = "";
 
-    showDialog(context: context!, builder: (builder){
-
-      return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: Dialog(
-        child: Container(
-          height: 300,
-          decoration: BoxDecoration(
-            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['foregroundColor'] as List ),
-            borderRadius: BorderRadius.circular(20)
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: Text('请输入微信扫码后的链接',style: TextStyle(fontSize: 20,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List )),),
-                  ),
-
-                ],),
-              Column(
-                children: [
-                  Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                    child: TextField(
-                      style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_water_view']!['textColor'] as List )),
-                      decoration: InputDecoration(
-                          labelText: '链接',
-                          hintText: '请输入链接'
+    showDialog(
+        context: context!,
+        barrierColor: Colors.black.withValues(alpha: .35),
+        builder: (builder) {
+          final Color text = GlassTheme.textColor('main_water_view');
+          final Color accent = GlassTheme.accentColor('main_water_view');
+          return MediaQuery(
+              data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0),
+              child: Dialog(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                insetPadding: const EdgeInsets.symmetric(horizontal: 32),
+                child: GlassCard(
+                  page: 'main_water_view',
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      GlassSectionTitle(
+                          page: 'main_water_view', title: '绑定打水账号'),
+                      const SizedBox(height: 6),
+                      Text(
+                        '请输入微信扫码后的链接',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: text.withValues(alpha: .6)),
                       ),
-                      onChanged: (v){
-                        _url = v;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              Padding(padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: Container(
-                  width: MediaQuery.of(context!).size.width,
-                  child: MaterialButton(
-                    onPressed: (){
-                      Get.snackbar("提示", "正在绑定,请稍后.....",duration: Duration(milliseconds: 1500),);
-                      WaterUtil().bindAccount(_url).then(
-                              (value){
-                            if(value!="") {
+                      const SizedBox(height: 10),
+                      TextField(
+                        style: TextStyle(color: text, fontSize: 13.5),
+                        decoration: InputDecoration(
+                          labelText: '链接',
+                          labelStyle: TextStyle(
+                              color: text.withValues(alpha: .6)),
+                          hintText: '请输入链接',
+                          hintStyle: TextStyle(
+                              color: text.withValues(alpha: .35)),
+                          contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 12),
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: text.withValues(alpha: .18))),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  BorderSide(color: accent, width: 1.4)),
+                        ),
+                        onChanged: (v) {
+                          _url = v;
+                        },
+                      ),
+                      const SizedBox(height: 14),
+                      GradientButton(
+                        text: '绑定',
+                        page: 'main_water_view',
+                        height: 44,
+                        onPressed: () {
+                          Get.snackbar("提示", "正在绑定,请稍后.....",
+                              duration: const Duration(milliseconds: 1500));
+                          WaterUtil().bindAccount(_url).then((value) {
+                            if (value != "") {
                               state.bingCard.value = WaterData.cardNum.value;
                               Get.snackbar("提示", "绑定成功",
-                                duration: Duration(milliseconds: 1500),);
-                              // Navigator.pop(context!);
+                                  duration:
+                                      const Duration(milliseconds: 1500));
                               Navigator.pop(builder);
                               //更新数据
                               WaterUtil()
-                                  .getMenoy(
-                                  WaterData.waterAccount.value, WaterData.waterSaler.value)
+                                  .getMenoy(WaterData.waterAccount.value,
+                                      WaterData.waterSaler.value)
                                   .then((value) {
                                 updateMessage(money: value);
                               });
+                            } else {
+                              Get.snackbar("提示", "输入的链接有误",
+                                  duration:
+                                      const Duration(milliseconds: 1500));
                             }
-                            else
-                              Get.snackbar("提示", "输入的链接有误",duration: Duration(milliseconds: 1500),);
                           });
-                    },
-                    child: Text('确定'),
-                    color: Colors.blue,
-                  ),),),
-              Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Container(
-                  width: MediaQuery.of(context!).size.width,
-                  child: MaterialButton(
-                    onPressed: (){
-                      Navigator.pop(builder!);
-                      Get.toNamed(Routes.WaterHelp);
-                    },
-                    child: Text('教程'),
-                    color: Colors.blue,
-                  ),),),
-
-              Padding(padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                child: Container(
-                  width: MediaQuery.of(context!).size.width,
-                  child: MaterialButton(
-                    onPressed: (){
-                      // Navigator.pop(context!);
-                      Navigator.pop(builder!);
-                    },
-                    child: Text('取消'),
-                    color: Colors.white60,
-                  ),),)
-
-
-            ],
-          ),
-        ),
-      ));
-    });
-
-
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GradientButton(
+                              text: '查看教程',
+                              page: 'main_water_view',
+                              height: 42,
+                              colors: const [
+                                Color(0xFF546E7A),
+                                Color(0xFF90A4AE)
+                              ],
+                              onPressed: () {
+                                Navigator.pop(builder!);
+                                Get.toNamed(Routes.WaterHelp);
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: GradientButton(
+                              text: '取消',
+                              page: 'main_water_view',
+                              height: 42,
+                              colors: [
+                                text.withValues(alpha: .35),
+                                text.withValues(alpha: .22)
+                              ],
+                              onPressed: () {
+                                Navigator.pop(builder!);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ));
+        });
   }
-
 
   //用于冷水关闭
   coolCloseWaterButtonCheck(){

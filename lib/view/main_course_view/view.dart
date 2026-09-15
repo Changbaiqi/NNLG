@@ -9,6 +9,7 @@ import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CourseUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/view/module/showCourseSharedSelectDialog.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
@@ -174,32 +175,43 @@ class MainCourseViewPage extends StatelessWidget {
                                 onTap: () {
                                   showDialog(
                                       context: context,
-                                      barrierColor: Colors.transparent,
+                                      barrierColor: Colors.black
+                                          .withValues(alpha: .35),
                                       builder: (builder) {
                                         return Dialog(
-                                          child: Container(
-                                            height: 250,
-                                            decoration: BoxDecoration(
-                                                color: Color.fromARGB(
-                                                    255, 231, 231, 231),
-                                                borderRadius:
-                                                BorderRadius.circular(20)),
-                                            child: Padding(
-                                              padding: EdgeInsets.fromLTRB(
-                                                  10, 10, 10, 10),
-                                              child: ListView(
-                                                children: [
-                                                  Wrap(
-                                                    spacing: 5,
-                                                    runSpacing: 5,
-                                                    alignment:
-                                                    WrapAlignment.center,
-                                                    children: logic
-                                                        .weekChooseWidgetList(
-                                                        builder),
-                                                  )
-                                                ],
-                                              ),
+                                          backgroundColor: Colors.transparent,
+                                          elevation: 0,
+                                          insetPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: 24),
+                                          child: GlassCard(
+                                            page: 'main_course_view',
+                                            padding: const EdgeInsets.fromLTRB(
+                                                16, 16, 16, 12),
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                GlassSectionTitle(
+                                                    page: 'main_course_view',
+                                                    title: '选择周次'),
+                                                const SizedBox(height: 12),
+                                                ConstrainedBox(
+                                                  constraints:
+                                                      const BoxConstraints(
+                                                          maxHeight: 300),
+                                                  child: SingleChildScrollView(
+                                                    child: Wrap(
+                                                      spacing: 8,
+                                                      runSpacing: 8,
+                                                      alignment:
+                                                          WrapAlignment.center,
+                                                      children: logic
+                                                          .weekChooseWidgetList(
+                                                              builder),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         );
@@ -262,6 +274,14 @@ class MainCourseViewPage extends StatelessWidget {
                   )),
                   PopupMenuButton(
                     color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['backgroundColor'] as List),
+                    surfaceTintColor: Colors.transparent,
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(
+                            color: GlassTheme.border('main_course_view'),
+                            width: 1)),
+                    menuPadding: const EdgeInsets.symmetric(vertical: 6),
                     position: PopupMenuPosition.under,
                     icon: _CourseIconTextAction(
                       icon: Icons.menu,
@@ -286,7 +306,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '共享课表',
                                   style:
-                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                                  TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -308,7 +328,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '当前页设为本周',
                                   style:
-                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                                  TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -330,7 +350,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '课表同步历史',
                                   style:
-                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                                  TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],
@@ -352,7 +372,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 child: Text(
                                   '桌面课表小组件',
                                   style:
-                                  TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
+                                  TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List)),
                                 ),
                               )
                             ],

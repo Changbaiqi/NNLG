@@ -1,250 +1,173 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
-import 'package:callo/dao/CustomThemeData.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
+
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/edusys/entity/TrainPlanInForm.dart';
 
 import 'logic.dart';
 
+/// 培养计划（学期课程列表）：毛玻璃 + 渐变风格
 class TrainPlanSemesterViewPage extends StatelessWidget {
   TrainPlanSemesterViewPage({Key? key}) : super(key: key);
 
   final logic = Get.find<TrainPlanSemesterViewLogic>();
   final state = Get.find<TrainPlanSemesterViewLogic>().state;
 
+  static const String _page = 'train_plan_view';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['backgroundColor'] as List),
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text('${state.semester.value}', style: TextStyle(fontSize: 18,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List))),
-            Text(
-              '${state.translate.value}',
-              style: TextStyle(fontSize: 12, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['hintTextColor'] as List)),
-            )
-          ],
-        ),
-        // foregroundColor: Colors.black,
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['foregroundColor'] as List),
+    final Color text = GlassTheme.textColor(_page);
+    return GlassBackground(
+      page: _page,
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 1,
-      ),
-      body: ListView.builder(
-        itemCount: state.dataList.value.length,
-        itemBuilder: (BuildContext context, int index) {
-          // children: state.dataList.value.map((e) => showchildElement(e)).toList();
-          return AnimationConfiguration.staggeredList(
-              position: index,
-              duration: const Duration(milliseconds: 350),
-              child: SlideAnimation(
-                verticalOffset: 50.0,
-                child: FadeInAnimation(
-                  child: showchildElement(state.dataList.value[index]),
-                ),
-              ));
-        },
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          foregroundColor: text,
+          iconTheme: IconThemeData(color: text),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('${state.semester.value}',
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: text)),
+              Text(
+                '${state.translate.value}',
+                style: TextStyle(
+                    fontSize: 11, color: text.withValues(alpha: .55)),
+              ),
+            ],
+          ),
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 120),
+          itemCount: state.dataList.value.length,
+          itemBuilder: (BuildContext context, int index) {
+            return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: const Duration(milliseconds: 350),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
+                  child: FadeInAnimation(
+                    child: showchildElement(state.dataList.value[index]),
+                  ),
+                ));
+          },
+        ),
       ),
     );
   }
 
-  /**
-   * 单个组件
-   */
+  /// 单个课程卡片
   Widget showchildElement(TrainPlanInForm trainPlanInForm) {
-    // int colorR = 0;
-    // int colorG = 0;
-    // int colorB = 0;
-    // while(true){
-    //   colorR =Random().nextInt(255);
-    //   colorG =Random().nextInt(255);
-    //   colorB =Random().nextInt(255);
-    //   if((colorR-colorG).abs()>=40 || (colorG-colorB).abs()>=40)
-    //     break;
-    // }
-
-    //print(json);
-    // json = jsonDecode(json);
-    //var jsson = jsonDecode('{"name":"cc"}');
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-      child: Container(
-        height: 220,
-        // width: 150,
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            // color: Colors.white,
-          color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['itemBackgroundColor'] as List),
-            // color: Color.fromARGB(255, colorR, colorG, colorB),
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black45, blurRadius: 10, offset: Offset(1, 1))
-            ]),
-        child: Stack(children: [
-          Positioned(
-            child: Container(
-              height: 25,
-              width: 25,
-              decoration: BoxDecoration(
-                  color: Colors.black54,
-                  borderRadius: BorderRadius.all(Radius.circular(500))),
-              child: Center(
-                child: Text(
-                  '${trainPlanInForm.number}',
-                  style: TextStyle(fontSize: 18, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
+    final Color text = GlassTheme.textColor(_page);
+    final Color accent = GlassTheme.accentColor(_page);
+    return GlassCard(
+      page: _page,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //序号圆
+              Container(
+                width: 26,
+                height: 26,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [accent, GlassTheme.lighten(accent, .35)],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        color: accent.withValues(alpha: .35),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3))
+                  ],
+                ),
+                child: Center(
+                  child: Text(
+                    '${trainPlanInForm.number}',
+                    style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.white),
+                  ),
                 ),
               ),
-            ),
-            left: 10,
-            top: 10,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '编号：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Container(
-                  width: 100,
-                  child: Text(
-                    '${trainPlanInForm.code}',
-                    style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                    maxLines: 2,
-                  ),
-                )
-              ],
-            ),
-            top: 50,
-            left: 10,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '名称：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
                   '${trainPlanInForm.courseName}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 50,
-            left: 180,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '开课单位：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: text),
                 ),
-                Text(
-                  '${trainPlanInForm.unit}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 90,
-            left: 10,
+              ),
+            ],
           ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '学分：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
-                  '${trainPlanInForm.credit}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 90,
-            left: 180,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '学时：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
-                  '${trainPlanInForm.creditHour}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 130,
-            left: 10,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '考核模式：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
-                  '${trainPlanInForm.evaMode}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 130,
-            left: 180,
-          ),
-          Positioned(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  '课程属性：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
-                  '${trainPlanInForm.property}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 170,
-            left: 10,
-          ),
-          Positioned(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '是否考核：',
-                  style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                ),
-                Text(
-                  '${trainPlanInForm.isExam}',
-                  style: TextStyle(fontSize: 12,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['train_plan_view']!['textColor'] as List)),
-                )
-              ],
-            ),
-            top: 170,
-            left: 180,
-          )
-        ]),
+          const SizedBox(height: 8),
+          Divider(color: text.withValues(alpha: .08), height: 1),
+          const SizedBox(height: 6),
+          _row2('编号', '${trainPlanInForm.code}', '学分',
+              '${trainPlanInForm.credit}'),
+          _row2('开课单位', '${trainPlanInForm.unit}', '学时',
+              '${trainPlanInForm.creditHour}'),
+          _row2('考核模式', '${trainPlanInForm.evaMode}', '课程属性',
+              '${trainPlanInForm.property}'),
+          _row2('是否考核', '${trainPlanInForm.isExam}', '', ''),
+        ],
       ),
+    );
+  }
+
+  /// 两列键值行
+  Widget _row2(String l1, String v1, String l2, String v2) {
+    final Color text = GlassTheme.textColor(_page);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: _kv(l1, v1, text)),
+          if (l2.isNotEmpty) Expanded(child: _kv(l2, v2, text)),
+        ],
+      ),
+    );
+  }
+
+  Widget _kv(String label, String value, Color text) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label,
+            style:
+                TextStyle(fontSize: 12, color: text.withValues(alpha: .5))),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            value,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: 12.5, fontWeight: FontWeight.w600, color: text),
+          ),
+        ),
+      ],
     );
   }
 }

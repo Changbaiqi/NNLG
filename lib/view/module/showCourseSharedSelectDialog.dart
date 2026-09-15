@@ -2,25 +2,19 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:callo/view/Course_SharedView.dart';
+
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/router/Routes.dart';
 
-
-
+/// 共享课表选择弹窗：毛玻璃 + 渐变圆形按钮
 class showCourseSharedSelectDialog extends Dialog {
-
-
+  static const String _page = 'main_course_view';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: Container(
-        decoration: BoxDecoration(boxShadow: [
-          // BoxShadow(color: Colors.white,B)
-        ]),
-        child: _CourseSharedSelect(),
-      ),
+      body: _CourseSharedSelect(),
     );
   }
 }
@@ -32,17 +26,19 @@ class _CourseSharedSelect extends StatefulWidget {
   State<_CourseSharedSelect> createState() => _CourseSharedSelectState();
 }
 
-class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTickerProviderStateMixin {
+class _CourseSharedSelectState extends State<_CourseSharedSelect>
+    with SingleTickerProviderStateMixin {
+  static const String _page = 'main_course_view';
+
   AnimationController? _animationController; //动画控制器
   Animation<double>? _backgroundAnimation; //背景动画
   Animation<double>? _topButtonAnimation;
   Animation<double>? _bottomButtonAnimation; //底部按钮
   Animation<double>? _buttonOpacityAnimation;
 
-
-
   @override
   Widget build(BuildContext context) {
+    final Color accent = GlassTheme.accentColor(_page);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: WillPopScope(
@@ -51,14 +47,18 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
             Align(
               child: InkWell(
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX:_backgroundAnimation!.value,sigmaY:_backgroundAnimation!.value),
+                  filter: ImageFilter.blur(
+                      sigmaX: _backgroundAnimation!.value,
+                      sigmaY: _backgroundAnimation!.value),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                   ),
                 ),
-                onTap: (){
-                  _animationController!.reverse().then((value) => Navigator.pop(context));
+                onTap: () {
+                  _animationController!
+                      .reverse()
+                      .then((value) => Navigator.pop(context));
                 },
               ),
             ),
@@ -69,42 +69,41 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, _topButtonAnimation!.value),
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      child: Opacity(opacity: _buttonOpacityAnimation!.value,child: ElevatedButton(
-                        child: Text('查询'),
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(150)))),
-                        onPressed: () {
-                          // Navigator.of(context).push(MaterialPageRoute(builder: (builder){
-                          //   return Course_SharedView();
-                          // }));
+                    padding: EdgeInsets.fromLTRB(
+                        0, 0, 0, _topButtonAnimation!.value),
+                    child: Opacity(
+                      opacity: _buttonOpacityAnimation!.value,
+                      child: _actionCircle(
+                        label: '查询',
+                        icon: Icons.search_rounded,
+                        colors: [accent, GlassTheme.lighten(accent, .35)],
+                        onTap: () {
                           Get.toNamed(Routes.SharedCourseChoose);
-                          _animationController!.reverse().then((value) => Navigator.pop(context));
+                          _animationController!
+                              .reverse()
+                              .then((value) => Navigator.pop(context));
                         },
-                      ),),
+                      ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, _bottomButtonAnimation!.value, 0, 0),
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      child: Opacity(
-                        opacity: _buttonOpacityAnimation!.value,
-                        child: ElevatedButton(
-                          child: Text('共享'),
-                          style: ButtonStyle(
-                              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(150)))),
-                          onPressed: () {
-                            Get.toNamed(Routes.CourseShared);
-                            _animationController!.reverse().then((value) => Navigator.pop(context));
-                          },
-                        ),
+                    padding:
+                        EdgeInsets.fromLTRB(0, _bottomButtonAnimation!.value, 0, 0),
+                    child: Opacity(
+                      opacity: _buttonOpacityAnimation!.value,
+                      child: _actionCircle(
+                        label: '共享',
+                        icon: Icons.ios_share_rounded,
+                        colors: const [
+                          Color(0xFF546E7A),
+                          Color(0xFF90A4AE)
+                        ],
+                        onTap: () {
+                          Get.toNamed(Routes.CourseShared);
+                          _animationController!
+                              .reverse()
+                              .then((value) => Navigator.pop(context));
+                        },
                       ),
                     ),
                   ),
@@ -114,9 +113,58 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
           ],
         ),
         onWillPop: () async {
-          _animationController!.reverse().then((value) => Navigator.pop(context));
+          _animationController!
+              .reverse()
+              .then((value) => Navigator.pop(context));
           return false;
         },
+      ),
+    );
+  }
+
+  /// 渐变圆形动作按钮
+  Widget _actionCircle({
+    required String label,
+    required IconData icon,
+    required List<Color> colors,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      height: 112,
+      width: 112,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: colors,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colors.first.withValues(alpha: .40),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          )
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onTap,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: Colors.white, size: 30),
+              const SizedBox(height: 6),
+              Text(label,
+                  style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -129,31 +177,30 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect> with SingleTic
    * [param] null
    * [return]
    */
-  backgroundAnimation(){
-
-    _animationController = AnimationController(vsync: this,
-        duration: const Duration(milliseconds: 200));
+  backgroundAnimation() {
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 200));
 
     CurvedAnimation(parent: _animationController!, curve: Curves.decelerate); //动画效果
-    _animationController!.addListener(() {setState(() {
-
-    }); });
-
+    _animationController!.addListener(() {
+      setState(() {});
+    });
 
     //背景动画
-    _backgroundAnimation = Tween(begin: 0.0,end: 20.0).animate(_animationController!); //动画绑定值
+    _backgroundAnimation =
+        Tween(begin: 0.0, end: 20.0).animate(_animationController!); //动画绑定值
 
-    _topButtonAnimation = Tween(begin: 30.0,end: 10.0).animate(_animationController!); //顶部按钮
-    _buttonOpacityAnimation = Tween(begin: 0.0,end: 1.0).animate(_animationController!); //透明度
+    _topButtonAnimation =
+        Tween(begin: 30.0, end: 10.0).animate(_animationController!); //顶部按钮
+    _buttonOpacityAnimation =
+        Tween(begin: 0.0, end: 1.0).animate(_animationController!); //透明度
 
-    _bottomButtonAnimation = Tween(begin: 20.0,end: 10.0).animate(_animationController!); //底部按钮
-
+    _bottomButtonAnimation =
+        Tween(begin: 20.0, end: 10.0).animate(_animationController!); //底部按钮
 
     _animationController!.forward();
-
-
-
   }
+
   @override
   void initState() {
     super.initState();

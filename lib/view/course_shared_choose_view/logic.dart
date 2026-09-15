@@ -3,6 +3,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:callo/entity/model/ShareCourseAccountModel.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/router/Routes.dart';
 
 import 'state.dart';
@@ -33,6 +34,7 @@ class CourseSharedChooseViewLogic extends GetxController {
         ),
       )
           : ListView.builder(
+        padding: EdgeInsets.only(bottom: 16),
         itemCount: state.accountList.value.length,
         itemBuilder: (BuildContext contxt, int index) {
           return AnimationConfiguration.staggeredList(
@@ -59,36 +61,32 @@ class CourseSharedChooseViewLogic extends GetxController {
    * [return]
    */
   Widget accountCard(json) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Card(
-        child: InkWell(
-          child: Container(
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              height: 85,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('姓名：${json['studentName']}'),
-                            Text('学号：${json['userAccount']}'),
-                            Text('专业班级：${json['studentClass']}'),
-                          ],
-                        ),
-                      )),
-                ],
-              )),
-          onTap: (){
-            Get.toNamed(Routes.CourseSharedShow, arguments: {'data': json});
-          },
-        ),
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    return GlassCard(
+      page: 'main_course_view',
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 13, 16, 13),
+      onTap: () {
+        Get.toNamed(Routes.CourseSharedShow, arguments: {'data': json});
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text('姓名：${json['studentName']}',
+              style: TextStyle(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                  color: textColor)),
+          const SizedBox(height: 5),
+          Text('学号：${json['userAccount']}',
+              style: TextStyle(
+                  fontSize: 12, color: textColor.withValues(alpha: .65))),
+          const SizedBox(height: 3),
+          Text('专业班级：${json['studentClass']}',
+              style: TextStyle(
+                  fontSize: 12, color: textColor.withValues(alpha: .65))),
+        ],
       ),
     );
   }
@@ -111,6 +109,7 @@ class CourseSharedChooseViewLogic extends GetxController {
         LottieBuilder.asset('assets/images/searchLoadingLottie.json'),
       )
           : Obx(() => ListView.builder(
+          padding: EdgeInsets.only(bottom: 16),
           scrollDirection: Axis.vertical,
           itemCount: state.searchList.value.length,
           itemBuilder: (BuildContext contxt, int index) {
@@ -138,63 +137,55 @@ class CourseSharedChooseViewLogic extends GetxController {
    * [return]
    */
   Widget searchCard(String searchTxT, json) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Card(
-        child: InkWell(
-          child: Container(
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-              height: 85,
-              child: Stack(
-                alignment: Alignment.center,
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    return GlassCard(
+      page: 'main_course_view',
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 13, 16, 13),
+      onTap: () {
+        Get.toNamed(Routes.CourseSharedShow, arguments: {'data': json});
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          RichText(
+            text: TextSpan(
                 children: [
-                  Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            RichText(
-                              text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: '姓名：',
-                                        style: TextStyle(color: Colors.black))
-                                  ]..addAll(buildText(
-                                      searchTxT, '${json['studentName']}'))),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: '学号：',
-                                        style: TextStyle(color: Colors.black))
-                                  ]..addAll(buildText(
-                                      searchTxT, '${json['userAccount']}'))),
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: '专业年级：',
-                                        style: TextStyle(color: Colors.black))
-                                  ]..addAll(buildText(
-                                      searchTxT, '${json['studentClass']}'))),
-                            ),
-                            // Text('姓名：${json['studentName'] ?? ''}'),
-                            // Text('学号：${json['shareAccount'] ?? ''}'),
-                            // Text('专业班级：${json['studentClass'] ?? ''}'),
-                          ],
-                        ),
-                      )),
-                ],
-              )),
-          onTap: (){
-            Get.toNamed(Routes.CourseSharedShow, arguments: {'data': json});
-          },
-        ),
+                  TextSpan(
+                      text: '姓名：',
+                      style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w600,
+                          color: textColor))
+                ]..addAll(buildText(
+                    searchTxT, '${json['studentName']}'))),
+          ),
+          const SizedBox(height: 5),
+          RichText(
+            text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: '学号：',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: textColor.withValues(alpha: .65)))
+                ]..addAll(buildText(
+                    searchTxT, '${json['userAccount']}'))),
+          ),
+          const SizedBox(height: 3),
+          RichText(
+            text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: '专业年级：',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: textColor.withValues(alpha: .65)))
+                ]..addAll(buildText(
+                    searchTxT, '${json['studentClass']}'))),
+          ),
+        ],
       ),
     );
   }
@@ -208,16 +199,18 @@ class CourseSharedChooseViewLogic extends GetxController {
    * [return]
    */
   List<TextSpan> buildText(String searchTxT, String dataTxt) {
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    final Color accent = GlassTheme.accentColor('main_course_view');
     List<TextSpan> list = [];
     List<String> strList = dataTxt.split('${searchTxT}');
     for (int i = 0; i < strList.length; ++i) {
       list.add(TextSpan(
-          text: '${strList[i]}', style: TextStyle(color: Colors.black)));
+          text: '${strList[i]}', style: TextStyle(color: textColor)));
       if (i != strList.length - 1)
         list.add(TextSpan(
             text: '${searchTxT}',
             style:
-            TextStyle(color: Colors.black, fontWeight: FontWeight.w900)));
+            TextStyle(color: accent, fontWeight: FontWeight.w900)));
     }
     return list;
   }

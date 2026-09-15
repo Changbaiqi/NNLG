@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 import 'logic.dart';
 
@@ -15,16 +16,29 @@ class CourseSharedViewPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Scaffold(
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    return Obx(() => GlassBackground(
+        page: 'main_course_view',
+        child: Scaffold(
+        backgroundColor: Colors.transparent,
         appBar: AppBar(
           automaticallyImplyLeading: !state.isSearch.value,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: textColor,
           title: Stack(
             alignment: Alignment.center,
             children: [
               AnimatedCrossFade(
                   firstChild: Align(
                     alignment: Alignment.centerLeft,
-                    child: Text('共享'),
+                    child: Text(
+                      '共享',
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                          color: textColor),
+                    ),
                   ),
                   secondChild: Align(
                     alignment: Alignment.center,
@@ -35,14 +49,33 @@ class CourseSharedViewPage extends StatelessWidget {
                           child: TextField(
                             textInputAction: TextInputAction.search,
                             controller: state.searchController.value,
+                            style: TextStyle(fontSize: 14, color: textColor),
+                            cursorColor:
+                                GlassTheme.accentColor('main_course_view'),
                             decoration: InputDecoration(
                                 hintText: '搜索',
+                                hintStyle: TextStyle(
+                                    fontSize: 14,
+                                    color: textColor.withValues(alpha: .45)),
                                 contentPadding:
                                     EdgeInsets.fromLTRB(20, 0, 50, 0),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(50),
                                     borderSide: BorderSide(
-                                        color: Colors.black38, width: 2.0)),),
+                                        color: textColor.withValues(alpha: .25),
+                                        width: 1.5)),
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                    borderSide: BorderSide(
+                                        color:
+                                            textColor.withValues(alpha: .18),
+                                        width: 1.2)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                    borderSide: BorderSide(
+                                        color: GlassTheme.accentColor(
+                                            'main_course_view'),
+                                        width: 1.5))),
                             onSubmitted: (value){
                               //检测输入框数据是否为空
                               if (state.searchTxtIsEmpty.value) {
@@ -85,7 +118,6 @@ class CourseSharedViewPage extends StatelessWidget {
               )
             ],
           ),
-          elevation: 0,
         ),
         body: WillPopScope(
           child: Obx(() => state.isSearch.value
@@ -101,7 +133,7 @@ class CourseSharedViewPage extends StatelessWidget {
             Get.back(); //退出当前页面
             return false;
           },
-        )));
+        ))));
   }
 
   /**
@@ -123,6 +155,7 @@ class CourseSharedViewPage extends StatelessWidget {
               ),
             )
           : ListView.builder(
+              padding: EdgeInsets.only(bottom: 16),
               itemCount: state.shareList.value.length,
               itemBuilder: (BuildContext contxt, int index) {
                 return AnimationConfiguration.staggeredList(
@@ -156,6 +189,7 @@ class CourseSharedViewPage extends StatelessWidget {
                   LottieBuilder.asset('assets/images/searchLoadingLottie.json'),
             )
           : Obx(() => ListView.builder(
+              padding: EdgeInsets.only(bottom: 16),
               itemCount: state.searchList.value.length,
               itemBuilder: (BuildContext contxt, int index) {
                 return AnimationConfiguration.staggeredList(
@@ -172,6 +206,28 @@ class CourseSharedViewPage extends StatelessWidget {
     );
   }
 
+  /// 右侧操作按钮（删除/分享）
+  Widget _actionButton({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: color.withValues(alpha: .12),
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          width: 42,
+          height: 42,
+          alignment: Alignment.center,
+          child: Icon(icon, color: color, size: 20),
+        ),
+      ),
+    );
+  }
+
   /**
    * [title]
    * [author] 长白崎
@@ -181,59 +237,43 @@ class CourseSharedViewPage extends StatelessWidget {
    * [return]
    */
   Widget accountCard(json) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Card(
-        child: Container(
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            height: 85,
-            child: Stack(
-              alignment: Alignment.center,
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    return GlassCard(
+      page: 'main_course_view',
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 13, 12, 13),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('姓名：${json['studentName']}'),
-                          Text('学号：${json['shareAccount']}'),
-                          Text('专业班级：${json['studentClass']}'),
-                        ],
-                      ),
-                    )),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: 88,
-                        child: ElevatedButton(
-                            style: ButtonStyle(
-                                padding:
-                                    MaterialStateProperty.all(EdgeInsets.zero),
-                                backgroundColor:
-                                    MaterialStateProperty.all(Colors.red),
-                                shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(10),
-                                            bottomRight:
-                                                Radius.circular(10))))),
-                            onPressed: () {
-                              state.deleteShareMeShare(
-                                  json, json['shareAccount']);
-                            },
-                            child: Icon(Icons.delete)),
-                      )
-                    ],
-                  ),
-                )
+                Text('姓名：${json['studentName']}',
+                    style: TextStyle(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w600,
+                        color: textColor)),
+                const SizedBox(height: 5),
+                Text('学号：${json['shareAccount']}',
+                    style: TextStyle(
+                        fontSize: 12, color: textColor.withValues(alpha: .65))),
+                const SizedBox(height: 3),
+                Text('专业班级：${json['studentClass']}',
+                    style: TextStyle(
+                        fontSize: 12, color: textColor.withValues(alpha: .65))),
               ],
-            )),
+            ),
+          ),
+          const SizedBox(width: 10),
+          _actionButton(
+            icon: Icons.delete_outline_rounded,
+            color: const Color(0xFFE53935),
+            onTap: () {
+              state.deleteShareMeShare(json, json['shareAccount']);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -247,118 +287,95 @@ class CourseSharedViewPage extends StatelessWidget {
    * [return]
    */
   Widget searchCard(String searchTxT, json) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-      child: Card(
-        child: Container(
-            // padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-            height: 85,
-            child: Stack(
-              alignment: Alignment.center,
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    final Color accent = GlassTheme.accentColor('main_course_view');
+    final bool isShare = json['isShare'] == true;
+    return GlassCard(
+      page: 'main_course_view',
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      padding: const EdgeInsets.fromLTRB(16, 13, 12, 13),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        height: 88,
-                        child: ElevatedButton(
-                          style: ButtonStyle(
-                              padding:
-                                  MaterialStateProperty.all(EdgeInsets.zero),
-                              backgroundColor: MaterialStateProperty.all(
-                                  json['isShare']
-                                      ? Colors.red
-                                      : Colors.blueAccent),
-                              shape: MaterialStateProperty.all(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(10),
-                                          bottomRight: Radius.circular(10))))),
-                          onPressed: () {
-                            //如果分享了
-                            if (json['isShare']) {
-                              print(json);
-                              state.deleteShareMeShare(
-                                  json, json['shareAccount']); //删除
-                            } else {
-                              // 如果没分享
-                              state.addShareMeShare(json, json['shareAccount']);
-                            }
-                          },
-                          child: json['isShare']
-                              ? Icon(
-                                  Icons.delete,
-                                  color: Colors.white,
-                                )
-                              : Icon(
-                                  Icons.share,
-                                  color: Colors.white,
-                                ),
-                        ),
-                      )
-                    ],
-                  ),
+                RichText(
+                  text: TextSpan(
+                      children: [
+                    TextSpan(
+                        text: '姓名：',
+                        style: TextStyle(
+                            fontSize: 13.5,
+                            fontWeight: FontWeight.w600,
+                            color: textColor))
+                  ]..addAll(buildText(
+                          searchTxT, '${json['studentName']}'))),
                 ),
-                Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                                children: [
-                              TextSpan(
-                                  text: '姓名：',
-                                  style: TextStyle(color: Colors.black))
-                            ]..addAll(buildText(
-                                    searchTxT, '${json['studentName']}'))),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                children: [
-                              TextSpan(
-                                  text: '学号：',
-                                  style: TextStyle(color: Colors.black))
-                            ]..addAll(buildText(
-                                    searchTxT, '${json['shareAccount']}'))),
-                          ),
-                          RichText(
-                            text: TextSpan(
-                                children: [
-                              TextSpan(
-                                  text: '专业年级：',
-                                  style: TextStyle(color: Colors.black))
-                            ]..addAll(buildText(
-                                    searchTxT, '${json['studentClass']}'))),
-                          ),
-                          // Text('姓名：${json['studentName'] ?? ''}'),
-                          // Text('学号：${json['shareAccount'] ?? ''}'),
-                          // Text('专业班级：${json['studentClass'] ?? ''}'),
-                        ],
-                      ),
-                    )),
+                const SizedBox(height: 5),
+                RichText(
+                  text: TextSpan(
+                      children: [
+                    TextSpan(
+                        text: '学号：',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: textColor.withValues(alpha: .65)))
+                  ]..addAll(buildText(
+                          searchTxT, '${json['shareAccount']}'))),
+                ),
+                const SizedBox(height: 3),
+                RichText(
+                  text: TextSpan(
+                      children: [
+                    TextSpan(
+                        text: '专业年级：',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: textColor.withValues(alpha: .65)))
+                  ]..addAll(buildText(
+                          searchTxT, '${json['studentClass']}'))),
+                ),
               ],
-            )),
+            ),
+          ),
+          const SizedBox(width: 10),
+          _actionButton(
+            icon: isShare
+                ? Icons.delete_outline_rounded
+                : Icons.ios_share_rounded,
+            color: isShare ? const Color(0xFFE53935) : accent,
+            onTap: () {
+              //如果分享了
+              if (isShare) {
+                print(json);
+                state.deleteShareMeShare(
+                    json, json['shareAccount']); //删除
+              } else {
+                // 如果没分享
+                state.addShareMeShare(json, json['shareAccount']);
+              }
+            },
+          ),
+        ],
       ),
     );
   }
 
   List<TextSpan> buildText(String searchTxT, String dataTxt) {
+    final Color textColor = GlassTheme.textColor('main_course_view');
+    final Color accent = GlassTheme.accentColor('main_course_view');
     List<TextSpan> list = [];
     List<String> strList = dataTxt.split('${searchTxT}');
     for (int i = 0; i < strList.length; ++i) {
       list.add(TextSpan(
-          text: '${strList[i]}', style: TextStyle(color: Colors.black)));
+          text: '${strList[i]}', style: TextStyle(color: textColor)));
       if (i != strList.length - 1)
         list.add(TextSpan(
             text: '${searchTxT}',
             style:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.w900)));
+                TextStyle(color: accent, fontWeight: FontWeight.w900)));
     }
     return list;
   }

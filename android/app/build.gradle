@@ -14,12 +14,12 @@ android {
             localProperties.load(reader)
         }
     }
-    //加载签名配置文件
-    def signPropertiesFile = rootProject.file('sign/key.properties')
-    if (signPropertiesFile.exists()) {
-        signPropertiesFile.withReader('UTF-8') { reader ->
-            localProperties.load(reader)
-        }
+    //加载签名配置文件（独立解析，避免与版本配置混用）
+    def keystoreProperties = new Properties()
+    def keystorePropertiesFile = rootProject.file('sign/key.properties')
+    if (keystorePropertiesFile.exists()) {
+        // 统一将反斜杠转为正斜杠，避免 Windows 路径中的 \r \n 等被 Properties 当成转义字符
+        keystoreProperties.load(new StringReader(keystorePropertiesFile.getText('UTF-8').replace('\\', '/')))
     }
 
     namespace = "com.cbq.callocollege"
@@ -55,12 +55,14 @@ android {
 
     signingConfigs {
         release {
-            storeFile file(localProperties.getProperty('storeFile'))
-            storePassword localProperties.getProperty('storePassword')
-            keyAlias localProperties.getProperty('keyAlias')
-            keyPassword localProperties.getProperty('keyPassword')
-            v1SigningEnabled true
-            v2SigningEnabled true
+            if (keystorePropertiesFile.exists()) {
+                storeFile = rootProject.file(keystoreProperties.getProperty('storeFile'))
+                storePassword = keystoreProperties.getProperty('storePassword')
+                keyAlias = keystoreProperties.getProperty('keyAlias')
+                keyPassword = keystoreProperties.getProperty('keyPassword')
+            }
+            v1SigningEnabled = true
+            v2SigningEnabled = true
         }
     }
     buildTypes {

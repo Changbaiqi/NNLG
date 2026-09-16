@@ -104,6 +104,8 @@ class ShareDateUtil{
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
 
+    //课表数据与主题都就绪后，刷新一次桌面课表小组件（内容+配色）
+    CourseWidgetUtil.updateCourseWidget();
 
   }
 

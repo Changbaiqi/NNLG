@@ -45,46 +45,44 @@ class AccountSafeViewPage extends StatelessWidget {
                 GlassCard(
                   page: _page,
                   padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(GlassTokens.radius),
-                    onTapUp: (v) => state.eyeState.value = false,
-                    onTapDown: (v) => state.eyeState.value = true,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('按住查看教务系统密码',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w700,
-                                      color: text)),
-                              const SizedBox(height: 6),
-                              Text('您的学号：${LoginData.account}',
+                  onTapDown: (v) => state.eyeState.value = true,
+                  onTapUp: (v) => state.eyeState.value = false,
+                  onTapCancel: () => state.eyeState.value = false,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('按住查看教务系统密码',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: text)),
+                            const SizedBox(height: 6),
+                            Text('您的学号：${LoginData.account}',
+                                style: TextStyle(
+                                    fontSize: 12.5,
+                                    color: text.withValues(alpha: .55))),
+                            const SizedBox(height: 2),
+                            Obx(() => Text(
+                                  '您的密码：${state.eyeState.value ? LoginData.password : '******'}',
                                   style: TextStyle(
                                       fontSize: 12.5,
-                                      color: text.withValues(alpha: .55))),
-                              const SizedBox(height: 2),
-                              Obx(() => Text(
-                                    '您的密码：${state.eyeState.value ? LoginData.password : '******'}',
-                                    style: TextStyle(
-                                        fontSize: 12.5,
-                                        color: text.withValues(alpha: .55)),
-                                  )),
-                            ],
-                          ),
+                                      color: text.withValues(alpha: .55)),
+                                )),
+                          ],
                         ),
-                        Obx(() => Image.asset(
-                              state.eyeState.value
-                                  ? 'assets/images/open_eye.png'
-                                  : 'assets/images/close_eye.png',
-                              height: 18,
-                              width: 18,
-                              color: text.withValues(alpha: .7),
-                            )),
-                      ],
-                    ),
+                      ),
+                      Obx(() => Image.asset(
+                            state.eyeState.value
+                                ? 'assets/images/open_eye.png'
+                                : 'assets/images/close_eye.png',
+                            height: 18,
+                            width: 18,
+                            color: text.withValues(alpha: .7),
+                          )),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 12),

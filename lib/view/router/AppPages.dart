@@ -56,6 +56,7 @@ import 'package:callo/view/train_plan_view/binding.dart';
 import 'package:callo/view/train_plan_view/view.dart';
 import 'package:callo/view/water_charge_view/binding.dart';
 import 'package:callo/view/water_charge_view/view.dart';
+import 'package:callo/view/widget_guide_view/view.dart';
 
 import 'Routes.dart';
 
@@ -84,6 +85,7 @@ abstract class AppPages{
     GetPage(name: Routes.CourseSharedShow, page:()=> CourseSharedShowViewPage(),binding: CourseSharedShowViewBinding()), // 共享课表查看页面
     GetPage(name: Routes.CourseShared, page:()=> CourseSharedViewPage(),binding: CourseSharedViewBinding()), // 共享课表查看页面
     GetPage(name: Routes.CourseSet, page: ()=>CourseSetViewPage(),binding: CourseSetViewBinding()), //课表设置页面
+    GetPage(name: Routes.WidgetGuide, page: () => const WidgetGuideViewPage()), //桌面小组件添加教程
     GetPage(name: Routes.AuthenticationStandards, page:()=> AuthenticationStandardsViewPage(),binding: AuthenticationStandardsViewBinding()), // 认证说明
     GetPage(name: Routes.NnlgCommunity, page: ()=>NnlgCommunityViewPage(),binding: NnlgCommunityViewBinding()), //校园社区
     GetPage(name: Routes.AccountSafe, page: ()=>AccountSafeViewPage(),binding: AccountSafeViewBinding()), //账号安全与隐私

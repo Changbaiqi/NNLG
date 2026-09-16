@@ -18,6 +18,9 @@ object CourseWidgetData {
 
     val DEFAULT_TEXT = 0xFF222222.toInt()
     val DEFAULT_SUB = 0x99000000.toInt()
+    //深色卡片（#1C1C1E）上的高对比默认色，避免文字与背景糊在一起
+    val DARK_TEXT = 0xFFEDEDED.toInt()
+    val DARK_SUB = 0xFFAFAFAF.toInt()
     val DEFAULT_ACCENT = 0xFF7C4DFF.toInt()
 
     private val WEEK_NAMES =
@@ -33,10 +36,12 @@ object CourseWidgetData {
     }
 
     fun textColor(root: JSONObject?): Int =
-        root?.optInt("text", DEFAULT_TEXT) ?: DEFAULT_TEXT
+        root?.optInt("text", if (isDark(root)) DARK_TEXT else DEFAULT_TEXT)
+            ?: DEFAULT_TEXT
 
     fun subColor(root: JSONObject?): Int =
-        root?.optInt("sub", DEFAULT_SUB) ?: DEFAULT_SUB
+        root?.optInt("sub", if (isDark(root)) DARK_SUB else DEFAULT_SUB)
+            ?: DEFAULT_SUB
 
     fun accentColor(root: JSONObject?): Int =
         root?.optInt("accent", DEFAULT_ACCENT) ?: DEFAULT_ACCENT
@@ -116,7 +121,8 @@ object CourseWidgetData {
             row.setViewVisibility(R.id.item_status, android.view.View.GONE)
         }
 
-        val alpha = if (isFinished(end)) 0.45f else 1f
+        //已结束课程降低存在感，但深色卡片上要保留足够对比
+        val alpha = if (isFinished(end)) 0.55f else 1f
         row.setFloat(R.id.item_name, "setAlpha", alpha)
         row.setFloat(R.id.item_info, "setAlpha", alpha)
         row.setFloat(R.id.item_bar, "setAlpha", alpha)

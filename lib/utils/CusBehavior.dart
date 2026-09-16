@@ -1,15 +1,20 @@
-import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 /**
- * 消除滑动时缓冲蓝条
+ * 统一的滚动行为：
+ * - 果冻感来自 Bouncing 弹性回弹（纯位移，避免 shader 拉伸与毛玻璃叠加产生阴影）
+ * - 不使用任何越界指示器（发光/拉伸都会在毛玻璃渐变页面上产生阴影跳变）
  */
-class CusBehavior extends ScrollBehavior {
+class CusBehavior extends MaterialScrollBehavior {
+  const CusBehavior();
+
   @override
-  Widget buildViewportChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection) {
-    if (Platform.isAndroid || Platform.isFuchsia) return child;
-    return super.buildOverscrollIndicator(context, child,ScrollableDetails(direction: axisDirection));
+  ScrollPhysics getScrollPhysics(BuildContext context) =>
+      const BouncingScrollPhysics(parent: ClampingScrollPhysics());
+
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context, Widget child, ScrollableDetails details) {
+    return child;
   }
 }

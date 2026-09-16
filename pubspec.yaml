@@ -239,6 +239,11 @@ flutter:
     - assets/files/scheduleJson.json
     - assets/files/testCourse.json
     - assets/files/aboutMe.md
+    - assets/files/smallElementCourse.md
+    - assets/files/widget_guide_1.jpeg
+    - assets/files/widget_guide_2.jpeg
+    - assets/files/widget_guide_3.jpeg
+    - assets/files/widget_guide_4.jpeg
     - assets/theme/atriTheme.json
     - assets/theme/blackTheme.json
     - assets/theme/blueTheme.json

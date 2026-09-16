@@ -8,6 +8,7 @@ import 'package:callo/dao/ClassScheduleDatabase.dart';
 import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
+import 'package:callo/utils/CusBehavior.dart';
 import 'package:callo/utils/GlassUI.dart';
 
 import 'dao/ClassScheduleDao.dart';
@@ -20,10 +21,48 @@ Color _themeBackground() => GlassTheme.pageBackground('main_view');
 /// 否则推送页面时会出现白色闪烁
 ThemeData _appTheme() {
   final Color bg = _themeBackground();
+  // 点击水波纹跟随主题：深色主题用柔和白光、浅色主题用柔和暗光，
+  // 默认的 InkSparkle 在深色页面上会闪出亮白色星芒，与主题很不搭
+  final Color onBg = GlassTheme.textColor('main_view');
   final ThemeData base = ThemeData.fallback();
   return base.copyWith(
     scaffoldBackgroundColor: bg,
     colorScheme: base.colorScheme.copyWith(surface: bg),
+    // 页面滚动到 AppBar 下方时不要突然出现着色/阴影（透明导航栏上会呈现为阴影跳变）
+    appBarTheme: const AppBarTheme(
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+    ),
+    splashFactory: InkRipple.splashFactory,
+    splashColor: onBg.withValues(alpha: .08),
+    highlightColor: onBg.withValues(alpha: .04),
+    hoverColor: onBg.withValues(alpha: .04),
+    focusColor: onBg.withValues(alpha: .06),
+    // 按钮的按压态默认取 colorScheme.primary（未换肤时的紫白色），一并跟随主题
+    elevatedButtonTheme:
+        ElevatedButtonThemeData(style: _pressOverlayStyle(onBg)),
+    textButtonTheme: TextButtonThemeData(style: _pressOverlayStyle(onBg)),
+    outlinedButtonTheme:
+        OutlinedButtonThemeData(style: _pressOverlayStyle(onBg)),
+    iconButtonTheme: IconButtonThemeData(style: _pressOverlayStyle(onBg)),
+  );
+}
+
+/// 按钮按压/悬停态颜色（跟随主题文字色，避免默认紫白色高亮）
+ButtonStyle _pressOverlayStyle(Color onBg) {
+  return ButtonStyle(
+    overlayColor: WidgetStateProperty.resolveWith((states) {
+      if (states.contains(WidgetState.pressed)) {
+        return onBg.withValues(alpha: .12);
+      }
+      if (states.contains(WidgetState.hovered) ||
+          states.contains(WidgetState.focused)) {
+        return onBg.withValues(alpha: .06);
+      }
+      return null;
+    }),
   );
 }
 
@@ -88,9 +127,12 @@ class MyApp extends StatelessWidget {
                 theme: _appTheme(),
                 // 转场/页面切换时窗口底色跟随主题，避免白色闪烁
                 color: _themeBackground(),
-                builder: (context, child) => ColoredBox(
-                      color: _themeBackground(),
-                      child: child ?? const SizedBox.shrink(),
+                builder: (context, child) => ScrollConfiguration(
+                      behavior: const CusBehavior(),
+                      child: ColoredBox(
+                        color: _themeBackground(),
+                        child: child ?? const SizedBox.shrink(),
+                      ),
                     )),
           ),
         ),

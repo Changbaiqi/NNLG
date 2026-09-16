@@ -16,6 +16,7 @@ class Routes{
   static const MainWater = '/main/water';
   static const MainCommunity = '/main/community';
   static const CourseSet = '/course/set';
+  static const WidgetGuide = '/course/widgetGuide';
   static const ChitChat = '/chitchat';
   static const AboutMe = '/aboutMe';
   static const ScoreInquiry='/ScoreInquiry';

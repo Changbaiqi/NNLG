@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:callo/utils/GlassUI.dart';
+import 'package:callo/view/router/Routes.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 
 /// 与原生 MainActivity 通信的快捷方式通道
@@ -195,6 +196,28 @@ void _showAddDesktopGuide({required bool pinSupported}) {
                       color: textColor.withValues(alpha: .8)),
                 ),
                 SizedBox(height: 18),
+                SizedBox(
+                  width: double.infinity,
+                  child: SizedBox(
+                    height: 44,
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(dialogContext);
+                        Get.toNamed(Routes.WidgetGuide);
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: textColor.withValues(alpha: .08),
+                        foregroundColor: textColor.withValues(alpha: .85),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                      ),
+                      child: const Text('查看添加教程',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
                   child: GradientButton(

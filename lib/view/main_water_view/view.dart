@@ -34,7 +34,8 @@ class MainWaterViewPage extends StatelessWidget {
             )),
         body: RefreshIndicator(
           color: GlassTheme.accentColor(_page),
-          backgroundColor: Colors.white,
+          backgroundColor: GlassTheme.surface(_page),
+          elevation: 0,
           onRefresh: logic.onRefresh,
           child: ListView(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 120),

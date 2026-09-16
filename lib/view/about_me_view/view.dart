@@ -38,6 +38,7 @@ class AboutMeViewPage extends StatelessWidget {
                       color: text)),
             ),
             body: ListView(
+              //果冻回弹由全局的 _JellyScrollBehavior 提供
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
               children: [
                 //应用信息

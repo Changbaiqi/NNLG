@@ -40,31 +40,51 @@ class CourseWidgetUtil {
       }
 
       final dynamic theme = CustomThemeData.nowThemeData.value['main_course_view'];
-      final Color textColor =
-          _themeColor(theme is Map ? theme['textColor'] : null) ??
-              const Color(0xFF222222);
       final Color bgColor =
           _themeColor(theme is Map ? theme['backgroundColor'] : null) ??
               Colors.white;
+      final bool isDark = bgColor.computeLuminance() < 0.45;
+      final double bgLum = bgColor.computeLuminance();
+
+      Color textColor =
+          _themeColor(theme is Map ? theme['textColor'] : null) ??
+              (isDark ? const Color(0xFFEDEDED) : const Color(0xFF222222));
+      //主题文字色与卡片底色过于接近时（如黑色主题），换成高对比默认色
+      if ((textColor.computeLuminance() - bgLum).abs() < 0.35) {
+        textColor = isDark ? const Color(0xFFEDEDED) : const Color(0xFF222222);
+      }
+
       final dynamic todayItem =
           theme is Map ? theme['todayCourseItemColor'] : null;
-      final Color accentColor =
+      Color accentColor =
           _themeColor(todayItem is Map ? todayItem['borderColor'] : null) ??
               _themeColor(theme is Map ? theme['nowWeekColor'] : null) ??
               const Color(0xFF7C4DFF);
+      //该颜色在主题中是描边/背景用途（黑色主题里接近纯黑），
+      //用作小组件文字时按卡片底色提亮/压暗，保证可读
+      if (isDark && accentColor.computeLuminance() < 0.35) {
+        accentColor = Color.lerp(accentColor, Colors.white, .55)!;
+      } else if (!isDark && accentColor.computeLuminance() > 0.75) {
+        accentColor = Color.lerp(accentColor, Colors.black, .35)!;
+      }
 
-      //数据版本号：数据变化时让桌面重建列表适配器，保证一定刷新
+      //副文字用不透明混色，避免深色卡片上叠加透明度过暗
+      final Color subColor =
+          Color.lerp(textColor, bgColor, isDark ? .35 : .4)!;
+
+      //数据版本号：数据或配色发生变化时让桌面重建列表适配器，保证一定刷新
       final int dataVersion =
           '${CourseData.schoolOpenTime.value}|${CourseData.ansWeek.value}|${jsonEncode(weeks)}'
+                  '|${textColor.toARGB32()}|${subColor.toARGB32()}|${accentColor.toARGB32()}|pv2'
               .hashCode;
 
       final Map<String, dynamic> payload = {
         'v': dataVersion,
         'open': CourseData.schoolOpenTime.value,
         'ans': CourseData.ansWeek.value,
-        'dark': bgColor.computeLuminance() < 0.45,
+        'dark': isDark,
         'text': textColor.toARGB32(),
-        'sub': textColor.withValues(alpha: 0.55).toARGB32(),
+        'sub': subColor.toARGB32(),
         'accent': accentColor.toARGB32(),
         'weeks': weeks,
       };

@@ -233,6 +233,9 @@ class GlassCard extends StatelessWidget {
     this.padding = const EdgeInsets.all(16),
     this.margin,
     this.onTap,
+    this.onTapDown,
+    this.onTapUp,
+    this.onTapCancel,
     this.radius = GlassTokens.radius,
     this.blur = GlassTokens.blur,
     this.gradient,
@@ -244,6 +247,9 @@ class GlassCard extends StatelessWidget {
   final EdgeInsetsGeometry padding;
   final EdgeInsetsGeometry? margin;
   final VoidCallback? onTap;
+  final GestureTapDownCallback? onTapDown;
+  final GestureTapUpCallback? onTapUp;
+  final GestureTapCancelCallback? onTapCancel;
   final double radius;
   final double blur;
   final Gradient? gradient;
@@ -268,6 +274,9 @@ class GlassCard extends StatelessWidget {
             child: InkWell(
               borderRadius: BorderRadius.circular(radius),
               onTap: onTap,
+              onTapDown: onTapDown,
+              onTapUp: onTapUp,
+              onTapCancel: onTapCancel,
               child: Padding(padding: padding, child: child),
             ),
           ),
@@ -344,6 +353,8 @@ class GradientButton extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             borderRadius: BorderRadius.circular(height / 2.6),
+            splashColor: Colors.white.withValues(alpha: .18),
+            highlightColor: Colors.white.withValues(alpha: .08),
             onTap: onPressed,
             child: Center(
               child: Row(

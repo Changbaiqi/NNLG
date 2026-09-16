@@ -48,7 +48,7 @@ class MainCourseViewPage extends StatelessWidget {
                       height: MediaQuery.of(context).size.height,
                       child: Image.network(
                         // 'https://t.mwm.moe/fj/',
-                        'https://imgapi.xl0408.top/index.php',
+                        'https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302',
                         fit: BoxFit.cover,
                         gaplessPlayback: true,
                         cacheWidth: _bgCacheWidth(context),

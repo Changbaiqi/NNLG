@@ -626,7 +626,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                           color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['textColor'] as List),
                         ),
                       ),
-                      maxLines: 4,
+                      maxLines: 8,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

@@ -82,8 +82,11 @@ android {
             debuggable false
             signingConfig signingConfigs.release // 关联 signingConfigs
 
-            minifyEnabled false //禁用混淆
-            shrinkResources false
+            //开启 R8 代码压缩 + 资源压缩（大幅减小 dex/资源体积）
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
     // 保留或调整 splits 配置（用于 ABI 拆分）

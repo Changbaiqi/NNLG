@@ -53,8 +53,7 @@ dependencies:
   image_gallery_saver_plus: ^5.1.1 #保存图片使用
   image_picker: ^0.8.6 #本地图片选择
 #  amap_flutter_map: ^3.0.0 #高德地图
-  amap_map: ^1.0.12
-#  amap_flutter_location: ^3.0.0 #高德定位
+  #  amap_flutter_location: ^3.0.0 #高德定位
   flutter_pickers: ^2.1.8
   flutter_svg: ^2.0.17 #用于加载svg图标
 
@@ -127,9 +126,6 @@ flutter:
   assets:
     - assets/images/ic_launcher.png
     - assets/images/NNLG.png
-    - assets/images/2.0x/NNLG.png
-    - assets/images/3.0x/NNLG.png
-    - assets/images/4.0x/NNLG.png
     - assets/images/userClip.png
     - assets/images/2.0x/userClip.png
     - assets/images/3.0x/userClip.png
@@ -150,7 +146,6 @@ flutter:
     - assets/images/2.0x/backLogin.png
     - assets/images/3.0x/backLogin.png
     - assets/images/4.0x/backLogin.png
-    - assets/images/backgroundTest.jpg
     - assets/images/user.jpg
     - assets/images/2.0x/user.jpg
     - assets/images/3.0x/user.jpg
@@ -172,9 +167,6 @@ flutter:
     - assets/images/3.0x/course.png
     - assets/images/4.0x/course.png
     - assets/images/xiaobei_gzt.jpg
-    - assets/images/2.0x/xiaobei_gzt.jpg
-    - assets/images/3.0x/xiaobei_gzt.jpg
-    - assets/images/4.0x/xiaobei_gzt.jpg
     - assets/images/xiaobei_title.png
     - assets/images/2.0x/xiaobei_title.png
     - assets/images/3.0x/xiaobei_title.png

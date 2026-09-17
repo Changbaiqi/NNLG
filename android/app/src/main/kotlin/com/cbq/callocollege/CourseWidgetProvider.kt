@@ -134,7 +134,8 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             val compact = minHeight < 120
             val padding =
                 ((if (compact) 10 else 14) * context.resources.displayMetrics.density).toInt()
-            views.setViewPadding(R.id.widget_root, padding, padding, padding, padding)
+            //内边距加在内容层，背景图才能铺满整个组件
+            views.setViewPadding(R.id.widget_content, padding, padding, padding, padding)
 
             views.setInt(
                 R.id.widget_root,
@@ -142,6 +143,24 @@ class CourseWidgetProvider : HomeWidgetProvider() {
                 if (CourseWidgetData.isDark(root)) R.drawable.widget_card_bg_dark
                 else R.drawable.widget_card_bg_light
             )
+
+            //自定义背景图：在 App 进程解码后随 RemoteViews 下发，透明度按设置应用
+            val bgPath = root?.optString("bgPath", "") ?: ""
+            val bgAlpha = root?.optDouble("bgAlpha", 0.0) ?: 0.0
+            val bgBitmap =
+                if (bgPath.isNotEmpty() && bgAlpha > 0.01)
+                    loadWidgetBackground(context, bgPath)
+                else null
+            if (bgBitmap != null) {
+                views.setImageViewBitmap(R.id.widget_bg, bgBitmap)
+                views.setFloat(
+                    R.id.widget_bg, "setAlpha",
+                    bgAlpha.toFloat().coerceIn(0f, 1f)
+                )
+                views.setViewVisibility(R.id.widget_bg, View.VISIBLE)
+            } else {
+                views.setViewVisibility(R.id.widget_bg, View.GONE)
+            }
             views.setTextColor(R.id.tv_date, textColor)
             views.setTextColor(R.id.tv_week, subColor)
             views.setTextColor(R.id.tv_count, accentColor)
@@ -195,7 +214,8 @@ class CourseWidgetProvider : HomeWidgetProvider() {
 
             val usesService = setCourseListAdapter(
                 context, views, rows, appWidgetId,
-                root.optLong("v", 0L), textColor, subColor, accentColor, plan, dark
+                root.optLong("v", 0L), textColor, subColor, accentColor, plan, dark,
+                root.optBoolean("noon", true)
             )
             if (usesService) {
                 notifyListChanged(appWidgetManager, intArrayOf(appWidgetId))
@@ -224,6 +244,7 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             accentColor: Int,
             plan: CourseWidgetData.DayPlan,
             dark: Boolean,
+            showNoon: Boolean,
         ): Boolean {
             val launchIntent =
                 HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java)
@@ -234,11 +255,15 @@ class CourseWidgetProvider : HomeWidgetProvider() {
                 for (i in 0 until rows.length()) {
                     val course = rows.optJSONObject(i) ?: continue
                     val highlight = i == plan.highlightIndex
+                    //下午第一节且上面还有课程时，显示午休分割线
+                    val noonDivider =
+                        showNoon && i > 0 && course.optInt("n", 0) == 1
                     val row = CourseWidgetData.buildRow(
                         context, course, textColor, subColor, accentColor,
                         statusText = if (highlight) plan.highlightText else null,
                         highlight = highlight,
                         dark = dark,
+                        noonDivider = noonDivider,
                     )
                     row.setOnClickPendingIntent(R.id.item_root, launchIntent)
                     builder.addItem(i.toLong(), row)
@@ -257,6 +282,64 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             }
             views.setRemoteAdapter(appWidgetId, R.id.course_list, serviceIntent)
             return true
+        }
+
+        /** 解码小组件背景图：最长边超过 900px 时按 2 的幂降采样，并按卡片圆角裁切 */
+        private fun loadWidgetBackground(
+            context: Context,
+            path: String,
+        ): android.graphics.Bitmap? {
+            return try {
+                val bounds = android.graphics.BitmapFactory.Options().apply {
+                    inJustDecodeBounds = true
+                }
+                android.graphics.BitmapFactory.decodeFile(path, bounds)
+                if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
+                var sample = 1
+                val maxSide = maxOf(bounds.outWidth, bounds.outHeight)
+                while (maxSide / sample > 900) sample *= 2
+                val options = android.graphics.BitmapFactory.Options().apply {
+                    inSampleSize = sample
+                }
+                val bitmap = android.graphics.BitmapFactory.decodeFile(path, options)
+                    ?: return null
+                roundCorners(
+                    bitmap,
+                    20f * context.resources.displayMetrics.density
+                )
+            } catch (e: Exception) {
+                Log.e(TAG, "loadWidgetBackground failed", e)
+                null
+            }
+        }
+
+        /** 把背景图圆角裁切，与卡片圆角保持一致（避免出现直角白边） */
+        private fun roundCorners(
+            source: android.graphics.Bitmap,
+            radiusPx: Float,
+        ): android.graphics.Bitmap {
+            val width = source.width
+            val height = source.height
+            if (width <= 0 || height <= 0) return source
+            val output = android.graphics.Bitmap.createBitmap(
+                width, height, android.graphics.Bitmap.Config.ARGB_8888
+            )
+            val canvas = android.graphics.Canvas(output)
+            val paint = android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+            val path = android.graphics.Path().apply {
+                addRoundRect(
+                    android.graphics.RectF(0f, 0f, width.toFloat(), height.toFloat()),
+                    radiusPx, radiusPx, android.graphics.Path.Direction.CW
+                )
+            }
+            canvas.drawARGB(0, 0, 0, 0)
+            paint.color = android.graphics.Color.BLACK
+            canvas.drawPath(path, paint)
+            paint.xfermode = android.graphics.PorterDuffXfermode(
+                android.graphics.PorterDuff.Mode.SRC_IN
+            )
+            canvas.drawBitmap(source, 0f, 0f, paint)
+            return output
         }
 
         private fun showEmpty(views: RemoteViews) {

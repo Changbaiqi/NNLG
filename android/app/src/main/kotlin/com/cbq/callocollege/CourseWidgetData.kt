@@ -182,6 +182,7 @@ object CourseWidgetData {
         statusText: String? = null,
         highlight: Boolean = false,
         dark: Boolean = false,
+        noonDivider: Boolean = false,
     ): RemoteViews {
         val row = RemoteViews(context.packageName, R.layout.course_widget_item)
         val name = course.optString("n", "课程")
@@ -242,6 +243,17 @@ object CourseWidgetData {
                 0
             }
         )
+
+        //午休分割线：下午第一节上方显示一条细线 + “午休”
+        if (noonDivider) {
+            row.setViewVisibility(R.id.noon_wrap, android.view.View.VISIBLE)
+            row.setTextColor(R.id.noon_text, withAlpha(textColor, 0.5f))
+            val lineColor = withAlpha(textColor, 0.14f)
+            row.setInt(R.id.noon_line_left, "setBackgroundColor", lineColor)
+            row.setInt(R.id.noon_line_right, "setBackgroundColor", lineColor)
+        } else {
+            row.setViewVisibility(R.id.noon_wrap, android.view.View.GONE)
+        }
 
         //已结束的课程会在 plan() 中被过滤掉，这里不再做淡化处理
         return row

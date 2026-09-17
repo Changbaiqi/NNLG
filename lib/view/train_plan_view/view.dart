@@ -34,30 +34,43 @@ class TrainPlanViewPage extends StatelessWidget {
               style: TextStyle(
                   fontSize: 17, fontWeight: FontWeight.w700, color: text)),
         ),
-        body: Obx(() => state.mapList.value.length == 0
-            ? Center(
+        body: Obx(() {
+          final List<String> keys = state.mapList.value.keys.toList();
+          if (keys.isEmpty) {
+            return Center(
                 child: Lottie.asset('assets/images/loading.json',
-                    height: 200, width: 200))
-            : ListView.builder(
-                padding: const EdgeInsets.fromLTRB(0, 8, 0, 120),
-                itemCount: state.mapList.value.length,
-                itemBuilder: (BuildContext context, int index) {
-                  List<String> keys = state.mapList.value.keys.toList();
-                  return AnimationConfiguration.staggeredList(
-                    position: index,
-                    duration: const Duration(milliseconds: 350),
-                    child: SlideAnimation(
-                      verticalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: listChild(keys[index],
-                            state.translate.value[state.total.value++]),
-                      ),
-                    ),
-                  );
-                },
-              )),
+                    height: 200, width: 200));
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 120),
+            itemCount: keys.length,
+            itemBuilder: (BuildContext context, int index) {
+              return AnimationConfiguration.staggeredList(
+                position: index,
+                duration: const Duration(milliseconds: 350),
+                child: SlideAnimation(
+                  verticalOffset: 50.0,
+                  child: FadeInAnimation(
+                    //注意：这里不能用递增计数器取 translate，
+                    //重建（返回页面）时下标会越界导致白屏
+                    child: listChild(keys[index], _translateOf(index)),
+                  ),
+                ),
+              );
+            },
+          );
+        }),
       ),
     );
+  }
+
+  /// 学期序号对应的“大X上/下学期”名称，越界时回退为“第N学期”
+  String _translateOf(int index) {
+    final List<String> translateList = state.translate.value;
+    if (index >= 0 && index < translateList.length) {
+      return translateList[index];
+    }
+    return '第${index + 1}学期';
   }
 
   //学期列表选项

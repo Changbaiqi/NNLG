@@ -55,6 +55,14 @@ class ShareDateUtil{
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
     await getIsPictureBackground(); //获取是否开启背景图
+    //课表小组件自定义背景相关
+    await getIsCourseWidgetCustomBackground();
+    await getIsCourseWidgetRandomQuadraticBackground();
+    await getIsCourseWidgetUrlBackground();
+    await getIsCourseWidgetLocalBackground();
+    await getCourseWidgetBackgroundFilePath();
+    await getCourseWidgetBackgroundInputUrl();
+    await getCourseWidgetBackgroundOpacity();
     await getIsRandomQuadraticBackground(); //获取是否为二次元随机图片
     await getIsUrlBackground(); //获取是否为url图片
     await getIsCustomerLocalBackground(); //获取是否为本地图片
@@ -829,6 +837,121 @@ class ShareDateUtil{
   Future<void> setIsPictureBackground(bool isPictureBackground) async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isPictureBackground', isPictureBackground).then((value) => CourseData.isPictureBackground.value = isPictureBackground);
+  }
+
+  //获取课表小组件是否自定义背景
+  Future<bool> getIsCourseWidgetCustomBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? value = await prefs.getBool('isCourseWidgetCustomBackground');
+    CourseData.isCourseWidgetCustomBackground.value = value??false;
+    return value??false;
+  }
+
+  //设置课表小组件是否自定义背景（立即刷新小组件）
+  Future<void> setIsCourseWidgetCustomBackground(bool value) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCourseWidgetCustomBackground', value).then((v) {
+      CourseData.isCourseWidgetCustomBackground.value = value;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件是否为随机二次元背景
+  Future<bool> getIsCourseWidgetRandomQuadraticBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? value = await prefs.getBool('isCourseWidgetRandomQuadraticBackground');
+    CourseData.isCourseWidgetRandomQuadraticBackground.value = value??false;
+    return value??false;
+  }
+
+  //设置课表小组件是否为随机二次元背景（立即刷新小组件）
+  Future<void> setIsCourseWidgetRandomQuadraticBackground(bool value) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCourseWidgetRandomQuadraticBackground', value).then((v) {
+      CourseData.isCourseWidgetRandomQuadraticBackground.value = value;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件是否为URL背景
+  Future<bool> getIsCourseWidgetUrlBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? value = await prefs.getBool('isCourseWidgetUrlBackground');
+    CourseData.isCourseWidgetUrlBackground.value = value??false;
+    return value??false;
+  }
+
+  //设置课表小组件是否为URL背景（立即刷新小组件）
+  Future<void> setIsCourseWidgetUrlBackground(bool value) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCourseWidgetUrlBackground', value).then((v) {
+      CourseData.isCourseWidgetUrlBackground.value = value;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件是否为本地图片背景
+  Future<bool> getIsCourseWidgetLocalBackground() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool? value = await prefs.getBool('isCourseWidgetLocalBackground');
+    CourseData.isCourseWidgetLocalBackground.value = value??false;
+    return value??false;
+  }
+
+  //设置课表小组件是否为本地图片背景（立即刷新小组件）
+  Future<void> setIsCourseWidgetLocalBackground(bool value) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isCourseWidgetLocalBackground', value).then((v) {
+      CourseData.isCourseWidgetLocalBackground.value = value;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件本地背景图路径
+  Future<void> getCourseWidgetBackgroundFilePath() async{
+    final prefs = await SharedPreferences.getInstance();
+    CourseData.courseWidgetBackgroundFilePath.value =
+        await prefs.getString('courseWidgetBackgroundFilePath')??"";
+  }
+
+  //设置课表小组件本地背景图路径（立即刷新小组件）
+  Future<void> setCourseWidgetBackgroundFilePath(String path) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('courseWidgetBackgroundFilePath', path).then((v) {
+      CourseData.courseWidgetBackgroundFilePath.value = path;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件URL背景图url
+  Future<void> getCourseWidgetBackgroundInputUrl() async{
+    final prefs = await SharedPreferences.getInstance();
+    CourseData.courseWidgetBackgroundInputUrl.value =
+        await prefs.getString('courseWidgetBackgroundInputUrl')??"";
+  }
+
+  //设置课表小组件URL背景图url（立即刷新小组件）
+  Future<void> setCourseWidgetBackgroundInputUrl(String url) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('courseWidgetBackgroundInputUrl', url).then((v) {
+      CourseData.courseWidgetBackgroundInputUrl.value = url;
+      CourseWidgetUtil.updateCourseWidget();
+    });
+  }
+
+  //获取课表小组件背景透明度
+  Future<void> getCourseWidgetBackgroundOpacity() async{
+    final prefs = await SharedPreferences.getInstance();
+    CourseData.courseWidgetBackgroundOpacity.value =
+        await prefs.getDouble('courseWidgetBackgroundOpacity')??0.35;
+  }
+
+  //设置课表小组件背景透明度
+  Future<void> setCourseWidgetBackgroundOpacity(double opacity) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('courseWidgetBackgroundOpacity', opacity).then((v) {
+      CourseData.courseWidgetBackgroundOpacity.value = opacity;
+    });
   }
 
   //获取是否为纯色背景课表

@@ -32,7 +32,10 @@ class MainWaterViewPage extends StatelessWidget {
               child: Text('加载中...',
                   style: TextStyle(color: GlassTheme.textColor(_page))),
             )),
-        body: RefreshIndicator(
+        //适配状态栏/挖孔摄像头：内容下移，渐变背景保持全屏
+        body: SafeArea(
+          bottom: false,
+          child: RefreshIndicator(
           color: GlassTheme.accentColor(_page),
           backgroundColor: GlassTheme.surface(_page),
           elevation: 0,
@@ -117,6 +120,7 @@ class MainWaterViewPage extends StatelessWidget {
                 child: bingAccount(),
               ),
             ],
+          ),
           ),
         ),
       ),

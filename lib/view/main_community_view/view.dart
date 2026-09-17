@@ -23,7 +23,10 @@ class MainCommunityViewPage extends StatelessWidget {
           backgroundColor: GlassTheme.pageBackground(_page),
           body: GlassBackground(
             page: _page,
-            child: ListView(
+            //适配状态栏/挖孔摄像头：内容下移，渐变背景保持全屏
+            child: SafeArea(
+              bottom: false,
+              child: ListView(
               padding: const EdgeInsets.only(bottom: 120),
               children: [
                 _statCard(),
@@ -44,6 +47,7 @@ class MainCommunityViewPage extends StatelessWidget {
                   child: logic.bindDormCard(),
                 ),
               ],
+            ),
             ),
           ),
         ));

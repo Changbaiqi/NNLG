@@ -25,6 +25,7 @@ class CourseRowFactory(private val context: Context) :
     private var subColor = CourseWidgetData.DEFAULT_SUB
     private var accentColor = CourseWidgetData.DEFAULT_ACCENT
     private var dark = false
+    private var showNoon = true
 
     override fun onCreate() {
         load()
@@ -42,6 +43,7 @@ class CourseRowFactory(private val context: Context) :
         subColor = CourseWidgetData.subColor(root)
         accentColor = CourseWidgetData.accentColor(root)
         dark = CourseWidgetData.isDark(root)
+        showNoon = root?.optBoolean("noon", true) ?: true
     }
 
     override fun getCount(): Int = rows?.length() ?: 0
@@ -50,11 +52,14 @@ class CourseRowFactory(private val context: Context) :
         val course = rows?.optJSONObject(position) ?: return null
         val currentPlan = plan
         val highlight = currentPlan != null && position == currentPlan.highlightIndex
+        //下午第一节且上面还有课程时，显示午休分割线
+        val noonDivider = showNoon && position > 0 && course.optInt("n", 0) == 1
         val row = CourseWidgetData.buildRow(
             context, course, textColor, subColor, accentColor,
             statusText = if (highlight) currentPlan?.highlightText else null,
             highlight = highlight,
             dark = dark,
+            noonDivider = noonDivider,
         )
         // 与 ListView 的 PendingIntent 模板配合，点击整行打开 App
         row.setOnClickFillInIntent(R.id.item_root, Intent(Intent.ACTION_VIEW))

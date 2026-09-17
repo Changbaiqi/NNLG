@@ -38,11 +38,11 @@ class MainUserViewPage extends StatelessWidget {
         body: ShowCaseWidget(
           builder: (showCaseContext) {
             logic.showCaseContext = showCaseContext;
-            return MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
+            //适配状态栏/挖孔摄像头：用真实安全区代替写死的 44 顶部间距
+            return SafeArea(
+                bottom: false,
                 child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 44, 16, 130),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 130),
                   children: [
                     _profileCard(context),
                     const SizedBox(height: 18),

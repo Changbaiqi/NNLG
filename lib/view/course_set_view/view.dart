@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
@@ -439,6 +440,288 @@ class CourseSetViewPage extends StatelessWidget {
               ),
             ),
             onTap: () {},
+          ),
+          //课表小组件自定义背景
+          InkWell(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '课表小组件自定义背景',
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+                            ),
+                            Text(
+                              '此选项可以调整课表小组件的背景图片',
+                              style: TextStyle(
+                                  fontSize: 11.5, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: Row(
+                          children: [
+                            Obx(() => Switch(
+                                activeColor: GlassTheme.accentColor('course_set_view'),
+                                value: CourseData.isCourseWidgetCustomBackground.value,
+                                onChanged: (v) {
+                                  ShareDateUtil().setIsCourseWidgetCustomBackground(v);
+                                }))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Visibility(
+                    child: Container(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          //小组件背景透明度
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '小组件背景透明度   ${(CourseData.courseWidgetBackgroundOpacity.value * 100).toInt()}',
+                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Slider(
+                                        value: CourseData.courseWidgetBackgroundOpacity.value,
+                                        onChanged: (v) {
+                                          ShareDateUtil().setCourseWidgetBackgroundOpacity(double.parse(v.toStringAsFixed(3)));
+                                        },
+                                        onChangeEnd: (v) {
+                                          CourseWidgetUtil.updateCourseWidget();
+                                        })
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          //随机二次元背景图
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Container(
+                                height: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '随机二次元背景图',
+                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                      child: Row(
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Obx(() => Transform.scale(
+                                            scale: 0.7,
+                                            child: Switch(
+                                                activeColor: GlassTheme.accentColor('course_set_view'),
+                                                value: CourseData.isCourseWidgetRandomQuadraticBackground.value,
+                                                onChanged: (v) {
+                                                  ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(v);
+                                                  if (v) {
+                                                    ShareDateUtil().setIsCourseWidgetUrlBackground(false);
+                                                    ShareDateUtil().setIsCourseWidgetLocalBackground(false);
+                                                  }
+                                                }),
+                                          ))
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          //自定义图片URL背景图
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Container(
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '自定义图片URL背景图',
+                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                          child: Row(
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Obx(() => Transform.scale(
+                                                scale: 0.7,
+                                                child: Switch(
+                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+                                                    value: CourseData.isCourseWidgetUrlBackground.value,
+                                                    onChanged: (v) {
+                                                      ShareDateUtil().setIsCourseWidgetUrlBackground(v);
+                                                      if (v) {
+                                                        ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(false);
+                                                        ShareDateUtil().setIsCourseWidgetLocalBackground(false);
+                                                      }
+                                                    }),
+                                              ))
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(35, 0, 20, 0),
+                                      child: TextField(
+                                          controller: logic.widgetBackGroundUrlController,
+                                          onSubmitted: (v) {
+                                            ShareDateUtil().setCourseWidgetBackgroundInputUrl(v);
+                                          },
+                                          decoration: InputDecoration(
+                                            label: Text('URL',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
+                                            hintText: '请输入图片URL链接',
+                                            hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
+                                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
+                                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
+                                          )),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          //自定义背景图
+                          InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Container(
+                                height: 100,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                '自定义背景图',
+                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                          child: Row(
+                                            children: [
+                                              Obx(() => Transform.scale(
+                                                scale: 0.7,
+                                                child: Switch(
+                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+                                                    value: CourseData.isCourseWidgetLocalBackground.value,
+                                                    onChanged: (v) {
+                                                      ShareDateUtil().setIsCourseWidgetLocalBackground(v);
+                                                      if (v) {
+                                                        ShareDateUtil().setIsCourseWidgetUrlBackground(false);
+                                                        ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(false);
+                                                      }
+                                                    }),
+                                              ))
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Container(
+                                      height: 35,
+                                      width: MediaQuery.of(Get.context!).size.width,
+                                      child: Padding(
+                                        padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ))
+                                            ),
+                                            onPressed: () async {
+                                              await logic.getWidgetImage();
+                                            },
+                                            child: Text('选择图片',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    visible: CourseData.isCourseWidgetCustomBackground.value,
+                  )
+                ],
+              ),
+            ),
+            onTap: () {
+              ShareDateUtil()
+                  .setIsCourseWidgetCustomBackground(!CourseData.isCourseWidgetCustomBackground.value);
+            },
           ),
           InkWell(
             child: Padding(

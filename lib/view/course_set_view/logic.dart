@@ -24,6 +24,38 @@ class CourseSetViewLogic extends GetxController {
   final CourseSetViewState state = CourseSetViewState();
   final ImagePicker picker = ImagePicker();
   final TextEditingController backGroundUrlController = TextEditingController();
+  //课表小组件自定义背景URL输入框
+  final TextEditingController widgetBackGroundUrlController = TextEditingController();
+
+  /// 选择课表小组件的本地背景图
+  Future getWidgetImage() async {
+    final pickerImages = await picker.pickImage(source: ImageSource.gallery);
+    if (pickerImages != null) {
+      if (CourseData.courseWidgetBackgroundFilePath.value != "") {
+        try {
+          await File(CourseData.courseWidgetBackgroundFilePath.value).delete();
+        } catch (_) {}
+      }
+      String fileName = await getFileHash(pickerImages.path);
+      File _imgPath = File(pickerImages.path);
+      await getApplicationDocumentsDirectory().then((value) async {
+        final String newPath =
+            value.path + '/courseWidgetBackground_${fileName}.jpg';
+        await _imgPath.copy(newPath);
+        await ShareDateUtil().setCourseWidgetBackgroundFilePath(newPath);
+        await ShareDateUtil().setIsCourseWidgetLocalBackground(true);
+        await ShareDateUtil().setIsCourseWidgetUrlBackground(false);
+        await ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(false);
+      });
+      Get.snackbar(
+        "课表通知",
+        "选择图片成功",
+        duration: Duration(milliseconds: 1500),
+      );
+    } else {
+      print('没有照片可以选择');
+    }
+  }
 
 
   Future<String> getFileHash(String filePath) async {
@@ -253,10 +285,17 @@ class CourseSetViewLogic extends GetxController {
   @override
   void onInit() {
     backGroundUrlController.text = CourseData.courseBackgroundInputUrl.value;
+    widgetBackGroundUrlController.text =
+        CourseData.courseWidgetBackgroundInputUrl.value;
   }
 
   @override
   void onClose() {
     ShareDateUtil().setCourseBackgroundInputUrl(backGroundUrlController.text);
+    if (widgetBackGroundUrlController.text !=
+        CourseData.courseWidgetBackgroundInputUrl.value) {
+      ShareDateUtil()
+          .setCourseWidgetBackgroundInputUrl(widgetBackGroundUrlController.text);
+    }
   }
 }

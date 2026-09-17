@@ -327,9 +327,14 @@ class GlassBlurGate extends StatefulWidget {
   State<GlassBlurGate> createState() => _GlassBlurGateState();
 }
 
+/// Tab 切换等页面内滑动期间临时关闭模糊（由外层在滑动开始时置位），
+/// 避免 BackdropFilter 跟随位移每帧重新采样导致掉帧
+final ValueNotifier<bool> glassBlurSuppress = ValueNotifier<bool>(false);
+
 class _GlassBlurGateState extends State<GlassBlurGate> {
   Animation<double>? _animation;
   Animation<double>? _secondaryAnimation;
+  Route<dynamic>? _route;
   bool _blurred = true;
 
   static bool _settled(Animation<double>? animation) {
@@ -340,7 +345,11 @@ class _GlassBlurGateState extends State<GlassBlurGate> {
   }
 
   void _sync() {
-    final bool blurred = _settled(_animation) && _settled(_secondaryAnimation);
+    //弹窗/底部弹层（PopupRoute）内容小而入场动画短，
+    //保持模糊避免"动画播完才突然出现模糊"；只有整页路由转场才临时关闭模糊
+    final bool isPopup = _route is PopupRoute;
+    final bool blurred = !glassBlurSuppress.value &&
+        (isPopup || (_settled(_animation) && _settled(_secondaryAnimation)));
     if (blurred != _blurred) {
       setState(() => _blurred = blurred);
     }
@@ -352,6 +361,7 @@ class _GlassBlurGateState extends State<GlassBlurGate> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    _route = route;
     final Animation<double>? animation = route?.animation;
     final Animation<double>? secondary = route?.secondaryAnimation;
     if (!identical(animation, _animation)) {
@@ -369,6 +379,7 @@ class _GlassBlurGateState extends State<GlassBlurGate> {
 
   @override
   void dispose() {
+    glassBlurSuppress.removeListener(_sync);
     _animation?.removeStatusListener(_handleStatus);
     _secondaryAnimation?.removeStatusListener(_handleStatus);
     super.dispose();

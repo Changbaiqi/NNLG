@@ -24,7 +24,9 @@ class NnlgCommunityViewPage extends StatelessWidget {
         },
       ),
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(FloatingActionButtonLocation.endFloat,1,-90),
-      body: isClose.value?Container(child: Center(child: Text('暂未开放，敬请期待',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['nnlg_community_view']!['textColor'] as List )),),),):Column(
+      body: SafeArea(
+        bottom: false,
+        child: isClose.value?Container(child: Center(child: Text('暂未开放，敬请期待',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['nnlg_community_view']!['textColor'] as List )),),),):Column(
         children: [
           Container(
               height: 100,
@@ -51,6 +53,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
             ],
           ),flex: 1,)
         ],
+      ),
       ),
     );
   }

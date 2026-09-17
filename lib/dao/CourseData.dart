@@ -52,6 +52,14 @@ class CourseData{
   static final courseBackgroundInputUrl = "".obs; //手动输入的背景图片url
   static final courseBackgroundOpacity = 0.0.obs; //背景透明度
 
+  static final isCourseWidgetCustomBackground = false.obs; //课表小组件是否自定义背景
+  static final isCourseWidgetRandomQuadraticBackground = false.obs; //课表小组件是否为随机二次元背景
+  static final isCourseWidgetUrlBackground = false.obs; //课表小组件是否为URL背景
+  static final isCourseWidgetLocalBackground = false.obs; //课表小组件是否为本地图片背景
+  static final courseWidgetBackgroundFilePath = "".obs; //课表小组件本地背景图片路径
+  static final courseWidgetBackgroundInputUrl = "".obs; //课表小组件URL背景图片url
+  static final courseWidgetBackgroundOpacity = 0.35.obs; //课表小组件背景透明度
+
   static final newOrOldCourseScheduleChoose = true.obs; //是采用新课表还是旧课表，true为新课表，默认也为新课表
   static final isMinForSchedule = false.obs; //是否为小节显示
   //每大节的时间

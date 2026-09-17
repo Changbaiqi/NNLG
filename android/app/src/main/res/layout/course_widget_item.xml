@@ -3,71 +3,116 @@
     android:id="@+id/item_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingStart="10dp"
-    android:paddingEnd="10dp"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp">
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/item_bar"
-        android:layout_width="4dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="10dp"
-        android:background="#FF7C4DFF"
-        android:scaleType="fitXY"
-        android:contentDescription="@null" />
-
+    <!-- 午休分割线：显示在下午第一节课程上方 -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/noon_wrap"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noon_line_left"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#1F000000"
+            android:contentDescription="@null" />
 
         <TextView
-            android:id="@+id/item_name"
-            android:layout_width="match_parent"
+            android:id="@+id/noon_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#FF222222"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:text="午休"
+            android:textColor="#80000000"
+            android:textSize="9sp" />
 
-        <TextView
-            android:id="@+id/item_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textColor="#99000000"
-            android:textSize="10.5sp" />
-
-        <TextView
-            android:id="@+id/item_room"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:maxLines="2"
-            android:textColor="#CC000000"
-            android:textSize="11sp"
-            android:visibility="gone" />
+        <ImageView
+            android:id="@+id/noon_line_right"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:background="#1F000000"
+            android:contentDescription="@null" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/item_status"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/row_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:paddingStart="7dp"
-        android:paddingEnd="7dp"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:text="上课中"
-        android:textColor="#FF22C55E"
-        android:textSize="9sp"
-        android:textStyle="bold"
-        android:visibility="gone" />
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
+
+        <ImageView
+            android:id="@+id/item_bar"
+            android:layout_width="4dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="10dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitXY"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#FF222222"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="#99000000"
+                android:textSize="10.5sp" />
+
+            <TextView
+                android:id="@+id/item_room"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:maxLines="2"
+                android:textColor="#CC000000"
+                android:textSize="11sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/item_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:text="上课中"
+            android:textColor="#FF22C55E"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+    </LinearLayout>
 </LinearLayout>

@@ -3,10 +3,13 @@
  * @Description TODO 桌面课表小组件数据构建与刷新
  */
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:home_widget/home_widget.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
@@ -21,6 +24,11 @@ class CourseWidgetUtil {
   //与原生通信（进程内刷新小组件，避免部分系统限制广播）
   static const MethodChannel _refreshChannel =
       MethodChannel('com.cbq.callocollege/shortcut');
+
+  //随机二次元背景缓存标记：同一会话内最多每小时重新下载一次
+  static DateTime? _randomBgDownloadAt;
+  static String? _cachedBgSignature;
+  static String? _cachedBgPath;
 
   /// 构建并刷新桌面小组件数据（整学期课表，原生按当天日期取今日课程）
   static Future<void> updateCourseWidget() async {
@@ -40,10 +48,12 @@ class CourseWidgetUtil {
       }
 
       final dynamic theme = CustomThemeData.nowThemeData.value['main_course_view'];
-      final Color bgColor =
+      final Color themeBg =
           _themeColor(theme is Map ? theme['backgroundColor'] : null) ??
               Colors.white;
-      final bool isDark = bgColor.computeLuminance() < 0.45;
+      final bool isDark = themeBg.computeLuminance() < 0.45;
+      //小组件实际底色（与 widget_card_bg_dark/light 对应），用于推导副文字
+      final Color bgColor = isDark ? const Color(0xFF24242A) : Colors.white;
       final double bgLum = bgColor.computeLuminance();
 
       Color textColor =
@@ -72,10 +82,15 @@ class CourseWidgetUtil {
       final Color subColor =
           Color.lerp(textColor, bgColor, isDark ? .35 : .4)!;
 
+      //自定义背景图（下载/复用本地文件），失败时回退到上次缓存
+      final String bgPath = await _resolveWidgetBackgroundPath();
+      final double bgAlpha = CourseData.courseWidgetBackgroundOpacity.value;
+
       //数据版本号：数据或配色发生变化时让桌面重建列表适配器，保证一定刷新
       final int dataVersion =
           '${CourseData.schoolOpenTime.value}|${CourseData.ansWeek.value}|${jsonEncode(weeks)}'
-                  '|${textColor.toARGB32()}|${subColor.toARGB32()}|${accentColor.toARGB32()}|pv2'
+                  '|${textColor.toARGB32()}|${subColor.toARGB32()}|${accentColor.toARGB32()}'
+                  '|$bgPath|$bgAlpha|pv2'
               .hashCode;
 
       final Map<String, dynamic> payload = {
@@ -86,6 +101,10 @@ class CourseWidgetUtil {
         'text': textColor.toARGB32(),
         'sub': subColor.toARGB32(),
         'accent': accentColor.toARGB32(),
+        'bgPath': bgPath,
+        'bgAlpha': bgAlpha,
+        //午休分割线开关（与课表设置同步）
+        'noon': CourseData.isNoonLineSwitch.value,
         'weeks': weeks,
       };
 
@@ -104,6 +123,60 @@ class CourseWidgetUtil {
     } catch (e) {
       print('课表小组件刷新失败: $e');
     }
+  }
+
+  /// 解析小组件自定义背景图的本地路径：
+  /// 随机二次元 / 自定义URL（下载到本地） / 本地图片，未开启时返回空串
+  static Future<String> _resolveWidgetBackgroundPath() async {
+    if (!CourseData.isCourseWidgetCustomBackground.value) return '';
+    try {
+      final Directory dir = await getApplicationDocumentsDirectory();
+      if (CourseData.isCourseWidgetRandomQuadraticBackground.value) {
+        final File file = File('${dir.path}/courseWidgetBg_random.jpg');
+        final bool needRefresh = _randomBgDownloadAt == null ||
+            DateTime.now().difference(_randomBgDownloadAt!) >
+                const Duration(hours: 1) ||
+            !file.existsSync();
+        if (!needRefresh) return file.path;
+        await Dio().download(
+          'https://img.xjh.me/random_img.php?type=bg&ctype=nature&return=302',
+          file.path,
+          options: Options(
+              responseType: ResponseType.bytes, followRedirects: true),
+        );
+        _randomBgDownloadAt = DateTime.now();
+        _cachedBgPath = file.path;
+        return file.path;
+      }
+      if (CourseData.isCourseWidgetUrlBackground.value) {
+        final String url =
+            CourseData.courseWidgetBackgroundInputUrl.value.trim();
+        if (url.isEmpty) return '';
+        final String signature = 'url:$url';
+        if (_cachedBgSignature == signature &&
+            _cachedBgPath != null &&
+            File(_cachedBgPath!).existsSync()) {
+          return _cachedBgPath!;
+        }
+        final File file = File('${dir.path}/courseWidgetBg_url.jpg');
+        await Dio().download(url, file.path,
+            options: Options(followRedirects: true));
+        _cachedBgSignature = signature;
+        _cachedBgPath = file.path;
+        return file.path;
+      }
+      if (CourseData.isCourseWidgetLocalBackground.value) {
+        final String path = CourseData.courseWidgetBackgroundFilePath.value;
+        if (path.isEmpty || !File(path).existsSync()) return '';
+        return path;
+      }
+    } catch (e) {
+      print('课表小组件背景处理失败: $e');
+      if (_cachedBgPath != null && File(_cachedBgPath!).existsSync()) {
+        return _cachedBgPath!;
+      }
+    }
+    return '';
   }
 
   /// 清除桌面小组件数据（退出登录时调用）
@@ -184,10 +257,16 @@ class CourseWidgetUtil {
     }
 
     rows.sort((a, b) => '${a['s']}'.compareTo('${b['s']}'));
+    bool noonMarked = false;
     for (final row in rows) {
       final int ps = row.remove('ps') as int;
       final int pe = row.remove('pe') as int;
       row['p'] = ps == pe ? '第$ps节' : '第$ps-$pe节';
+      //与课表一致：第 5 节起为下午，第一节下午课打上"午休"分割线标记
+      if (!noonMarked && ps >= 5) {
+        row['n'] = 1;
+        noonMarked = true;
+      }
     }
     return rows;
   }

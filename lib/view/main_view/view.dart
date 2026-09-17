@@ -31,12 +31,30 @@ class MainViewPage extends StatelessWidget {
       extendBody: true,
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: false,
-      body: PageView(
-        children: _viewList,
-        controller: state.pageController.value,
-        onPageChanged: (indexPage) {
-          state.index.value = indexPage;
+      //Tab 切换（PageView 滑动）期间临时关闭毛玻璃模糊：
+      //BackdropFilter 跟随页面位移每帧都要重新采样，是切换掉帧的主因。
+      //depth==0 只针对 PageView 本身，页面内列表滚动不受影响。
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.depth != 0) return false;
+          if (notification is ScrollStartNotification) {
+            glassBlurSuppress.value = true;
+          } else if (notification is ScrollEndNotification) {
+            glassBlurSuppress.value = false;
+          }
+          return false;
         },
+        child: PageView(
+          //预构建相邻页，避免开始滑动的瞬间才构建整页导致卡顿
+          allowImplicitScrolling: true,
+          children: _viewList
+              .map((page) => RepaintBoundary(child: page))
+              .toList(),
+          controller: state.pageController.value,
+          onPageChanged: (indexPage) {
+            state.index.value = indexPage;
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _scheduleFab(),
@@ -170,21 +188,16 @@ class MainViewPage extends StatelessWidget {
   /// 中间课表按钮：渐变 + 柔光
   Widget _scheduleFab() {
     final bool dark = GlassTheme.isDark('main_view');
+    final Color accent =
+        GlassTheme.bottomNav('selectScheduleColor', GlassTokens.accent);
     //中间按钮带渐变底色 + 自适应图标色，不需要为了文字对比度把主题色压暗，
     //浅色主题下按主题色提亮，避免颜色过深和页面不搭
-    final Color selectColor = GlassTheme.lighten(
-        GlassTheme.bottomNav('selectScheduleColor', GlassTokens.accent),
-        dark ? .08 : .14);
-    final Color nonSelectColor = dark
-        ? GlassTheme.lighten(
-            GlassTheme.bottomNav(
-                'nonSelectScheduleColor', const Color(0xFF3A3A40)),
-            .20)
-        : Color.lerp(
-            GlassTheme.bottomNav(
-                'nonSelectScheduleColor', const Color(0xFF8C8C96)),
-            Colors.white,
-            .45)!;
+    final Color selectColor = GlassTheme.lighten(accent, dark ? .08 : .14);
+    //未在课表页时：用主题强调色的淡色（不再是灰色），和整体主题统一
+    final Color nonSelectColor = Color.alphaBlend(
+      accent.withValues(alpha: dark ? .32 : .16),
+      GlassTheme.pageBackground('main_view'),
+    );
     return Obx(() {
       final bool selected = state.index.value == 2;
       final Color color = selected ? selectColor : nonSelectColor;

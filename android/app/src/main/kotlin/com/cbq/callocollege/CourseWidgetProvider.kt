@@ -255,9 +255,9 @@ class CourseWidgetProvider : HomeWidgetProvider() {
                 for (i in 0 until rows.length()) {
                     val course = rows.optJSONObject(i) ?: continue
                     val highlight = i == plan.highlightIndex
-                    //下午第一节且上面还有课程时，显示午休分割线
+                    //下午第一节且上面还有课程时，显示午休分割线（nr 为午休标记，n 是课程名）
                     val noonDivider =
-                        showNoon && i > 0 && course.optInt("n", 0) == 1
+                        showNoon && i > 0 && course.optInt("nr", 0) == 1
                     val row = CourseWidgetData.buildRow(
                         context, course, textColor, subColor, accentColor,
                         statusText = if (highlight) plan.highlightText else null,

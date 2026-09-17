@@ -52,8 +52,8 @@ class CourseRowFactory(private val context: Context) :
         val course = rows?.optJSONObject(position) ?: return null
         val currentPlan = plan
         val highlight = currentPlan != null && position == currentPlan.highlightIndex
-        //下午第一节且上面还有课程时，显示午休分割线
-        val noonDivider = showNoon && position > 0 && course.optInt("n", 0) == 1
+        //下午第一节且上面还有课程时，显示午休分割线（nr 为午休标记，n 是课程名）
+        val noonDivider = showNoon && position > 0 && course.optInt("nr", 0) == 1
         val row = CourseWidgetData.buildRow(
             context, course, textColor, subColor, accentColor,
             statusText = if (highlight) currentPlan?.highlightText else null,

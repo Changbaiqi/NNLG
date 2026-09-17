@@ -263,8 +263,9 @@ class CourseWidgetUtil {
       final int pe = row.remove('pe') as int;
       row['p'] = ps == pe ? '第$ps节' : '第$ps-$pe节';
       //与课表一致：第 5 节起为下午，第一节下午课打上"午休"分割线标记
+      //注意：不能用 'n'，它是课程名的键
       if (!noonMarked && ps >= 5) {
-        row['n'] = 1;
+        row['nr'] = 1;
         noonMarked = true;
       }
     }

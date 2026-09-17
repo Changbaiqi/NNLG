@@ -257,50 +257,125 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color borderColor = GlassTheme.border(page);
-    Widget card = ClipRRect(
-      borderRadius: BorderRadius.circular(radius),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
+    Widget buildCard({required bool blurred}) {
+      final Color borderColor = GlassTheme.border(page);
+      Widget card = ClipRRect(
+        borderRadius: BorderRadius.circular(radius),
+        child: blurred
+            ? BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
+                child: _surface(),
+              )
+            : _surface(),
+      );
+      if (elevated) {
+        card = DecoratedBox(
           decoration: BoxDecoration(
-            color: gradient == null ? GlassTheme.surface(page) : null,
-            gradient: gradient,
             borderRadius: BorderRadius.circular(radius),
-            border: Border.all(color: borderColor, width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: GlassTheme.shadow(page),
+                blurRadius: 22,
+                offset: const Offset(0, 10),
+              )
+            ],
           ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(radius),
-              onTap: onTap,
-              onTapDown: onTapDown,
-              onTapUp: onTapUp,
-              onTapCancel: onTapCancel,
-              child: Padding(padding: padding, child: child),
-            ),
-          ),
+          child: card,
+        );
+      }
+      if (margin != null) card = Padding(padding: margin!, child: card);
+      return card;
+    }
+
+    //转场动画期间跳过模糊：BackdropFilter 每帧都要重采样，容易掉帧；
+    //页面停稳后再恢复毛玻璃，观感几乎无差别
+    return GlassBlurGate(
+      builder: (blurred) => buildCard(blurred: blurred),
+    );
+  }
+
+  Widget _surface() {
+    return Container(
+      decoration: BoxDecoration(
+        color: gradient == null ? GlassTheme.surface(page) : null,
+        gradient: gradient,
+        borderRadius: BorderRadius.circular(radius),
+        border: Border.all(color: GlassTheme.border(page), width: 1),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(radius),
+          onTap: onTap,
+          onTapDown: onTapDown,
+          onTapUp: onTapUp,
+          onTapCancel: onTapCancel,
+          child: Padding(padding: padding, child: child),
         ),
       ),
     );
-    if (elevated) {
-      card = DecoratedBox(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius),
-          boxShadow: [
-            BoxShadow(
-              color: GlassTheme.shadow(page),
-              blurRadius: 22,
-              offset: const Offset(0, 10),
-            )
-          ],
-        ),
-        child: card,
-      );
-    }
-    if (margin != null) card = Padding(padding: margin!, child: card);
-    return card;
   }
+}
+
+/// 毛玻璃开关：路由转场进行中返回 false（不做模糊），停稳后返回 true
+class GlassBlurGate extends StatefulWidget {
+  const GlassBlurGate({super.key, required this.builder});
+
+  final Widget Function(bool blurred) builder;
+
+  @override
+  State<GlassBlurGate> createState() => _GlassBlurGateState();
+}
+
+class _GlassBlurGateState extends State<GlassBlurGate> {
+  Animation<double>? _animation;
+  Animation<double>? _secondaryAnimation;
+  bool _blurred = true;
+
+  static bool _settled(Animation<double>? animation) {
+    final AnimationStatus? status = animation?.status;
+    return status == null ||
+        status == AnimationStatus.completed ||
+        status == AnimationStatus.dismissed;
+  }
+
+  void _sync() {
+    final bool blurred = _settled(_animation) && _settled(_secondaryAnimation);
+    if (blurred != _blurred) {
+      setState(() => _blurred = blurred);
+    }
+  }
+
+  void _handleStatus(AnimationStatus status) => _sync();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final ModalRoute<dynamic>? route = ModalRoute.of(context);
+    final Animation<double>? animation = route?.animation;
+    final Animation<double>? secondary = route?.secondaryAnimation;
+    if (!identical(animation, _animation)) {
+      _animation?.removeStatusListener(_handleStatus);
+      _animation = animation;
+      _animation?.addStatusListener(_handleStatus);
+    }
+    if (!identical(secondary, _secondaryAnimation)) {
+      _secondaryAnimation?.removeStatusListener(_handleStatus);
+      _secondaryAnimation = secondary;
+      _secondaryAnimation?.addStatusListener(_handleStatus);
+    }
+    _sync();
+  }
+
+  @override
+  void dispose() {
+    _animation?.removeStatusListener(_handleStatus);
+    _secondaryAnimation?.removeStatusListener(_handleStatus);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(_blurred);
 }
 
 /// 渐变主按钮

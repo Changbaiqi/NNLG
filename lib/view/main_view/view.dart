@@ -50,13 +50,7 @@ class MainViewPage extends StatelessWidget {
     // 半透明主题色 + 强模糊：保留通透的毛玻璃感，同时前景色按合成色推导保证可读
     final Color surface = GlassTheme.glassTint('main_view')
         .withValues(alpha: GlassTheme.glassAlpha('main_view'));
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
-          child: Container(
+    final Widget bar = Container(
             height: 68,
             decoration: BoxDecoration(
               color: surface,
@@ -84,7 +78,19 @@ class MainViewPage extends StatelessWidget {
                 _navItem(4, Icons.person_rounded, '我的'),
               ],
             ),
-          ),
+          );
+    //转场期间跳过模糊，页面停稳后再恢复毛玻璃（避免切换页面掉帧）
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(28),
+        child: GlassBlurGate(
+          builder: (blurred) => blurred
+              ? BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
+                  child: bar,
+                )
+              : bar,
         ),
       ),
     );

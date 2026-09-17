@@ -170,15 +170,21 @@ class MainViewPage extends StatelessWidget {
   /// 中间课表按钮：渐变 + 柔光
   Widget _scheduleFab() {
     final bool dark = GlassTheme.isDark('main_view');
-    final Color base = GlassTheme.pageBackground('main_view');
-    final Color surface = GlassTheme.glassSurfaceOn('main_view', base);
-    final Color selectColor = GlassTheme.readableAccent(
+    //中间按钮带渐变底色 + 自适应图标色，不需要为了文字对比度把主题色压暗，
+    //浅色主题下按主题色提亮，避免颜色过深和页面不搭
+    final Color selectColor = GlassTheme.lighten(
         GlassTheme.bottomNav('selectScheduleColor', GlassTokens.accent),
-        surface);
-    final Color nonSelectColor = GlassTheme.readableAccent(
-        GlassTheme.bottomNav('nonSelectScheduleColor',
-            dark ? const Color(0xFF3A3A40) : Colors.white),
-        surface);
+        dark ? .08 : .14);
+    final Color nonSelectColor = dark
+        ? GlassTheme.lighten(
+            GlassTheme.bottomNav(
+                'nonSelectScheduleColor', const Color(0xFF3A3A40)),
+            .20)
+        : Color.lerp(
+            GlassTheme.bottomNav(
+                'nonSelectScheduleColor', const Color(0xFF8C8C96)),
+            Colors.white,
+            .45)!;
     return Obx(() {
       final bool selected = state.index.value == 2;
       final Color color = selected ? selectColor : nonSelectColor;
@@ -193,13 +199,13 @@ class MainViewPage extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [color, GlassTheme.lighten(color, .30)],
+            colors: [color, GlassTheme.lighten(color, .38)],
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withValues(alpha: .45),
-              blurRadius: 18,
-              offset: const Offset(0, 8),
+              color: color.withValues(alpha: .35),
+              blurRadius: 20,
+              offset: const Offset(0, 9),
             )
           ],
         ),

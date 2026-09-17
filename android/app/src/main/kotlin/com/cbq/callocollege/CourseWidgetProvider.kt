@@ -120,7 +120,9 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             val textColor = CourseWidgetData.textColor(root)
             val subColor = CourseWidgetData.subColor(root)
             val accentColor = CourseWidgetData.accentColor(root)
-            val rows = CourseWidgetData.todayRows(root)
+            val dark = CourseWidgetData.isDark(root)
+            val plan = CourseWidgetData.plan(root)
+            val rows = plan.rows
 
             // 高度很小时进入紧凑模式：隐藏周次行、分隔线并缩小内边距，把空间留给课程列表
             val minHeight = try {
@@ -149,33 +151,60 @@ class CourseWidgetProvider : HomeWidgetProvider() {
                 "setBackgroundColor",
                 CourseWidgetData.withAlpha(textColor, 0.08f)
             )
-            views.setTextViewText(R.id.tv_date, CourseWidgetData.todayTitle())
-            views.setTextViewText(R.id.tv_week, CourseWidgetData.weekLabel(root))
-            views.setViewVisibility(R.id.tv_week, if (compact) View.GONE else View.VISIBLE)
+            //今天没课且明天也没课时预显示明天的空状态提示
+            val dayOffset = if (plan.showTomorrow) 1 else 0
+            val weekText = CourseWidgetData.weekLabel(root, dayOffset)
+            views.setTextViewText(R.id.tv_date, CourseWidgetData.dayTitle(dayOffset))
+            views.setTextViewText(R.id.tv_week, weekText)
+            //周次做成小胶囊，观感更柔和
+            views.setInt(
+                R.id.tv_week, "setBackgroundResource",
+                if (dark) R.drawable.widget_chip_dark else R.drawable.widget_chip_light
+            )
+            views.setViewVisibility(
+                R.id.tv_week,
+                if (compact || weekText.isEmpty()) View.GONE else View.VISIBLE
+            )
             views.setViewVisibility(R.id.divider, if (compact) View.GONE else View.VISIBLE)
 
             if (root == null) {
+                views.setTextViewText(R.id.tv_date, CourseWidgetData.todayTitle())
+                views.setTextViewText(R.id.tv_week, "")
+                views.setViewVisibility(R.id.tv_week, View.GONE)
                 views.setTextViewText(R.id.tv_count, "打开App同步")
                 views.setTextViewText(R.id.tv_empty, "打开「恰啰校园」同步课表后，这里会显示今日课程")
                 showEmpty(views)
                 return
             }
             if (rows == null || rows.length() == 0) {
-                views.setTextViewText(R.id.tv_count, "今日无课")
-                views.setTextViewText(R.id.tv_empty, "今天没有课，好好休息~")
+                views.setTextViewText(
+                    R.id.tv_count,
+                    when {
+                        plan.emptyText == null -> "今日无课"
+                        plan.todayEmpty -> "今明两天都无课"
+                        else -> "今日课程已结束"
+                    }
+                )
+                views.setTextViewText(
+                    R.id.tv_empty,
+                    plan.emptyText ?: "今天没有课，好好休息~"
+                )
                 showEmpty(views)
                 return
             }
 
             val usesService = setCourseListAdapter(
                 context, views, rows, appWidgetId,
-                root.optLong("v", 0L), textColor, subColor, accentColor
+                root.optLong("v", 0L), textColor, subColor, accentColor, plan, dark
             )
             if (usesService) {
                 notifyListChanged(appWidgetManager, intArrayOf(appWidgetId))
             }
 
-            views.setTextViewText(R.id.tv_count, "今日 ${rows.length()} 门课")
+            views.setTextViewText(
+                R.id.tv_count,
+                (if (plan.showTomorrow) "明日 " else "今日 ") + "${rows.length()} 门课"
+            )
             views.setViewVisibility(R.id.tv_empty, View.GONE)
             views.setViewVisibility(R.id.course_list, View.VISIBLE)
         }
@@ -193,6 +222,8 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             textColor: Int,
             subColor: Int,
             accentColor: Int,
+            plan: CourseWidgetData.DayPlan,
+            dark: Boolean,
         ): Boolean {
             val launchIntent =
                 HomeWidgetLaunchIntent.getActivity(context, MainActivity::class.java)
@@ -202,8 +233,12 @@ class CourseWidgetProvider : HomeWidgetProvider() {
                     .setHasStableIds(false)
                 for (i in 0 until rows.length()) {
                     val course = rows.optJSONObject(i) ?: continue
+                    val highlight = i == plan.highlightIndex
                     val row = CourseWidgetData.buildRow(
-                        context, course, textColor, subColor, accentColor
+                        context, course, textColor, subColor, accentColor,
+                        statusText = if (highlight) plan.highlightText else null,
+                        highlight = highlight,
+                        dark = dark,
                     )
                     row.setOnClickPendingIntent(R.id.item_root, launchIntent)
                     builder.addItem(i.toLong(), row)

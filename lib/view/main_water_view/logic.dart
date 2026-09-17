@@ -52,6 +52,7 @@ class MainWaterViewLogic extends GetxController {
     String _url = "";
 
     showDialog(
+        useRootNavigator: false,
         context: context!,
         barrierColor: Colors.black.withValues(alpha: .35),
         builder: (builder) {

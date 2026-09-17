@@ -38,6 +38,7 @@ class XiaoBei_Login{
   Future bindAccountShow(){
 
     return showDialog(
+        useRootNavigator: false,
         context: _context!,
         builder: (builder){
           return AlertDialog(

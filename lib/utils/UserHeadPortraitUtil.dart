@@ -20,6 +20,7 @@ class UserHeadPortraitUtil {
 
   Future setHead() async {
     return await showDialog(
+        useRootNavigator: false,
         context: _context!,
         barrierColor: Colors.black.withValues(alpha: .35),
         builder: (BuildContext buildContext) {

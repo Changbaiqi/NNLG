@@ -938,6 +938,7 @@ class CourseSetViewPage extends StatelessWidget {
                                       ),
                                       onPressed: (){
                                         showDialog(
+                                          useRootNavigator: false,
                                           context: context,
                                           builder: (BuildContext context) {
                                             return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: AlertDialog(

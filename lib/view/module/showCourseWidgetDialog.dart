@@ -72,6 +72,7 @@ void showCourseWidgetDialog() {
       .value['main_course_view']!['todayCourseItemColor']['borderColor'] as List);
 
   showDialog(
+    useRootNavigator: false,
     context: Get.context!,
     barrierColor: Colors.black.withValues(alpha: .35),
     builder: (dialogContext) {
@@ -156,6 +157,7 @@ void _showAddDesktopGuide({required bool pinSupported}) {
       : '当前系统桌面不支持一键添加，请手动添加：\n1. 长按桌面空白处\n2. 点击「添加小组件」\n3. 搜索「恰啰校园」或找到「今日课表」\n4. 拖到桌面即可\n\n提示：也可以长按桌面上的「恰啰校园」图标，选择「添加课表小组件」';
 
   showDialog(
+    useRootNavigator: false,
     context: Get.context!,
     barrierColor: Colors.black.withValues(alpha: .35),
     builder: (dialogContext) {

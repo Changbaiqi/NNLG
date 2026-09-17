@@ -59,6 +59,7 @@ class showUpdateDialog extends Dialog {
       if (json["data"]["code"] == noVersion) return; //屏蔽更新
 
       showDialog(
+          useRootNavigator: false,
           barrierDismissible: false,
           context: context,
           builder: (builder) {

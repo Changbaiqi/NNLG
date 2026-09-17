@@ -174,6 +174,7 @@ class MainCourseViewPage extends StatelessWidget {
                                 ),
                                 onTap: () {
                                   showDialog(
+                                      useRootNavigator: false,
                                       context: context,
                                       barrierColor: Colors.black
                                           .withValues(alpha: .35),
@@ -386,6 +387,7 @@ class MainCourseViewPage extends StatelessWidget {
                         case '共享课表':
                           {
                             showDialog(
+                                useRootNavigator: false,
                                 context: context,
                                 barrierColor: Colors.transparent,
                                 builder: (contxt) {

@@ -222,6 +222,7 @@ class MainCourseViewLogic extends GetxController
     final Color textColor = GlassTheme.textColor('main_course_view');
     final Color accent = GlassTheme.accentColor('main_course_view');
     showDialog(
+        useRootNavigator: false,
         context: Get.context!,
         barrierDismissible: false,
         barrierColor: Colors.black.withValues(alpha: .35),

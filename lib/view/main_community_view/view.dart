@@ -120,6 +120,7 @@ class MainCommunityViewPage extends StatelessWidget {
                 'assets/images/dorm.svg', '宿舍电费预警'),
             onTap: () {
               showDialog(
+                  useRootNavigator: false,
                   context: logic.context!,
                   builder: (builder) {
                     return Center(child: showBindPowerDialog());

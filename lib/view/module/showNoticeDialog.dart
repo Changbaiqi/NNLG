@@ -37,6 +37,7 @@ class showNoticeDialog extends Dialog {
       if (json["data"]["uid"] <= NoticeData.noticeId) return;
 
       showDialog(
+          useRootNavigator: false,
           barrierColor: Colors.transparent,
           context: context,
           builder: (builder) {

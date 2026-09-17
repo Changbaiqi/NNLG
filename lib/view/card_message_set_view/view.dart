@@ -43,6 +43,7 @@ class CardMessageSetViewPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   onTap: () {
                     showDialog(
+                        useRootNavigator: false,
                         context: context,
                         barrierColor: Colors.black.withValues(alpha: .35),
                         builder: (builder) {

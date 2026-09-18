@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/manage/ManageXiaoBeiUserOperation.dart';
 
 import '../../utils/ToastUtil.dart';
@@ -64,7 +65,7 @@ class _ManageXiaoBei_Main_Card_1State extends State<ManageXiaoBei_Main_Card_1> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),
@@ -138,7 +139,7 @@ class _ManageXiaoBei_Main_Card_2State extends State<ManageXiaoBei_Main_Card_2> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),
@@ -155,8 +156,10 @@ class _ManageXiaoBei_Main_Card_2State extends State<ManageXiaoBei_Main_Card_2> {
                         width: 100,
                         height: 100,
                         child: CircularProgressIndicator(
-                          backgroundColor: Colors.white,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
+                          backgroundColor:
+                              GlassTheme.scheme.surfaceContainerHighest,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              GlassTheme.scheme.primary),
                           value: 0.8,
                           strokeWidth: 6,
                         ),
@@ -211,7 +214,7 @@ class _ManageXiaoBei_Main_Card_3State extends State<ManageXiaoBei_Main_Card_3> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),
@@ -272,7 +275,7 @@ class _ManageXiaoBei_Main_Card_4State extends State<ManageXiaoBei_Main_Card_4> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),

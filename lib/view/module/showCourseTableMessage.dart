@@ -101,16 +101,12 @@ class _showCourseTableMessageChildState
     final Color accent = GlassTheme.accentColor(_page);
     final bool dark = GlassTheme.isDark(_page);
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-        child: Container(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      child: Container(
           height: 320,
           decoration: BoxDecoration(
-            color: base.withValues(alpha: dark ? .88 : .92),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(26)),
-            border: Border(
-                top: BorderSide(color: GlassTheme.border(_page), width: 1)),
+            color: GlassTheme.scheme.surfaceContainerLow,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: Column(
             children: [
@@ -173,7 +169,6 @@ class _showCourseTableMessageChildState
             ],
           ),
         ),
-      ),
     );
   }
 }

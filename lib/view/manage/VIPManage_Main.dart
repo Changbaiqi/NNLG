@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/manage/ManageXiaoBei_Main.dart';
 
 class VIPManage_Main extends StatefulWidget {
@@ -33,8 +34,8 @@ class _VIPManage_MainState extends State<VIPManage_Main> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
+        selectedItemColor: GlassTheme.scheme.primary,
+        unselectedItemColor: GlassTheme.scheme.onSurfaceVariant,
         onTap: (c){
           setState((){
             _index = c;

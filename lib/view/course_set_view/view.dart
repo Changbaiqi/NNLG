@@ -80,7 +80,7 @@ class CourseSetViewPage extends StatelessWidget {
                         children: [
                           // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
                           Obx(() => Switch(
-                              activeColor: GlassTheme.accentColor('course_set_view'),
+
                               value: CourseData.isColorClassSchedule.value,
                               onChanged: (v) {
                                 ShareDateUtil().setColorClassSchedule(v);
@@ -128,7 +128,7 @@ class CourseSetViewPage extends StatelessWidget {
                           children: [
                             // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
                             Obx(() => Switch(
-                                activeColor: GlassTheme.accentColor('course_set_view'),
+
                                 value: CourseData.isPictureBackground.value,
                                 onChanged: (v) {
                                   ShareDateUtil().setIsPictureBackground(v);
@@ -223,7 +223,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           Obx(() => Transform.scale(
                                             scale: 0.7,
                                             child: Switch(
-                                                activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                 value: CourseData
                                                     .isRandomQuadraticBackground
                                                     .value,
@@ -291,7 +291,7 @@ class CourseSetViewPage extends StatelessWidget {
                                               Obx(() => Transform.scale(
                                                 scale: 0.7,
                                                 child: Switch(
-                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                     value: CourseData
                                                         .isUrlBackground
                                                         .value,
@@ -384,7 +384,7 @@ class CourseSetViewPage extends StatelessWidget {
                                               Obx(() => Transform.scale(
                                                 scale: 0.7,
                                                 child: Switch(
-                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                     value: CourseData
                                                         .isCustomerLocalBackground
                                                         .value,
@@ -472,7 +472,7 @@ class CourseSetViewPage extends StatelessWidget {
                         child: Row(
                           children: [
                             Obx(() => Switch(
-                                activeColor: GlassTheme.accentColor('course_set_view'),
+
                                 value: CourseData.isCourseWidgetCustomBackground.value,
                                 onChanged: (v) {
                                   ShareDateUtil().setIsCourseWidgetCustomBackground(v);
@@ -554,7 +554,7 @@ class CourseSetViewPage extends StatelessWidget {
                                           Obx(() => Transform.scale(
                                             scale: 0.7,
                                             child: Switch(
-                                                activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                 value: CourseData.isCourseWidgetRandomQuadraticBackground.value,
                                                 onChanged: (v) {
                                                   ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(v);
@@ -606,7 +606,7 @@ class CourseSetViewPage extends StatelessWidget {
                                               Obx(() => Transform.scale(
                                                 scale: 0.7,
                                                 child: Switch(
-                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                     value: CourseData.isCourseWidgetUrlBackground.value,
                                                     onChanged: (v) {
                                                       ShareDateUtil().setIsCourseWidgetUrlBackground(v);
@@ -674,7 +674,7 @@ class CourseSetViewPage extends StatelessWidget {
                                               Obx(() => Transform.scale(
                                                 scale: 0.7,
                                                 child: Switch(
-                                                    activeColor: GlassTheme.accentColor('course_set_view'),
+
                                                     value: CourseData.isCourseWidgetLocalBackground.value,
                                                     onChanged: (v) {
                                                       ShareDateUtil().setIsCourseWidgetLocalBackground(v);
@@ -761,7 +761,7 @@ class CourseSetViewPage extends StatelessWidget {
                         children: [
                           // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
                           Obx(() => Switch(
-                              activeColor: GlassTheme.accentColor('course_set_view'),
+
                               value: CourseData.isShakeToNowSchedule.value,
                               onChanged: (v) {
                                 ShareDateUtil().setShakeToNowSchedule(v);
@@ -816,7 +816,7 @@ class CourseSetViewPage extends StatelessWidget {
                         children: [
                           // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
                           Obx(() => Switch(
-                              activeColor: GlassTheme.accentColor('course_set_view'),
+
                               value: CourseData.isNoonLineSwitch.value,
                               onChanged: (v) {
                                 ShareDateUtil().setNoonLineSwitch(v);
@@ -1216,7 +1216,8 @@ class CourseSetViewPage extends StatelessWidget {
                                   width: MediaQuery.of(context).size.width*0.8,
                                   child: ElevatedButton(
                                       style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(const Color(0xFFE53935)),
+                                          backgroundColor: MaterialStateProperty.all(GlassTheme.scheme.error),
+                                          foregroundColor: MaterialStateProperty.all(GlassTheme.scheme.onError),
                                           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))))
                                       ),
                                       onPressed: (){
@@ -1243,7 +1244,7 @@ class CourseSetViewPage extends StatelessWidget {
                                             ));
                                           },
                                         );
-                                      }, child: Text('一键重置默认时间',style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),)),
+                                      }, child: Text('一键重置默认时间',style: TextStyle(color: GlassTheme.scheme.onError, fontSize: 13, fontWeight: FontWeight.w600),)),
                                 ),)
                               ],
                             ),

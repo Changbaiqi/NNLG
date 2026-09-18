@@ -11,23 +11,55 @@ import 'state.dart';
 class MainViewLogic extends GetxController {
   final MainViewState state = MainViewState();
 
-  animationJumpToPage(int page) async {
+  /// 点击底部导航切页：直接切换（不做左右滑动动画）
+  animationJumpToPage(int page, {bool retry = true}) {
     state.index.value = page;
     final PageController controller = state.pageController.value;
-    if (!controller.hasClients) return;
-    try {
-      await controller.animateToPage(
-          page, duration: Duration(milliseconds: 350),
-          curve: Curves.decelerate);
-    } catch (_) {
-      //忽略动画被中断的异常
+    final ScrollPosition? position = _currentPosition(controller);
+    if (position == null) {
+      //页面还没挂载时容易被吞掉，下一帧重试一次
+      if (retry) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          animationJumpToPage(page, retry: false);
+        });
+      }
+      return;
     }
-    //兜底：动画被手势/其它动画打断时，保证页面一定落到目标页，
-    //避免出现"底部导航高亮变了但页面卡住不动"
-    if (controller.hasClients &&
-        controller.page != null &&
-        (controller.page! - page).abs() > 0.01) {
-      controller.jumpToPage(page);
+    _jumpTo(position, page);
+    _ensureOnPage(controller, page);
+    //兜底：手势/其它滚动打断时再校验一次，保证一定落到目标页
+    Future.delayed(const Duration(milliseconds: 80), () {
+      _ensureOnPage(controller, page);
+    });
+  }
+
+  /// 取当前生效的滚动位置。
+  /// 用 positions 而不是 position：控制器万一被挂载到多个 PageView 上时，
+  /// position 会抛异常导致导航点击"没反应"
+  ScrollPosition? _currentPosition(PageController controller) {
+    if (controller.positions.isEmpty) return null;
+    return controller.positions.last;
+  }
+
+  void _jumpTo(ScrollPosition position, int page) {
+    final double target = (page * position.viewportDimension)
+        .clamp(position.minScrollExtent, position.maxScrollExtent);
+    try {
+      position.jumpTo(target);
+    } catch (_) {
+      //忽略：极端情况下 position 已失效
+    }
+  }
+
+  /// 校验并（必要时）强制跳到目标页
+  void _ensureOnPage(PageController controller, int page) {
+    final ScrollPosition? position = _currentPosition(controller);
+    if (position == null) return;
+    final double viewport = position.viewportDimension;
+    if (viewport <= 0) return;
+    final double current = position.pixels / viewport;
+    if ((current - page).abs() > 0.05) {
+      _jumpTo(position, page);
     }
   }
 

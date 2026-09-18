@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/dao/ContextData.dart';
 import 'package:callo/dao/XiaoBeiData.dart';
 import 'package:callo/utils/ToastUtil.dart';
@@ -64,7 +65,7 @@ class _XiaoBei_User_MessageCardState extends State<XiaoBei_User_MessageCard> {
                           offset: Offset(0.0,7.0),
                           blurRadius: 14.0,
                           spreadRadius: 0,
-                          color:Color(0xFFdfdfdf)
+                          color:GlassTheme.scheme.outlineVariant
                       )
                     ]
                 ),
@@ -144,7 +145,7 @@ class _XiaoBei_User_MessageCardState extends State<XiaoBei_User_MessageCard> {
                     child: Container(
                       height: 50,
                       decoration: new BoxDecoration(
-                        color: Colors.blue,
+                        color: GlassTheme.scheme.primaryContainer,
                         borderRadius: BorderRadius.all(Radius.circular(13)),
                         //border: Border.all(width: 1,)
                       ),
@@ -152,7 +153,7 @@ class _XiaoBei_User_MessageCardState extends State<XiaoBei_User_MessageCard> {
                       //color: Colors.blue,
                       child: Padding(
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Center(child: Text('${openTime}',style: TextStyle(fontSize: 12,color: Colors.black87,fontWeight: FontWeight.w900,),),),
+                        child: Center(child: Text('${openTime}',style: TextStyle(fontSize: 12,color: GlassTheme.scheme.onPrimaryContainer,fontWeight: FontWeight.w900,),),),
                       ),
                     )))
 
@@ -247,7 +248,7 @@ class _XiaoBei_User_NoticeState extends State<XiaoBei_User_Notice> {
                 offset: Offset(0.0,7.0),
                 blurRadius: 14.0,
                 spreadRadius: 0,
-                color:Color(0xFFdfdfdf)
+                color:GlassTheme.scheme.outlineVariant
             )
           ]
       ),

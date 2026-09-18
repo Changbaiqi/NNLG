@@ -103,14 +103,12 @@ class _showUpdateDialogMainState extends State<_showUpdateDialogMain>
           body: Stack(
             children: [
               Align(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: _backgroundAnimation!.value,
-                      sigmaY: _backgroundAnimation!.value),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black.withValues(
+                      alpha:
+                          .32 * (_backgroundAnimation!.value / 20).clamp(0, 1)),
                 ),
               ),
               Align(

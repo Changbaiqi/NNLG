@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/xiaobei/XiaoBei_Home.dart';
 import 'package:callo/view/xiaobei/XiaoBei_User.dart';
 
@@ -41,8 +42,8 @@ class _XiaoBei_MainState extends State<XiaoBei_Main> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _index,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
+        selectedItemColor: GlassTheme.scheme.primary,
+        unselectedItemColor: GlassTheme.scheme.onSurfaceVariant,
         onTap: (c){
           setState((){
             _index = c;

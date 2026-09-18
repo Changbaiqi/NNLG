@@ -10,61 +10,160 @@ import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CusBehavior.dart';
-import 'package:callo/utils/GlassUI.dart';
 
 import 'dao/ClassScheduleDao.dart';
 
-/// 当前主题的页面底色，用于消除页面切换时的白闪
-/// 注意：黑色主题的 main_view 没有 backgroundColor，需要回退到导航背景色
-Color _themeBackground() => GlassTheme.pageBackground('main_view');
-
-/// 应用主题：转场动画会用 colorScheme.surface 打底，必须跟随主题背景色，
-/// 否则推送页面时会出现白色闪烁
+/// 应用主题：Material 3 + 8 套配色预设（参考工墨）
+/// 色板来自唯一数据源 CustomThemeData.currentScheme（主题 JSON 决定明暗）
 ThemeData _appTheme() {
-  final Color bg = _themeBackground();
-  // 点击水波纹跟随主题：深色主题用柔和白光、浅色主题用柔和暗光，
-  // 默认的 InkSparkle 在深色页面上会闪出亮白色星芒，与主题很不搭
-  final Color onBg = GlassTheme.textColor('main_view');
-  final ThemeData base = ThemeData.fallback();
+  final ColorScheme scheme = CustomThemeData.currentScheme.value;
+  final bool isDark = CustomThemeData.isDarkTheme;
+  final Color cardColor = CustomThemeData.cardColor;
+  final Color pageColor = CustomThemeData.pageColor;
+  final Color onBg = scheme.onSurface;
+
+  OutlineInputBorder border(Color color, [double width = 1]) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide(color: color, width: width),
+      );
+
+  final ThemeData base = ThemeData.from(colorScheme: scheme, useMaterial3: true);
   return base.copyWith(
-    scaffoldBackgroundColor: bg,
-    colorScheme: base.colorScheme.copyWith(surface: bg),
-    // 页面滚动到 AppBar 下方时不要突然出现着色/阴影（透明导航栏上会呈现为阴影跳变）
-    appBarTheme: const AppBarTheme(
+    scaffoldBackgroundColor: pageColor,
+    colorScheme: scheme,
+    appBarTheme: AppBarTheme(
+      centerTitle: true,
       elevation: 0,
       scrolledUnderElevation: 0,
+      backgroundColor: Colors.transparent,
       surfaceTintColor: Colors.transparent,
       shadowColor: Colors.transparent,
+      foregroundColor: scheme.onSurface,
+      titleTextStyle: TextStyle(
+          fontSize: 17, fontWeight: FontWeight.w600, color: scheme.onSurface),
+    ),
+    cardTheme: CardThemeData(
+      elevation: 0,
+      color: cardColor,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: scheme.outlineVariant.withValues(alpha: .35)),
+      ),
+    ),
+    dividerTheme: DividerThemeData(
+      color: scheme.outlineVariant.withValues(alpha: .4),
+      thickness: .6,
+      space: 1,
+    ),
+    listTileTheme: ListTileThemeData(
+      iconColor: scheme.onSurfaceVariant,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: isDark
+          ? Colors.white.withValues(alpha: .04)
+          : Colors.black.withValues(alpha: .025),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      border: border(scheme.outlineVariant.withValues(alpha: .5)),
+      enabledBorder: border(scheme.outlineVariant.withValues(alpha: .5)),
+      focusedBorder: border(scheme.primary, 1.5),
+      hintStyle: TextStyle(color: scheme.onSurfaceVariant),
+    ),
+    chipTheme: ChipThemeData(
+      backgroundColor: cardColor,
+      selectedColor: scheme.primaryContainer,
+      labelStyle: TextStyle(fontSize: 12.5, color: scheme.onSurface),
+      side: BorderSide(color: scheme.outlineVariant.withValues(alpha: .6)),
+      shape: const StadiumBorder(),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: scheme.primary,
+        foregroundColor: scheme.onPrimary,
+        elevation: 0,
+        minimumSize: const Size(88, 46),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      ).copyWith(overlayColor: _pressOverlay(onBg)),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: scheme.primary,
+        minimumSize: const Size(88, 46),
+        side: BorderSide(color: scheme.primary.withValues(alpha: .5)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(13)),
+        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+      ).copyWith(overlayColor: _pressOverlay(onBg)),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: scheme.primary,
+        textStyle: const TextStyle(fontWeight: FontWeight.w600),
+      ).copyWith(overlayColor: _pressOverlay(onBg)),
+    ),
+    iconButtonTheme: IconButtonThemeData(
+      style: ButtonStyle(overlayColor: _pressOverlay(onBg)),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      elevation: 3,
+      backgroundColor: scheme.primary,
+      foregroundColor: scheme.onPrimary,
+      shape: const CircleBorder(),
+    ),
+    snackBarTheme: SnackBarThemeData(
+      behavior: SnackBarBehavior.floating,
+      backgroundColor:
+          isDark ? const Color(0xFF2C322C) : const Color(0xFF252A25),
+      contentTextStyle: const TextStyle(color: Colors.white, fontSize: 14),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    ),
+    dialogTheme: DialogThemeData(
+      backgroundColor: cardColor,
+      surfaceTintColor: Colors.transparent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      titleTextStyle: TextStyle(
+          fontSize: 17, fontWeight: FontWeight.w600, color: scheme.onSurface),
+    ),
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected) ? Colors.white : null,
+      ),
+      trackColor: WidgetStateProperty.resolveWith(
+        (states) => states.contains(WidgetState.selected)
+            ? scheme.primary
+            : scheme.surfaceContainerHighest,
+      ),
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(color: scheme.primary),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
     ),
     splashFactory: InkRipple.splashFactory,
     splashColor: onBg.withValues(alpha: .08),
     highlightColor: onBg.withValues(alpha: .04),
     hoverColor: onBg.withValues(alpha: .04),
     focusColor: onBg.withValues(alpha: .06),
-    // 按钮的按压态默认取 colorScheme.primary（未换肤时的紫白色），一并跟随主题
-    elevatedButtonTheme:
-        ElevatedButtonThemeData(style: _pressOverlayStyle(onBg)),
-    textButtonTheme: TextButtonThemeData(style: _pressOverlayStyle(onBg)),
-    outlinedButtonTheme:
-        OutlinedButtonThemeData(style: _pressOverlayStyle(onBg)),
-    iconButtonTheme: IconButtonThemeData(style: _pressOverlayStyle(onBg)),
   );
 }
 
 /// 按钮按压/悬停态颜色（跟随主题文字色，避免默认紫白色高亮）
-ButtonStyle _pressOverlayStyle(Color onBg) {
-  return ButtonStyle(
-    overlayColor: WidgetStateProperty.resolveWith((states) {
-      if (states.contains(WidgetState.pressed)) {
-        return onBg.withValues(alpha: .12);
-      }
-      if (states.contains(WidgetState.hovered) ||
-          states.contains(WidgetState.focused)) {
-        return onBg.withValues(alpha: .06);
-      }
-      return null;
-    }),
-  );
+WidgetStateProperty<Color?> _pressOverlay(Color onBg) {
+  return WidgetStateProperty.resolveWith((states) {
+    if (states.contains(WidgetState.pressed)) {
+      return onBg.withValues(alpha: .12);
+    }
+    if (states.contains(WidgetState.hovered) ||
+        states.contains(WidgetState.focused)) {
+      return onBg.withValues(alpha: .06);
+    }
+    return null;
+  });
 }
 
 void main() async {
@@ -114,32 +213,42 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(2080, 2340),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      child: MaterialApp(
-        theme: _appTheme(),
-        home: ColoredBox(
-          color: _themeBackground(),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-            child: GetMaterialApp(
-                initialRoute: Routes.Start,
-                getPages: AppPages.pages,
-                theme: _appTheme(),
-                // 转场/页面切换时窗口底色跟随主题，避免白色闪烁
-                color: _themeBackground(),
-                builder: (context, child) => ScrollConfiguration(
-                      behavior: const CusBehavior(),
-                      child: ColoredBox(
-                        color: _themeBackground(),
-                        child: child ?? const SizedBox.shrink(),
-                      ),
-                    )),
+    //订阅主题数据变化：Material You 的颜色都来自 ThemeData，
+    //根节点不重建会导致切换主题后页面颜色不刷新
+    return Obx(() {
+      CustomThemeData.nowThemeData.value;
+      CustomThemeData.currentScheme.value;
+      CustomThemeData.selectThemeUid.value;
+      CustomThemeData.isFollowSystemDarkMode.value;
+      final ThemeData theme = _appTheme();
+      final Color background = theme.colorScheme.surface;
+      return ScreenUtilInit(
+        designSize: const Size(2080, 2340),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        child: MaterialApp(
+          theme: theme,
+          home: ColoredBox(
+            color: background,
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: GetMaterialApp(
+                  initialRoute: Routes.Start,
+                  getPages: AppPages.pages,
+                  theme: theme,
+                  // 转场/页面切换时窗口底色跟随主题，避免白色闪烁
+                  color: background,
+                  builder: (context, child) => ScrollConfiguration(
+                        behavior: const CusBehavior(),
+                        child: ColoredBox(
+                          color: background,
+                          child: child ?? const SizedBox.shrink(),
+                        ),
+                      )),
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

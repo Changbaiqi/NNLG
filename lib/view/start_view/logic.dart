@@ -144,8 +144,9 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
               toLogin();
             }
           });
-          //如果打开了极速启动，那么先执行启动工作
-          if(ContextDate.isTopSpeedStart.value){
+          //如果打开了极速启动，那么先执行启动工作（已经在主页则不重复跳转）
+          if (ContextDate.isTopSpeedStart.value &&
+              Get.currentRoute != Routes.Main) {
             Get.offNamed(Routes.Main);
           }
         });
@@ -164,12 +165,18 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
 
   void toLogin() {
     Timer timer = Timer(Duration(seconds: 1), () {
+      //用户已经"跳过同步直接进入主页"时，不再强制跳转登录页，
+      //同步完成只需刷新本地 token/cookie 即可
+      if (Get.currentRoute != Routes.Start) return;
       Get.offNamed(Routes.Login);
     });
   }
 
   void toMain() {
     Timer timer = Timer(Duration(seconds: 1), () {
+      //已经在主页时不再重复跳转：否则会重新加载一遍主页，
+      //并导致底部导航（PageController 重复挂载）点击失效
+      if (Get.currentRoute == Routes.Main) return;
       Get.offNamed(Routes.Main);
     });
   }

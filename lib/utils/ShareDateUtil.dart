@@ -107,6 +107,7 @@ class ShareDateUtil{
 
     //初始化主题
     await getThemeUid();
+    await getThemePreset(); //配色预设要在加载主题前读取
     await getIsFollowSystemDarkMode();
     if (CustomThemeData.isFollowSystemDarkMode.value) {
       //跟随系统夜间模式：按系统深浅色自动选择主题
@@ -1209,6 +1210,27 @@ class ShareDateUtil{
   }
 
   //获取主题
+  //获取配色预设
+  Future<void> getThemePreset() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? name = await prefs.getString('themePreset');
+    if (name != null) {
+      CustomThemeData.preset.value = AppThemePreset.values.firstWhere(
+        (e) => e.name == name,
+        orElse: () => AppThemePreset.ocean,
+      );
+    }
+  }
+
+  //设置配色预设（立即生效并刷新界面/小组件）
+  Future<void> setThemePreset(AppThemePreset value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('themePreset', value.name).then((v) {
+      CustomThemeData.preset.value = value;
+      CustomThemeData.applyPreset();
+    });
+  }
+
   //获取是否跟随系统夜间模式
   Future<bool> getIsFollowSystemDarkMode() async {
     final prefs = await SharedPreferences.getInstance();

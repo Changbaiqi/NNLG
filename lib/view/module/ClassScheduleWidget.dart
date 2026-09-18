@@ -513,6 +513,24 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
   final _animTick = 0.0.obs;
 
   /// 表格网格线颜色：统一跟随主题（深色主题下不再用纯黑导致看不见）
+  /// 彩色课表的课程块颜色：
+  /// 以当前主题主色为基调，按课程名哈希在 ±60° 内偏移色相，
+  /// 并按深浅色选择明度/饱和度，保证与所选配色协调且文字清晰
+  Color _courseBlockColor(String title) {
+    final ColorScheme scheme = GlassTheme.scheme;
+    final bool dark = CustomThemeData.isDarkTheme;
+    final double baseHue =
+        HSLColor.fromColor(scheme.primary).hue.clamp(0, 360).toDouble();
+    final double offset = ((title.hashCode % 120) - 60).toDouble();
+    final double hue = (baseHue + offset + 360) % 360;
+    return HSLColor.fromAHSL(
+      1,
+      hue,
+      dark ? .34 : .46,
+      dark ? .30 : .86,
+    ).toColor();
+  }
+
   Color get _lineColor => GlassTheme.color('main_course_view', 'courseLineColor',
       const Color(0xFF9E9E9E)).withValues(alpha: .85);
 
@@ -540,20 +558,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
     // log(courses.toString());
     for (int i = 0; i < tables.length; ++i) {
       var element = tables[i];
-      var hash = element["title"].hashCode;
-      var hexColor = hash.toRadixString(16).substring(
-          0,
-          hash.toRadixString(16).length < 6
-              ? hash.toRadixString(16).length
-              : 6);
-      var colorInt = int.parse(hexColor, radix: 16);
-      // 提取ARGB分量
-      var alpha = (colorInt >> 24) & 0xFF;
-      var red = (colorInt >> 16) & 0xFF;
-      var green = (colorInt >> 8) & 0xFF;
-      var blue = colorInt & 0xFF;
-      // 创建Color对象
-      var color = Color.fromARGB(60, red, green, blue);
+      //彩色课表的课程色：跟随主题配色（主色基调 + 课程名色相偏移 + 明暗适配）
+      var color = _courseBlockColor('${element["title"]}');
       final int order = list.length;
       list.add(Positioned(
         child: Obx(() {
@@ -609,7 +615,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                                       '\n${element['data'][0]['courseClassRoom']}',
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.deepOrange,
+                                    color: GlassTheme.scheme.tertiary,
                                   ),
                                 )
                               ]

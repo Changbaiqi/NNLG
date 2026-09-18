@@ -74,7 +74,7 @@ class EvalFormViewPage extends StatelessWidget {
                                         borderRadius:
                                             BorderRadius.circular(20),
                                         border: Border.all(
-                                            color: const Color(0xFFE53935)
+                          color: GlassTheme.scheme.error
                                                 .withValues(alpha: .28)),
                                       ),
                                       child: Text(

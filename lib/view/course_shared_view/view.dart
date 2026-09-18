@@ -268,7 +268,7 @@ class CourseSharedViewPage extends StatelessWidget {
           const SizedBox(width: 10),
           _actionButton(
             icon: Icons.delete_outline_rounded,
-            color: const Color(0xFFE53935),
+            color: GlassTheme.scheme.error,
             onTap: () {
               state.deleteShareMeShare(json, json['shareAccount']);
             },
@@ -345,7 +345,7 @@ class CourseSharedViewPage extends StatelessWidget {
             icon: isShare
                 ? Icons.delete_outline_rounded
                 : Icons.ios_share_rounded,
-            color: isShare ? const Color(0xFFE53935) : accent,
+            color: isShare ? GlassTheme.scheme.error : accent,
             onTap: () {
               //如果分享了
               if (isShare) {

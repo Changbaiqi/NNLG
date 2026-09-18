@@ -1,110 +1,85 @@
 /* FileName GlassUI
  *
- * @Description TODO 全局 UI 规范：毛玻璃 + 渐变风格通用组件
+ * @Description 全局 UI 规范：Material You（Material 3 动态取色）风格通用组件
  *
  * 使用约定：
- * 1. 页面背景用 [GlassBackground]（作为毛玻璃的底，需要它才能看到模糊效果）
+ * 1. 页面背景用 [GlassBackground]（M3 surface 底色）
  * 2. 卡片/面板统一用 [GlassCard]，段落标题用 [GlassSectionTitle]
- * 3. 主按钮用 [GradientButton]，统计数字用 [GlassStat]，功能入口用 [GlassIconTile]
- * 4. 所有组件颜色优先取页面主题 JSON，缺失时用兜底色，保证各主题下都可用
+ * 3. 主按钮用 [GradientButton]（M3 Filled 按钮样式），统计数字用 [GlassStat]
+ * 4. 颜色全部来自当前主题的 ColorScheme（支持 Android 12+ 动态取色）
  */
-import 'dart:ui' show ImageFilter;
-
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:callo/dao/CustomThemeData.dart';
 
 /// 统一设计参数
 class GlassTokens {
-  static const double radius = 18;
+  static const double radius = 16;
   static const double radiusSmall = 12;
   static const double pagePad = 16;
-  static const double blur = 18;
-  static const Color accent = Color(0xFF7C4DFF);
+  static const double blur = 0;
+  static const Color accent = Color(0xFF6750A4);
   static const Color text = Color(0xFF1C1B20);
   static const Color subText = Color(0xFF8A8A93);
 }
 
-/// 从页面主题 JSON 安全取色
+/// 主题色取值：统一走 Material 3 的 ColorScheme（支持动态取色）
 class GlassTheme {
-  static dynamic _page(String page) {
-    final dynamic data = CustomThemeData.nowThemeData.value;
-    if (data is Map) return data[page];
-    return null;
-  }
+  /// 当前 Material 主题色板（唯一数据源，读取即订阅主题变化）
+  static ColorScheme get scheme => CustomThemeData.currentScheme.value;
 
-  static Color _color(dynamic rgba, Color fallback) {
-    if (rgba is List && rgba.length >= 4) {
-      try {
-        return Color.fromARGB(rgba[0] as int, rgba[1] as int, rgba[2] as int,
-            rgba[3] as int);
-      } catch (_) {
-        return fallback;
-      }
-    }
-    return fallback;
-  }
-
-  /// [rgba] 合法时返回颜色，否则 null
-  static Color? _read(dynamic rgba) {
-    if (rgba is List && rgba.length >= 4) {
-      try {
-        return Color.fromARGB(rgba[0] as int, rgba[1] as int, rgba[2] as int,
-            rgba[3] as int);
-      } catch (_) {
-        return null;
-      }
-    }
-    return null;
-  }
-
-  /// 页面背景色（带回退链）：页面 backgroundColor → 底部导航 backgroundColor →
-  /// 任意页面的 backgroundColor → 兜底色。
-  /// 例如黑色主题的 main_view 只配置了 bottomNavigate，需要回退到它的背景色
+  /// 页面背景色（工墨风格：每套预设单独的浅/深底色）
   static Color pageBackground(String page,
       [Color fallback = const Color(0xFFF6F6FA)]) {
-    final dynamic p = _page(page);
-    if (p is Map) {
-      final Color? direct = _read(p['backgroundColor']);
-      if (direct != null) return direct;
-      final dynamic nav = p['bottomNavigate'];
-      if (nav is Map) {
-        final Color? navColor = _read(nav['backgroundColor']);
-        if (navColor != null) return navColor;
-      }
-    }
-    final dynamic data = CustomThemeData.nowThemeData.value;
-    if (data is Map) {
-      final Color? navColor = _read((data['main_view'] is Map &&
-              (data['main_view'] as Map)['bottomNavigate'] is Map)
-          ? ((data['main_view'] as Map)['bottomNavigate'] as Map)['backgroundColor']
-          : null);
-      if (navColor != null) return navColor;
-      for (final dynamic other in data.values) {
-        final Color? c = _read(other is Map ? other['backgroundColor'] : null);
-        if (c != null) return c;
-      }
-    }
-    return fallback;
+    return CustomThemeData.pageColor;
   }
 
-  /// 读取页面主题的一级颜色，如 backgroundColor / textColor
+  /// 兼容旧代码的取色（按主题键映射到 M3 色板）
   static Color color(String page, String key,
       [Color fallback = Colors.white]) {
-    final dynamic p = _page(page);
-    if (p is Map && p[key] != null) return _color(p[key], fallback);
-    return fallback;
+    final ColorScheme scheme = GlassTheme.scheme;
+    switch (key) {
+      case 'backgroundColor':
+        return scheme.surface;
+      case 'textColor':
+        return scheme.onSurface;
+      case 'hintTextColor':
+        return scheme.onSurfaceVariant;
+      case 'foregroundColor':
+        return scheme.surfaceContainerHighest;
+      case 'defaultIconColor':
+        return scheme.onSurfaceVariant;
+      case 'shadowColor':
+        return scheme.shadow;
+      case 'courseLineColor':
+        return scheme.outlineVariant;
+      default:
+        return fallback;
+    }
   }
 
-  /// 读取页面主题的二级颜色，如 bottomNavigate.selectColor
+  /// 兼容旧代码的二级取色（如 bottomNavigate.selectColor）
   static Color nested(String page, String group, String key,
       [Color fallback = Colors.white]) {
-    final dynamic p = _page(page);
-    if (p is Map) {
-      final dynamic g = p[group];
-      if (g is Map && g[key] != null) return _color(g[key], fallback);
+    final ColorScheme scheme = GlassTheme.scheme;
+    switch (key) {
+      case 'backgroundColor':
+        return scheme.surfaceContainer;
+      case 'selectColor':
+      case 'selectScheduleColor':
+        return scheme.primary;
+      case 'nonSelectColor':
+        return scheme.onSurfaceVariant;
+      case 'nonSelectScheduleColor':
+        return scheme.surfaceContainerHighest;
+      case 'textColor':
+        return scheme.onSurface;
+      case 'shadowColor':
+        return scheme.shadow;
+      default:
+        return fallback;
     }
-    return fallback;
   }
 
   /// 底部导航配置（兼容老代码的 main_view.bottomNavigate）
@@ -112,43 +87,23 @@ class GlassTheme {
     return nested('main_view', 'bottomNavigate', key, fallback);
   }
 
-  static Color textColor(String page) {
-    final dynamic p = _page(page);
-    if (p is Map) {
-      final Color? direct = _read(p['textColor']);
-      if (direct != null) return direct;
-    }
-    // 页面未配置文字色时（例如黑色主题下没有 login_view 小节），
-    // 按页面背景亮度自动取黑/白，避免深色背景上出现深色字
-    return onSurface(pageBackground(page));
-  }
+  static Color textColor(String page) => scheme.onSurface;
 
-  static Color accentColor(String page) {
-    final Color a = color(page, 'synIconColor', Colors.transparent);
-    if (a.a > 0) return a;
-    final Color navSelect =
-        bottomNav('selectColor', Colors.transparent);
-    if (navSelect.a > 0) return navSelect;
-    return GlassTokens.accent;
-  }
+  static bool isDark(String page) => CustomThemeData.isDarkTheme;
 
-  static bool isDark(String page) =>
-      pageBackground(page).computeLuminance() < 0.45;
+  static Color accentColor(String page) => scheme.primary;
 
-  /// 毛玻璃卡片的填充色
-  static Color surface(String page) => isDark(page)
-      ? Colors.white.withValues(alpha: .07)
-      : Colors.white.withValues(alpha: .60);
+  /// 次要文字色
+  static Color subTextColor(String page) => scheme.onSurfaceVariant;
 
-  /// 毛玻璃卡片的描边色
-  static Color border(String page) => isDark(page)
-      ? Colors.white.withValues(alpha: .14)
-      : Colors.white.withValues(alpha: .85);
+  static Color border(String page) => scheme.outlineVariant;
 
-  static Color shadow(String page) => Colors.black
-      .withValues(alpha: isDark(page) ? .32 : .08);
+  static Color surface(String page) => CustomThemeData.cardColor;
 
-  /// 把主色提亮，用于渐变按钮/图标
+  static Color shadow(String page) =>
+      scheme.shadow.withValues(alpha: scheme.brightness == Brightness.dark ? .30 : .10);
+
+  /// 把主色提亮，用于渐变/高亮（保留给非 M3 场景使用）
   static Color lighten(Color c, [double amount = .28]) =>
       Color.alphaBlend(Colors.white.withValues(alpha: amount), c);
 
@@ -177,24 +132,17 @@ class GlassTheme {
         : lighten(accent, .38);
   }
 
-  /// 毛玻璃导航/面板的实际表面色（合成后），用于推导前景色
-  static Color glassSurfaceOn(String page, Color base) {
-    return Color.alphaBlend(
-        glassTint(page).withValues(alpha: glassAlpha(page)), base);
-  }
+  /// 毛玻璃表面色（M3 下返回容器的实际合成色）
+  static Color glassSurfaceOn(String page, Color base) => scheme.surfaceContainerHigh;
 
-  /// 毛玻璃表面用的底色（优先取主题的导航背景色，保证与主题一致）
-  static Color glassTint(String page) {
-    final bool dark = isDark(page);
-    return bottomNav('backgroundColor',
-        dark ? const Color(0xFF141218) : Colors.white);
-  }
+  /// 毛玻璃表面用的底色（M3 下用 surfaceContainer）
+  static Color glassTint(String page) => scheme.surfaceContainer;
 
-  /// 毛玻璃表面透明度：保留可透视/模糊感
-  static double glassAlpha(String page) => isDark(page) ? .58 : .72;
+  /// 毛玻璃表面透明度（M3 下不透明）
+  static double glassAlpha(String page) => 1;
 }
 
-/// 页面渐变背景：所有毛玻璃效果的底
+/// 页面背景：M3 surface 底色
 class GlassBackground extends StatelessWidget {
   const GlassBackground({super.key, required this.page, required this.child});
 
@@ -203,28 +151,15 @@ class GlassBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool dark = GlassTheme.isDark(page);
-    final Color base = GlassTheme.pageBackground(page);
-    final Color accent = GlassTheme.accentColor(page);
-    final Color top =
-        Color.alphaBlend(accent.withValues(alpha: dark ? .24 : .16), base);
-    final Color bottom =
-        Color.alphaBlend(accent.withValues(alpha: dark ? .05 : .03), base);
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [top, base, bottom],
-          stops: const [0, .5, 1],
-        ),
-      ),
-      child: child,
-    );
+    //自订阅主题：即使外层页面没有重建，也能实时换色
+    return Obx(() => ColoredBox(
+          color: CustomThemeData.pageColor,
+          child: child,
+        ));
   }
 }
 
-/// 毛玻璃卡片
+/// Material 3 卡片
 class GlassCard extends StatelessWidget {
   const GlassCard({
     super.key,
@@ -257,67 +192,62 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget buildCard({required bool blurred}) {
-      final Color borderColor = GlassTheme.border(page);
-      Widget card = ClipRRect(
-        borderRadius: BorderRadius.circular(radius),
-        child: blurred
-            ? BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-                child: _surface(),
-              )
-            : _surface(),
-      );
-      if (elevated) {
-        card = DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(radius),
-            boxShadow: [
-              BoxShadow(
-                color: GlassTheme.shadow(page),
-                blurRadius: 22,
-                offset: const Offset(0, 10),
-              )
-            ],
+    //自订阅主题：即使外层页面没有重建，也能实时换色
+    return Obx(() {
+      final ColorScheme scheme = GlassTheme.scheme;
+      //工墨风格：卡片无阴影、用低对比描边 + 预设卡片底色（亮色为白卡片）
+      Widget card = Container(
+        decoration: BoxDecoration(
+          color: gradient == null ? CustomThemeData.cardColor : null,
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(radius),
+          border: Border.all(
+            color: scheme.outlineVariant.withValues(alpha: .35),
+            width: 1,
           ),
-          child: card,
-        );
-      }
+        ),
+        child: Material(
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(radius),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(radius),
+            onTap: onTap,
+            onTapDown: onTapDown,
+            onTapUp: onTapUp,
+            onTapCancel: onTapCancel,
+            child: Padding(padding: padding, child: child),
+          ),
+        ),
+      );
       if (margin != null) card = Padding(padding: margin!, child: card);
       return card;
-    }
-
-    //转场动画期间跳过模糊：BackdropFilter 每帧都要重采样，容易掉帧；
-    //页面停稳后再恢复毛玻璃，观感几乎无差别
-    return GlassBlurGate(
-      builder: (blurred) => buildCard(blurred: blurred),
-    );
-  }
-
-  Widget _surface() {
-    return Container(
-      decoration: BoxDecoration(
-        color: gradient == null ? GlassTheme.surface(page) : null,
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(radius),
-        border: Border.all(color: GlassTheme.border(page), width: 1),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(radius),
-          onTap: onTap,
-          onTapDown: onTapDown,
-          onTapUp: onTapUp,
-          onTapCancel: onTapCancel,
-          child: Padding(padding: padding, child: child),
-        ),
-      ),
-    );
+    });
   }
 }
 
-/// 毛玻璃开关：路由转场进行中返回 false（不做模糊），停稳后返回 true
+/// 主题变化时重建子页面：
+/// release 下 Get.forceAppUpdate() 是空操作、路由页面不会自己重建，
+/// 这里订阅主题状态并重新构造页面实例，让页面 build 重新取色（同时保留 State）
+class ThemeRebuild extends StatelessWidget {
+  const ThemeRebuild({super.key, required this.builder});
+
+  final Widget Function() builder;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      CustomThemeData.nowThemeData.value;
+      CustomThemeData.currentScheme.value;
+      CustomThemeData.selectThemeUid.value;
+      CustomThemeData.isFollowSystemDarkMode.value;
+      return builder();
+    });
+  }
+}
+
+/// 过渡动画期间的模糊开关（M3 下无模糊，保留用于兼容旧调用）
+final ValueNotifier<bool> glassBlurSuppress = ValueNotifier<bool>(false);
+
 class GlassBlurGate extends StatefulWidget {
   const GlassBlurGate({super.key, required this.builder});
 
@@ -327,69 +257,12 @@ class GlassBlurGate extends StatefulWidget {
   State<GlassBlurGate> createState() => _GlassBlurGateState();
 }
 
-/// Tab 切换等页面内滑动期间临时关闭模糊（由外层在滑动开始时置位），
-/// 避免 BackdropFilter 跟随位移每帧重新采样导致掉帧
-final ValueNotifier<bool> glassBlurSuppress = ValueNotifier<bool>(false);
-
 class _GlassBlurGateState extends State<GlassBlurGate> {
-  Animation<double>? _animation;
-  Animation<double>? _secondaryAnimation;
-  Route<dynamic>? _route;
-  bool _blurred = true;
-
-  static bool _settled(Animation<double>? animation) {
-    final AnimationStatus? status = animation?.status;
-    return status == null ||
-        status == AnimationStatus.completed ||
-        status == AnimationStatus.dismissed;
-  }
-
-  void _sync() {
-    //弹窗/底部弹层（PopupRoute）内容小而入场动画短，
-    //保持模糊避免"动画播完才突然出现模糊"；只有整页路由转场才临时关闭模糊
-    final bool isPopup = _route is PopupRoute;
-    final bool blurred = !glassBlurSuppress.value &&
-        (isPopup || (_settled(_animation) && _settled(_secondaryAnimation)));
-    if (blurred != _blurred) {
-      setState(() => _blurred = blurred);
-    }
-  }
-
-  void _handleStatus(AnimationStatus status) => _sync();
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final ModalRoute<dynamic>? route = ModalRoute.of(context);
-    _route = route;
-    final Animation<double>? animation = route?.animation;
-    final Animation<double>? secondary = route?.secondaryAnimation;
-    if (!identical(animation, _animation)) {
-      _animation?.removeStatusListener(_handleStatus);
-      _animation = animation;
-      _animation?.addStatusListener(_handleStatus);
-    }
-    if (!identical(secondary, _secondaryAnimation)) {
-      _secondaryAnimation?.removeStatusListener(_handleStatus);
-      _secondaryAnimation = secondary;
-      _secondaryAnimation?.addStatusListener(_handleStatus);
-    }
-    _sync();
-  }
-
-  @override
-  void dispose() {
-    glassBlurSuppress.removeListener(_sync);
-    _animation?.removeStatusListener(_handleStatus);
-    _secondaryAnimation?.removeStatusListener(_handleStatus);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => widget.builder(_blurred);
+  Widget build(BuildContext context) => widget.builder(true);
 }
 
-/// 渐变主按钮
+/// 主按钮：Material 3 Filled 按钮样式
 class GradientButton extends StatelessWidget {
   const GradientButton({
     super.key,
@@ -407,55 +280,48 @@ class GradientButton extends StatelessWidget {
   final String page;
   final double height;
 
-  /// 自定义渐变（不传时用页面主题强调色）
+  /// 自定义底色（不传时用主题主色）
   final List<Color>? colors;
 
   @override
   Widget build(BuildContext context) {
+    //自订阅主题
+    return Obx(() {
     final bool enabled = onPressed != null;
-    final Color accent = GlassTheme.accentColor(page);
-    final List<Color> gradientColors =
-        colors ?? [accent, GlassTheme.lighten(accent)];
+    final ColorScheme scheme = GlassTheme.scheme;
+    final Color bg =
+        (colors != null && colors!.isNotEmpty) ? colors!.first : scheme.primary;
+    final Color fg = GlassTheme.contrastRatio(bg, Colors.white) >= 2.2
+        ? Colors.white
+        : GlassTheme.onSurface(bg);
     return Opacity(
-      opacity: enabled ? 1 : .55,
+      opacity: enabled ? 1 : .5,
       child: Container(
         height: height,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: gradientColors,
-          ),
-          borderRadius: BorderRadius.circular(height / 2.6),
-          boxShadow: [
-            BoxShadow(
-              color: gradientColors.first.withValues(alpha: .38),
-              blurRadius: 16,
-              offset: const Offset(0, 8),
-            )
-          ],
+          color: bg,
+          borderRadius: BorderRadius.circular(height / 2),
         ),
         child: Material(
           color: Colors.transparent,
+          borderRadius: BorderRadius.circular(height / 2),
           child: InkWell(
-            borderRadius: BorderRadius.circular(height / 2.6),
-            splashColor: Colors.white.withValues(alpha: .18),
-            highlightColor: Colors.white.withValues(alpha: .08),
+            borderRadius: BorderRadius.circular(height / 2),
             onTap: onPressed,
             child: Center(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, color: Colors.white, size: 18),
+                    Icon(icon, color: fg, size: 18),
                     const SizedBox(width: 8),
                   ],
                   Text(
                     text,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: fg,
                       fontSize: 15,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -465,10 +331,11 @@ class GradientButton extends StatelessWidget {
         ),
       ),
     );
+    });
   }
 }
 
-/// 段落标题：渐变小竖条 + 标题
+/// 段落标题：Material 3 标题样式
 class GlassSectionTitle extends StatelessWidget {
   const GlassSectionTitle({
     super.key,
@@ -483,39 +350,29 @@ class GlassSectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accent = GlassTheme.accentColor(page);
-    return Row(
-      children: [
-        Container(
-          width: 4,
-          height: 16,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [accent, GlassTheme.lighten(accent)],
-            ),
-            borderRadius: BorderRadius.circular(2),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: GlassTheme.textColor(page),
+    //自订阅主题
+    return Obx(() {
+      final ColorScheme scheme = GlassTheme.scheme;
+      return Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: scheme.onSurface,
+              ),
             ),
           ),
-        ),
-        if (trailing != null) trailing!,
-      ],
-    );
+          if (trailing != null) trailing!,
+        ],
+      );
+    });
   }
 }
 
-/// 统计数字（渐变文字）
+/// 统计数字（主色文字）
 class GlassStat extends StatelessWidget {
   const GlassStat({
     super.key,
@@ -536,46 +393,41 @@ class GlassStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accent = GlassTheme.accentColor(page);
-    final Color text = GlassTheme.textColor(page);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[
-              Icon(icon, size: 16, color: accent),
-              const SizedBox(width: 4),
+    //自订阅主题
+    return Obx(() {
+      final ColorScheme scheme = GlassTheme.scheme;
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, size: 16, color: scheme.primary),
+                const SizedBox(width: 4),
+              ],
+              Text(label,
+                  style: TextStyle(
+                      fontSize: 12, color: scheme.onSurfaceVariant)),
             ],
-            Text(label,
-                style: TextStyle(
-                    fontSize: 12, color: text.withValues(alpha: .62))),
-          ],
-        ),
-        const SizedBox(height: 4),
-        ShaderMask(
-          shaderCallback: (Rect rect) => LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [accent, GlassTheme.lighten(accent, .45)],
-          ).createShader(rect),
-          child: valueWidget ??
+          ),
+          const SizedBox(height: 4),
+          valueWidget ??
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: scheme.primary,
                 ),
               ),
-        ),
-      ],
-    );
+        ],
+      );
+    });
   }
 }
 
-/// 毛玻璃下拉选择器：胶囊按钮 + 毛玻璃选择弹层
+/// 下拉选择器：Material 3 样式
 class GlassDropdown<T> extends StatelessWidget {
   const GlassDropdown({
     super.key,
@@ -596,17 +448,17 @@ class GlassDropdown<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color text = GlassTheme.textColor(page);
+    //自订阅主题
+    return Obx(() {
+    final ColorScheme scheme = GlassTheme.scheme;
     return InkWell(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(12),
       onTap: items.isEmpty ? null : () => _openPicker(context),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: GlassTheme.glassTint(page)
-              .withValues(alpha: GlassTheme.glassAlpha(page)),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: GlassTheme.border(page), width: 1),
+          color: scheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -618,23 +470,26 @@ class GlassDropdown<T> extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    fontSize: 13, fontWeight: FontWeight.w600, color: text),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: scheme.onSurface),
               ),
             ),
             const SizedBox(width: 4),
             Icon(Icons.expand_more_rounded,
-                size: 18, color: text.withValues(alpha: .7)),
+                size: 18, color: scheme.onSurfaceVariant),
           ],
         ),
       ),
     );
+    });
   }
 
   Future<void> _openPicker(BuildContext context) async {
     final T? selected = await showModalBottomSheet<T>(
       context: context,
       backgroundColor: Colors.transparent,
-      barrierColor: Colors.black.withValues(alpha: .35),
+      barrierColor: Colors.black.withValues(alpha: .32),
       builder: (ctx) {
         return SafeArea(
           child: Padding(
@@ -668,28 +523,19 @@ class GlassDropdown<T> extends StatelessWidget {
   }
 
   Widget _buildItem(BuildContext ctx, T item) {
-    final Color text = GlassTheme.textColor(page);
-    final Color accent = GlassTheme.accentColor(page);
+    final ColorScheme scheme = GlassTheme.scheme;
     final bool selected = item == value;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         onTap: () => Navigator.pop(ctx, item),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 160),
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: selected
-                ? accent.withValues(alpha: .16)
-                : text.withValues(alpha: .05),
-            border: Border.all(
-              color: selected
-                  ? accent.withValues(alpha: .60)
-                  : text.withValues(alpha: .12),
-              width: selected ? 1.3 : 1,
-            ),
+            borderRadius: BorderRadius.circular(12),
+            color: selected ? scheme.secondaryContainer : Colors.transparent,
           ),
           child: Row(
             children: [
@@ -700,11 +546,14 @@ class GlassDropdown<T> extends StatelessWidget {
                       fontSize: 13.5,
                       fontWeight:
                           selected ? FontWeight.w700 : FontWeight.w500,
-                      color: selected ? accent : text),
+                      color: selected
+                          ? scheme.onSecondaryContainer
+                          : scheme.onSurface),
                 ),
               ),
               if (selected)
-                Icon(Icons.check_rounded, size: 18, color: accent),
+                Icon(Icons.check_rounded,
+                    size: 18, color: scheme.onSecondaryContainer),
             ],
           ),
         ),
@@ -713,7 +562,7 @@ class GlassDropdown<T> extends StatelessWidget {
   }
 }
 
-/// 功能入口（图标 + 文案，毛玻璃小块）
+/// 功能入口（图标 + 文案）：M3 tonal 色块
 class GlassIconTile extends StatelessWidget {
   const GlassIconTile({
     super.key,
@@ -730,28 +579,27 @@ class GlassIconTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accent = GlassTheme.accentColor(page);
-    // 这里刻意不使用 BackdropFilter：列表/网格中大量模糊会导致首帧闪烁
-    return Padding(
-      padding: const EdgeInsets.all(2),
-      child: Container(
-        decoration: BoxDecoration(
-          color: accent.withValues(alpha: GlassTheme.isDark(page) ? .10 : .07),
-          borderRadius: BorderRadius.circular(radius),
-          border: Border.all(
-            color: accent.withValues(alpha: .18),
-            width: 1,
-          ),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
+    //自订阅主题
+    return Obx(() {
+      final ColorScheme scheme = GlassTheme.scheme;
+      return Padding(
+        padding: const EdgeInsets.all(2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: scheme.secondaryContainer,
             borderRadius: BorderRadius.circular(radius),
-            onTap: onTap,
-            child: child,
+          ),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(radius),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(radius),
+              onTap: onTap,
+              child: child,
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

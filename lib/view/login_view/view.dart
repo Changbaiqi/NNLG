@@ -122,17 +122,17 @@ class LoginViewPage extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(50, 14, 50, 0),
                 child: EasyButton(
                   type: EasyButtonType.elevated,
-                  idleStateWidget: const Text(
+                  idleStateWidget: Text(
                     '登录',
                     style: TextStyle(
-                        color: Colors.white,
+                        color: GlassTheme.scheme.onPrimary,
                         fontSize: 15,
                         fontWeight: FontWeight.w700),
                   ),
-                  loadingStateWidget: const CircularProgressIndicator(
+                  loadingStateWidget: CircularProgressIndicator(
                     strokeWidth: 3.0,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        GlassTheme.scheme.onPrimary),
                   ),
                   useWidthAnimation: true,
                   useEqualLoadingStateWidgetDimension: true,

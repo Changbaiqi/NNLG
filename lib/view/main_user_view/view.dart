@@ -54,7 +54,7 @@ class MainUserViewPage extends StatelessWidget {
                       onTap: () => Get.toNamed(Routes.AboutMe),
                     ),
                     _entry(
-                      title: '设置、账号安全及隐私',
+                      title: '设置',
                       svg: 'assets/images/safe.svg',
                       onTap: () => Get.toNamed(Routes.AccountSafe),
                     ),

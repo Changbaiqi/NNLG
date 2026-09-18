@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:callo/utils/CourseScoreUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 
 import 'state.dart';
 
@@ -38,22 +39,22 @@ class ScoreInquiryViewLogic extends GetxController {
     });
   }
 
-  //成绩颜色判断
+  //成绩颜色判断（M3：不及格=error，合格=tertiary，优秀=primary，其余=onSurface）
   Color scoreColors(String score) {
     double? num = double.tryParse(score);
     if (num == null) {
-      if (score == '不合格') return Colors.red;
-      if (score == '不及格') return Colors.red;
-      if (score == '合格') return Colors.amber;
-      if (score == '及格') return Colors.amber;
-      if (score == '优') return Colors.deepPurple;
-      return Colors.white;
+      if (score == '不合格') return GlassTheme.scheme.error;
+      if (score == '不及格') return GlassTheme.scheme.error;
+      if (score == '合格') return GlassTheme.scheme.tertiary;
+      if (score == '及格') return GlassTheme.scheme.tertiary;
+      if (score == '优') return GlassTheme.scheme.primary;
+      return GlassTheme.scheme.onSurface;
     }
-    if (num! < 60) return Colors.red;
-    if (num == 60) return Colors.amber;
-    if (num >= 90) return Colors.deepPurple;
+    if (num! < 60) return GlassTheme.scheme.error;
+    if (num == 60) return GlassTheme.scheme.tertiary;
+    if (num >= 90) return GlassTheme.scheme.primary;
 
-    return Colors.white;
+    return GlassTheme.scheme.onSurface;
   }
 
   @override

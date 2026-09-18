@@ -70,10 +70,10 @@ class MainCommunityViewPage extends StatelessWidget {
                 icon: Icons.people_alt_rounded,
                 valueWidget: AnimatedFlipCounter(
                   value: ContextDate.onLineTotalCount.value.toInt(),
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white),
+                      color: GlassTheme.scheme.primary),
                 ),
               )),
           Container(width: 1, height: 44, color: divider),
@@ -84,10 +84,10 @@ class MainCommunityViewPage extends StatelessWidget {
                 icon: Icons.touch_app_rounded,
                 valueWidget: AnimatedFlipCounter(
                   value: state.onClickTotal.value.toInt(),
-                  textStyle: const TextStyle(
+                  textStyle: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white),
+                      color: GlassTheme.scheme.primary),
                 ),
               )),
         ],

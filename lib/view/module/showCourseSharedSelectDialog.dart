@@ -46,14 +46,12 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect>
           children: [
             Align(
               child: InkWell(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                      sigmaX: _backgroundAnimation!.value,
-                      sigmaY: _backgroundAnimation!.value),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    width: MediaQuery.of(context).size.width,
-                  ),
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black.withValues(
+                      alpha:
+                          .32 * (_backgroundAnimation!.value / 20).clamp(0, 1)),
                 ),
                 onTap: () {
                   _animationController!
@@ -94,9 +92,9 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect>
                       child: _actionCircle(
                         label: '共享',
                         icon: Icons.ios_share_rounded,
-                        colors: const [
-                          Color(0xFF546E7A),
-                          Color(0xFF90A4AE)
+                        colors: [
+                          GlassTheme.scheme.tertiary,
+                          GlassTheme.lighten(GlassTheme.scheme.tertiary, .28)
                         ],
                         onTap: () {
                           Get.toNamed(Routes.CourseShared);
@@ -155,11 +153,11 @@ class _CourseSharedSelectState extends State<_CourseSharedSelect>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: Colors.white, size: 30),
+              Icon(icon, color: GlassTheme.onSurface(colors.first), size: 30),
               const SizedBox(height: 6),
               Text(label,
-                  style: const TextStyle(
-                      color: Colors.white,
+                  style: TextStyle(
+                      color: GlassTheme.onSurface(colors.first),
                       fontSize: 15,
                       fontWeight: FontWeight.w700)),
             ],

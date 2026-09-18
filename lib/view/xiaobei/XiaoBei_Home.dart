@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/XiaoBeiHomeUtil.dart';
 import 'package:callo/view/module/setXiaoBeiPlayTImeSheet.dart';
 
@@ -66,7 +67,7 @@ class _XiaoBei_Home_Card_1State extends State<XiaoBei_Home_Card_1> {
                             offset: Offset(0.0,7.0),
                             blurRadius: 14.0,
                             spreadRadius: 0,
-                            color:Color(0xFFdfdfdf)
+                            color:GlassTheme.scheme.outlineVariant
                         )
                       ]
                   ),
@@ -105,7 +106,7 @@ class _XiaoBei_Home_Card_1State extends State<XiaoBei_Home_Card_1> {
                             offset: Offset(0.0,7.0),
                             blurRadius: 14.0,
                             spreadRadius: 0,
-                            color:Color(0xFFdfdfdf)
+                            color:GlassTheme.scheme.outlineVariant
                         )
                       ]
                   ),
@@ -236,7 +237,7 @@ class _XiaoBei_Home_Card_2State extends State<XiaoBei_Home_Card_2> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),
@@ -373,7 +374,7 @@ class _XiaoBei_Home_Card_3State extends State<XiaoBei_Home_Card_3> {
                           offset: Offset(0.0,7.0),
                           blurRadius: 14.0,
                           spreadRadius: 0,
-                          color:Color(0xFFdfdfdf)
+                          color:GlassTheme.scheme.outlineVariant
                       )
                     ]
                 ),
@@ -411,7 +412,7 @@ class _XiaoBei_Home_Card_3State extends State<XiaoBei_Home_Card_3> {
                           offset: Offset(0.0,7.0),
                           blurRadius: 14.0,
                           spreadRadius: 0,
-                          color:Color(0xFFdfdfdf)
+                          color:GlassTheme.scheme.outlineVariant
                       )
                     ]
                 ),
@@ -514,7 +515,7 @@ class _XiaoBei_Home_Card_4State extends State<XiaoBei_Home_Card_4> {
                       offset: Offset(0.0,7.0),
                       blurRadius: 14.0,
                       spreadRadius: 0,
-                      color:Color(0xFFdfdfdf)
+                      color:GlassTheme.scheme.outlineVariant
                   )
                 ]
             ),

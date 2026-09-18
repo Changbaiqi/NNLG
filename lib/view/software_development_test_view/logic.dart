@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:wifi_hunter/wifi_hunter.dart';
 import 'package:wifi_hunter/wifi_hunter_result.dart';
 
@@ -15,7 +16,7 @@ import 'state.dart';
 class SoftwareDevelopmentTestViewLogic extends GetxController {
   final SoftwareDevelopmentTestViewState state = SoftwareDevelopmentTestViewState();
   final wiFiHunterResult = WiFiHunterResult().obs;
-  final huntButtonColor = Colors.lightBlue.obs;
+  final huntButtonColor = GlassTheme.scheme.primary.obs;
   final list = [].obs;
   Future<void> huntWiFis() async {
     // setState(() => huntButtonColor = Colors.red);
@@ -43,7 +44,7 @@ class SoftwareDevelopmentTestViewLogic extends GetxController {
     // if (!mounted) return;
     wiFiHunterResult.refresh();
     list.refresh();
-    huntButtonColor.value = Colors.lightBlue;
+    huntButtonColor.value = GlassTheme.scheme.primary;
     // setState(() => huntButtonColor = Colors.lightBlue);
   }
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:callo/utils/GlassUI.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
@@ -18,7 +19,9 @@ class NnlgCommunityViewPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['nnlg_community_view']!['backgroundColor'] as List ),
       floatingActionButton: FloatingActionButton(
-        child: Text('发布'),
+        //禁用 Hero：避免与主页的课表 FAB 默认 tag 冲突
+        heroTag: null,
+        child: Text('发帖'),
         onPressed: (){
 
         },
@@ -70,7 +73,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
       width: 80,
       height: 80,
       decoration: BoxDecoration(
-          color: isSelect?Colors.black38:Colors.black12,
+          color: isSelect?GlassTheme.scheme.primaryContainer:GlassTheme.scheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20)
       ),
       child: Stack(
@@ -79,7 +82,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
             height: 50,
             width: 50,
             decoration: BoxDecoration(
-                color: Colors.black12,
+                color: GlassTheme.scheme.primary.withValues(alpha: .18),
                 borderRadius: BorderRadius.circular(50)
             ),
           ),alignment: Alignment.center,),
@@ -117,7 +120,7 @@ class NnlgCommunityViewPage extends StatelessWidget {
               width: 200,
               child: Row(
                 children: [
-                  Text('发布时间：${issueTime.year}-${issueTime.month}-${issueTime.day}-${issueTime.hour}-${issueTime.minute}',style: TextStyle(color: Colors.black45),)
+                  Text('发布时间：${issueTime.year}-${issueTime.month}-${issueTime.day}-${issueTime.hour}-${issueTime.minute}',style: TextStyle(color: GlassTheme.scheme.onSurfaceVariant),)
                 ],
               ),
             ),left: 10,top: 120,),

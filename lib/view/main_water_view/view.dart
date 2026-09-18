@@ -60,15 +60,14 @@ class MainWaterViewPage extends StatelessWidget {
                           _switchButton(
                             '冷水开',
                             Icons.lock_open_rounded,
-                            const Color(0xFF1E88E5),
                             () => logic.coolOpenWaterButtonCheck(),
                           ),
                           const SizedBox(height: 10),
                           _switchButton(
                             '冷水关',
                             Icons.lock_rounded,
-                            const Color(0xFF1E88E5),
                             () => logic.coolCloseWaterButtonCheck(),
+                            filled: false,
                           ),
                         ],
                       ),
@@ -85,15 +84,15 @@ class MainWaterViewPage extends StatelessWidget {
                           _switchButton(
                             '热水开',
                             Icons.local_fire_department_rounded,
-                            const Color(0xFFE53935),
                             () => logic.hotOpenWaterButtonCheck(),
+                            hot: true,
                           ),
                           const SizedBox(height: 10),
                           _switchButton(
                             '热水关',
                             Icons.block_rounded,
-                            const Color(0xFFE53935),
                             () => logic.hotCloseWaterButtonCheck(),
+                            filled: false,
                           ),
                         ],
                       ),
@@ -127,9 +126,9 @@ class MainWaterViewPage extends StatelessWidget {
     );
   }
 
-  /// 余额卡片
+  /// 余额卡片（M3：主色大字 + 中性胶囊）
   Widget _moneyCard() {
-    final Color text = GlassTheme.textColor(_page);
+    final ColorScheme scheme = GlassTheme.scheme;
     return GlassCard(
       page: _page,
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
@@ -137,40 +136,33 @@ class MainWaterViewPage extends StatelessWidget {
             children: [
               Text('账户余额',
                   style: TextStyle(
-                      fontSize: 12, color: text.withValues(alpha: .62))),
+                      fontSize: 12, color: scheme.onSurfaceVariant)),
               const SizedBox(height: 6),
-              ShaderMask(
-                shaderCallback: (Rect rect) => const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFFFF9800), Color(0xFFFFC107)],
-                ).createShader(rect),
-                child: Text(
-                  '${(state.money.value == "" || state.money.value == null) ? "0.00" : state.money.value}￥',
-                  style: const TextStyle(
-                      fontSize: 46,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white),
-                ),
+              Text(
+                '${(state.money.value == "" || state.money.value == null) ? "0.00" : state.money.value}￥',
+                style: TextStyle(
+                    fontSize: 46,
+                    fontWeight: FontWeight.w800,
+                    color: scheme.primary),
               ),
               const SizedBox(height: 6),
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: text.withValues(alpha: .06),
+                  color: scheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.water_drop_rounded,
-                        size: 14, color: text.withValues(alpha: .55)),
+                        size: 14, color: scheme.onSurfaceVariant),
                     const SizedBox(width: 6),
                     Text(
                       '当前设备：${state.divice.value ?? "未知"}',
                       style: TextStyle(
-                          fontSize: 12, color: text.withValues(alpha: .75)),
+                          fontSize: 12, color: scheme.onSurfaceVariant),
                     ),
                   ],
                 ),
@@ -180,50 +172,42 @@ class MainWaterViewPage extends StatelessWidget {
     );
   }
 
-  /// 单个开关按钮：渐变胶囊（占满所在列宽度）
+  /// 单个开关按钮：M3 按钮（开=主色/暖色容器，关=中性容器）
   Widget _switchButton(
     String label,
     IconData icon,
-    Color color,
-    VoidCallback onPressed,
-  ) {
+    VoidCallback onPressed, {
+    bool filled = true,
+    bool hot = false,
+  }) {
+    final ColorScheme scheme = GlassTheme.scheme;
+    final Color bg = !filled
+        ? scheme.surfaceContainerHighest
+        : (hot ? scheme.error : scheme.primary);
+    final Color fg = !filled
+        ? scheme.onSurfaceVariant
+        : (hot ? scheme.onError : scheme.onPrimary);
     return SizedBox(
-      height: 56,
+      height: 52,
       width: double.infinity,
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [color, GlassTheme.lighten(color, .30)],
-          ),
+      child: Material(
+        color: bg,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: .35),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
-            )
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onTap: onPressed,
-            child: Center(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(icon, color: Colors.white, size: 18),
-                  const SizedBox(width: 5),
-                  Text(label,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w700)),
-                ],
-              ),
+          onTap: onPressed,
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: fg, size: 18),
+                const SizedBox(width: 5),
+                Text(label,
+                    style: TextStyle(
+                        color: fg,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600)),
+              ],
             ),
           ),
         ),
@@ -329,40 +313,46 @@ class MainWaterViewPage extends StatelessWidget {
     );
   }
 
-  /// 渐变圆形动作按钮
+  /// 动作按钮的 M3 色调底：保留功能色相，但用低饱和 tonal 底
+  Color _tonalBg(List<Color> colors) {
+    final ColorScheme scheme = GlassTheme.scheme;
+    final Color hue = colors.isNotEmpty ? colors.first : scheme.primary;
+    return Color.alphaBlend(
+      hue.withValues(alpha: scheme.brightness == Brightness.dark ? .30 : .16),
+      scheme.surfaceContainerHigh,
+    );
+  }
+
+  /// 色调底上的可读前景色
+  Color _tonalFg(List<Color> colors, Color bg) {
+    final Color hue =
+        colors.isNotEmpty ? colors.first : GlassTheme.scheme.primary;
+    return GlassTheme.readableAccent(hue, bg);
+  }
+
+  /// 圆形动作按钮（M3 tonal）
   Widget _actionButton({
     required String label,
     required IconData icon,
     required List<Color> colors,
     required VoidCallback onPressed,
   }) {
+    final Color bg = _tonalBg(colors);
+    final Color fg = _tonalFg(colors, bg);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: 64,
           height: 64,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: colors.first.withValues(alpha: .38),
-                blurRadius: 14,
-                offset: const Offset(0, 6),
-              )
-            ],
-          ),
+          decoration: BoxDecoration(shape: BoxShape.circle, color: bg),
           child: Material(
             color: Colors.transparent,
+            shape: const CircleBorder(),
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: onPressed,
-              child: Icon(icon, color: Colors.white, size: 28),
+              child: Icon(icon, color: fg, size: 26),
             ),
           ),
         ),
@@ -378,44 +368,36 @@ class MainWaterViewPage extends StatelessWidget {
     );
   }
 
-  /// 小号渐变按钮
+  /// 小号胶囊按钮（M3 tonal）
   Widget _smallButton({
     required String label,
     required IconData icon,
     required List<Color> colors,
     required VoidCallback onPressed,
   }) {
+    final Color bg = _tonalBg(colors);
+    final Color fg = _tonalFg(colors, bg);
     return Container(
       height: 34,
       padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: colors,
-        ),
+        color: bg,
         borderRadius: BorderRadius.circular(17),
-        boxShadow: [
-          BoxShadow(
-            color: colors.first.withValues(alpha: .30),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
       ),
       child: Material(
         color: Colors.transparent,
+        borderRadius: BorderRadius.circular(17),
         child: InkWell(
           borderRadius: BorderRadius.circular(17),
           onTap: onPressed,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: Colors.white, size: 14),
+              Icon(icon, color: fg, size: 14),
               const SizedBox(width: 4),
               Text(label,
-                  style: const TextStyle(
-                      color: Colors.white,
+                  style: TextStyle(
+                      color: fg,
                       fontSize: 12,
                       fontWeight: FontWeight.w600)),
             ],

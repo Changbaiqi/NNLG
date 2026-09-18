@@ -82,10 +82,10 @@ class selectNowCourseWeekSheet{
                           onPressed: () {
                             Navigator.pop(_context);
                           },
-                          child: Text('取消',style: TextStyle(color: Colors.white),),
+                          child: Text('取消',style: TextStyle(color: GlassTheme.scheme.onSurface),),
                           style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all(
-                                  const Color(0xFF546E7A)
+                                  GlassTheme.scheme.surfaceContainerHighest
                               ),
                               shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),

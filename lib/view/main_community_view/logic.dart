@@ -219,7 +219,7 @@ class MainCommunityViewLogic extends GetxController {
                   child: Text('刷新卡片信息'),
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.blueGrey)),
+                          MaterialStateProperty.all(GlassTheme.scheme.primary)),
                 ),
               ),
               Container(
@@ -233,7 +233,7 @@ class MainCommunityViewLogic extends GetxController {
                   child: Text('取消绑定'),
                   style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.blueGrey)),
+                          MaterialStateProperty.all(GlassTheme.scheme.primary)),
                 ),
               )
             ],

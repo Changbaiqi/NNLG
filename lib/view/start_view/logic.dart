@@ -164,7 +164,8 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void toLogin() {
-    Timer timer = Timer(Duration(seconds: 1), () {
+    //延迟缩短到 300ms：只保留入场动画的缓冲，避免无谓等待
+    Timer timer = Timer(const Duration(milliseconds: 300), () {
       //用户已经"跳过同步直接进入主页"时，不再强制跳转登录页，
       //同步完成只需刷新本地 token/cookie 即可
       if (Get.currentRoute != Routes.Start) return;
@@ -173,7 +174,8 @@ class StartViewLogic extends GetxController with SingleGetTickerProviderMixin {
   }
 
   void toMain() {
-    Timer timer = Timer(Duration(seconds: 1), () {
+    //延迟缩短到 300ms：登录/同步一完成就尽快进入主页
+    Timer timer = Timer(const Duration(milliseconds: 300), () {
       //已经在主页时不再重复跳转：否则会重新加载一遍主页，
       //并导致底部导航（PageController 重复挂载）点击失效
       if (Get.currentRoute == Routes.Main) return;

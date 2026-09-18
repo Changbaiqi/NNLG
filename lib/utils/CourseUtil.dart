@@ -28,6 +28,10 @@ class CourseUtil{
 
     _options.baseUrl ='${ContextDate.ContextUrl}';
     _options.headers['Cookie'] = ContextDate.ContextCookie;
+    //超时保护：教务系统卡住时不再无限转圈
+    _options.connectTimeout = const Duration(seconds: 10);
+    _options.sendTimeout = const Duration(seconds: 15);
+    _options.receiveTimeout = const Duration(seconds: 25);
 
   }
 

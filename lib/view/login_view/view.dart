@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:easy_loading_button/easy_loading_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -169,56 +167,54 @@ class LoginViewPage extends StatelessWidget {
                             await AccountUtil()
                                 .getAccountPersonalInformation()
                                 .then((value) async {
-                              print('${jsonDecode(value)['id']}');
+                              final dynamic info = jsonDecode(value);
+                              print('${info['id']}');
+
+                              //学期列表 + 服务器登录 与本地保存并行执行，缩短等待
+                              final Future semesterFuture =
+                                  CourseUtil().getSemesterCourseList();
+                              MainUserUtil()
+                                  .vipLogin('${LoginData.account}',
+                                      '${LoginData.password}')
+                                  .then((value) {
+                                if (value["code"] == 400) {
+                                  ToastUtil.show('${value["msg"]}');
+                                  return;
+                                }
+
+                                if (value["code"] == 200) {
+                                  ContextDate.ContextVIPTken = value["token"];
+                                  ShareDateUtil().setIsIdent(
+                                      value["data"]["user"]["isIdent"] == 1);
+                                  ShareDateUtil().setIdentMainColor(
+                                      value["data"]["user"]["identMainColor"]);
+                                  ShareDateUtil().setIdentMainTag(
+                                      value["data"]["user"]["identMainTag"]);
+                                }
+                              }).catchError((e, s) {
+                                //服务器登录失败不影响进入主页，仅记录日志
+                                print('vipLogin Exception $e; $s');
+                              });
 
                               await Future.wait([
-                                ShareDateUtil().setAccountStudentID(
-                                    jsonDecode(value)['id']),
-                                ShareDateUtil().setAccountStudentName(
-                                    jsonDecode(value)['name']),
-                                ShareDateUtil().setAccountStudentMajor(
-                                    jsonDecode(value)['major'])
-                              ]).then((value) {
-                                //以上数据获取完后外部调用刷新界面
-                              });
-                              //课程学期列表获取
-                              await CourseUtil()
-                                  .getSemesterCourseList()
-                                  .then((value) {
+                                ShareDateUtil()
+                                    .setAccountStudentID(info['id']),
+                                ShareDateUtil()
+                                    .setAccountStudentName(info['name']),
+                                ShareDateUtil()
+                                    .setAccountStudentMajor(info['major'])
+                              ]);
+                              //等待学期列表（与上面的服务器登录并行，不再串行等待）
+                              await semesterFuture.then((value) {
                                 //如果以及寄存了课表的日期那么久直接返回
                                 if (CourseData.nowCourseList.value != null &&
                                     CourseData.nowCourseList.value != "")
                                   return;
 
-                                ShareDateUtil().setNowCourseList(value[0]);
+                                if (value is List && value.isNotEmpty) {
+                                  ShareDateUtil().setNowCourseList(value[0]);
+                                }
                               });
-
-                              //这个使用服务器功能的登录
-                              try {
-                                await MainUserUtil()
-                                    .vipLogin('${LoginData.account}',
-                                        '${LoginData.password}')
-                                    .then((value) {
-                                  if (value["code"] == 400) {
-                                    ToastUtil.show('${value["msg"]}');
-                                    return;
-                                  }
-
-                                  if (value["code"] == 200) {
-                                    ContextDate.ContextVIPTken = value["token"];
-                                    ShareDateUtil().setIsIdent(
-                                        value["data"]["user"]["isIdent"] == 1);
-                                    ShareDateUtil().setIdentMainColor(
-                                        value["data"]["user"]
-                                            ["identMainColor"]);
-                                    log("认证颜色：${value["data"]["user"]["identMainColor"]}");
-                                    ShareDateUtil().setIdentMainTag(
-                                        value["data"]["user"]["identMainTag"]);
-                                  }
-                                });
-                              } catch (e, s) {
-                                print('_printException $e; $s');
-                              }
 
                               Get.offNamed(Routes.Main);
                             });

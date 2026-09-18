@@ -11,6 +11,10 @@ class MainUserUtil{
 
   MainUserUtil(){
     _options.baseUrl = ContextDate.VIPContextUrl;
+    //超时保护：服务器卡住时不再无限转圈
+    _options.connectTimeout = const Duration(seconds: 10);
+    _options.sendTimeout = const Duration(seconds: 15);
+    _options.receiveTimeout = const Duration(seconds: 20);
   }
 
 

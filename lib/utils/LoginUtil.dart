@@ -17,6 +17,10 @@ class LoginUtil {
     _options.method = 'POST';
     _options.baseUrl = '${ContextDate.ContextUrl}';
     _options.followRedirects = false;
+    //超时保护：教务系统卡住时不再无限转圈
+    _options.connectTimeout = const Duration(seconds: 10);
+    _options.sendTimeout = const Duration(seconds: 15);
+    _options.receiveTimeout = const Duration(seconds: 25);
     // _options.responseDecoder =gbkDecoder(responseBytes, options, responseBody)
     _options.validateStatus = (status) {
       return status! < 500;

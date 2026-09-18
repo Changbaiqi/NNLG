@@ -147,7 +147,10 @@ class _MainViewPageState extends State<MainViewPage>
     );
   }
 
-  /// 单个导航项：M3 选中态用 secondaryContainer 胶囊指示
+  /// 当前按下的导航项（用于按下缩放反馈）
+  int? _pressedNavIndex;
+
+  /// 单个导航项：M3 选中态用 secondaryContainer 胶囊指示 + 按下缩放
   Widget _navItem(int index, IconData icon, String label) {
     final ColorScheme scheme = GlassTheme.scheme;
     return Expanded(
@@ -163,6 +166,14 @@ class _MainViewPageState extends State<MainViewPage>
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
               onTap: () => _jumpToPage(index),
+              onTapDown: (_) =>
+                  setState(() => _pressedNavIndex = index),
+              onTapUp: (_) => setState(() => _pressedNavIndex = null),
+              onTapCancel: () => setState(() => _pressedNavIndex = null),
+              child: AnimatedScale(
+                scale: _pressedNavIndex == index ? .94 : 1.0,
+                duration: const Duration(milliseconds: 120),
+                curve: Curves.easeOut,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
                 curve: Curves.easeOutCubic,
@@ -196,6 +207,7 @@ class _MainViewPageState extends State<MainViewPage>
                     ),
                   ],
                 ),
+              ),
               ),
             ),
           ),

@@ -159,8 +159,8 @@ class GlassBackground extends StatelessWidget {
   }
 }
 
-/// Material 3 卡片
-class GlassCard extends StatelessWidget {
+/// Material 3 卡片（按下时轻微缩放，提供触感反馈，参考工墨 TapScale）
+class GlassCard extends StatefulWidget {
   const GlassCard({
     super.key,
     required this.page,
@@ -191,6 +191,33 @@ class GlassCard extends StatelessWidget {
   final bool elevated;
 
   @override
+  State<GlassCard> createState() => _GlassCardState();
+}
+
+class _GlassCardState extends State<GlassCard> {
+  bool _pressed = false;
+
+  bool get _tappable =>
+      widget.onTap != null ||
+      widget.onTapDown != null ||
+      widget.onTapUp != null;
+
+  void _handleTapDown(TapDownDetails details) {
+    if (_tappable && mounted) setState(() => _pressed = true);
+    widget.onTapDown?.call(details);
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    if (_pressed && mounted) setState(() => _pressed = false);
+    widget.onTapUp?.call(details);
+  }
+
+  void _handleTapCancel() {
+    if (_pressed && mounted) setState(() => _pressed = false);
+    widget.onTapCancel?.call();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //自订阅主题：即使外层页面没有重建，也能实时换色
     return Obx(() {
@@ -198,9 +225,9 @@ class GlassCard extends StatelessWidget {
       //工墨风格：卡片无阴影、用低对比描边 + 预设卡片底色（亮色为白卡片）
       Widget card = Container(
         decoration: BoxDecoration(
-          color: gradient == null ? CustomThemeData.cardColor : null,
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(radius),
+          color: widget.gradient == null ? CustomThemeData.cardColor : null,
+          gradient: widget.gradient,
+          borderRadius: BorderRadius.circular(widget.radius),
           border: Border.all(
             color: scheme.outlineVariant.withValues(alpha: .35),
             width: 1,
@@ -208,18 +235,27 @@ class GlassCard extends StatelessWidget {
         ),
         child: Material(
           color: Colors.transparent,
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(widget.radius),
           child: InkWell(
-            borderRadius: BorderRadius.circular(radius),
-            onTap: onTap,
-            onTapDown: onTapDown,
-            onTapUp: onTapUp,
-            onTapCancel: onTapCancel,
-            child: Padding(padding: padding, child: child),
+            borderRadius: BorderRadius.circular(widget.radius),
+            onTap: widget.onTap,
+            onTapDown: _handleTapDown,
+            onTapUp: _handleTapUp,
+            onTapCancel: _handleTapCancel,
+            child: Padding(padding: widget.padding, child: widget.child),
           ),
         ),
       );
-      if (margin != null) card = Padding(padding: margin!, child: card);
+      //按下缩放反馈
+      card = AnimatedScale(
+        scale: _pressed ? .97 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: card,
+      );
+      if (widget.margin != null) {
+        card = Padding(padding: widget.margin!, child: card);
+      }
       return card;
     });
   }
@@ -262,8 +298,8 @@ class _GlassBlurGateState extends State<GlassBlurGate> {
   Widget build(BuildContext context) => widget.builder(true);
 }
 
-/// 主按钮：Material 3 Filled 按钮样式
-class GradientButton extends StatelessWidget {
+/// 主按钮：Material 3 Filled 按钮样式（按下轻微缩放，参考工墨 TapScale）
+class GradientButton extends StatefulWidget {
   const GradientButton({
     super.key,
     required this.text,
@@ -284,53 +320,75 @@ class GradientButton extends StatelessWidget {
   final List<Color>? colors;
 
   @override
+  State<GradientButton> createState() => _GradientButtonState();
+}
+
+class _GradientButtonState extends State<GradientButton> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (widget.onPressed == null) return;
+    if (mounted && value != _pressed) setState(() => _pressed = value);
+  }
+
+  @override
   Widget build(BuildContext context) {
     //自订阅主题
     return Obx(() {
-    final bool enabled = onPressed != null;
-    final ColorScheme scheme = GlassTheme.scheme;
-    final Color bg =
-        (colors != null && colors!.isNotEmpty) ? colors!.first : scheme.primary;
-    final Color fg = GlassTheme.contrastRatio(bg, Colors.white) >= 2.2
-        ? Colors.white
-        : GlassTheme.onSurface(bg);
-    return Opacity(
-      opacity: enabled ? 1 : .5,
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(
-          color: bg,
-          borderRadius: BorderRadius.circular(height / 2),
-        ),
-        child: Material(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(height / 2),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(height / 2),
-            onTap: onPressed,
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (icon != null) ...[
-                    Icon(icon, color: fg, size: 18),
-                    const SizedBox(width: 8),
-                  ],
-                  Text(
-                    text,
-                    style: TextStyle(
-                      color: fg,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
+      final bool enabled = widget.onPressed != null;
+      final ColorScheme scheme = GlassTheme.scheme;
+      final Color bg = (widget.colors != null && widget.colors!.isNotEmpty)
+          ? widget.colors!.first
+          : scheme.primary;
+      final Color fg = GlassTheme.contrastRatio(bg, Colors.white) >= 2.2
+          ? Colors.white
+          : GlassTheme.onSurface(bg);
+      final double radius = widget.height / 2;
+      return Opacity(
+        opacity: enabled ? 1 : .5,
+        child: AnimatedScale(
+          scale: _pressed ? .96 : 1.0,
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOut,
+          child: Container(
+            height: widget.height,
+            decoration: BoxDecoration(
+              color: bg,
+              borderRadius: BorderRadius.circular(radius),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(radius),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(radius),
+                onTap: widget.onPressed,
+                onTapDown: (_) => _setPressed(true),
+                onTapUp: (_) => _setPressed(false),
+                onTapCancel: () => _setPressed(false),
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.icon != null) ...[
+                        Icon(widget.icon, color: fg, size: 18),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        widget.text,
+                        style: TextStyle(
+                          color: fg,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
-    );
+      );
     });
   }
 }

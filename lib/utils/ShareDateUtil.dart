@@ -107,7 +107,13 @@ class ShareDateUtil{
 
     //初始化主题
     await getThemeUid();
-    await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
+    await getIsFollowSystemDarkMode();
+    if (CustomThemeData.isFollowSystemDarkMode.value) {
+      //跟随系统夜间模式：按系统深浅色自动选择主题
+      await CustomThemeData.applySystemTheme();
+    } else {
+      await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
+    }
 
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
@@ -1203,6 +1209,27 @@ class ShareDateUtil{
   }
 
   //获取主题
+  //获取是否跟随系统夜间模式
+  Future<bool> getIsFollowSystemDarkMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? follow = await prefs.getBool('isFollowSystemDarkMode');
+    CustomThemeData.isFollowSystemDarkMode.value = follow ?? false;
+    return follow ?? false;
+  }
+
+  //设置是否跟随系统夜间模式（开启立即按系统深浅色应用主题，关闭恢复手动选择的主题）
+  Future<void> setIsFollowSystemDarkMode(bool follow) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFollowSystemDarkMode', follow).then((v) async {
+      CustomThemeData.isFollowSystemDarkMode.value = follow;
+      if (follow) {
+        await CustomThemeData.applySystemTheme();
+      } else {
+        await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
+      }
+    });
+  }
+
   Future<String> getThemeUid() async {
     final prefs = await SharedPreferences.getInstance();
     String? themeUid = await prefs.getString('selectThemeUid');

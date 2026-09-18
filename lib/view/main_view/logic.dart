@@ -1,4 +1,5 @@
 import 'package:flutter/animation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/AppUpdateData.dart';
@@ -10,11 +11,24 @@ import 'state.dart';
 class MainViewLogic extends GetxController {
   final MainViewState state = MainViewState();
 
-  animationJumpToPage(int page){
-    state.index.value =page;
-    state.pageController.value.animateToPage(
-        page, duration: Duration(milliseconds: 350),
-        curve: Curves.decelerate);
+  animationJumpToPage(int page) async {
+    state.index.value = page;
+    final PageController controller = state.pageController.value;
+    if (!controller.hasClients) return;
+    try {
+      await controller.animateToPage(
+          page, duration: Duration(milliseconds: 350),
+          curve: Curves.decelerate);
+    } catch (_) {
+      //忽略动画被中断的异常
+    }
+    //兜底：动画被手势/其它动画打断时，保证页面一定落到目标页，
+    //避免出现"底部导航高亮变了但页面卡住不动"
+    if (controller.hasClients &&
+        controller.page != null &&
+        (controller.page! - page).abs() > 0.01) {
+      controller.jumpToPage(page);
+    }
   }
 
   startInit(context)async{

@@ -8,6 +8,7 @@ import 'package:callo/dao/ClassScheduleDatabase.dart';
 import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
+import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CusBehavior.dart';
 import 'package:callo/utils/GlassUI.dart';
 
@@ -68,6 +69,8 @@ ButtonStyle _pressOverlayStyle(Color onBg) {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  //监听系统深浅色切换（开启“跟随系统夜间模式”时自动换主题）
+  CustomThemeData.startSystemBrightnessListener();
 
   //数据库迁移更新
   final database = await $FloorClassScheduleDatabase

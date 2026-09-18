@@ -47,6 +47,9 @@ class MainViewPage extends StatelessWidget {
         child: PageView(
           //预构建相邻页，避免开始滑动的瞬间才构建整页导致卡顿
           allowImplicitScrolling: true,
+          //显式使用 PageScrollPhysics：否则会被全局弹性物理覆盖，
+          //拖拽松手后可能停在两页之间，表现为"页面卡住"
+          physics: const PageScrollPhysics(parent: ClampingScrollPhysics()),
           children: _viewList
               .map((page) => RepaintBoundary(child: page))
               .toList(),

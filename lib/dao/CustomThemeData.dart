@@ -7,6 +7,7 @@
  */
 import 'dart:convert';
 
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:callo/utils/FileUtils.dart';
@@ -14,6 +15,29 @@ import 'package:callo/utils/FileUtils.dart';
 class CustomThemeData {
   static final selectThemeUid = "".obs;
   static final nowThemeData ={}.obs;
+
+  //是否跟随系统夜间模式
+  static final isFollowSystemDarkMode = false.obs;
+
+  ///系统深色 → 黑色主题，浅色 → 白色主题
+  static String themeUidForBrightness(Brightness brightness) =>
+      brightness == Brightness.dark ? 'default:blackTheme' : 'default:whiteTheme';
+
+  ///按当前系统深浅色应用主题（仅在开启“跟随系统”时生效）
+  static Future<void> applySystemTheme() async {
+    if (!isFollowSystemDarkMode.value) return;
+    final Brightness brightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    await loadTheme(themeUidForBrightness(brightness));
+  }
+
+  ///监听系统深浅色切换（App 启动时调用一次）
+  static void startSystemBrightnessListener() {
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+        () {
+      applySystemTheme();
+    };
+  }
 
   //记录当前已加载的主题，避免重复强制刷新
   static String? _loadedThemeUid;

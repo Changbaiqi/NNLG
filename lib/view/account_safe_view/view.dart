@@ -151,9 +151,15 @@ class AccountSafeViewPage extends StatelessWidget {
                       ),
                       _themeSwatch(
                         color: Colors.white,
-                        selected: CustomThemeData.selectThemeUid.value ==
-                            "default:whiteTheme",
+                        selected: !CustomThemeData.isFollowSystemDarkMode.value &&
+                            CustomThemeData.selectThemeUid.value ==
+                                "default:whiteTheme",
                         onTap: () async {
+                          //手动选主题时自动关闭“跟随系统”
+                          if (CustomThemeData.isFollowSystemDarkMode.value) {
+                            await ShareDateUtil()
+                                .setIsFollowSystemDarkMode(false);
+                          }
                           await ShareDateUtil()
                               .setThemeUid("default:whiteTheme")
                               .then((v) {
@@ -165,9 +171,15 @@ class AccountSafeViewPage extends StatelessWidget {
                       const SizedBox(width: 14),
                       _themeSwatch(
                         color: const Color(0xFF1C1B20),
-                        selected: CustomThemeData.selectThemeUid.value ==
-                            "default:blackTheme",
+                        selected: !CustomThemeData.isFollowSystemDarkMode.value &&
+                            CustomThemeData.selectThemeUid.value ==
+                                "default:blackTheme",
                         onTap: () async {
+                          //手动选主题时自动关闭“跟随系统”
+                          if (CustomThemeData.isFollowSystemDarkMode.value) {
+                            await ShareDateUtil()
+                                .setIsFollowSystemDarkMode(false);
+                          }
                           await ShareDateUtil()
                               .setThemeUid("default:blackTheme")
                               .then((v) {
@@ -176,6 +188,41 @@ class AccountSafeViewPage extends StatelessWidget {
                           });
                         },
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                //跟随系统夜间模式
+                GlassCard(
+                  page: _page,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('跟随系统夜间模式',
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w700,
+                                    color: text)),
+                            const SizedBox(height: 4),
+                            Text('开启后跟随手机深色模式自动切换主题',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: text.withValues(alpha: .55))),
+                          ],
+                        ),
+                      ),
+                      Obx(() => Switch(
+                            activeColor: accent,
+                            value: CustomThemeData.isFollowSystemDarkMode.value,
+                            onChanged: (v) {
+                              ShareDateUtil().setIsFollowSystemDarkMode(v);
+                            },
+                          )),
                     ],
                   ),
                 ),

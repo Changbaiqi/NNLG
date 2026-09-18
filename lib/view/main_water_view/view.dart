@@ -83,14 +83,14 @@ class MainWaterViewPage extends StatelessWidget {
                         children: [
                           _switchButton(
                             '热水开',
-                            Icons.local_fire_department_rounded,
+                            Icons.lock_open_rounded,
                             () => logic.hotOpenWaterButtonCheck(),
                             hot: true,
                           ),
                           const SizedBox(height: 10),
                           _switchButton(
                             '热水关',
-                            Icons.block_rounded,
+                            Icons.lock_rounded,
                             () => logic.hotCloseWaterButtonCheck(),
                             filled: false,
                           ),

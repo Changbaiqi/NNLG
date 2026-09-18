@@ -497,6 +497,7 @@ class MainCourseViewLogic extends GetxController
     CourseData.schoolOpenTime.value;
     CourseData.courseTime.value;
     CourseData.isNoonLineSwitch.value;
+    CourseData.courseItemOpacity.value;
     CourseData.isMinForSchedule.value;
     CourseData.isColorClassSchedule.value;
   }

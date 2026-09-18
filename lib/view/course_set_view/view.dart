@@ -42,6 +42,16 @@ class CourseSetViewPage extends StatelessWidget {
                           ShareDateUtil().setColorClassSchedule(v),
                     ),
                     const Divider(height: 1),
+                    //课表项透明度（课程块 + 顶部"大小节显示/周一/周二"等控件背景）
+                    _opacityRow(
+                      cs,
+                      icon: Icons.opacity_rounded,
+                      label: '课表项透明度',
+                      value: CourseData.courseItemOpacity.value,
+                      onChanged: (v) =>
+                          ShareDateUtil().setCourseItemOpacity(v),
+                    ),
+                    const Divider(height: 1),
                     //纯白背景/图片背景
                     SwitchListTile(
                       secondary:

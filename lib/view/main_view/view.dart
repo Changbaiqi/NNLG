@@ -46,10 +46,11 @@ class _MainViewPageState extends State<MainViewPage>
     super.dispose();
   }
 
-  /// 导航点击：直接切页 + 淡入过渡
+  /// 导航点击：直接切页 + 淡入过渡；
+  /// 点击当前页时不播过渡（否则看起来像页面被刷新了一遍）
   void _jumpToPage(int index) {
-    logic.animationJumpToPage(index);
-    _pageFade.forward(from: 0);
+    final bool moved = logic.animationJumpToPage(index);
+    if (moved) _pageFade.forward(from: 0);
   }
 
   @override

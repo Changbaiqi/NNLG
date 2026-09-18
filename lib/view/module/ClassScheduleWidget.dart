@@ -17,6 +17,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
+import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/view/module/showCourseTableMessage.dart';
@@ -258,7 +259,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                         padding: EdgeInsets.all(4),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['leftTopShowColor'] as List),
+                              color: _itemOpacity(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['leftTopShowColor'] as List)),
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
                             child: Obx(() => Text(
@@ -289,14 +290,16 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                       padding: EdgeInsets.all(4),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: isToday ? null : normalBg,
+                            color: isToday ? null : _itemOpacity(normalBg),
                             gradient: isToday
                                 ? LinearGradient(
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                     colors: [
-                                      todayBg,
-                                      todayBg.withValues(alpha: 0.55)
+                                      _itemOpacity(todayBg),
+                                      _itemOpacity(todayBg).withValues(
+                                          alpha: _itemOpacity(todayBg).a *
+                                              0.55)
                                     ],
                                   )
                                 : null,
@@ -513,6 +516,12 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
   final _animTick = 0.0.obs;
 
   /// 表格网格线颜色：统一跟随主题（深色主题下不再用纯黑导致看不见）
+  /// 课表项/表头控件的背景透明度（设置里的「课表项透明度」）
+  Color _itemOpacity(Color color) {
+    final double opacity = CourseData.courseItemOpacity.value.clamp(0.0, 1.0);
+    return color.withValues(alpha: color.a * opacity);
+  }
+
   /// 彩色课表的课程块颜色：
   /// 以当前主题主色为基调，按课程名哈希在 ±60° 内偏移色相，
   /// 并按深浅色选择明度/饱和度，保证与所选配色协调且文字清晰
@@ -584,12 +593,12 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: isColor.value
-                          ? color
+                          ? _itemOpacity(color)
                           : ((columTimeList[element['columStart'] - 1].month ==
                           DateTime.now().month) &&
                           (columTimeList[element['columStart'] - 1]
                               .day ==
-                              DateTime.now().day)?CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['backgroundColor'] as List ):CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['backgroundColor'] as List )),
+                              DateTime.now().day)?_itemOpacity(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['todayCourseItemColor']['backgroundColor'] as List )):_itemOpacity(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['main_course_view']!['nonTodayCourseItemColor']['backgroundColor'] as List ))),
                       //设置四周边框
                       border: (columTimeList[element['columStart'] - 1].month ==
                           DateTime.now().month) &&

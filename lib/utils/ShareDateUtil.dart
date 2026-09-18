@@ -54,6 +54,7 @@ class ShareDateUtil{
     await getColorClassSchedule();
     await getShakeToNowSchedule();
     await getNoonLineSwitch();
+    await getCourseItemOpacity();
     await getIsPictureBackground(); //获取是否开启背景图
     //课表小组件自定义背景相关
     await getIsCourseWidgetCustomBackground();
@@ -1248,6 +1249,21 @@ class ShareDateUtil{
     });
   }
 
+  //获取课表项透明度
+  Future<double> getCourseItemOpacity() async {
+    final prefs = await SharedPreferences.getInstance();
+    double? value = await prefs.getDouble('courseItemOpacity');
+    CourseData.courseItemOpacity.value = value ?? 1.0;
+    return value ?? 1.0;
+  }
+
+  //设置课表项透明度（课表项 + 表头控件背景，立即生效）
+  Future<void> setCourseItemOpacity(double value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('courseItemOpacity', value).then((v) {
+      CourseData.courseItemOpacity.value = value;
+    });
+  }
   //获取是否开启自动取色模式
   Future<bool> getIsAutoColorMode() async {
     final prefs = await SharedPreferences.getInstance();

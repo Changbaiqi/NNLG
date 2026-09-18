@@ -40,6 +40,8 @@ class CourseData{
 
   static final isNoonLineSwitch = true.obs; //是否开启午休分割线提示
 
+  static final courseItemOpacity = 1.0.obs; //课表项与表头背景透明度（1=不透明）
+
   static final isPictureBackground = false.obs; //是否为图片背景
 
   static final isRandomQuadraticBackground = false.obs; //是否为随机二次元背景

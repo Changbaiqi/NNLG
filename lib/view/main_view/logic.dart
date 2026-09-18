@@ -11,9 +11,9 @@ import 'state.dart';
 class MainViewLogic extends GetxController {
   final MainViewState state = MainViewState();
 
-  /// 点击底部导航切页：直接切换（不做左右滑动动画）
-  animationJumpToPage(int page, {bool retry = true}) {
-    state.index.value = page;
+  /// 点击底部导航切页：直接切换（不做左右滑动动画）。
+  /// 返回是否真的发生了切页——点击当前页时返回 false（不播过渡、不"刷新"）
+  bool animationJumpToPage(int page, {bool retry = true}) {
     final PageController controller = state.pageController.value;
     final ScrollPosition? position = _currentPosition(controller);
     if (position == null) {
@@ -23,14 +23,21 @@ class MainViewLogic extends GetxController {
           animationJumpToPage(page, retry: false);
         });
       }
-      return;
+      return false;
     }
+    state.index.value = page;
+    final double viewport = position.viewportDimension;
+    final double current =
+        viewport > 0 ? position.pixels / viewport : page.toDouble();
+    //已经在目标页：直接返回，不重播过渡动画
+    if ((current - page).abs() < 0.01) return false;
     _jumpTo(position, page);
     _ensureOnPage(controller, page);
     //兜底：手势/其它滚动打断时再校验一次，保证一定落到目标页
     Future.delayed(const Duration(milliseconds: 80), () {
       _ensureOnPage(controller, page);
     });
+    return true;
   }
 
   /// 取当前生效的滚动位置。

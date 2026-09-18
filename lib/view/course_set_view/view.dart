@@ -3,11 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/CourseData.dart';
-import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CourseUtil.dart';
 import 'package:callo/utils/CourseWidgetUtil.dart';
-import 'package:callo/utils/CustomerThemeUtil.dart';
-import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/view/module/selectBeginCourseTimeSheet.dart';
 import 'package:callo/view/module/selectCourseTimeSheet.dart';
@@ -17,1530 +14,609 @@ import 'package:callo/view/module/showCourseNumSheet.dart';
 
 import 'logic.dart';
 
+/// 课表设置：参考工墨设置页（分组标题 + Card/ListTile/SwitchListTile）
 class CourseSetViewPage extends StatelessWidget {
   CourseSetViewPage({Key? key}) : super(key: key);
   final logic = Get.put(CourseSetViewLogic());
-  final state = Get.find<CourseSetViewLogic>().state;
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => GlassBackground(
-      page: 'course_set_view',
-      child: Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        title: Text(
-          '课表设置',
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-        ),
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        foregroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-        iconTheme: IconThemeData(
-            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['defaultIconColor'] as List )
+    final ColorScheme cs = Theme.of(context).colorScheme;
+    return Scaffold(
+      appBar: AppBar(title: const Text('课表设置'), centerTitle: true),
+      body: Obx(() => ListView(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+            children: [
+              _sectionTitle(cs, '外观'),
+              Card(
+                child: Column(
+                  children: [
+                    //彩色课表
+                    SwitchListTile(
+                      secondary: Icon(Icons.palette_outlined, color: cs.primary),
+                      title: const Text('彩色课表'),
+                      subtitle: const Text('将不同课程用不同颜色区分',
+                          style: TextStyle(fontSize: 11.5)),
+                      value: CourseData.isColorClassSchedule.value,
+                      onChanged: (v) =>
+                          ShareDateUtil().setColorClassSchedule(v),
+                    ),
+                    const Divider(height: 1),
+                    //纯白背景/图片背景
+                    SwitchListTile(
+                      secondary:
+                          Icon(Icons.wallpaper_rounded, color: cs.primary),
+                      title: const Text('纯白背景/图片背景'),
+                      subtitle: const Text('调整课表背景图片',
+                          style: TextStyle(fontSize: 11.5)),
+                      value: CourseData.isPictureBackground.value,
+                      onChanged: (v) =>
+                          ShareDateUtil().setIsPictureBackground(v),
+                    ),
+                    //背景子选项（展开/收起动画，参考工墨）
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 260),
+                      curve: Curves.easeOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: !CourseData.isPictureBackground.value
+                          ? const SizedBox(width: double.infinity)
+                          : Column(
+                        children: [
+                          const Divider(height: 1),
+                          _opacityRow(
+                            cs,
+                            icon: Icons.opacity_rounded,
+                            label: '背景透明度',
+                            value: CourseData.courseBackgroundOpacity.value,
+                            onChanged: (v) => ShareDateUtil()
+                                .setCourseBackgroundOpacity(v),
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.auto_awesome_rounded,
+                                color: cs.primary),
+                            title: const Text('随机二次元背景图'),
+                            value: CourseData
+                                .isRandomQuadraticBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil()
+                                  .setIsRandomQuadraticBackground(v);
+                              if (v) {
+                                ShareDateUtil().setIsUrlBackground(false);
+                                ShareDateUtil()
+                                    .setIsCustomerLocalBackground(false);
+                              }
+                            },
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.link_rounded,
+                                color: cs.primary),
+                            title: const Text('自定义图片URL背景图'),
+                            value: CourseData.isUrlBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil().setIsUrlBackground(v);
+                              if (v) {
+                                ShareDateUtil()
+                                    .setIsRandomQuadraticBackground(false);
+                                ShareDateUtil()
+                                    .setIsCustomerLocalBackground(false);
+                              }
+                            },
+                          ),
+                          _urlField(
+                            controller: logic.backGroundUrlController,
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.image_outlined,
+                                color: cs.primary),
+                            title: const Text('自定义背景图'),
+                            value: CourseData.isCustomerLocalBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil()
+                                  .setIsCustomerLocalBackground(v);
+                              if (v) {
+                                ShareDateUtil().setIsUrlBackground(false);
+                                ShareDateUtil()
+                                    .setIsRandomQuadraticBackground(false);
+                              }
+                            },
+                          ),
+                          _pickImageButton(
+                            label: '选择图片',
+                            onPressed: () => logic.getImage(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    //课表小组件自定义背景
+                    SwitchListTile(
+                      secondary:
+                          Icon(Icons.widgets_outlined, color: cs.primary),
+                      title: const Text('课表小组件自定义背景'),
+                      subtitle: const Text('调整桌面课表小组件的背景图片',
+                          style: TextStyle(fontSize: 11.5)),
+                      value: CourseData.isCourseWidgetCustomBackground.value,
+                      onChanged: (v) => ShareDateUtil()
+                          .setIsCourseWidgetCustomBackground(v),
+                    ),
+                    AnimatedSize(
+                      duration: const Duration(milliseconds: 260),
+                      curve: Curves.easeOutCubic,
+                      alignment: Alignment.topCenter,
+                      child: !CourseData.isCourseWidgetCustomBackground.value
+                          ? const SizedBox(width: double.infinity)
+                          : Column(
+                        children: [
+                          const Divider(height: 1),
+                          _opacityRow(
+                            cs,
+                            icon: Icons.opacity_rounded,
+                            label: '小组件背景透明度',
+                            value:
+                                CourseData.courseWidgetBackgroundOpacity.value,
+                            onChanged: (v) => ShareDateUtil()
+                                .setCourseWidgetBackgroundOpacity(v),
+                            onChangeEnd: (_) =>
+                                CourseWidgetUtil.updateCourseWidget(),
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.auto_awesome_rounded,
+                                color: cs.primary),
+                            title: const Text('随机二次元背景图'),
+                            value: CourseData
+                                .isCourseWidgetRandomQuadraticBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil()
+                                  .setIsCourseWidgetRandomQuadraticBackground(v);
+                              if (v) {
+                                ShareDateUtil()
+                                    .setIsCourseWidgetUrlBackground(false);
+                                ShareDateUtil()
+                                    .setIsCourseWidgetLocalBackground(false);
+                              }
+                            },
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.link_rounded,
+                                color: cs.primary),
+                            title: const Text('自定义图片URL背景图'),
+                            value: CourseData.isCourseWidgetUrlBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil().setIsCourseWidgetUrlBackground(v);
+                              if (v) {
+                                ShareDateUtil()
+                                    .setIsCourseWidgetRandomQuadraticBackground(
+                                        false);
+                                ShareDateUtil()
+                                    .setIsCourseWidgetLocalBackground(false);
+                              }
+                            },
+                          ),
+                          _urlField(
+                            controller: logic.widgetBackGroundUrlController,
+                            onSubmitted: (v) => ShareDateUtil()
+                                .setCourseWidgetBackgroundInputUrl(v),
+                          ),
+                          const Divider(height: 1),
+                          SwitchListTile(
+                            secondary: Icon(Icons.image_outlined,
+                                color: cs.primary),
+                            title: const Text('自定义背景图'),
+                            value:
+                                CourseData.isCourseWidgetLocalBackground.value,
+                            onChanged: (v) {
+                              ShareDateUtil()
+                                  .setIsCourseWidgetLocalBackground(v);
+                              if (v) {
+                                ShareDateUtil()
+                                    .setIsCourseWidgetUrlBackground(false);
+                                ShareDateUtil()
+                                    .setIsCourseWidgetRandomQuadraticBackground(
+                                        false);
+                              }
+                            },
+                          ),
+                          _pickImageButton(
+                            label: '选择图片',
+                            onPressed: () => logic.getWidgetImage(),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(height: 1),
+                    //摇一摇返回当前周
+                    SwitchListTile(
+                      secondary:
+                          Icon(Icons.vibration_rounded, color: cs.primary),
+                      title: const Text('摇一摇返回当前周'),
+                      subtitle: const Text('浏览其它周课表时摇一摇快速回到当前周',
+                          style: TextStyle(fontSize: 11.5)),
+                      value: CourseData.isShakeToNowSchedule.value,
+                      onChanged: (v) =>
+                          ShareDateUtil().setShakeToNowSchedule(v),
+                    ),
+                    const Divider(height: 1),
+                    //午休分割线
+                    SwitchListTile(
+                      secondary: Icon(Icons.horizontal_rule_rounded,
+                          color: cs.primary),
+                      title: const Text('午休分割线'),
+                      subtitle: const Text('是否显示课表午休分割线',
+                          style: TextStyle(fontSize: 11.5)),
+                      value: CourseData.isNoonLineSwitch.value,
+                      onChanged: (v) => ShareDateUtil().setNoonLineSwitch(v),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              _sectionTitle(cs, '课表数据'),
+              Card(
+                child: Column(
+                  children: [
+                    //学期课表
+                    _valueTile(
+                      cs,
+                      icon: Icons.menu_book_rounded,
+                      title: '学期课表',
+                      subtitle: '此项为必选，会根据官网拉取最新的课表数据',
+                      value: '${CourseData.nowCourseList.value}',
+                      onTap: () {
+                        selectNowCourseListSheet(context).show().then((value) async {
+                          if (value != null) {
+                            Get.snackbar("课表通知", "正在切换课表...",
+                                duration: const Duration(milliseconds: 1500));
+                            CourseData.nowCourseList.value = value;
+                            ShareDateUtil().setNowCourseList(value);
+                            await logic.onRefresh();
+                            Get.snackbar("课表通知", "课表切换成功",
+                                duration: const Duration(milliseconds: 1500));
+                          }
+                        });
+                      },
+                    ),
+                    const Divider(height: 1),
+                    //开学时间
+                    _valueTile(
+                      cs,
+                      icon: Icons.event_available_rounded,
+                      title: '开学时间',
+                      subtitle: '判断是否为假期中以及自动判断周数',
+                      value: '${CourseData.schoolOpenTime.value}',
+                      onTap: () {
+                        selectDateSheet(context).show().then((value) {
+                          if (value != null) {
+                            CourseData.schoolOpenTime.value = value;
+                            CourseData.nowWeek.value = CourseUtil.getNowWeek(
+                                CourseData.schoolOpenTime.value,
+                                CourseData.ansWeek.value);
+                            ShareDateUtil().setSchoolOpenDate(
+                                CourseData.schoolOpenTime.value);
+                          }
+                        });
+                      },
+                    ),
+                    const Divider(height: 1),
+                    //当前周数
+                    _valueTile(
+                      cs,
+                      icon: Icons.timelapse_rounded,
+                      title: '当前周数',
+                      subtitle: '开学到现在第几周',
+                      value: CourseData.nowWeek.value == 0
+                          ? '假期中'
+                          : '${CourseData.nowWeek.value}',
+                      onTap: () {
+                        Get.snackbar(
+                          "课表通知",
+                          CourseData.nowWeek.value == 0
+                              ? "假期中"
+                              : '当前第${CourseData.nowWeek.value}周',
+                          duration: const Duration(milliseconds: 1500),
+                        );
+                      },
+                    ),
+                    const Divider(height: 1),
+                    //本学期总周数
+                    _valueTile(
+                      cs,
+                      icon: Icons.date_range_rounded,
+                      title: '本学期总周数',
+                      subtitle: '请选择本学期总共多少周',
+                      value: '${CourseData.ansWeek.value}',
+                      onTap: () {
+                        showCourseNumSheet(context).show().then((value) {
+                          if (value != null) {
+                            CourseData.ansWeek.value = value;
+                            ShareDateUtil()
+                                .setSemesterWeekNum(CourseData.ansWeek.value);
+                          }
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              _sectionTitle(cs, '上课时间'),
+              CourseData.newOrOldCourseScheduleChoose.value
+                  ? _newCourseTimeCard(cs, context)
+                  : _oldCourseTimeCard(cs, context),
+            ],
+          )),
+    );
+  }
+
+  /// 分组标题（工墨同款：小号弱化文字）
+  Widget _sectionTitle(ColorScheme cs, String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8, left: 4),
+      child: Text(
+        title,
+        style: TextStyle(
+          color: cs.onSurfaceVariant,
+          fontWeight: FontWeight.bold,
+          fontSize: 13,
         ),
       ),
-      body: Obx(() => ListView(
+    );
+  }
+
+  /// 带当前值的跳转行（工墨设置页风格）
+  Widget _valueTile(
+    ColorScheme cs, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+    required VoidCallback onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: cs.primary),
+      title: Text(title),
+      subtitle: Text(subtitle, style: const TextStyle(fontSize: 11.5)),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 120),
             child: Text(
-              '课表设置',
-              style: TextStyle(fontSize: 13, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 13, color: cs.onSurfaceVariant),
             ),
           ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '彩色课表',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                          ),
-                          Text(
-                            '此选项可以将不同课程进行不同颜色的区分',
-                            style: TextStyle(
-                                fontSize: 11.5, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                          Obx(() => Switch(
+          Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
+        ],
+      ),
+      onTap: onTap,
+    );
+  }
 
-                              value: CourseData.isColorClassSchedule.value,
-                              onChanged: (v) {
-                                ShareDateUtil().setColorClassSchedule(v);
-                              }))
-                        ],
-                      ),
-                    )
-                  ],
+  /// 透明度滑杆行
+  Widget _opacityRow(
+    ColorScheme cs, {
+    required IconData icon,
+    required String label,
+    required double value,
+    required ValueChanged<double> onChanged,
+    ValueChanged<double>? onChangeEnd,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+      child: Row(
+        children: [
+          Icon(icon, color: cs.primary, size: 22),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$label   ${(value * 100).toInt()}',
+                    style: const TextStyle(fontSize: 14)),
+                Slider(
+                  value: value.clamp(0, 1),
+                  onChanged: (v) =>
+                      onChanged(double.parse(v.toStringAsFixed(3))),
+                  onChangeEnd: onChangeEnd,
                 ),
-              ),
+              ],
             ),
-            onTap: () {
-              ShareDateUtil().setColorClassSchedule(
-                  !CourseData.isColorClassSchedule.value);
-            },
           ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '纯白背景/图片背景',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                            ),
-                            Text(
-                              '此选项可以调整课表背景图片',
-                              style: TextStyle(
-                                  fontSize: 11.5, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Row(
-                          children: [
-                            // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                            Obx(() => Switch(
+        ],
+      ),
+    );
+  }
 
-                                value: CourseData.isPictureBackground.value,
-                                onChanged: (v) {
-                                  ShareDateUtil().setIsPictureBackground(v);
-                                }))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Visibility(
-                    child: Container(
-                      height: 300,
-                      child: Column(
-                        children: [
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '背景透明度   ${(CourseData.courseBackgroundOpacity.value * 100).toInt()}',
-                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Slider(
-                                        value: CourseData
-                                            .courseBackgroundOpacity.value,
-                                        onChanged: (v) {
-                                          // CourseData.courseBackgroundOpacity.value = double.parse(v.toStringAsFixed(3));
-                                          ShareDateUtil()
-                                              .setCourseBackgroundOpacity(
-                                              double.parse(v
-                                                  .toStringAsFixed(3)));
-                                          // log(v.toString());
-                                        })
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '随机二次元背景图',
-                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                                          Obx(() => Transform.scale(
-                                            scale: 0.7,
-                                            child: Switch(
+  /// URL 输入框
+  Widget _urlField({
+    required TextEditingController controller,
+    ValueChanged<String>? onSubmitted,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(72, 0, 16, 12),
+      child: TextField(
+        controller: controller,
+        onSubmitted: onSubmitted,
+        decoration: const InputDecoration(
+          labelText: 'URL',
+          hintText: '请输入图片URL链接',
+          isDense: true,
+        ),
+      ),
+    );
+  }
 
-                                                value: CourseData
-                                                    .isRandomQuadraticBackground
-                                                    .value,
-                                                onChanged: (v) {
-                                                  ShareDateUtil()
-                                                      .setIsRandomQuadraticBackground(
-                                                      v);
-                                                  if (v) {
-                                                    ShareDateUtil()
-                                                        .setIsUrlBackground(
-                                                        false);
-                                                    ShareDateUtil()
-                                                        .setIsCustomerLocalBackground(
-                                                        false);
-                                                  }
-                                                }),
-                                          ))
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              35, 5, 0, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '自定义图片URL背景图',
-                                                style:
-                                                TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              0, 0, 10, 0),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                                              Obx(() => Transform.scale(
-                                                scale: 0.7,
-                                                child: Switch(
+  /// 选择图片按钮
+  Widget _pickImageButton({
+    required String label,
+    required VoidCallback onPressed,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(72, 0, 16, 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: onPressed,
+          icon: const Icon(Icons.photo_library_outlined, size: 18),
+          label: Text(label),
+        ),
+      ),
+    );
+  }
 
-                                                    value: CourseData
-                                                        .isUrlBackground
-                                                        .value,
-                                                    onChanged: (v) {
-                                                      ShareDateUtil()
-                                                          .setIsUrlBackground(
-                                                          v);
-                                                      if (v) {
-                                                        ShareDateUtil()
-                                                            .setIsRandomQuadraticBackground(
-                                                            false);
-                                                        ShareDateUtil()
-                                                            .setIsCustomerLocalBackground(
-                                                            false);
-                                                      }
-                                                    }),
-                                              ))
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding:
-                                      EdgeInsets.fromLTRB(35, 0, 20, 0),
-                                      child: TextField(
-                                          controller:
-                                          logic.backGroundUrlController,
-                                          decoration: InputDecoration(
-                                            label: Text('URL',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
-                                            hintText: '请输入图片URL链接',
-                                            hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                            contentPadding:
-                                            EdgeInsets.fromLTRB(
-                                                10, 0, 10, 0),
-                                            enabledBorder:
-                                            OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.all(
-                                                    Radius.circular(
-                                                        0))),
-                                            focusedBorder:
-                                            OutlineInputBorder(
-                                                borderRadius:
-                                                BorderRadius.all(
-                                                    Radius.circular(
-                                                        0))),
-                                          )),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              35, 5, 0, 0),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '自定义背景图',
-                                                style:
-                                                TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              0, 0, 10, 0),
-                                          child: Row(
-                                            children: [
-                                              // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                                              Obx(() => Transform.scale(
-                                                scale: 0.7,
-                                                child: Switch(
-
-                                                    value: CourseData
-                                                        .isCustomerLocalBackground
-                                                        .value,
-                                                    onChanged: (v) {
-                                                      ShareDateUtil()
-                                                          .setIsCustomerLocalBackground(
-                                                          v);
-                                                      if (v) {
-                                                        ShareDateUtil()
-                                                            .setIsUrlBackground(
-                                                            false);
-                                                        ShareDateUtil()
-                                                            .setIsRandomQuadraticBackground(
-                                                            false);
-                                                      }
-                                                    }),
-                                              ))
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      height: 35,
-                                      width: MediaQuery.of(Get.context!)
-                                          .size
-                                          .width,
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            35, 0, 35, 0),
-                                        child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ))
-                                            ),
-                                            onPressed: () async {
-                                              await logic.getImage();
-                                            },
-                                            child: Text('选择图片',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    visible: CourseData.isPictureBackground.value,
-                  )
-                ],
-              ),
-            ),
-            onTap: () {},
-          ),
-          //课表小组件自定义背景
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '课表小组件自定义背景',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                            ),
-                            Text(
-                              '此选项可以调整课表小组件的背景图片',
-                              style: TextStyle(
-                                  fontSize: 11.5, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child: Row(
-                          children: [
-                            Obx(() => Switch(
-
-                                value: CourseData.isCourseWidgetCustomBackground.value,
-                                onChanged: (v) {
-                                  ShareDateUtil().setIsCourseWidgetCustomBackground(v);
-                                }))
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                  Visibility(
-                    child: Container(
-                      height: 300,
-                      child: Column(
-                        children: [
-                          //小组件背景透明度
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '小组件背景透明度   ${(CourseData.courseWidgetBackgroundOpacity.value * 100).toInt()}',
-                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Slider(
-                                        value: CourseData.courseWidgetBackgroundOpacity.value,
-                                        onChanged: (v) {
-                                          ShareDateUtil().setCourseWidgetBackgroundOpacity(double.parse(v.toStringAsFixed(3)));
-                                        },
-                                        onChangeEnd: (v) {
-                                          CourseWidgetUtil.updateCourseWidget();
-                                        })
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          //随机二次元背景图
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            '随机二次元背景图',
-                                            style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Obx(() => Transform.scale(
-                                            scale: 0.7,
-                                            child: Switch(
-
-                                                value: CourseData.isCourseWidgetRandomQuadraticBackground.value,
-                                                onChanged: (v) {
-                                                  ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(v);
-                                                  if (v) {
-                                                    ShareDateUtil().setIsCourseWidgetUrlBackground(false);
-                                                    ShareDateUtil().setIsCourseWidgetLocalBackground(false);
-                                                  }
-                                                }),
-                                          ))
-                                        ],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          //自定义图片URL背景图
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '自定义图片URL背景图',
-                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                          child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Obx(() => Transform.scale(
-                                                scale: 0.7,
-                                                child: Switch(
-
-                                                    value: CourseData.isCourseWidgetUrlBackground.value,
-                                                    onChanged: (v) {
-                                                      ShareDateUtil().setIsCourseWidgetUrlBackground(v);
-                                                      if (v) {
-                                                        ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(false);
-                                                        ShareDateUtil().setIsCourseWidgetLocalBackground(false);
-                                                      }
-                                                    }),
-                                              ))
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(35, 0, 20, 0),
-                                      child: TextField(
-                                          controller: logic.widgetBackGroundUrlController,
-                                          onSubmitted: (v) {
-                                            ShareDateUtil().setCourseWidgetBackgroundInputUrl(v);
-                                          },
-                                          decoration: InputDecoration(
-                                            label: Text('URL',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
-                                            hintText: '请输入图片URL链接',
-                                            hintStyle: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                            contentPadding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
-                                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(0))),
-                                          )),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                          //自定义背景图
-                          InkWell(
-                            child: Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              child: Container(
-                                height: 100,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(35, 5, 0, 0),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                '自定义背景图',
-                                                style: TextStyle(fontSize: 15,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                          child: Row(
-                                            children: [
-                                              Obx(() => Transform.scale(
-                                                scale: 0.7,
-                                                child: Switch(
-
-                                                    value: CourseData.isCourseWidgetLocalBackground.value,
-                                                    onChanged: (v) {
-                                                      ShareDateUtil().setIsCourseWidgetLocalBackground(v);
-                                                      if (v) {
-                                                        ShareDateUtil().setIsCourseWidgetUrlBackground(false);
-                                                        ShareDateUtil().setIsCourseWidgetRandomQuadraticBackground(false);
-                                                      }
-                                                    }),
-                                              ))
-                                            ],
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Container(
-                                      height: 35,
-                                      width: MediaQuery.of(Get.context!).size.width,
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(35, 0, 35, 0),
-                                        child: ElevatedButton(
-                                            style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all(CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ))
-                                            ),
-                                            onPressed: () async {
-                                              await logic.getWidgetImage();
-                                            },
-                                            child: Text('选择图片',style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),)),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    visible: CourseData.isCourseWidgetCustomBackground.value,
-                  )
-                ],
-              ),
-            ),
-            onTap: () {
-              ShareDateUtil()
-                  .setIsCourseWidgetCustomBackground(!CourseData.isCourseWidgetCustomBackground.value);
-            },
-          ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 65,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Container(
-                        width: 250,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '摇一摇返回当前周',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                            ),
-                            Text(
-                              '此选项可以在浏览其他周课表时摇一摇手机快速移动到当前周课表',
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                          Obx(() => Switch(
-
-                              value: CourseData.isShakeToNowSchedule.value,
-                              onChanged: (v) {
-                                ShareDateUtil().setShakeToNowSchedule(v);
-                              }))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              ShareDateUtil().setShakeToNowSchedule(
-                  !CourseData.isShakeToNowSchedule.value);
-            },
-          ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 65,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Container(
-                        width: 250,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '午休分割线',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                            ),
-                            Text(
-                              '是否显示课表午休分割线',
-                              maxLines: 2,
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-                          Obx(() => Switch(
-
-                              value: CourseData.isNoonLineSwitch.value,
-                              onChanged: (v) {
-                                ShareDateUtil().setNoonLineSwitch(v);
-                              }))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              ShareDateUtil().setShakeToNowSchedule(
-                  !CourseData.isShakeToNowSchedule.value);
-            },
-          ),
-          // InkWell(
-          //   child: Padding(
-          //     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          //     child: Container(
-          //       height: 65,
-          //       child: Row(
-          //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //         children: [
-          //           Padding(
-          //             padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-          //             child: Container(
-          //               width: 250,
-          //               child: Column(
-          //                 crossAxisAlignment: CrossAxisAlignment.start,
-          //                 children: [
-          //                   Text(
-          //                     '采用最新课表爬虫算法',
-          //                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-          //                   ),
-          //                   Text(
-          //                     '默认开启最新爬虫算法，一般情况也推荐使用最新',
-          //                     maxLines: 2,
-          //                     style: TextStyle(
-          //                         fontSize: 10, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-          //                   ),
-          //                 ],
-          //               ),
-          //             ),
-          //           ),
-          //           Padding(
-          //             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-          //             child: Row(
-          //               children: [
-          //                 // Image.asset('assets/images/end.png',height: 17,width: 17,color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),),
-          //                 Obx(() => Switch(
-          //                     value: CourseData.newOrOldCourseScheduleChoose.value,
-          //                     onChanged: (v) {
-          //                       ShareDateUtil().setNewOrOldCourseScheduleChoose(v);
-          //                     }))
-          //               ],
-          //             ),
-          //           )
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          //   onTap: () {
-          //     ShareDateUtil().setNewOrOldCourseScheduleChoose(
-          //         !CourseData.newOrOldCourseScheduleChoose.value);
-          //   },
-          // ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '学期课表',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                          ),
-                          Text(
-                            '此项为必选，会根据官网拉取最新的课表数据',
-                            style: TextStyle(
-                                fontSize: 10,
-                                // color: Colors.black45
-                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
-                            child: Text(
-                              '${CourseData.nowCourseList.value}',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            'assets/images/end.png',
-                            height: 17,
-                            width: 17,
-                            // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              //用于选择开学年月日
-              selectNowCourseListSheet(context).show().then((value) async {
-                if (value != null) {
-                  Get.snackbar(
-                    "课表通知",
-                    "正在切换课表...",
-                    duration: Duration(milliseconds: 1500),
-                  );
-                  CourseData.nowCourseList.value = value;
-                  ShareDateUtil().setNowCourseList(value);
-                  await logic.onRefresh();
-                  Get.snackbar(
-                    "课表通知",
-                    "课表切换成功",
-                    duration: Duration(milliseconds: 1500),
-                  );
-                  // CourseUtil()
-                  //     .getAllCourseWeekList("${CourseData.nowCourseList}")
-                  //     .then((value) {
-                  //   Get.snackbar(
-                  //     "课表通知",
-                  //     "课表切换成功",
-                  //     duration: Duration(milliseconds: 1500),
-                  //   );
-                  // });
-                }
-              });
-            },
-          ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '开学时间',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                          ),
-                          Text(
-                            '判断是否为假期中以及自动判断周数',
-                            style: TextStyle(
-                                fontSize: 10,
-                                // color: Colors.black45
-                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
-                            child: Text(
-                              '${CourseData.schoolOpenTime.value}',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            'assets/images/end.png',
-                            height: 17,
-                            width: 17,
-                            // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              //用于选择开学年月日
-              selectDateSheet(context).show().then((value) {
-                if (value != null) {
-                  CourseData.schoolOpenTime.value = value;
-                  CourseData.nowWeek.value = CourseUtil.getNowWeek(
-                      CourseData.schoolOpenTime.value,
-                      CourseData.ansWeek.value);
-                  ShareDateUtil()
-                      .setSchoolOpenDate(CourseData.schoolOpenTime.value)
-                      .then((value) {
-                    // course_listState?.refreshAllCourseTable();
-                  }); //记录本地存储
-                }
-              });
-            },
-          ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '当前周数',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                          ),
-                          Text(
-                            '开学到现在第几周',
-                            style: TextStyle(
-                                fontSize: 10,
-                                // color: Colors.black45
-                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
-                            child: Text(
-                              '${CourseData.nowWeek.value == 0 ? '假期中' : CourseData.nowWeek.value}',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            'assets/images/end.png',
-                            height: 17,
-                            width: 17,
-                            // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            onTap: () {
-              Get.snackbar(
-                "课表通知",
-                "${CourseData.nowWeek.value == 0 ? "假期中" : '当前第${CourseData.nowWeek.value}周'}",
-                duration: Duration(milliseconds: 1500),
-              );
-            },
-          ),
-          InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '本学期总周数',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                          ),
-                          Text(
-                            '请选择本学期总共多少周',
-                            style: TextStyle(
-                                fontSize: 10,
-                                // color: Colors.black45
-                                color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(2, 0, 5, 0),
-                            child: Text(
-                              '${CourseData.ansWeek.value}',
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  // color: Colors.black45
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                              ),
-                            ),
-                          ),
-                          Image.asset(
-                            'assets/images/end.png',
-                            height: 17,
-                            width: 17,
-                            // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                            color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+  /// 新课程表：各小节课时间
+  Widget _newCourseTimeCard(ColorScheme cs, BuildContext context) {
+    final List<String> times =
+        CourseData.courseTime.value.map((e) => '$e').toList();
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: Icon(Icons.schedule_rounded, color: cs.primary),
+            title: const Text('各小节课时间'),
+            subtitle: const Text('调节每小节课的起止时间',
+                style: TextStyle(fontSize: 11.5)),
+            trailing:
+                Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
             onTap: () async {
-              showCourseNumSheet(context).show().then((value) {
-                if (value != null) {
-                  CourseData.ansWeek.value = value;
-                  ShareDateUtil()
-                      .setSemesterWeekNum(CourseData.ansWeek.value);
-                  // ToastUtil.show('正在刷新课表...');
-                  // course_listState?.updatePullDataAndRefresh().then((value){
-                  //   ToastUtil.show('刷新成功');
-                  // });
-                }
-              });
-            },
-          ),
-          CourseData.newOrOldCourseScheduleChoose.value
-              ? InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                  height: 650,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                            child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '各小节课时间',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                ),
-                                Text(
-                                  '调节每小节课的起止时间',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      // color: Colors.black45
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0),child: Container(
-                                  height: 40,
-                                  width: MediaQuery.of(context).size.width*0.8,
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(GlassTheme.scheme.error),
-                                          foregroundColor: MaterialStateProperty.all(GlassTheme.scheme.onError),
-                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(12))))
-                                      ),
-                                      onPressed: (){
-                                        showDialog(
-                                          useRootNavigator: false,
-                                          context: context,
-                                          builder: (BuildContext context) {
-                                            return MediaQuery(data: MediaQuery.of(Get.context!).copyWith(textScaleFactor: 1.0), child: AlertDialog(
-                                              backgroundColor: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['backgroundColor'] as List ),
-                                              title: Text("提示",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
-                                              content: Text("确定重置吗？",style: TextStyle(color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),),
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text("取消"),
-                                                ),
-                                                TextButton(onPressed: () {
-                                                  ShareDateUtil().setCourseTimeList(CourseData.defaultCourseTime).then((value) => CourseData.courseTime.refresh());
-                                                  Navigator.of(context).pop();
-                                                }, child: const Text("确定")),
-                                              ],
-                                            ));
-                                          },
-                                        );
-                                      }, child: Text('一键重置默认时间',style: TextStyle(color: GlassTheme.scheme.onError, fontSize: 13, fontWeight: FontWeight.w600),)),
-                                ),)
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/end.png',
-                                  height: 17,
-                                  width: 17,
-                                  // color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['foregroundColor'] as List ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: CourseData.courseTime
-                            .map(
-                              (element) => Padding(
-                            padding: EdgeInsets.fromLTRB(
-                                20, 20, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第${state.courseCount.value >= 12 ? state.courseCount.value = 1 : ++state.courseCount.value}小节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.courseTime.value[state.courseCount.value - 1]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                            .toList(),
-                      )
-                    ],
-                  )),
-            ),
-            onTap: () async {
-              //调节时间
               await selectCourseTimeSheet
                   .show(Get.context!, 12, CourseData.courseTime.value)
                   .then((resDataTime) async {
                 if (resDataTime != null) {
                   List<String> resTime = [];
-                  //用于刷新控件
                   for (int i = 1;
-                  i <= CourseData.courseTime.value.length;
-                  ++i) {
+                      i <= CourseData.courseTime.value.length;
+                      ++i) {
                     resTime.add(
                         '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
-                    // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
                   }
-                  //用于刷新课表的时间显示控件
                   await ShareDateUtil()
                       .setCourseTimeList(resTime)
                       .then((value) {
-                    Get.snackbar(
-                      "课表通知",
-                      "修改成功",
-                      duration: Duration(milliseconds: 1500),
-                    );
+                    Get.snackbar("课表通知", "修改成功",
+                        duration: const Duration(milliseconds: 1500));
                   });
                 }
               });
             },
-          )
-              : InkWell(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: Container(
-                  height: 400,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(20, 5, 0, 0),
-                            child: Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '各大节课时间',
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['textColor'] as List )),
-                                ),
-                                Text(
-                                  '调节每大节课的起止时间',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: Row(
-                              children: [
-                                Image.asset(
-                                  'assets/images/end.png',
-                                  height: 17,
-                                  width: 17,
-                                  color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List ),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 20, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第一大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[0]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第二大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[1]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第三大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[2]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第四大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[3]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第五大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[4]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.fromLTRB(20, 10, 20, 0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '第六大节',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                ),
-                                Text(
-                                  '${CourseData.oldCourseTime.value[5]}',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: CustomerThemeUtil.setColor(CustomThemeData.nowThemeData.value['course_set_view']!['hintTextColor'] as List )),
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  )),
+          ),
+          for (int i = 0; i < times.length; i++) ...[
+            const Divider(height: 1),
+            ListTile(
+              dense: true,
+              contentPadding: const EdgeInsets.only(left: 72, right: 16),
+              title: Text('第${i + 1}小节',
+                  style: const TextStyle(fontSize: 13.5)),
+              trailing: Text(times[i],
+                  style: TextStyle(fontSize: 13.5, color: cs.onSurfaceVariant)),
             ),
-            onTap: () async {
-              //调节时间
+          ],
+          const Divider(height: 1),
+          ListTile(
+            leading: Icon(Icons.restart_alt_rounded, color: cs.error),
+            title: Text('一键重置默认时间',
+                style: TextStyle(color: cs.error, fontWeight: FontWeight.w600)),
+            onTap: () => _confirmReset(context, cs),
+          ),
+        ],
+      ),
+    );
+  }
 
+  /// 旧课程表：各大节课时间
+  Widget _oldCourseTimeCard(ColorScheme cs, BuildContext context) {
+    final List<String> times =
+        CourseData.oldCourseTime.value.map((e) => '$e').toList();
+    const List<String> labels = [
+      '第一大节',
+      '第二大节',
+      '第三大节',
+      '第四大节',
+      '第五大节',
+      '第六大节',
+    ];
+    return Card(
+      child: Column(
+        children: [
+          ListTile(
+            leading: Icon(Icons.schedule_rounded, color: cs.primary),
+            title: const Text('各大节课时间'),
+            subtitle: const Text('调节每大节课的起止时间',
+                style: TextStyle(fontSize: 11.5)),
+            trailing:
+                Icon(Icons.chevron_right_rounded, color: cs.onSurfaceVariant),
+            onTap: () async {
               await selectBeginCourseTimeSheet(context)
                   .show()
                   .then((resDataTime) async {
                 if (resDataTime != null) {
                   List<String> resTime = [];
-                  //用于刷新控件
                   for (int i = 1;
-                  i <= CourseData.oldCourseTime.value.length;
-                  ++i) {
+                      i <= CourseData.oldCourseTime.value.length;
+                      ++i) {
                     resTime.add(
                         '${(resDataTime[i * 2 - 2].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 2].minute.toString()).padLeft(2, '0')}-${(resDataTime[i * 2 - 1].hour.toString()).padLeft(2, '0')}:${(resDataTime[i * 2 - 1].minute.toString()).padLeft(2, '0')}');
-                    // CourseData.oldCourseTime.value[i-1] = '${(resDataTime[i*2-2].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-2].minute.toString()).padLeft(2,'0')}-${(resDataTime[i*2-1].hour.toString()).padLeft(2,'0')}:${(resDataTime[i*2-1].minute.toString()).padLeft(2,'0')}';
                   }
-                  //用于刷新课表的时间显示控件
                   await ShareDateUtil()
                       .setOldCourseTimeList(resTime)
                       .then((value) {
-                    Get.snackbar(
-                      "课表通知",
-                      "修改成功",
-                      duration: Duration(milliseconds: 1500),
-                    );
+                    Get.snackbar("课表通知", "修改成功",
+                        duration: const Duration(milliseconds: 1500));
                   });
                 }
               });
             },
-          )
+          ),
+          for (int i = 0; i < times.length && i < labels.length; i++) ...[
+            const Divider(height: 1),
+            ListTile(
+              dense: true,
+              contentPadding: const EdgeInsets.only(left: 72, right: 16),
+              title: Text(labels[i], style: const TextStyle(fontSize: 13.5)),
+              trailing: Text(times[i],
+                  style: TextStyle(fontSize: 13.5, color: cs.onSurfaceVariant)),
+            ),
+          ],
         ],
-      )),
-    )));
+      ),
+    );
+  }
+
+  /// 一键重置确认（M3 弹窗）
+  void _confirmReset(BuildContext context, ColorScheme cs) {
+    showDialog(
+      useRootNavigator: false,
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('提示'),
+          content: const Text('确定重置为默认上课时间吗？'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('取消'),
+            ),
+            TextButton(
+              onPressed: () {
+                ShareDateUtil()
+                    .setCourseTimeList(CourseData.defaultCourseTime)
+                    .then((value) => CourseData.courseTime.refresh());
+                Navigator.pop(dialogContext);
+                Get.snackbar("课表通知", "已重置为默认时间",
+                    duration: const Duration(milliseconds: 1500));
+              },
+              child: Text('确定', style: TextStyle(color: cs.error)),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

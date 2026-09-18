@@ -10,6 +10,7 @@ import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/CusBehavior.dart';
+import 'package:callo/utils/SharedImageUtil.dart';
 
 import 'dao/ClassScheduleDao.dart';
 
@@ -204,6 +205,8 @@ void main() async {
 
   //监听长按桌面图标「添加课表小组件」快捷方式
   initCourseWidgetShortcut();
+  //监听系统分享进来的图片（可设为课表/小组件背景）
+  SharedImageUtil.init();
 
   return runApp(MyApp());
 }

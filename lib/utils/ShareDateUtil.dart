@@ -117,7 +117,7 @@ class ShareDateUtil{
       await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
     }
     //自动取色模式：启动后异步从课表壁纸取色（不阻塞启动）
-    CustomThemeData.refreshAutoColor();
+    CustomThemeData.scheduleAutoColorRefresh();
 
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
@@ -848,7 +848,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isPictureBackground', isPictureBackground).then((value) {
       CourseData.isPictureBackground.value = isPictureBackground;
-      CustomThemeData.refreshAutoColor();
+      CustomThemeData.scheduleAutoColorRefresh();
     });
   }
 
@@ -980,7 +980,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isRandomQuadraticBackground', isRandomQuadraticBackground).then((value) {
       CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground;
-      CustomThemeData.refreshAutoColor();
+      CustomThemeData.scheduleAutoColorRefresh();
     });
   }
 
@@ -997,7 +997,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isCustomerLocalBackground', isCustomerLocalBackground).then((value) {
       CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground;
-      CustomThemeData.refreshAutoColor();
+      CustomThemeData.scheduleAutoColorRefresh();
     });
   }
 
@@ -1014,7 +1014,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isUrlBackground', isUrlBackground).then((value) {
       CourseData.isUrlBackground.value = isUrlBackground;
-      CustomThemeData.refreshAutoColor();
+      CustomThemeData.scheduleAutoColorRefresh();
     });
   }
 
@@ -1023,7 +1023,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('courseBackgroundFilePath', filePath).then((c){
       CourseData.courseBackgroundFilePath.value = filePath;
-        CustomThemeData.refreshAutoColor();
+        CustomThemeData.scheduleAutoColorRefresh();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }
@@ -1042,7 +1042,7 @@ class ShareDateUtil{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('courseBackgroundInputUrl', courseBackgroundInputUrl).then((c){
       CourseData.courseBackgroundInputUrl.value = courseBackgroundInputUrl;
-        CustomThemeData.refreshAutoColor();
+        CustomThemeData.scheduleAutoColorRefresh();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }

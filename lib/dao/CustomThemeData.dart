@@ -5,6 +5,7 @@
  *
  * @Description TODO
  */
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -61,13 +62,31 @@ class CustomThemeData {
     return schemeFor(preset.value, brightness);
   }
 
+  /// 取色防抖：设置背景时会连续改多个开关，避免并发多次取色互相覆盖
+  static Timer? _autoColorDebounce;
+
+  /// 取色请求版本号：过期请求的结果直接丢弃
+  static int _autoColorToken = 0;
+
+  /// 延迟合并一次取色请求（背景设置变化时调用）
+  static void scheduleAutoColorRefresh() {
+    _autoColorDebounce?.cancel();
+    _autoColorDebounce = Timer(const Duration(milliseconds: 400), () {
+      refreshAutoColor();
+    });
+  }
+
   /// 从课表背景图重新提取主题色并应用
   static Future<void> refreshAutoColor({bool force = false}) async {
     if (!isAutoColorMode.value && !force) return;
+    final int token = ++_autoColorToken;
     try {
       final Uint8List? bytes = await ColorExtractor.backgroundBytes();
+      //已经有更新的取色请求（背景刚被改成别的图），丢弃过期结果
+      if (token != _autoColorToken) return;
       if (bytes == null) return;
       final Color? seed = await ColorExtractor.extractSeed(bytes);
+      if (token != _autoColorToken) return;
       if (seed == null) return;
       if (_autoSeed == seed) return; //颜色没变就不刷新
       _autoSeed = seed;

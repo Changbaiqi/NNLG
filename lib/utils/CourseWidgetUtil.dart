@@ -79,8 +79,12 @@ class CourseWidgetUtil {
       }
 
       //副文字用不透明混色，避免深色卡片上叠加透明度过暗
-      final Color subColor =
-          Color.lerp(textColor, bgColor, isDark ? .35 : .4)!;
+      Color subColor = Color.lerp(textColor, bgColor, isDark ? .35 : .4)!;
+
+      //统一做对比度兜底：任何主题/配色/自动取色下，文字都保证看得清
+      textColor = ensureReadable(textColor, bgColor, 4.5);
+      subColor = ensureReadable(subColor, bgColor, 3.0);
+      accentColor = ensureReadable(accentColor, bgColor, 3.0);
 
       //自定义背景图（下载/复用本地文件），失败时回退到上次缓存
       final String bgPath = await _resolveWidgetBackgroundPath();
@@ -286,6 +290,30 @@ class CourseWidgetUtil {
     return HSVColor.fromAHSV(1.0, (hash % 360).toDouble(), 0.55, 0.82)
         .toColor()
         .toARGB32();
+  }
+
+  /// 保证 [color] 在 [bg] 上的对比度不低于 [minRatio]（WCAG）。
+  /// 不足时朝与背景相反的方向逐级调整，保证任何主题下都看得清
+  static Color ensureReadable(Color color, Color bg, double minRatio) {
+    if (_contrastRatio(color, bg) >= minRatio) return color;
+    final bool bgDark = bg.computeLuminance() < .5;
+    Color result = color;
+    for (int i = 0; i < 10; i++) {
+      result = bgDark
+          ? Color.lerp(result, Colors.white, .22)!
+          : Color.lerp(result, Colors.black, .22)!;
+      if (_contrastRatio(result, bg) >= minRatio) break;
+    }
+    return result;
+  }
+
+  /// WCAG 对比度
+  static double _contrastRatio(Color a, Color b) {
+    final double l1 = a.computeLuminance();
+    final double l2 = b.computeLuminance();
+    final double hi = l1 > l2 ? l1 : l2;
+    final double lo = l1 > l2 ? l2 : l1;
+    return (hi + .05) / (lo + .05);
   }
 
   /// [r,g,b,a] 转 Color

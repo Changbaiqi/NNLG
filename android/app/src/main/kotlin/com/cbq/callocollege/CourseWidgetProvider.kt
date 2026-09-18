@@ -149,7 +149,11 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             val bgAlpha = root?.optDouble("bgAlpha", 0.0) ?: 0.0
             val bgBitmap =
                 if (bgPath.isNotEmpty() && bgAlpha > 0.01)
-                    loadWidgetBackground(context, bgPath)
+                    loadWidgetBackground(
+                        context, bgPath,
+                        widgetSizePx(appWidgetManager, appWidgetId, true),
+                        widgetSizePx(appWidgetManager, appWidgetId, false)
+                    )
                 else null
             if (bgBitmap != null) {
                 views.setImageViewBitmap(R.id.widget_bg, bgBitmap)
@@ -284,29 +288,79 @@ class CourseWidgetProvider : HomeWidgetProvider() {
             return true
         }
 
-        /** 解码小组件背景图：最长边超过 900px 时按 2 的幂降采样，并按卡片圆角裁切 */
+        /** 小组件当前尺寸（px）：width=true 取宽，否则取高 */
+        private fun widgetSizePx(
+            manager: AppWidgetManager,
+            appWidgetId: Int,
+            width: Boolean,
+        ): Int {
+            val options = try {
+                manager.getAppWidgetOptions(appWidgetId)
+            } catch (e: Exception) {
+                Bundle()
+            }
+            val dp = if (width) {
+                options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 250)
+            } else {
+                options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 110)
+            }
+            return dp
+        }
+
+        /**
+         * 解码小组件背景图并裁切为小组件尺寸后做圆角：
+         * 先按目标比例 centerCrop 缩放，再以 20dp 圆角裁切，
+         * 保证图片圆角与卡片圆角一致（否则会露出直角边，看起来像直角阴影）
+         */
         private fun loadWidgetBackground(
             context: Context,
             path: String,
+            targetWidthDp: Int,
+            targetHeightDp: Int,
         ): android.graphics.Bitmap? {
             return try {
+                val density = context.resources.displayMetrics.density
+                val targetW = (targetWidthDp * density).toInt().coerceIn(64, 1600)
+                val targetH = (targetHeightDp * density).toInt().coerceIn(64, 1600)
                 val bounds = android.graphics.BitmapFactory.Options().apply {
                     inJustDecodeBounds = true
                 }
                 android.graphics.BitmapFactory.decodeFile(path, bounds)
                 if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
                 var sample = 1
-                val maxSide = maxOf(bounds.outWidth, bounds.outHeight)
-                while (maxSide / sample > 900) sample *= 2
+                while (bounds.outWidth / sample > targetW * 2 ||
+                    bounds.outHeight / sample > targetH * 2
+                ) {
+                    sample *= 2
+                }
                 val options = android.graphics.BitmapFactory.Options().apply {
                     inSampleSize = sample
                 }
-                val bitmap = android.graphics.BitmapFactory.decodeFile(path, options)
+                val source = android.graphics.BitmapFactory.decodeFile(path, options)
                     ?: return null
-                roundCorners(
-                    bitmap,
-                    20f * context.resources.displayMetrics.density
+                //centerCrop：按目标比例裁出中间区域
+                val sourceRatio = source.width.toFloat() / source.height
+                val targetRatio = targetW.toFloat() / targetH
+                val cropW: Int
+                val cropH: Int
+                if (sourceRatio > targetRatio) {
+                    cropH = source.height
+                    cropW = (source.height * targetRatio).toInt().coerceAtLeast(1)
+                } else {
+                    cropW = source.width
+                    cropH = (source.width / targetRatio).toInt().coerceAtLeast(1)
+                }
+                val cropX = (source.width - cropW) / 2
+                val cropY = (source.height - cropH) / 2
+                val cropped = android.graphics.Bitmap.createBitmap(
+                    source, cropX, cropY, cropW, cropH
                 )
+                val scaled = android.graphics.Bitmap.createScaledBitmap(
+                    cropped, targetW, targetH, true
+                )
+                if (scaled !== source) source.recycle()
+                if (cropped !== source && cropped !== scaled) cropped.recycle()
+                roundCorners(scaled, 20f * density)
             } catch (e: Exception) {
                 Log.e(TAG, "loadWidgetBackground failed", e)
                 null

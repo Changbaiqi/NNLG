@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart' show Color, Colors;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -116,5 +117,30 @@ void main() {
     expect(after['ans'], 20);
     expect(after['v'] != before['v'], true);
     expect(jsonEncode(after['weeks']), jsonEncode(before['weeks']));
+  });
+
+  double _ratio(Color a, Color b) {
+    final double l1 = a.computeLuminance();
+    final double l2 = b.computeLuminance();
+    final double hi = l1 > l2 ? l1 : l2;
+    final double lo = l1 > l2 ? l2 : l1;
+    return (hi + .05) / (lo + .05);
+  }
+
+  test('桌面小组件文字对比度兜底：任何配色下都保证可读', () {
+    const Color darkCard = Color(0xFF24242A);
+    const Color lightCard = Color(0xFFFFFFFF);
+    //文字与底色相同（最糟情况）也要被修正到可读
+    expect(
+        _ratio(CourseWidgetUtil.ensureReadable(const Color(0xFF24242A), darkCard, 4.5),
+            darkCard),
+        greaterThanOrEqualTo(4.5));
+    expect(
+        _ratio(CourseWidgetUtil.ensureReadable(Colors.white, lightCard, 4.5),
+            lightCard),
+        greaterThanOrEqualTo(4.5));
+    //正常浅色文字不该被改动
+    const Color normalText = Color(0xFFEDEDED);
+    expect(CourseWidgetUtil.ensureReadable(normalText, darkCard, 4.5), normalText);
   });
 }

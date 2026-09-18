@@ -88,16 +88,17 @@
             android:dividerHeight="0dp"
             android:scrollbars="vertical" />
 
+        <!-- 空状态提示：占满剩余空间并居中，字体稍大稍粗 -->
         <TextView
             android:id="@+id/tv_empty"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:gravity="center"
-            android:paddingTop="18dp"
-            android:paddingBottom="18dp"
             android:text="今天没有课，好好休息~"
             android:textColor="#99000000"
-            android:textSize="12sp"
+            android:textSize="13.5sp"
+            android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
 </FrameLayout>

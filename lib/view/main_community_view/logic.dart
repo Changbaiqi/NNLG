@@ -8,6 +8,7 @@ import 'package:callo/dao/CustomThemeData.dart';
 import 'package:callo/utils/AccountUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
 import 'package:callo/utils/GlassUI.dart';
+import 'package:callo/view/module/SyncRefreshButton.dart';
 import 'package:callo/utils/JustMessengerUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/edusys/Account.dart';
@@ -270,12 +271,27 @@ class MainCommunityViewLogic extends GetxController {
    * [param] null
    * [return]
    */
-  refreshCard(){
-    if(AccountData.dormCampus.value!="" && AccountData.dormLoudongId.value!="" && AccountData.dormRoom .value!="") {
-      PowerDormUtil().getDormPower(AccountData.dormCampus.value, AccountData.dormLoudongId.value, AccountData.dormRoom .value).then((v){
+  /// 刷新宿舍电费数据
+  /// 返回 true=成功 false=失败 null=未绑定宿舍（不显示成功/失败反馈）
+  Future<bool?> refreshCard() async {
+    if (AccountData.dormCampus.value != "" &&
+        AccountData.dormLoudongId.value != "" &&
+        AccountData.dormRoom.value != "") {
+      try {
+        final v = await PowerDormUtil().getDormPower(
+            AccountData.dormCampus.value,
+            AccountData.dormLoudongId.value,
+            AccountData.dormRoom.value);
         AccountData.powerMoney.value = v;
-      });
+        return true;
+      } catch (e) {
+        print('刷新宿舍电费失败: $e');
+        return false;
+      }
     }
+    Get.snackbar('提示', '请先绑定宿舍后再刷新',
+        duration: const Duration(milliseconds: 1500));
+    return null;
   }
   /**
    * [title]
@@ -324,12 +340,11 @@ class MainCommunityViewLogic extends GetxController {
         Row(
           children: [
             Expanded(
-              child: GradientButton(
-                text: '刷新数据',
-                icon: Icons.refresh_rounded,
+              child: SyncRefreshButton(
                 page: 'main_community_view',
+                label: '刷新数据',
                 height: 42,
-                onPressed: refreshCard,
+                onSync: refreshCard,
               ),
             ),
             const SizedBox(width: 10),

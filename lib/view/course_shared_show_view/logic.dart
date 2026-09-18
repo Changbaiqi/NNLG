@@ -123,10 +123,15 @@ class CourseSharedShowViewLogic extends GetxController {
   Widget courseTableWidget(courseJSON, DateTime dateTime /*传入相应的授课日期*/,
       {Color? color}) {
     return courseJSON.length == 0
-        ? Center(
+        ? Container(
+      alignment: Alignment.center,
       child: Text(
         '无课',
-        style: TextStyle(fontSize: 12, color: GlassTheme.textColor('main_course_view').withValues(alpha: .45)),
+        style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color:
+                GlassTheme.textColor('main_course_view').withValues(alpha: .55)),
       ),
     )
         : Container(

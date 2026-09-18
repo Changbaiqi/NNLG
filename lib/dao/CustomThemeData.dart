@@ -6,9 +6,11 @@
  * @Description TODO
  */
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:callo/utils/ColorExtractor.dart';
 import 'package:callo/utils/CourseWidgetUtil.dart';
 import 'package:callo/utils/FileUtils.dart';
 
@@ -35,6 +37,45 @@ class CustomThemeData {
 
   /// 当前配色预设（默认海洋蓝）
   static final preset = AppThemePreset.ocean.obs;
+
+  /// 自动取色模式：从课表壁纸提取主题色（Material You 风格）
+  static final isAutoColorMode = false.obs;
+
+  /// 自动取色得到的种子色（未取到时为 null → 用默认种子色）
+  static Color? _autoSeed;
+
+  /// 自动取色无结果时使用的默认种子（M3 基线紫）
+  static const Color _defaultAutoSeed = Color(0xFF6750A4);
+
+  /// 当前应使用的色板：
+  /// 自动取色模式 → 提取到的种子（没有则默认种子）；否则用所选预设
+  static ColorScheme currentSchemeFor() {
+    final Brightness brightness =
+        _themeDark ? Brightness.dark : Brightness.light;
+    if (isAutoColorMode.value) {
+      return ColorScheme.fromSeed(
+        seedColor: _autoSeed ?? _defaultAutoSeed,
+        brightness: brightness,
+      );
+    }
+    return schemeFor(preset.value, brightness);
+  }
+
+  /// 从课表背景图重新提取主题色并应用
+  static Future<void> refreshAutoColor({bool force = false}) async {
+    if (!isAutoColorMode.value && !force) return;
+    try {
+      final Uint8List? bytes = await ColorExtractor.backgroundBytes();
+      if (bytes == null) return;
+      final Color? seed = await ColorExtractor.extractSeed(bytes);
+      if (seed == null) return;
+      if (_autoSeed == seed) return; //颜色没变就不刷新
+      _autoSeed = seed;
+      if (isAutoColorMode.value) applyPreset();
+    } catch (e) {
+      print('自动取色失败: $e');
+    }
+  }
 
   /// 当前 M3 色板（由「配色预设 + 主题明暗」生成）
   static final currentScheme =
@@ -185,12 +226,9 @@ class CustomThemeData {
     );
   }
 
-  /// 应用当前配色预设（切换预设或明暗后重新生成色板并刷新旧页面配色）
+  /// 应用当前配色（切换预设/自动取色/明暗后重新生成色板并刷新旧页面配色）
   static void applyPreset() {
-    final ColorScheme scheme = schemeFor(
-      preset.value,
-      _themeDark ? Brightness.dark : Brightness.light,
-    );
+    final ColorScheme scheme = currentSchemeFor();
     currentScheme.value = scheme;
     final Map<String, dynamic>? raw = _rawThemeJson;
     if (raw != null) {
@@ -198,6 +236,8 @@ class CustomThemeData {
       nowThemeData.value = mapped;
       nowThemeData.refresh();
     }
+    //配色变了，桌面课表小组件的配色也同步刷新
+    CourseWidgetUtil.updateCourseWidget();
   }
 
   //是否跟随系统夜间模式
@@ -250,10 +290,7 @@ class CustomThemeData {
     if (themeJson is Map<String, dynamic>) {
       _themeDark = _isDarkJson(themeJson);
       _rawThemeJson = themeJson;
-      final ColorScheme scheme = schemeFor(
-        preset.value,
-        _themeDark ? Brightness.dark : Brightness.light,
-      );
+      final ColorScheme scheme = currentSchemeFor();
       currentScheme.value = scheme;
       //把主题颜色统一映射为 M3 色板，旧页面无需改代码即可跟随配色
       themeJson = _materialYouTheme(themeJson, scheme);

@@ -132,24 +132,46 @@ class AccountSafeViewPage extends StatelessWidget {
                           },
                         ),
                       ]),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 10),
+                      //自动取色模式（Material You：从课表壁纸提取主题色）
+                      SwitchListTile(
+                        contentPadding: EdgeInsets.zero,
+                        secondary: Icon(Icons.auto_fix_high_rounded,
+                            color: cs.primary),
+                        title: const Text('自动取色模式'),
+                        subtitle: const Text(
+                            '根据课表壁纸自动生成主题配色（Material You）',
+                            style: TextStyle(fontSize: 11.5)),
+                        value: CustomThemeData.isAutoColorMode.value,
+                        onChanged: (v) =>
+                            ShareDateUtil().setIsAutoColorMode(v),
+                      ),
+                      const SizedBox(height: 6),
                       Text('主题配色',
                           style: TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: cs.onSurface)),
                       const SizedBox(height: 10),
-                      SizedBox(
-                        height: 84,
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 2, vertical: 4),
-                          itemCount: AppThemePreset.values.length,
-                          separatorBuilder: (_, __) =>
-                              const SizedBox(width: 8),
-                          itemBuilder: (context, index) =>
-                              _presetTile(cs, AppThemePreset.values[index]),
+                      //自动取色模式下预设配色置灰且不可选（使用自动取到的/默认主题色）
+                      Opacity(
+                        opacity:
+                            CustomThemeData.isAutoColorMode.value ? .45 : 1,
+                        child: IgnorePointer(
+                          ignoring: CustomThemeData.isAutoColorMode.value,
+                          child: SizedBox(
+                            height: 84,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 2, vertical: 4),
+                              itemCount: AppThemePreset.values.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(width: 8),
+                              itemBuilder: (context, index) => _presetTile(
+                                  cs, AppThemePreset.values[index]),
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -166,28 +188,6 @@ class AccountSafeViewPage extends StatelessWidget {
                   title: const Text('关于软件和作者'),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => Get.toNamed(Routes.AboutMe),
-                ),
-                const Divider(height: 1),
-                //检测最新版
-                ListTile(
-                  leading: const Icon(Icons.system_update_alt_rounded),
-                  title: const Text('检测最新版'),
-                  subtitle: const Text('检查是否有新版本',
-                      style: TextStyle(fontSize: 11.5)),
-                  trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () {
-                    showUpdateDialog.isLastVersion().then((value) {
-                      if (value == true) {
-                        Get.snackbar(
-                          "更新通知",
-                          "当前已是最新版本(~▽~)~ ",
-                          duration: const Duration(milliseconds: 1500),
-                        );
-                      } else {
-                        showUpdateDialog.autoDialog(context, -1);
-                      }
-                    });
-                  },
                 ),
                 const Divider(height: 1),
                 ListTile(

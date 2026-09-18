@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/utils/ColorExtractor.dart';
 import 'package:callo/utils/GlassUI.dart';
 
 /// 模拟真实页面：在 build 中捕获主题颜色（这是原先切换主题不刷新的关键场景）
@@ -75,6 +78,41 @@ void main() {
     //恢复默认预设，避免影响其它用例
     CustomThemeData.preset.value = AppThemePreset.green;
     CustomThemeData.applyPreset();
+  });
+
+  test('自动取色模式：忽略预设配色，使用自动/默认主题色', () async {
+    await CustomThemeData.loadTheme('default:whiteTheme');
+
+    //开启自动取色（尚未取到壁纸色 → 使用默认主题色）
+    CustomThemeData.isAutoColorMode.value = true;
+    CustomThemeData.applyPreset();
+    final Color autoPrimary = CustomThemeData.currentScheme.value.primary;
+
+    //自动取色模式下切换预设不应影响主题色
+    CustomThemeData.preset.value = AppThemePreset.grape;
+    CustomThemeData.applyPreset();
+    expect(CustomThemeData.currentScheme.value.primary, autoPrimary,
+        reason: '自动取色模式下预设配色不应生效');
+
+    //关闭后恢复所选预设
+    CustomThemeData.isAutoColorMode.value = false;
+    CustomThemeData.preset.value = AppThemePreset.ocean;
+    CustomThemeData.applyPreset();
+    expect(CustomThemeData.currentScheme.value.primary,
+        isNot(equals(autoPrimary)));
+  });
+
+  test('自动取色：从像素中能提取出接近的主色', () {
+    final Uint8List pixels = Uint8List.fromList([
+      30, 120, 220, 255, //鲜艳蓝
+      30, 120, 220, 255, //鲜艳蓝
+      5, 5, 5, 255, //过暗（应被忽略）
+      250, 250, 250, 255, //过亮（应被忽略）
+    ]);
+    final Color? seed = ColorExtractor.seedFromRgba(pixels);
+    expect(seed, isNotNull);
+    expect(seed!.b, greaterThan(seed.r), reason: '应提取出蓝色调');
+    expect(seed.b, greaterThan(seed.g));
   });
 
   testWidgets('路由页面：主题切换后页面被重建并重新取色', (tester) async {

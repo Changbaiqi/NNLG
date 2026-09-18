@@ -108,6 +108,7 @@ class ShareDateUtil{
     //初始化主题
     await getThemeUid();
     await getThemePreset(); //配色预设要在加载主题前读取
+    await getIsAutoColorMode(); //自动取色模式也要在加载主题前读取
     await getIsFollowSystemDarkMode();
     if (CustomThemeData.isFollowSystemDarkMode.value) {
       //跟随系统夜间模式：按系统深浅色自动选择主题
@@ -115,6 +116,8 @@ class ShareDateUtil{
     } else {
       await CustomThemeData.loadTheme(CustomThemeData.selectThemeUid.value);
     }
+    //自动取色模式：启动后异步从课表壁纸取色（不阻塞启动）
+    CustomThemeData.refreshAutoColor();
 
     //用来判断当前周数并赋值给配置变量
     CourseData.nowWeek.value = CourseUtil.getNowWeek(CourseData.schoolOpenTime.value, CourseData.ansWeek.value);
@@ -843,7 +846,10 @@ class ShareDateUtil{
   //设置是否为纯色背景课表
   Future<void> setIsPictureBackground(bool isPictureBackground) async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isPictureBackground', isPictureBackground).then((value) => CourseData.isPictureBackground.value = isPictureBackground);
+    await prefs.setBool('isPictureBackground', isPictureBackground).then((value) {
+      CourseData.isPictureBackground.value = isPictureBackground;
+      CustomThemeData.refreshAutoColor();
+    });
   }
 
   //获取课表小组件是否自定义背景
@@ -972,7 +978,10 @@ class ShareDateUtil{
   //设置是二次元随机背景课表
   Future<void> setIsRandomQuadraticBackground(bool isRandomQuadraticBackground) async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isRandomQuadraticBackground', isRandomQuadraticBackground).then((value) => CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground);
+    await prefs.setBool('isRandomQuadraticBackground', isRandomQuadraticBackground).then((value) {
+      CourseData.isRandomQuadraticBackground.value = isRandomQuadraticBackground;
+      CustomThemeData.refreshAutoColor();
+    });
   }
 
   //获取是否为本地背景课表
@@ -986,7 +995,10 @@ class ShareDateUtil{
   //设置是否为本地背景课表
   Future<void> setIsCustomerLocalBackground(bool isCustomerLocalBackground) async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isCustomerLocalBackground', isCustomerLocalBackground).then((value) => CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground);
+    await prefs.setBool('isCustomerLocalBackground', isCustomerLocalBackground).then((value) {
+      CourseData.isCustomerLocalBackground.value = isCustomerLocalBackground;
+      CustomThemeData.refreshAutoColor();
+    });
   }
 
   //获取是否为Url背景课表
@@ -1000,14 +1012,18 @@ class ShareDateUtil{
   //设置是否为Url背景课表
   Future<void> setIsUrlBackground(bool isUrlBackground) async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isUrlBackground', isUrlBackground).then((value) => CourseData.isUrlBackground.value = isUrlBackground);
+    await prefs.setBool('isUrlBackground', isUrlBackground).then((value) {
+      CourseData.isUrlBackground.value = isUrlBackground;
+      CustomThemeData.refreshAutoColor();
+    });
   }
 
   //设置背景图片本地路径
   setCourseBackgroundFilePath(String filePath)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('courseBackgroundFilePath', filePath).then((c){
-      CourseData.courseBackgroundFilePath.value= filePath;
+      CourseData.courseBackgroundFilePath.value = filePath;
+        CustomThemeData.refreshAutoColor();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }
@@ -1025,7 +1041,8 @@ class ShareDateUtil{
   setCourseBackgroundInputUrl(String courseBackgroundInputUrl)async{
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('courseBackgroundInputUrl', courseBackgroundInputUrl).then((c){
-      CourseData.courseBackgroundInputUrl.value= courseBackgroundInputUrl;
+      CourseData.courseBackgroundInputUrl.value = courseBackgroundInputUrl;
+        CustomThemeData.refreshAutoColor();
       //print('当前设定的Cookie：${ContextDate.cookie}');
     });
   }
@@ -1231,6 +1248,25 @@ class ShareDateUtil{
     });
   }
 
+  //获取是否开启自动取色模式
+  Future<bool> getIsAutoColorMode() async {
+    final prefs = await SharedPreferences.getInstance();
+    bool? value = await prefs.getBool('isAutoColorMode');
+    CustomThemeData.isAutoColorMode.value = value ?? false;
+    return value ?? false;
+  }
+
+  //设置自动取色模式（开启：按课表壁纸自动配色；关闭：恢复所选预设）
+  Future<void> setIsAutoColorMode(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isAutoColorMode', value).then((v) async {
+      CustomThemeData.isAutoColorMode.value = value;
+      if (value) {
+        await CustomThemeData.refreshAutoColor(force: true); //先取色
+      }
+      CustomThemeData.applyPreset(); //再应用（无取色结果时用默认主题色）
+    });
+  }
   //获取是否跟随系统夜间模式
   Future<bool> getIsFollowSystemDarkMode() async {
     final prefs = await SharedPreferences.getInstance();

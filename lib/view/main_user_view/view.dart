@@ -50,17 +50,18 @@ class MainUserViewPage extends StatelessWidget {
                     const SizedBox(height: 10),
                     _entry(
                       title: '关于软件和作者',
-                      svg: 'assets/images/about.svg',
+                      icon: Icons.info_outline_rounded,
                       onTap: () => Get.toNamed(Routes.AboutMe),
                     ),
                     _entry(
+                      //设置项改用符合主题的 Material 图标（主色）
                       title: '设置',
-                      svg: 'assets/images/safe.svg',
+                      icon: Icons.settings_rounded,
                       onTap: () => Get.toNamed(Routes.AccountSafe),
                     ),
                     _entry(
                       title: '探索新版',
-                      image: 'assets/images/bbgx.png',
+                      icon: Icons.system_update_alt_rounded,
                       onTap: () {
                         showUpdateDialog.isLastVersion().then((value) {
                           if (value == true) {
@@ -77,7 +78,7 @@ class MainUserViewPage extends StatelessWidget {
                     ),
                     _entry(
                       title: '退出登录',
-                      image: 'assets/images/backLogin.png',
+                      icon: Icons.logout_rounded,
                       danger: true,
                       onTap: () {
                         ShareDateUtil().clearAllAccountData();
@@ -88,7 +89,7 @@ class MainUserViewPage extends StatelessWidget {
                       visible: false,
                       child: _entry(
                         title: '软件开发测试',
-                        image: 'assets/images/backLogin.png',
+                        icon: Icons.developer_mode_rounded,
                         onTap: () =>
                             Get.toNamed(Routes.SoftwareDevelopmentTestView),
                       ),
@@ -283,15 +284,17 @@ class MainUserViewPage extends StatelessWidget {
   /// 功能入口
   Widget _entry({
     required String title,
+    IconData? icon,
     String? svg,
     String? image,
     bool danger = false,
     required VoidCallback onTap,
   }) {
+    final ColorScheme cs = GlassTheme.scheme;
     final Color text = GlassTheme.textColor(_page);
-    final Color titleColor = danger ? const Color(0xFFE53935) : text;
-    final Color iconColor =
-        danger ? const Color(0xFFE53935) : text.withValues(alpha: .72);
+    //工墨风格：普通项图标用主题主色，危险项用 error 色
+    final Color titleColor = danger ? cs.error : text;
+    final Color iconColor = danger ? cs.error : cs.primary;
     return GlassCard(
       page: _page,
       margin: const EdgeInsets.only(bottom: 10),
@@ -301,7 +304,9 @@ class MainUserViewPage extends StatelessWidget {
         height: 54,
         child: Row(
           children: [
-            if (svg != null)
+            if (icon != null)
+              Icon(icon, size: 22, color: iconColor)
+            else if (svg != null)
               SvgPicture.asset(svg, width: 22, height: 22, color: iconColor)
             else if (image != null)
               Image.asset(image, width: 22, height: 22, color: iconColor),

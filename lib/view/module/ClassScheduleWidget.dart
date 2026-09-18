@@ -27,6 +27,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tencent_kit/tencent_kit.dart';
 
 import '../../utils/CustomerThemeUtil.dart';
+import '../../utils/CourseShareImageUtil.dart';
 import '../../utils/GlassUI.dart';
 
 class ClassScheduleWidget extends StatefulWidget {
@@ -372,9 +373,8 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
 
                                 },
                                 onLongPress: () async {
-                                  // await capturePngFilePath(_tableViewKey,_weekViewKey);
                                   await capturePngFilePath(
-                                      _weekViewKey, _weekViewKey);
+                                      _weekViewKey, _tableViewKey);
                                 },
                               ),
                               drawTable(tableJson),
@@ -403,34 +403,24 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
    * [return]
    */
   Future<String?> capturePngFilePath(weekKey, tableKey) async {
-    // TencentKitPlatform.instance.shareText(
-    //   scene: TencentScene.kScene_QQ,
-    //   summary: '分享测试',
-    // );
     try {
-      RenderRepaintBoundary weekBoundary =
-          weekKey.currentContext.findRenderObject();
-      RenderRepaintBoundary boundary =
-          tableKey.currentContext.findRenderObject();
-      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
-
-      ui.Image weekImage = await weekBoundary.toImage(pixelRatio: dpr);
-      ui.Image image = await boundary.toImage(pixelRatio: dpr);
-      weekImage.height + image.height;
-
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List picBytes = byteData!.buffer.asUint8List();
-
-      var tempDir = await getTemporaryDirectory();
-      // 判断路径是否存在
-      bool isDirExist = await Directory(tempDir.path).exists();
-      if (!isDirExist) Directory(tempDir.path).create();
-      var file =
-          await File(tempDir.path + "${DateTime.now().toIso8601String()}.png")
-              .writeAsBytes(picBytes);
-      await Share.shareXFiles([XFile(file.path)], text: '南理校园助手');
-      return file.path;
+      final RenderRepaintBoundary? headerBoundary =
+          weekKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      final RenderRepaintBoundary? tableBoundary =
+          tableKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (headerBoundary == null || tableBoundary == null) return null;
+      Get.snackbar('课表通知', '正在生成课表图片...',
+          duration: const Duration(milliseconds: 1200));
+      //完整表格 + 背景图合成（背景图不在截图区域内，表格比可视区域高）
+      final Uint8List? picBytes =
+          await CourseShareImageUtil.captureWeekWithBackground(
+        headerBoundary: headerBoundary,
+        tableBoundary: tableBoundary,
+      );
+      if (picBytes == null) return null;
+      final String path = await CourseShareImageUtil.writeTempPng(picBytes);
+      await Share.shareXFiles([XFile(path)], text: '南理校园助手');
+      return path;
     } catch (e) {
       print(e);
     }
@@ -461,24 +451,26 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
   //保存到相册
   void savePhoto() async {
     try {
-      final context = _weekViewKey.currentContext;
-      if (context == null) return;
-      RenderRepaintBoundary? boundary =
-          context.findRenderObject() as RenderRepaintBoundary?;
-      if (boundary == null) return;
+      final RenderRepaintBoundary? headerBoundary = _weekViewKey.currentContext
+          ?.findRenderObject() as RenderRepaintBoundary?;
+      final RenderRepaintBoundary? tableBoundary = _tableViewKey.currentContext
+          ?.findRenderObject() as RenderRepaintBoundary?;
+      if (headerBoundary == null || tableBoundary == null) return;
 
-      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
-      var image = await boundary.toImage(pixelRatio: dpr);
-      // 将image转化成byte
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      //完整表格 + 背景图合成（背景图不在截图区域内，表格比可视区域高）
+      final Uint8List? captured =
+          await CourseShareImageUtil.captureWeekWithBackground(
+        headerBoundary: headerBoundary,
+        tableBoundary: tableBoundary,
+      );
+      if (captured == null) return;
       //获取保存相册权限，如果没有，则申请该权限
       bool permition = await getPormiation();
       if (!permition) return; //权限被拒绝时直接返回，避免无限递归
       var status = await Permission.photos.status;
       if (Platform.isIOS) {
         if (status.isGranted) {
-          Uint8List images = byteData!.buffer.asUint8List();
+          Uint8List images = captured;
           final result = await ImageGallerySaverPlus.saveImage(images,
               quality: 60, name: "hello");
           File saveFile = new File(result.replaceAll("file://", ""));
@@ -491,7 +483,7 @@ class _ClassScheduleWidgetState extends State<ClassScheduleWidget>
         }
       } else {
         //安卓：getPormiation 已放行，直接保存（Android 10+ 走 MediaStore）
-        Uint8List images = byteData!.buffer.asUint8List();
+        Uint8List images = captured;
         final result = await ImageGallerySaverPlus.saveImage(images,
             quality: 60, isReturnImagePathOfIOS: true);
         // print(result);

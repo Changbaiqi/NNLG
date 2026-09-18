@@ -24,6 +24,7 @@ import 'package:callo/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:callo/dao/entity/ClassScheduleEntity.dart';
 import 'package:callo/utils/CourseUtil.dart';
 import 'package:callo/utils/CustomerThemeUtil.dart';
+import 'package:callo/utils/CourseShareImageUtil.dart';
 import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/ToastUtil.dart';
@@ -601,21 +602,13 @@ class MainCourseViewLogic extends GetxController
     try {
       RenderRepaintBoundary boundary =
           globalKey.currentContext.findRenderObject();
-      double dpr = ui.window.devicePixelRatio; // 获取当前设备的像素比
-      ui.Image image = await boundary.toImage(pixelRatio: dpr);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List picBytes = byteData!.buffer.asUint8List();
-
-      var tempDir = await getTemporaryDirectory();
-      // 判断路径是否存在
-      bool isDirExist = await Directory(tempDir.path).exists();
-      if (!isDirExist) Directory(tempDir.path).create();
-      var file =
-          await File(tempDir.path + "${DateTime.now().toIso8601String()}.png")
-              .writeAsBytes(picBytes);
-      await Share.shareXFiles([XFile(file.path)], text: '南理校园助手');
-      return file.path;
+      //合成页面上设置的课表背景图（背景图不在截图区域内）
+      final Uint8List? picBytes =
+          await CourseShareImageUtil.captureWithBackground(boundary);
+      if (picBytes == null) return null;
+      final String path = await CourseShareImageUtil.writeTempPng(picBytes);
+      await Share.shareXFiles([XFile(path)], text: '南理校园助手');
+      return path;
     } catch (e) {
       print(e);
     }

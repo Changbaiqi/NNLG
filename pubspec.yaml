@@ -79,6 +79,7 @@ dependencies:
   sensors_plus: ^4.0.2 #摇一摇
   tencent_kit: ^6.0.1 #QQ分享
   share_plus: ^7.2.2 #分享
+  file_picker: ^8.1.7 #导入导出文件选择
   permission_handler: ^11.3.1 #权限管理
 #  syncfusion_flutter_calendar: ^25.1.38 #calendar课表展示表格
   flutter_screenutil: ^5.9.3  #用于字体大小适配
@@ -233,6 +234,10 @@ flutter:
     - assets/files/testCourse.json
     - assets/files/aboutMe.md
     - assets/files/smallElementCourse.md
+    - assets/files/waterCourse.md
+    - assets/files/water_guide_1.jpeg
+    - assets/files/water_guide_2.jpeg
+    - assets/files/water_guide_3.png
     - assets/files/widget_guide_1.jpeg
     - assets/files/widget_guide_2.jpeg
     - assets/files/widget_guide_3.jpeg

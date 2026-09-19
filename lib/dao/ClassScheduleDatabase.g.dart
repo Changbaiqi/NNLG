@@ -79,13 +79,15 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
 
   ClassNewScheduleDao? _classNewScheduleDaoInstance;
 
+  WaterFavoriteDao? _waterFavoriteDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
     Callback? callback,
   ]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
-      version: 6,
+      version: 8,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
         await callback?.onConfigure?.call(database);
@@ -104,6 +106,8 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
             'CREATE TABLE IF NOT EXISTS `ClassScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `list` TEXT)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `ClassNewScheduleEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `studentId` TEXT, `semester` TEXT, `uid` TEXT, `dateTime` INTEGER, `md5` TEXT, `json` TEXT)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `WaterFavoriteEntity` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `campus` TEXT NOT NULL, `building` TEXT NOT NULL, `floor` TEXT NOT NULL, `label` TEXT NOT NULL, `hotDeviceId` TEXT NOT NULL, `coldDeviceId` TEXT NOT NULL, `apSource` TEXT NOT NULL, `apJson` TEXT NOT NULL, `createdAt` INTEGER, `sortOrder` INTEGER NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -121,6 +125,12 @@ class _$ClassScheduleDatabase extends ClassScheduleDatabase {
   ClassNewScheduleDao get classNewScheduleDao {
     return _classNewScheduleDaoInstance ??=
         _$ClassNewScheduleDao(database, changeListener);
+  }
+
+  @override
+  WaterFavoriteDao get waterFavoriteDao {
+    return _waterFavoriteDaoInstance ??=
+        _$WaterFavoriteDao(database, changeListener);
   }
 }
 
@@ -369,6 +379,141 @@ class _$ClassNewScheduleDao extends ClassNewScheduleDao {
       ClassNewScheduleEntity classNewScheduleEntity) {
     return _classNewScheduleEntityDeletionAdapter
         .deleteAndReturnChangedRows(classNewScheduleEntity);
+  }
+}
+
+class _$WaterFavoriteDao extends WaterFavoriteDao {
+  _$WaterFavoriteDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database),
+        _waterFavoriteEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'WaterFavoriteEntity',
+            (WaterFavoriteEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'campus': item.campus,
+                  'building': item.building,
+                  'floor': item.floor,
+                  'label': item.label,
+                  'hotDeviceId': item.hotDeviceId,
+                  'coldDeviceId': item.coldDeviceId,
+                  'apSource': item.apSource,
+                  'apJson': item.apJson,
+                  'createdAt': _dateTimeConverter.encode(item.createdAt),
+                  'sortOrder': item.sortOrder
+                }),
+        _waterFavoriteEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'WaterFavoriteEntity',
+            ['id'],
+            (WaterFavoriteEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'campus': item.campus,
+                  'building': item.building,
+                  'floor': item.floor,
+                  'label': item.label,
+                  'hotDeviceId': item.hotDeviceId,
+                  'coldDeviceId': item.coldDeviceId,
+                  'apSource': item.apSource,
+                  'apJson': item.apJson,
+                  'createdAt': _dateTimeConverter.encode(item.createdAt),
+                  'sortOrder': item.sortOrder
+                }),
+        _waterFavoriteEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'WaterFavoriteEntity',
+            ['id'],
+            (WaterFavoriteEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'campus': item.campus,
+                  'building': item.building,
+                  'floor': item.floor,
+                  'label': item.label,
+                  'hotDeviceId': item.hotDeviceId,
+                  'coldDeviceId': item.coldDeviceId,
+                  'apSource': item.apSource,
+                  'apJson': item.apJson,
+                  'createdAt': _dateTimeConverter.encode(item.createdAt),
+                  'sortOrder': item.sortOrder
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<WaterFavoriteEntity>
+      _waterFavoriteEntityInsertionAdapter;
+
+  final UpdateAdapter<WaterFavoriteEntity> _waterFavoriteEntityUpdateAdapter;
+
+  final DeletionAdapter<WaterFavoriteEntity>
+      _waterFavoriteEntityDeletionAdapter;
+
+  @override
+  Future<List<WaterFavoriteEntity>> findAll() async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM WaterFavoriteEntity ORDER BY sortOrder ASC, id ASC',
+        mapper: (Map<String, Object?> row) => WaterFavoriteEntity(
+            id: row['id'] as int?,
+            campus: row['campus'] as String,
+            building: row['building'] as String,
+            floor: row['floor'] as String,
+            label: row['label'] as String,
+            hotDeviceId: row['hotDeviceId'] as String,
+            coldDeviceId: row['coldDeviceId'] as String,
+            apSource: row['apSource'] as String,
+            apJson: row['apJson'] as String,
+            createdAt: _dateTimeConverter.decode(row['createdAt'] as int?),
+            sortOrder: row['sortOrder'] as int));
+  }
+
+  @override
+  Future<WaterFavoriteEntity?> findByDevice(
+    String hotDeviceId,
+    String coldDeviceId,
+  ) async {
+    return _queryAdapter.query(
+        'SELECT * FROM WaterFavoriteEntity WHERE hotDeviceId= ?1 AND coldDeviceId= ?2 LIMIT 1',
+        mapper: (Map<String, Object?> row) => WaterFavoriteEntity(id: row['id'] as int?, campus: row['campus'] as String, building: row['building'] as String, floor: row['floor'] as String, label: row['label'] as String, hotDeviceId: row['hotDeviceId'] as String, coldDeviceId: row['coldDeviceId'] as String, apSource: row['apSource'] as String, apJson: row['apJson'] as String, createdAt: _dateTimeConverter.decode(row['createdAt'] as int?), sortOrder: row['sortOrder'] as int),
+        arguments: [hotDeviceId, coldDeviceId]);
+  }
+
+  @override
+  Future<void> clearAll() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM WaterFavoriteEntity');
+  }
+
+  @override
+  Future<int> insertFavorite(WaterFavoriteEntity entity) {
+    return _waterFavoriteEntityInsertionAdapter.insertAndReturnId(
+        entity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<List<int>> insertFavorites(List<WaterFavoriteEntity> entities) {
+    return _waterFavoriteEntityInsertionAdapter.insertListAndReturnIds(
+        entities, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> updateFavorite(WaterFavoriteEntity entity) {
+    return _waterFavoriteEntityUpdateAdapter.updateAndReturnChangedRows(
+        entity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateFavorites(List<WaterFavoriteEntity> entities) async {
+    await _waterFavoriteEntityUpdateAdapter.updateList(
+        entities, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<int> deleteFavorite(WaterFavoriteEntity entity) {
+    return _waterFavoriteEntityDeletionAdapter
+        .deleteAndReturnChangedRows(entity);
   }
 }
 

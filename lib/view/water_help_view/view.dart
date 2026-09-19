@@ -7,7 +7,7 @@ import 'package:callo/utils/GlassUI.dart';
 import 'logic.dart';
 import 'state.dart';
 
-/// 打水教程：毛玻璃 + 渐变风格
+/// 打水教程：读取 assets/files/waterCourse.md（毛玻璃 + 渐变风格）
 class WaterHelpViewPage extends StatelessWidget {
   WaterHelpViewPage({Key? key}) : super(key: key);
 
@@ -15,6 +15,9 @@ class WaterHelpViewPage extends StatelessWidget {
   final WaterHelpViewState state = Get.find<WaterHelpViewLogic>().state;
 
   static const String _page = 'main_water_view';
+
+  /// 教程图片所在目录（markdown 里是 ./xxx.jpeg 这种相对路径）
+  static const String _assetDir = 'assets/files/';
 
   @override
   Widget build(BuildContext context) {
@@ -33,19 +36,21 @@ class WaterHelpViewPage extends StatelessWidget {
                   fontSize: 17, fontWeight: FontWeight.w700, color: text)),
         ),
         body: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 120),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
           children: [
             GlassCard(
               page: _page,
               padding: const EdgeInsets.all(6),
-              child: MarkdownWidget(
-                padding: const EdgeInsets.all(10),
-                shrinkWrap: true,
-                data: txt(),
-                config: MarkdownConfig(configs: [
-                  PConfig(textStyle: TextStyle(color: text)),
-                ]),
-              ),
+              child: Obx(() => MarkdownWidget(
+                    padding: const EdgeInsets.all(10),
+                    shrinkWrap: true,
+                    data: state.text.value,
+                    config: MarkdownConfig(configs: [
+                      PConfig(textStyle: TextStyle(color: text)),
+                      //图片：支持 markdown 里的相对路径（本地 assets）与网络图片
+                      ImgConfig(builder: _buildImage),
+                    ]),
+                  )),
             ),
           ],
         ),
@@ -53,18 +58,43 @@ class WaterHelpViewPage extends StatelessWidget {
     );
   }
 
-  txt() {
-    return '''
-### 一、绑定账号
-* 1、首先需要使用微信随便扫描某个饮水机的二维码；
-* 2、待页面完全加载完毕后（注意一定要加载完）点击微信右上角然后选择复制链接；
-* 3、将复制好的链接粘贴到账号绑定的输入框内，然后点击“确定”按钮等待绑定成功即可。
-
-注：绑定号账号后以后就不用再绑定账号了，软件会一直保存，除非你需要切换其他账号。
-### 二、绑定饮水机冷热水
-绑定饮水机的操作有两种：
-* 第一种是直接点击中间的“自动探测饮水机”按钮，这种方式目前只支持桂林校区的8栋和2栋。
-* 第二种是通过点击界面上的扫码按钮（“绑定”按钮）进行扫码绑定，这种每次绑定都会一直存在除非你需要换其他饮水机才需要另外扫码。
-    ''';
+  /// 自定义图片渲染：
+  /// ./xxx.jpeg 这类相对路径按 assets/files/ 目录下的本地图片加载，
+  /// http(s) 开头仍走网络加载
+  Widget _buildImage(String url, Map<String, String> attributes) {
+    final String src = url.trim();
+    //图片宽度：屏幕宽度 - 页面/卡片/markdown的内边距
+    final double width =
+        (MediaQuery.of(Get.context!).size.width - 64).clamp(80.0, 900.0);
+    final Widget errorWidget = Container(
+      width: width,
+      height: 120,
+      alignment: Alignment.center,
+      child: Icon(Icons.broken_image_outlined,
+          color: GlassTheme.textColor(_page).withValues(alpha: .45)),
+    );
+    if (src.startsWith('http')) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          src,
+          width: width,
+          fit: BoxFit.fitWidth,
+          errorBuilder: (context, error, stackTrace) => errorWidget,
+        ),
+      );
+    }
+    //本地图片：./water_guide_1.jpeg -> assets/files/water_guide_1.jpeg
+    String asset = src.startsWith('./') ? src.substring(2) : src;
+    if (!asset.startsWith('assets/')) asset = '$_assetDir$asset';
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.asset(
+        asset,
+        width: width,
+        fit: BoxFit.fitWidth,
+        errorBuilder: (context, error, stackTrace) => errorWidget,
+      ),
+    );
   }
 }

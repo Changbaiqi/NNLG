@@ -7,6 +7,7 @@ import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/utils/WaterUtil.dart';
 import 'package:callo/view/ScanKit_Water.dart';
 import 'package:callo/view/router/Routes.dart';
+import 'package:callo/view/main_water_view/widget/WaterFavoriteDrawer.dart';
 
 import 'logic.dart';
 
@@ -21,19 +22,52 @@ class MainWaterViewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logic.context = context;
-    return GlassBackground(
+    //侧滑栏展开时拦截物理返回键：先收起侧滑栏而不是退出软件
+    return Obx(() => PopScope(
+          canPop: !logic.isEndDrawerOpen.value,
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (logic.scaffoldKey.currentState?.isEndDrawerOpen ?? false) {
+              logic.scaffoldKey.currentState?.closeEndDrawer();
+            }
+          },
+          child: GlassBackground(
       page: _page,
       child: Scaffold(
+        key: logic.scaffoldKey,
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: false,
-        endDrawer: Drawer(
-            width: 200,
-            child: Center(
-              child: Text('加载中...',
-                  style: TextStyle(color: GlassTheme.textColor(_page))),
-            )),
+        //右侧收藏抽屉（按 校区/栋数/楼层 分类）
+        endDrawer: const WaterFavoriteDrawer(),
+        onEndDrawerChanged: (isOpen) => logic.isEndDrawerOpen.value = isOpen,
+        //顶部栏：标题 + 收藏列表入口（与课表页AppBar风格一致）
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          title: Text('打水',
+              style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: GlassTheme.textColor(_page))),
+          actions: [
+            IconButton(
+              tooltip: '收藏的饮水机',
+              onPressed: logic.openFavoriteDrawer,
+              icon: Obx(() {
+                final int count = logic.favorites.length;
+                final Widget icon = Icon(Icons.bookmarks_rounded,
+                    size: 22, color: GlassTheme.accentColor(_page));
+                if (count == 0) return icon;
+                return Badge(label: Text('$count'), child: icon);
+              }),
+            ),
+            const SizedBox(width: 6),
+          ],
+        ),
         //适配状态栏/挖孔摄像头：内容下移，渐变背景保持全屏
         body: SafeArea(
+          top: false,
           bottom: false,
           child: RefreshIndicator(
           color: GlassTheme.accentColor(_page),
@@ -41,44 +75,21 @@ class MainWaterViewPage extends StatelessWidget {
           elevation: 0,
           onRefresh: logic.onRefresh,
           child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 120),
+            //尽量在一屏内显示完：底部不需要给底栏留大间距（底栏是 Scaffold 的 bottomNavigationBar）
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
             children: [
               _moneyCard(),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               GlassSectionTitle(page: _page, title: '冷热水开关'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  //冷水独立卡片：开在上、关在下（竖排）
-                  Expanded(
-                    child: GlassCard(
-                      page: _page,
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          _switchButton(
-                            '冷水开',
-                            Icons.lock_open_rounded,
-                            () => logic.coolOpenWaterButtonCheck(),
-                          ),
-                          const SizedBox(height: 10),
-                          _switchButton(
-                            '冷水关',
-                            Icons.lock_rounded,
-                            () => logic.coolCloseWaterButtonCheck(),
-                            filled: false,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   //热水独立卡片：开在上、关在下（竖排）
                   Expanded(
                     child: GlassCard(
                       page: _page,
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(10),
                       child: Column(
                         children: [
                           _switchButton(
@@ -87,7 +98,7 @@ class MainWaterViewPage extends StatelessWidget {
                             () => logic.hotOpenWaterButtonCheck(),
                             hot: true,
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           _switchButton(
                             '热水关',
                             Icons.lock_rounded,
@@ -98,32 +109,57 @@ class MainWaterViewPage extends StatelessWidget {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 12),
+                  //冷水独立卡片：开在上、关在下（竖排）
+                  Expanded(
+                    child: GlassCard(
+                      page: _page,
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          _switchButton(
+                            '冷水开',
+                            Icons.lock_open_rounded,
+                            () => logic.coolOpenWaterButtonCheck(),
+                            hot: true
+                          ),
+                          const SizedBox(height: 8),
+                          _switchButton(
+                            '冷水关',
+                            Icons.lock_rounded,
+                            () => logic.coolCloseWaterButtonCheck(),
+                            filled: false,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               GlassSectionTitle(page: _page, title: '绑定饮水机'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               GlassCard(
                 page: _page,
                 padding: const EdgeInsets.symmetric(
-                    vertical: 16, horizontal: 12),
+                    vertical: 12, horizontal: 12),
                 child: bingWater(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
               GlassSectionTitle(page: _page, title: '打水账号'),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               GlassCard(
                 page: _page,
                 padding: const EdgeInsets.symmetric(
-                    vertical: 14, horizontal: 16),
+                    vertical: 10, horizontal: 16),
                 child: bingAccount(),
               ),
             ],
           ),
-          ),
         ),
       ),
-    );
+      ),
+      )));
   }
 
   /// 余额卡片（M3：主色大字 + 中性胶囊）
@@ -131,7 +167,7 @@ class MainWaterViewPage extends StatelessWidget {
     final ColorScheme scheme = GlassTheme.scheme;
     return GlassCard(
       page: _page,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
       child: Obx(() => Column(
             children: [
               Text('账户余额',
@@ -141,7 +177,7 @@ class MainWaterViewPage extends StatelessWidget {
               Text(
                 '${(state.money.value == "" || state.money.value == null) ? "0.00" : state.money.value}￥',
                 style: TextStyle(
-                    fontSize: 46,
+                    fontSize: 40,
                     fontWeight: FontWeight.w800,
                     color: scheme.primary),
               ),
@@ -188,7 +224,7 @@ class MainWaterViewPage extends StatelessWidget {
         ? scheme.onSurfaceVariant
         : (hot ? scheme.onError : scheme.onPrimary);
     return SizedBox(
-      height: 52,
+      height: 46,
       width: double.infinity,
       child: Material(
         color: bg,
@@ -218,22 +254,24 @@ class MainWaterViewPage extends StatelessWidget {
   Widget bingAccount() {
     final Color text = GlassTheme.textColor(_page);
     return SizedBox(
-      height: 44,
+      height: 40,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: Obx(() => Text(
-                  '账号：${state.bingCard.value.isEmpty ? "未绑定" : state.bingCard.value}',
+                  '账号：${WaterData.cardNum.value.isEmpty ? "未绑定" : WaterData.cardNum.value}',
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontSize: 13, color: text),
                 )),
           ),
-          Row(
-            children: [
-              Visibility(
-                  visible: WaterData.waterAccount.value.isEmpty ? false : true,
-                  child: Padding(
+          //充值/绑定按钮跟随绑定状态实时刷新
+          Obx(() {
+            final bool bound = WaterData.waterAccount.value.isNotEmpty;
+            return Row(
+              children: [
+                if (bound)
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                     child: _smallButton(
                       label: '充值',
@@ -241,73 +279,97 @@ class MainWaterViewPage extends StatelessWidget {
                       colors: const [Color(0xFF1E88E5), Color(0xFF64B5F6)],
                       onPressed: () => Get.toNamed(Routes.WaterCharge),
                     ),
-                  )),
-              _smallButton(
-                label: WaterData.waterAccount.value.isEmpty ? '绑定' : '解绑',
-                icon: Icons.link_rounded,
-                colors: const [Color(0xFF7C4DFF), Color(0xFFB388FF)],
-                onPressed: () {
-                  if (WaterData.waterAccount.value.isEmpty) {
-                    logic.bingShow();
-                  } else {
-                    ShareDateUtil().setWaterUnBind().then((value) {
-                      state.bingCard.value = "";
-                      Get.snackbar("提示", "解绑成功",
-                          duration: const Duration(milliseconds: 1500));
-                    });
-                  }
-                },
-              )
-            ],
-          )
+                  ),
+                _smallButton(
+                  label: bound ? '解绑' : '绑定',
+                  icon: Icons.link_rounded,
+                  colors: const [Color(0xFF7C4DFF), Color(0xFFB388FF)],
+                  onPressed: () {
+                    if (!bound) {
+                      logic.bingShow();
+                    } else {
+                      ShareDateUtil().setWaterUnBind().then((value) {
+                        state.bingCard.value = "";
+                        state.money.value = "";
+                        state.divice.value = "";
+                        Get.snackbar("提示", "解绑成功",
+                            duration: const Duration(milliseconds: 1500));
+                      });
+                    }
+                  },
+                )
+              ],
+            );
+          })
         ],
       ),
     );
   }
 
   Widget bingWater() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
       children: [
-        _actionButton(
-          label: '绑冷水',
-          icon: Icons.qr_code_scanner_rounded,
-          colors: const [Color(0xFF1E88E5), Color(0xFF64B5F6)],
-          onPressed: () async {
-            String result = await Navigator.push(logic.context!,
-                MaterialPageRoute(builder: (builder) {
-              return ScanKit_Water();
-            }));
-            WaterUtil().bindCoolWater(result);
-          },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _actionButton(
+              label: '绑热水',
+              icon: Icons.qr_code_scanner_rounded,
+              colors: const [Color(0xFFF4511E), Color(0xFFFF8A65)],
+              onPressed: () async {
+                String result = await Navigator.push(logic.context!,
+                    MaterialPageRoute(builder: (builder) {
+                      return ScanKit_Water();
+                    }));
+                WaterUtil().bindHotWater(result);
+              },
+            ),
+            _actionButton(
+              label: '自动探测',
+              icon: Icons.radar_rounded,
+              colors: const [Color(0xFF00897B), Color(0xFF4DB6AC)],
+              onPressed: () async {
+                logic.detectWater().then((value) {
+                  if (value == null) {
+                    ToastUtil.show('探测失败，未找到附近收录或收藏的饮水机');
+                    return;
+                  }
+                  ShareDateUtil().setCoolWater('${value['coldDeviceId']}');
+                  ShareDateUtil().setHotWater('${value['hotDeviceId']}');
+                  //匹配到收藏的饮水机时自动切换绑定
+                  ToastUtil.show(value['fromFavorite'] == true
+                      ? '已自动切换到收藏的饮水机：${value['label']}'
+                      : '已绑定${value['label']}');
+                });
+              },
+            ),
+            _actionButton(
+              label: '绑冷水',
+              icon: Icons.qr_code_scanner_rounded,
+              colors: const [Color(0xFF1E88E5), Color(0xFF64B5F6)],
+              onPressed: () async {
+                String result = await Navigator.push(logic.context!,
+                    MaterialPageRoute(builder: (builder) {
+                      return ScanKit_Water();
+                    }));
+                WaterUtil().bindCoolWater(result);
+              },
+            ),
+          ],
         ),
-        _actionButton(
-          label: '自动探测',
-          icon: Icons.radar_rounded,
-          colors: const [Color(0xFF00897B), Color(0xFF4DB6AC)],
-          onPressed: () async {
-            logic.detectWater().then((value) {
-              if (value == null) {
-                ToastUtil.show('探测失败，未找到附近收录的机子');
-                return;
-              }
-              ToastUtil.show('已绑定${value['inform']['label']}');
-              ShareDateUtil().setCoolWater(value['coldDeviceId']);
-              ShareDateUtil().setHotWater(value['hotDeviceId']);
-            });
-          },
-        ),
-        _actionButton(
-          label: '绑热水',
-          icon: Icons.qr_code_scanner_rounded,
-          colors: const [Color(0xFFF4511E), Color(0xFFFF8A65)],
-          onPressed: () async {
-            String result = await Navigator.push(logic.context!,
-                MaterialPageRoute(builder: (builder) {
-              return ScanKit_Water();
-            }));
-            WaterUtil().bindHotWater(result);
-          },
+        const SizedBox(height: 12),
+        //收藏：横向占满，左右与父布局留出padding，并与上方按钮留出间距
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: FilledButton.icon(
+              onPressed: logic.favoriteCurrent,
+              icon: const Icon(Icons.star_rounded, size: 20),
+              label: const Text('收藏当前绑定的饮水机'),
+            ),
+          ),
         ),
       ],
     );
@@ -343,8 +405,8 @@ class MainWaterViewPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 64,
-          height: 64,
+          width: 54,
+          height: 54,
           decoration: BoxDecoration(shape: BoxShape.circle, color: bg),
           child: Material(
             color: Colors.transparent,
@@ -352,11 +414,11 @@ class MainWaterViewPage extends StatelessWidget {
             child: InkWell(
               customBorder: const CircleBorder(),
               onTap: onPressed,
-              child: Icon(icon, color: fg, size: 26),
+              child: Icon(icon, color: fg, size: 22),
             ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Text(
           label,
           style: TextStyle(

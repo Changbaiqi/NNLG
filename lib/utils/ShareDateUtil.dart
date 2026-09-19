@@ -696,6 +696,8 @@ class ShareDateUtil{
     await setWaterUserId("");
     await setWaterAccount("");
     await setWaterSaler("");
+    //卡号也要清空，否则重新进入页面还会显示绑定状态
+    await setCardNum("");
   }
 
 

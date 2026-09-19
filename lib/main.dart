@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_it/get_it.dart';
 import 'package:callo/dao/ClassNewScheduleDao.dart';
 import 'package:callo/dao/ClassScheduleDatabase.dart';
+import 'package:callo/dao/WaterFavoriteDao.dart';
 import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
@@ -192,16 +193,39 @@ void main() async {
         md5 TEXT,
         json TEXT
     );''');
+    }),
+    //饮水机收藏表
+    Migration(6, 7, (database) async {
+      await database.execute('''CREATE TABLE IF NOT EXISTS WaterFavoriteEntity (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        campus TEXT NOT NULL,
+        building TEXT NOT NULL,
+        floor TEXT NOT NULL,
+        label TEXT NOT NULL,
+        hotDeviceId TEXT NOT NULL,
+        coldDeviceId TEXT NOT NULL,
+        apSource TEXT NOT NULL,
+        apJson TEXT NOT NULL,
+        createdAt INTEGER
+    );''');
+    }),
+    //收藏排序字段
+    Migration(7, 8, (database) async {
+      await database.execute(
+          'ALTER TABLE WaterFavoriteEntity ADD COLUMN sortOrder INTEGER NOT NULL DEFAULT 0');
     })
   ]).build();
   // final database = await $FloorClassScheduleDatabase.databaseBuilder('app_database.db').build();
   final classScheduleDao = database.classScheduleDao;
   final classNewScheduleDao = database.classNewScheduleDao;
+  final waterFavoriteDao = database.waterFavoriteDao;
 
   GetIt getIt = GetIt.instance;
   getIt.registerSingleton<ClassScheduleDao>(classScheduleDao,
       signalsReady: true);
   getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,
+      signalsReady: true);
+  getIt.registerSingleton<WaterFavoriteDao>(waterFavoriteDao,
       signalsReady: true);
 
   //读取开发者调试开关（「关于软件和作者」页连点图标5次切换）

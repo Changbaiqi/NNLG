@@ -1,8 +1,8 @@
 <div align="center">
 
-# 校园助手 NNLG
+# 校园助手
 
-基于 Flutter 开发的第三方校园综合服务 App，为南宁理工学院学子提供课表、成绩、考试、打水等一站式服务。
+基于 Flutter 开发的第三方校园综合服务 App，为学校学生提供、成绩、考试、打水等一站式服务。
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B.svg?logo=flutter)](https://flutter.dev)
 [![Android](https://img.shields.io/badge/Android-passing-3DDC84.svg?logo=android)](https://www.android.com)

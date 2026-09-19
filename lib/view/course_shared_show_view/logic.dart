@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/WeekDayForm.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/view/module/showCourseTableMessage.dart';
 
@@ -44,8 +45,14 @@ class CourseSharedShowViewLogic extends GetxController {
 
   //刷新课表
   Future<void> onRefresh() async {
-    await CourseUtil()
-        .getAllCourseWeekList("${CourseData.nowCourseList.value}");
+    try {
+      await CourseUtil()
+          .getAllCourseWeekList("${CourseData.nowCourseList.value}");
+    } catch (e) {
+      //同步失败（网络异常/登录失效等）时提示，避免直接抛到界面
+      print('课表刷新失败: $e');
+      ToastUtil.show('课表同步失败，请检查网络或重新登录');
+    }
   }
 
   //如果出现Each Child must be laid out exactly once那么很大可能bug出现在这里！！！！！！！！！！！！！！

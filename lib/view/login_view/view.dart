@@ -156,6 +156,8 @@ class LoginViewPage extends StatelessWidget {
                           if (value['code'] == 200) {
                             ContextDate.ContextCookie =
                                 value['session']; //设置session
+                            //保存会话，下次启动可以先用上次的登录状态刷新数据
+                            ShareDateUtil().setCookie(value['session']);
                             if (LoginData.rememberAccountAndPassword.value) {
                               ShareDateUtil().setLoginAccount(
                                   state.inputAccountController.value.text);
@@ -184,6 +186,8 @@ class LoginViewPage extends StatelessWidget {
 
                                 if (value["code"] == 200) {
                                   ContextDate.ContextVIPTken = value["token"];
+                                  //按账号保存Token，下次启动可直接使用
+                                  ShareDateUtil().setVipToken(value["token"]);
                                   ShareDateUtil().setIsIdent(
                                       value["data"]["user"]["isIdent"] == 1);
                                   ShareDateUtil().setIdentMainColor(

@@ -8,6 +8,7 @@ import 'package:showcaseview/showcaseview.dart';
 
 import 'package:callo/dao/AccountData.dart';
 import 'package:callo/dao/ContextData.dart';
+import 'package:callo/dao/DebugData.dart';
 import 'package:callo/dao/LoginData.dart';
 import 'package:callo/utils/GlassUI.dart';
 import 'package:callo/utils/HexColor.dart';
@@ -85,15 +86,16 @@ class MainUserViewPage extends StatelessWidget {
                         Get.offNamed(Routes.Login);
                       },
                     ),
-                    Visibility(
-                      visible: false,
-                      child: _entry(
-                        title: '软件开发测试',
-                        icon: Icons.developer_mode_rounded,
-                        onTap: () =>
-                            Get.toNamed(Routes.SoftwareDevelopmentTestView),
-                      ),
-                    ),
+                    //默认隐藏，在「关于软件和作者」页连续点击图标5次后显示
+                    Obx(() => Visibility(
+                          visible: DebugData.showDevTest.value,
+                          child: _entry(
+                            title: '软件开发测试',
+                            icon: Icons.developer_mode_rounded,
+                            onTap: () =>
+                                Get.toNamed(Routes.SoftwareDevelopmentTestView),
+                          ),
+                        )),
                   ],
                 ));
           },
@@ -122,6 +124,8 @@ class MainUserViewPage extends StatelessWidget {
                     }
                     if (value["code"] == 200) {
                       ContextDate.ContextVIPTken = value["token"];
+                      //按账号保存Token，下次启动可直接使用
+                      ShareDateUtil().setVipToken(value["token"]);
                       Navigator.push(
                           context,
                           MaterialPageRoute(

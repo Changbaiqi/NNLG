@@ -1,11 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:gbk_codec/gbk_codec.dart';
 import 'package:callo/dao/LoginData.dart';
+import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:callo/utils/edusys/tools/EncryEncode.dart';
 
 import '../dao/ContextData.dart';
@@ -39,6 +36,23 @@ class LoginUtil {
     // log(result);
     // return returnValue;
     return result;
+  }
+
+  //登录单飞：避免启动页自动登录与业务请求触发的重新登录同时进行
+  static Future<Map<String, dynamic>>? _loginFuture;
+
+  /// 用账号密码登录（并发调用会共用同一个请求）
+  static Future<Map<String, dynamic>> loginOnce(
+      String account, String password) {
+    final Future<Map<String, dynamic>>? running = _loginFuture;
+    if (running != null) return running;
+    final Future<Map<String, dynamic>> future =
+        LoginUtil().LoginPost(EncryEncode.toEncodeInp(account, password));
+    _loginFuture = future;
+    future.whenComplete(() {
+      if (identical(_loginFuture, future)) _loginFuture = null;
+    }).ignore();
+    return future;
   }
 
   //如果登录成功那么返回302，失败返回404
@@ -85,14 +99,17 @@ class LoginUtil {
         r'<font style="display: inline;white-space:nowrap;" color="red">([^<]+)</font>');
     RegExpMatch? match = regExp.firstMatch(body);
     if(match!=null && match.group(1).toString().contains("请先登录系统")){
-      await LoginUtil().LoginPost(EncryEncode.toEncodeInp(LoginData.account, LoginData.password)).then((value)async{
-        if(value['code']==200){
-          // LoginData.session = value['session'];
-          ContextDate.ContextCookie = value['session'];
-        }else{
-          return false;
-        }
-      });
+      //与启动页的自动登录共用同一个请求，避免重复登录互相顶掉会话
+      final value = await loginOnce(LoginData.account, LoginData.password);
+      if(value['code']==200){
+        // LoginData.session = value['session'];
+        ContextDate.ContextCookie = value['session'];
+        //刷新本地保存的会话，避免下次启动继续用过期的Cookie
+        ShareDateUtil().setCookie(value['session']);
+      }else{
+        //重新登录失败（账号密码错误等）：抛出让上层停止重试，避免反复登录
+        throw Exception('重新登录失败：${value['msg']}');
+      }
       return false;
     }
     return true;

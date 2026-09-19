@@ -9,6 +9,7 @@ import 'package:callo/view/router/AppPages.dart';
 import 'package:callo/view/router/Routes.dart';
 import 'package:callo/view/module/showCourseWidgetDialog.dart';
 import 'package:callo/dao/CustomThemeData.dart';
+import 'package:callo/dao/DebugData.dart';
 import 'package:callo/utils/CusBehavior.dart';
 import 'package:callo/utils/SharedImageUtil.dart';
 
@@ -203,6 +204,8 @@ void main() async {
   getIt.registerSingleton<ClassNewScheduleDao>(classNewScheduleDao,
       signalsReady: true);
 
+  //读取开发者调试开关（「关于软件和作者」页连点图标5次切换）
+  DebugData.init();
   //监听长按桌面图标「添加课表小组件」快捷方式
   initCourseWidgetShortcut();
   //监听系统分享进来的图片（可设为课表/小组件背景）

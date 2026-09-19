@@ -1,4 +1,6 @@
 import 'package:callo/dao/AppInfoData.dart';
+import 'package:callo/dao/DebugData.dart';
+import 'package:callo/utils/ToastUtil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -48,22 +50,26 @@ class AboutMeViewPage extends StatelessWidget {
                       const EdgeInsets.symmetric(vertical: 22, horizontal: 16),
                   child: Column(
                     children: [
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [accent, GlassTheme.lighten(accent, .45)],
+                      //连续点击图标5次：切换「我的」页面里的「软件开发测试」入口
+                      GestureDetector(
+                        onTap: _onLogoTap,
+                        child: Container(
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [accent, GlassTheme.lighten(accent, .45)],
+                            ),
                           ),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            'assets/images/ic_launcher.png',
-                            width: 72,
-                            height: 72,
-                            fit: BoxFit.cover,
+                          child: ClipOval(
+                            child: Image.asset(
+                              'assets/images/ic_launcher.png',
+                              width: 72,
+                              height: 72,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
@@ -146,6 +152,15 @@ class AboutMeViewPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  /// 连续点击图标5次：切换「我的」页面里的「软件开发测试」入口
+  void _onLogoTap() {
+    if (DebugData.onLogoTap()) {
+      ToastUtil.show(DebugData.showDevTest.value
+          ? '已开启软件开发测试入口'
+          : '已隐藏软件开发测试入口');
+    }
   }
 
   /// 作者链接按钮

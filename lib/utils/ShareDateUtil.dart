@@ -41,6 +41,10 @@ class ShareDateUtil{
     await getRememberAccountAndPassword();
     await getLoginAccount();
     await getLoginPassword();
+    //恢复上次登录的会话：教务系统登录慢时，课表刷新也能先正常工作
+    await getCookie();
+    //恢复上次登录的服务器Token（认证、在线功能等）
+    await getVipToken();
 
     //课表信息页初始化信息加载
     await getSchoolOpenDate();
@@ -148,6 +152,10 @@ class ShareDateUtil{
     //自动登录取消
     await setAutoLogin(false);
 
+    //清空保存的会话，避免退出登录后下次启动仍用旧会话
+    await setCookie("");
+    await setVipToken("");
+
     //课表信息数据
     await setoldWeekCourseList(<String>[]);
     // await setOldShowClassScheduleUUID(''); 旧课表
@@ -164,20 +172,43 @@ class ShareDateUtil{
 
   }
 
-  //设置登录Cookie
+  //设置登录Cookie（按账号分别保存，换个账号登录不会互相覆盖）
   setCookie(String cookie) async{
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('cookie', '${cookie}').then((c){
-      ContextDate.ContextCookie = cookie;
-      //print('当前设定的Cookie：${ContextDate.cookie}');
-    });
-    //print('设置的Cookie：${ContextDate.token}');
+    await prefs.setString('cookie', '${cookie}');
+    if (LoginData.account.isNotEmpty) {
+      await prefs.setString('cookie_${LoginData.account}', '${cookie}');
+    }
+    ContextDate.ContextCookie = cookie;
+    //print('当前设定的Cookie：${ContextDate.cookie}');
   }
 
-  //获取登录Cookie
+  //设置服务器Token（按账号分别保存）
+  setVipToken(String token) async{
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('vipToken', '${token}');
+    if (LoginData.account.isNotEmpty) {
+      await prefs.setString('vipToken_${LoginData.account}', '${token}');
+    }
+    ContextDate.ContextVIPTken = token;
+  }
+
+  //获取服务器Token（优先取当前账号上次保存的）
+  Future<String> getVipToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String account = LoginData.account;
+    String? token = account.isEmpty ? null : prefs.getString('vipToken_$account');
+    token ??= prefs.getString('vipToken');
+    ContextDate.ContextVIPTken = token ?? "";
+    return token ?? "";
+  }
+
+  //获取登录Cookie（优先取当前账号上次保存的）
   Future<String> getCookie() async {
     final prefs = await SharedPreferences.getInstance();
-    String? cookie = await prefs.getString('cookie');
+    final String account = LoginData.account;
+    String? cookie = account.isEmpty ? null : prefs.getString('cookie_$account');
+    cookie ??= prefs.getString('cookie');
     ContextDate.ContextCookie = cookie??"";
     return cookie??"";
   }

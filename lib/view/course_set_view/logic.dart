@@ -14,6 +14,7 @@ import 'package:callo/dao/CourseData.dart';
 import 'package:callo/dao/entity/ClassNewScheduleEntity.dart';
 import 'package:callo/dao/entity/ClassScheduleEntity.dart';
 import 'package:callo/utils/CourseUtil.dart';
+import 'package:callo/utils/ToastUtil.dart';
 import 'package:callo/utils/ShareDateUtil.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -105,16 +106,21 @@ class CourseSetViewLogic extends GetxController {
 
   //刷新课表
   Future<void> onRefresh() async {
-
-    //同步拉取教务系统课表
-    String newestCourse = await CourseUtil().getAllCourseSemesterList("${CourseData.nowCourseList.value}",CourseData.ansWeek.value);
-    //课表缓存逻辑执行
-    await cacheClassSchedule(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    //首次获取课表逻辑
-    await firstClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    //拉取显示最新课表逻辑
-    await newestClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
-    // ShareDateUtil().setoldWeekCourseList(newestCourse); //设置课表
+    try {
+      //同步拉取教务系统课表
+      String newestCourse = await CourseUtil().getAllCourseSemesterList("${CourseData.nowCourseList.value}",CourseData.ansWeek.value);
+      //课表缓存逻辑执行
+      await cacheClassSchedule(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      //首次获取课表逻辑
+      await firstClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      //拉取显示最新课表逻辑
+      await newestClassScheduleLogic(AccountData.studentID, CourseData.nowCourseList.value, newestCourse);
+      // ShareDateUtil().setoldWeekCourseList(newestCourse); //设置课表
+    } catch (e) {
+      //同步失败（网络异常/登录失效等）时提示，避免直接抛到界面
+      print('课表同步失败: $e');
+      ToastUtil.show('课表同步失败，请检查网络或重新登录');
+    }
   }
 
   //旧 用于缓存课表的

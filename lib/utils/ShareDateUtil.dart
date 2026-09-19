@@ -1280,12 +1280,12 @@ class ShareDateUtil{
     });
   }
 
-  //获取课表项透明度
+  //获取课表项透明度（默认50%）
   Future<double> getCourseItemOpacity() async {
     final prefs = await SharedPreferences.getInstance();
     double? value = await prefs.getDouble('courseItemOpacity');
-    CourseData.courseItemOpacity.value = value ?? 1.0;
-    return value ?? 1.0;
+    CourseData.courseItemOpacity.value = value ?? 0.5;
+    return value ?? 0.5;
   }
 
   //设置课表项透明度（课表项 + 表头控件背景，立即生效）
